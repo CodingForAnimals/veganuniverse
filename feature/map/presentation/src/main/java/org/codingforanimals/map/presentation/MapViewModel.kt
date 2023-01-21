@@ -11,11 +11,11 @@ import org.codingforanimals.veganuniverse.common.permissions.PermissionsManager
 import org.codingforanimals.veganuniverse.common.permissions.VeganUniversePermissions
 
 class MapViewModel(
-    private val permissionsManager: PermissionsManager,
+    permissionsManager: PermissionsManager,
 ) : ViewModel() {
 
-    val uiState = permissionsManager.granted.map {
-        Success(it.contains(VeganUniversePermissions.USER_LOCATION))
+    val uiState = permissionsManager.denied.map {
+        Success(!it.contains(VeganUniversePermissions.USER_LOCATION))
     }.stateIn(
         scope = viewModelScope,
         initialValue = Loading,
@@ -24,6 +24,6 @@ class MapViewModel(
 
     sealed interface MapUiState {
         object Loading : MapUiState
-        data class Success(val locationPermissionsGranted: Boolean) : MapUiState
+        data class Success(val locationPermissionDenied: Boolean) : MapUiState
     }
 }

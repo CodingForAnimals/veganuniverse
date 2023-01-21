@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,6 +53,7 @@ internal fun VeganUniverseApp(
         if (showOnboarding) {
             OnboardingScreen { showOnboarding = false }
         } else {
+            val snackbarHostState = remember { SnackbarHostState() }
             Scaffold(
                 bottomBar = {
                     VeganUniverseBottomNavBar(
@@ -59,6 +62,7 @@ internal fun VeganUniverseApp(
                         navigateToDestination = appState::navigateToTopLevelDestination
                     )
                 },
+                snackbarHost = { SnackbarHost(snackbarHostState) }
             ) { padding ->
                 Row(
                     modifier = Modifier
@@ -82,6 +86,7 @@ internal fun VeganUniverseApp(
                         }
                         VeganUniverseAppNavHost(
                             navController = appState.navController,
+                            snackbarHostState = snackbarHostState,
                         )
                     }
                 }
@@ -136,8 +141,10 @@ private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLev
 fun DefaultPreview() {
     val appState = rememberVeganUniverseAppState()
     VeganUniverseTheme {
+        val snackbarHostState = SnackbarHostState()
         VeganUniverseAppNavHost(
             navController = appState.navController,
+            snackbarHostState = snackbarHostState,
         )
     }
 }

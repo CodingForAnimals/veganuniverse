@@ -1,5 +1,6 @@
 package org.codingforanimals.map.presentation.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -12,6 +13,7 @@ fun NavController.navigateToMap() = navigate(mapNavigationRoute)
 
 fun NavGraphBuilder.mapGraph(
     navigateToSite: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     nestedGraphs: NavGraphBuilder.() -> Unit,
 ) {
     injectMapModules()
@@ -20,6 +22,7 @@ fun NavGraphBuilder.mapGraph(
     ) {
         MapRoute(
             navigateToSite = navigateToSite,
+            snackbarHostState = snackbarHostState
         )
     }
     nestedGraphs()

@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.ui
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -17,6 +18,7 @@ import org.codingforanimals.veganuniverse.site.presentation.navigation.siteGraph
 @Composable
 internal fun VeganUniverseAppNavHost(
     navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
 ) {
     NavHost(
         navController = navController,
@@ -32,6 +34,7 @@ internal fun VeganUniverseAppNavHost(
         )
         mapGraph(
             navigateToSite = navController::navigateToSite,
+            snackbarHostState = snackbarHostState,
             nestedGraphs = {
                 siteGraph()
             }
