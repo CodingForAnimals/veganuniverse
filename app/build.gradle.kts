@@ -1,8 +1,6 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("dagger.hilt.android.plugin")
-    kotlin("kapt")
     `android-config`
     `compose-config`
 }
@@ -41,8 +39,6 @@ dependencies {
     implementation(project(":feature:site:presentation"))
     implementation(libs.compose)
     debugImplementation(libs.composeDebug)
-    implementation(libs.daggerHilt)
-    kapt(libs.daggerHiltAndroidCompiler)
 
     implementation(libs.koinAndroid)
 

@@ -1,16 +1,11 @@
 @file:Suppress("ClassName")
 
 object versions {
-    const val ksp = "1.7.10-1.0.6"
     const val core = "1.8.0"
     const val lifecycle = "2.5.1"
     const val coroutines = "1.6.4"
-    const val composeCompiler = "1.3.0"
     const val compose = "1.2.1"
-    const val dagger = "2.43.2"
-    const val daggerExt = "1.0.0"
-    const val paging = "3.1.1"
-    const val pagingCompose = "1.0.0-alpha16"
+    const val composeCompiler = "1.3.0"
     const val accompanist = "0.25.1"
     const val retrofit = "2.9.0"
     const val moshi = "1.14.0"
@@ -19,6 +14,7 @@ object versions {
     const val material3 = "1.1.0-alpha03"
     const val datastore = "1.0.0"
     const val koinAndroid = "3.3.2"
+    const val koinAndroidCompose = "3.4.1"
 }
 
 object libs {
@@ -33,6 +29,7 @@ object libs {
         "androidx.compose.ui:ui-tooling-preview:${versions.compose}",
         "androidx.activity:activity-compose:1.6.1",
         "androidx.navigation:navigation-compose:2.5.1",
+        "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha04",
         "io.coil-kt:coil-compose:2.2.0"
     )
 
@@ -49,21 +46,11 @@ object libs {
     const val swipeRefreshCompose =
         "com.google.accompanist:accompanist-swiperefresh:${versions.accompanist}"
 
-    const val palette =
-        "androidx.palette:palette-ktx:1.0.0"
-
     const val coroutines =
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
 
     const val koinAndroid = "io.insert-koin:koin-android:${versions.koinAndroid}"
-
-    const val daggerHilt = "com.google.dagger:hilt-android:${versions.dagger}"
-    const val daggerHiltCompose = "androidx.hilt:hilt-navigation-compose:${versions.daggerExt}"
-    const val daggerHiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:${versions.dagger}"
-    const val daggerHiltCompiler = "com.google.dagger:hilt-compiler:${versions.daggerExt}"
-
-    const val daggerCompiler =
-        "com.google.dagger:dagger-compiler:${versions.dagger}"
+    const val koinAndroidCompose = "io.insert-koin:koin-androidx-compose:${versions.koinAndroidCompose}"
 
     val retrofit = listOf(
         "com.squareup.retrofit2:retrofit:${versions.retrofit}",

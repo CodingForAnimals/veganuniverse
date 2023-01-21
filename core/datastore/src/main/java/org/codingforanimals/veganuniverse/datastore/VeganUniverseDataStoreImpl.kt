@@ -4,13 +4,12 @@ import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
-class VeganUniverseDataStoreImpl @Inject constructor(
+class VeganUniverseDataStoreImpl(
     private val dataStore: DataStore<Preferences>,
-): VeganUniverseDataStore {
+) : VeganUniverseDataStore {
 
     private val tag = VeganUniverseDataStoreImpl::class.simpleName
 
