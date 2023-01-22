@@ -1,7 +1,6 @@
 package org.codingforanimals.map.presentation
 
 import android.Manifest
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -25,9 +24,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,19 +37,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_GREEN
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
-import kotlinx.coroutines.launch
-import org.codingforanimals.map.presentation.MapViewModel.MapUiState
+import com.google.maps.android.compose.rememberCameraPositionState
+import org.codingforanimals.map.presentation.mockdata.Place
+import org.codingforanimals.map.presentation.mockdata.places
 import org.koin.androidx.compose.koinViewModel
-
-private const val TAG = "MapRoute.kt"
 
 @Composable
 internal fun MapRoute(
@@ -57,78 +59,92 @@ internal fun MapRoute(
     snackbarHostState: SnackbarHostState,
     viewModel: MapViewModel = koinViewModel(),
 ) {
-    val uiState: MapUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val mapUiState by viewModel.mapUiState.collectAsState()
+
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(mapUiState.initialCameraPosition, 4f)
+    }
+
+    if (mapUiState.isUserLocationEnabled) {
+        LaunchedEffect(Unit) {
+            cameraPositionState.animate(
+                durationMs = 3_000,
+                update = CameraUpdateFactory.newCameraPosition(
+                    CameraPosition(mapUiState.initialCameraPosition, 16f, 0f, 0f)
+                ),
+            )
+        }
+    } else {
+        RequestLocationPermission(
+            snackbarHostState = snackbarHostState,
+            onLocationPermissionGranted = viewModel::fetchUserLocation,
+        )
+    }
 
     MapScreen(
-        uiState = uiState,
+        isMyLocationEnabled = mapUiState.isUserLocationEnabled,
+        cameraPositionState = cameraPositionState,
         navigateToSite = navigateToSite,
+    )
+}
+
+@Composable
+private fun RequestLocationPermission(
+    snackbarHostState: SnackbarHostState,
+    onLocationPermissionGranted: () -> Unit,
+) {
+    val context = LocalContext.current
+    PermissionDialog(
+        context = context,
+        permission = Manifest.permission.ACCESS_FINE_LOCATION,
+        permissionRationale = "Con tu ubicación podemos personalizar la sección Lugares especialmente para vos",
         snackbarHostState = snackbarHostState,
+        permissionAction = {
+            when (it) {
+                PermissionAction.Denied -> Unit
+                PermissionAction.Granted -> onLocationPermissionGranted()
+            }
+        },
     )
 }
 
 @Composable
 private fun MapScreen(
-    uiState: MapUiState,
-    snackbarHostState: SnackbarHostState,
+    isMyLocationEnabled: Boolean,
+    cameraPositionState: CameraPositionState,
     navigateToSite: () -> Unit,
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     Box {
-        Map(navigateToSite)
-
-        PermissionDialog(
-            context = context,
-            permission = Manifest.permission.ACCESS_FINE_LOCATION,
-            permissionRationale = "permition rationale!!!",
-            snackbarHostState = snackbarHostState,
-            permissionAction = {
-                when (it) {
-                    PermissionAction.Denied -> {
-                        Log.e(TAG, "PERMISSION DENIED")
-                    }
-                    PermissionAction.Granted -> {
-                        Log.e(TAG, "PERMISSION GRANTED")
-                        scope.launch {
-                            snackbarHostState.showSnackbar("Location granted!!")
-                        }
-                    }
-                }
-            },
-        )
+        Map(isMyLocationEnabled, cameraPositionState, navigateToSite)
     }
 }
 
 @Composable
 private fun BoxScope.Map(
+    isMyLocationEnabled: Boolean,
+    cameraPositionState: CameraPositionState,
     navigateToSite: () -> Unit,
 ) {
-    var isCardVisible by rememberSaveable { mutableStateOf(false) }
-    var title by rememberSaveable { mutableStateOf("") }
+    var selectedPlace by rememberSaveable { mutableStateOf<Place?>(null) }
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
+        cameraPositionState = cameraPositionState,
+        properties = MapProperties(isMyLocationEnabled = isMyLocationEnabled),
         uiSettings = MapUiSettings(
             mapToolbarEnabled = false,
             zoomControlsEnabled = false,
         ),
-        onMapClick = { isCardVisible = false }
+        onMapClick = { selectedPlace = null }
     ) {
-        Marker(
-            state = MarkerState(position = LatLng(-50.0, -50.0)),
-            title = "Restaurante Pepe Argento",
-            icon = if (isCardVisible) BitmapDescriptorFactory.defaultMarker(
-                BitmapDescriptorFactory.HUE_GREEN
-            ) else BitmapDescriptorFactory.defaultMarker(),
-            onClick = {
-                isCardVisible = true
-                title = it.title ?: "Default"
-                false
-            },
-            onInfoWindowClose = {
-                isCardVisible = false
-            },
-        )
+        Places { selectedPlace = it }
+
+        selectedPlace?.let { place ->
+            Marker(
+                state = MarkerState(position = place.latLng),
+                icon = BitmapDescriptorFactory.defaultMarker(HUE_GREEN),
+            )
+        }
     }
 
     AnimatedVisibility(
@@ -136,7 +152,7 @@ private fun BoxScope.Map(
             .fillMaxWidth()
             .fillMaxHeight(0.4f)
             .align(Alignment.BottomCenter),
-        visible = isCardVisible,
+        visible = selectedPlace != null,
         enter = slideInVertically { it },
         exit = slideOutVertically { it }
     ) {
@@ -150,7 +166,7 @@ private fun BoxScope.Map(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Text(text = title)
+                Text(text = selectedPlace?.name ?: "")
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     AsyncImage(
                         modifier = Modifier
@@ -184,5 +200,18 @@ private fun BoxScope.Map(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Places(
+    onClick: (Place) -> Unit,
+) {
+    places.forEach { place ->
+        println("pepe argento NORMAL $place")
+        Marker(
+            state = MarkerState(position = place.latLng),
+            onClick = { onClick(place); false }
+        )
     }
 }

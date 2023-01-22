@@ -1,29 +1,40 @@
 package org.codingforanimals.map.presentation
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import org.codingforanimals.map.presentation.MapViewModel.MapUiState.Loading
-import org.codingforanimals.map.presentation.MapViewModel.MapUiState.Success
-import org.codingforanimals.veganuniverse.common.permissions.PermissionsManager
-import org.codingforanimals.veganuniverse.common.permissions.VeganUniversePermissions
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+
+private val argentinaLatLtn = LatLng(-34.603722, -58.381592)
 
 class MapViewModel(
-    permissionsManager: PermissionsManager,
+    context: Context
 ) : ViewModel() {
 
-    val uiState = permissionsManager.denied.map {
-        Success(!it.contains(VeganUniversePermissions.USER_LOCATION))
-    }.stateIn(
-        scope = viewModelScope,
-        initialValue = Loading,
-        started = SharingStarted.WhileSubscribed(5_000)
-    )
+    private val mapUiStateEmitter = MutableStateFlow(MapUiState())
+    val mapUiState: StateFlow<MapUiState> = mapUiStateEmitter
 
-    sealed interface MapUiState {
-        object Loading : MapUiState
-        data class Success(val locationPermissionDenied: Boolean) : MapUiState
+    private val fusedLocationClient: FusedLocationProviderClient by lazy {
+        LocationServices.getFusedLocationProviderClient(context)
     }
+
+    fun fetchUserLocation() {
+        viewModelScope.launch {
+            fusedLocationClient.locationFlow().collect { location ->
+                val latLng = LatLng(location.latitude, location.longitude)
+                mapUiStateEmitter.emit(MapUiState(true, latLng))
+            }
+        }
+    }
+
+    data class MapUiState(
+        val isUserLocationEnabled: Boolean = false,
+        val initialCameraPosition: LatLng = argentinaLatLtn,
+    )
 }

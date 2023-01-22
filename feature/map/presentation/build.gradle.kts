@@ -12,6 +12,7 @@ android {
 dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
+    implementation(libs.android)
     implementation(libs.compose)
     debugImplementation(libs.composeDebug)
 
