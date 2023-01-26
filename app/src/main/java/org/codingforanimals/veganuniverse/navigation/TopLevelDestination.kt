@@ -17,11 +17,11 @@ enum class TopLevelDestination(
         iconTextId = R.string.nav_label_community,
         titleTextId = R.string.app_name,
     ),
-    MAP(
-        selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Map),
-        unselectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Map),
-        iconTextId = R.string.nav_label_map,
-        titleTextId = R.string.nav_label_map,
+    PLACES(
+        selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Places),
+        unselectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Places),
+        iconTextId = R.string.nav_label_places,
+        titleTextId = R.string.nav_label_places,
     ),
     RECIPES(
         selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Recipes),

@@ -37,8 +37,9 @@ dependencies {
     implementation(project(":feature:post:presentation"))
     implementation(project(":feature:map:presentation"))
     implementation(project(":feature:site:presentation"))
-    implementation(libs.compose)
-    debugImplementation(libs.composeDebug)
+    implementation(project(":feature:places:presentation"))
+
+    implementation("com.google.maps.android:maps-compose:2.8.0")
 
     implementation(libs.koinAndroid)
 

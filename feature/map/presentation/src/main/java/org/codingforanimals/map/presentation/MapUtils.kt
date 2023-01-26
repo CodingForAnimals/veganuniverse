@@ -21,10 +21,20 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
+private val argentinaLatLtn = LatLng(-34.603722, -58.381592)
 private const val TAG = "MapUtils"
+
+@Composable
+fun rememberCameraPositionState(defaultLocation: LatLng = argentinaLatLtn) =
+    rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(defaultLocation, 4f)
+    }
 
 @SuppressLint("MissingPermission")
 fun FusedLocationProviderClient.locationFlow() = callbackFlow {

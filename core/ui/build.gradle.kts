@@ -10,9 +10,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.compose)
-    debugImplementation(libs.composeDebug)
-
     implementation(libs.permissionsCompose)
 
     testImplementation("junit:junit:4.13.2")

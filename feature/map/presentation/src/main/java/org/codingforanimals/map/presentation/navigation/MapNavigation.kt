@@ -1,10 +1,14 @@
 package org.codingforanimals.map.presentation.navigation
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import org.codingforanimals.map.presentation.MapRoute
+import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.rememberCameraPositionState
+import org.codingforanimals.map.presentation.MapScreen
 import org.codingforanimals.map.presentation.di.injectMapModules
 
 const val mapNavigationRoute = "map_route"
@@ -20,9 +24,9 @@ fun NavGraphBuilder.mapGraph(
     composable(
         route = mapNavigationRoute
     ) {
-        MapRoute(
+        MapScreen(
             navigateToSite = navigateToSite,
-            snackbarHostState = snackbarHostState
+            snackbarHostState = snackbarHostState,
         )
     }
     nestedGraphs()

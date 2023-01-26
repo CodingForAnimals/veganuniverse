@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.google.maps.android.compose.rememberCameraPositionState
 import org.codingforanimals.veganuniverse.app.R
 import org.codingforanimals.veganuniverse.core.ui.components.BottomNavBar
 import org.codingforanimals.veganuniverse.core.ui.components.BottomNavBarItem
@@ -49,7 +50,7 @@ internal fun VeganUniverseApp(
 ) {
     VeganUniverseBackground {
 
-        var showOnboarding by remember { mutableStateOf(true) }
+        var showOnboarding by remember { mutableStateOf(false) }
         if (showOnboarding) {
             OnboardingScreen { showOnboarding = false }
         } else {
@@ -87,6 +88,7 @@ internal fun VeganUniverseApp(
                         VeganUniverseAppNavHost(
                             navController = appState.navController,
                             snackbarHostState = snackbarHostState,
+                            cameraPositionState = appState.cameraPositionState,
                         )
                     }
                 }
@@ -141,10 +143,10 @@ private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLev
 fun DefaultPreview() {
     val appState = rememberVeganUniverseAppState()
     VeganUniverseTheme {
-        val snackbarHostState = SnackbarHostState()
         VeganUniverseAppNavHost(
             navController = appState.navController,
-            snackbarHostState = snackbarHostState,
+            snackbarHostState = SnackbarHostState(),
+            cameraPositionState = rememberCameraPositionState()
         )
     }
 }

@@ -4,7 +4,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.google.maps.android.compose.CameraPositionState
 import org.codingforanimals.map.presentation.navigation.mapGraph
+import org.codingforanimals.map.presentation.navigation.navigateToMap
+import org.codingforanimals.places.presentation.navigation.placesGraph
 import org.codingforanimals.post.presentation.navigation.navigateToPost
 import org.codingforanimals.post.presentation.navigation.postGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.communityGraph
@@ -19,6 +22,7 @@ import org.codingforanimals.veganuniverse.site.presentation.navigation.siteGraph
 internal fun VeganUniverseAppNavHost(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
+    cameraPositionState: CameraPositionState,
 ) {
     NavHost(
         navController = navController,
@@ -31,6 +35,10 @@ internal fun VeganUniverseAppNavHost(
                 featuredTopicGraph()
                 postGraph()
             }
+        )
+        placesGraph(
+            cameraPositionState = cameraPositionState,
+            navigateToMap = navController::navigateToMap,
         )
         mapGraph(
             navigateToSite = navController::navigateToSite,
