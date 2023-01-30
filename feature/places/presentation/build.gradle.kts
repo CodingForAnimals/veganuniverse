@@ -10,13 +10,17 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:common"))
     implementation(project(":core:ui"))
 
     //testing compose google maps api
     implementation("com.google.maps.android:maps-compose:2.8.0")
+    implementation("com.google.maps.android:android-maps-utils:2.3.0")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
+    implementation(libs.koinAndroid)
+    implementation(libs.koinAndroidCompose)
     
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -24,10 +24,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,9 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
@@ -47,9 +43,6 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.map.presentation.mockdata.Site
 import org.codingforanimals.map.presentation.mockdata.sites
 import org.koin.androidx.compose.koinViewModel
@@ -57,16 +50,11 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun MapScreen(
     snackbarHostState: SnackbarHostState,
+    cameraPositionState: CameraPositionState,
     navigateToSite: () -> Unit,
     viewModel: MapViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val cameraPositionState = rememberCameraPositionState()
-
-    HandleSideEffects(
-        effectsFlow = viewModel.sideEffect,
-        cameraPositionState = cameraPositionState,
-    )
 
     RequestLocationPermission(
         locationGranted = uiState.locationGranted,
@@ -117,7 +105,10 @@ private fun Map(
     content: @Composable @GoogleMapComposable (() -> Unit)?,
 ) {
     val properties = MapProperties(isMyLocationEnabled = locationGranted)
-    val uiSettings = MapUiSettings(zoomControlsEnabled = zoomControlsEnabled, mapToolbarEnabled = mapToolbarEnabled)
+    val uiSettings = MapUiSettings(
+        zoomControlsEnabled = zoomControlsEnabled,
+        mapToolbarEnabled = mapToolbarEnabled
+    )
     GoogleMap(
         modifier = modifier,
         properties = properties,
@@ -222,7 +213,6 @@ private fun RequestLocationPermission(
     onLocationPermissionGranted: () -> Unit,
 ) {
     if (locationGranted) return
-    println("recomposition request location permission")
     val context = LocalContext.current
     PermissionDialog(
         context = context,
@@ -237,194 +227,3 @@ private fun RequestLocationPermission(
         },
     )
 }
-
-@Composable
-private fun HandleSideEffects(
-    effectsFlow: Flow<MapViewModel.SideEffect>,
-    cameraPositionState: CameraPositionState,
-) {
-    LaunchedEffect(Unit) {
-        effectsFlow.onEach { effect ->
-            when (effect) {
-                is MapViewModel.SideEffect.UserLocationZoom -> {
-                    cameraPositionState.animate(
-                        durationMs = 1_000,
-                        update = CameraUpdateFactory.newCameraPosition(
-                            CameraPosition(effect.latLng, 16f, 0f, 0f)
-                        ),
-                    )
-                }
-            }
-        }.collect()
-    }
-}
-
-
-//@Composable
-//internal fun MapRoute(
-//    snackbarHostState: SnackbarHostState,
-//    viewModel: MapViewModel = koinViewModel(),
-//) {
-//
-//    val cameraPositionState = rememberCameraPositionState {
-//        position = CameraPosition.fromLatLngZoom(viewModel.defaultCameraPosition, 4f)
-//    }
-//
-//    val state = viewModel.uiState.value
-//    LaunchedEffect(Unit) {
-//        viewModel.effect.onEach { effect ->
-//            when (effect) {
-//                is MapUiContract.Effect.LocateUserInMap -> {
-//                    cameraPositionState.animate(
-//                        durationMs = 1_000,
-//                        update = CameraUpdateFactory.newCameraPosition(
-//                            CameraPosition(effect.userCurrentLocation, 16f, 0f, 0f)
-//                        ),
-//                    )
-//                }
-//            }
-//        }.collect()
-//    }
-//
-//    println("pepe argento locationGranted ${state.locationGranted}")
-//    if (!state.locationGranted) {
-//        RequestLocationPermission(
-//            snackbarHostState = snackbarHostState,
-//            onLocationPermissionGranted = {
-//                println("pepe argento send location granted event")
-//                viewModel.setEvent(MapUiContract.Event.LocationGranted)
-//            },
-//        )
-//    }
-//
-//    MapScreen(
-//        isLocationGranted = state.locationGranted,
-//        cameraPositionState = cameraPositionState,
-//        onEvent = { event -> viewModel.setEvent(event) },
-//        showCard = state.showCard,
-//        selectedSite = state.selectedSite,
-//    )
-//
-//    AnimatedVisibility(
-//        visible = state.showBriefing,
-//        enter = slideInVertically { it },
-//        exit = slideOutVertically { it },
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(Color.White),
-//        ) {
-//            Text(text = "This is site ${state.selectedSite?.name}")
-//        }
-//    }
-//
-//    BackHandler(state.showBriefing) {
-//        viewModel.setEvent(MapUiContract.Event.onBriefingClose)
-//    }
-//}
-//
-//
-//@Composable
-//private fun MapScreen(
-//    isLocationGranted: Boolean,
-//    cameraPositionState: CameraPositionState,
-//    onEvent: (MapUiContract.Event) -> Unit,
-//    showCard: Boolean,
-//    selectedSite: Site?,
-//) {
-//    Box {
-//        Map(
-//            isLocationGranted = isLocationGranted,
-//            cameraPositionState = cameraPositionState,
-//            onEvent = onEvent,
-//            showCard = showCard,
-//            selectedSite = selectedSite,
-//        )
-//    }
-//}
-//
-//@Composable
-//private fun BoxScope.Map(
-//    isLocationGranted: Boolean,
-//    cameraPositionState: CameraPositionState,
-//    showCard: Boolean,
-//    selectedSite: Site?,
-//    onEvent: (MapUiContract.Event) -> Unit,
-//) {
-//    GoogleMap(
-//        modifier = Modifier.fillMaxSize(),
-//        cameraPositionState = cameraPositionState,
-//        properties = MapProperties(isMyLocationEnabled = isLocationGranted),
-//        uiSettings = MapUiSettings(
-//            mapToolbarEnabled = false,
-//            zoomControlsEnabled = false,
-//        ),
-//        onMapClick = { onEvent(MapUiContract.Event.onCardClose) }
-//    ) {
-//        Places { site -> onEvent(MapUiContract.Event.OnMarkerClick(site)) }
-//
-//        if (showCard && selectedSite != null) {
-//            Marker(
-//                state = MarkerState(selectedSite.latLng),
-//                icon = BitmapDescriptorFactory.defaultMarker(HUE_GREEN),
-//            )
-//        }
-//    }
-//
-//    AnimatedVisibility(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .fillMaxHeight(0.4f)
-//            .align(Alignment.BottomCenter),
-//        visible = showCard,
-//        enter = slideInVertically { it },
-//        exit = slideOutVertically { it }
-//    ) {
-//        ElevatedCard(
-//            modifier = Modifier
-//                .padding(18.dp)
-//                .clickable { onEvent(MapUiContract.Event.OnCardClick) },
-//            colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
-//        ) {
-//            Column(
-//                modifier = Modifier.padding(20.dp),
-//                verticalArrangement = Arrangement.spacedBy(8.dp),
-//            ) {
-//                Text(text = selectedSite?.name ?: "")
-//                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-//                    AsyncImage(
-//                        modifier = Modifier
-//                            .weight(1f)
-//                            .fillMaxSize()
-//                            .clip(RoundedCornerShape(8.dp)),
-//                        contentScale = ContentScale.Crop,
-//                        model = R.drawable.vegan_restaurant,
-//                        contentDescription = "",
-//                    )
-//                    Column(modifier = Modifier.weight(1f)) {
-//                        Text(text = "Martínez 5434")
-//
-//                        Row {
-//                            repeat(3) {
-//                                Icon(
-//                                    imageVector = Icons.Rounded.Star,
-//                                    contentDescription = "",
-//                                    tint = MaterialTheme.colorScheme.primary,
-//                                )
-//                            }
-//                            repeat(2) {
-//                                Icon(
-//                                    imageVector = Icons.Rounded.Star,
-//                                    contentDescription = "",
-//                                    tint = Color.LightGray,
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-//

@@ -11,9 +11,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.CoroutineScope
-import org.codingforanimals.map.presentation.MapFloatingActionButton
-import org.codingforanimals.map.presentation.navigation.mapNavigationRoute
-import org.codingforanimals.map.presentation.navigation.navigateToMap
 import org.codingforanimals.places.presentation.navigation.navigateToPlaces
 import org.codingforanimals.places.presentation.navigation.placesNavigationRoute
 import org.codingforanimals.veganuniverse.community.presentation.navigation.communityNavigationRoute

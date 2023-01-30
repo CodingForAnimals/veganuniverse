@@ -37,6 +37,7 @@ internal fun VeganUniverseAppNavHost(
             }
         )
         placesGraph(
+            snackbarHostState = snackbarHostState,
             cameraPositionState = cameraPositionState,
             navigateToMap = navController::navigateToMap,
         )

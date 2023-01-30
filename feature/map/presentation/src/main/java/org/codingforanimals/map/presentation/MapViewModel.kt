@@ -1,25 +1,16 @@
 package org.codingforanimals.map.presentation
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.codingforanimals.map.presentation.mockdata.Site
 
 
-class MapViewModel(
-    context: Context
-) : ViewModel() {
+class MapViewModel : ViewModel() {
 
     private val _sideEffect = Channel<SideEffect>()
     val sideEffect: Flow<SideEffect> = _sideEffect.receiveAsFlow()
@@ -32,7 +23,6 @@ class MapViewModel(
             Action.OnLocationGranted -> {
                 val newState = uiState.value.copy(locationGranted = true)
                 _uiState.value = newState
-                fetchUserLocation()
             }
             is Action.OnMarkerClicked -> {
                 val newState = uiState.value.copy(selectedSite = action.site, showCard = true)
@@ -45,21 +35,6 @@ class MapViewModel(
         }
     }
 
-    private val fusedLocationClient: FusedLocationProviderClient by lazy {
-        LocationServices.getFusedLocationProviderClient(context)
-    }
-
-    private fun fetchUserLocation() {
-        viewModelScope.launch(Dispatchers.IO) {
-            fusedLocationClient.locationFlow().collect { location ->
-                val latLng = LatLng(location.latitude, location.longitude)
-                withContext(Dispatchers.Main) {
-                    _sideEffect.send(SideEffect.UserLocationZoom(latLng))
-                }
-            }
-        }
-    }
-
     data class UiState(
         val locationGranted: Boolean = false,
         val selectedSite: Site? = null,
@@ -67,13 +42,11 @@ class MapViewModel(
     )
 
     sealed interface Action {
-        object OnLocationGranted: Action
-        data class OnMarkerClicked(val site: Site): Action
-        object OnCardClose: Action
+        object OnLocationGranted : Action
+        data class OnMarkerClicked(val site: Site) : Action
+        object OnCardClose : Action
     }
 
-    sealed interface SideEffect {
-        data class UserLocationZoom(val latLng: LatLng): SideEffect
-    }
+    sealed interface SideEffect
 
 }
