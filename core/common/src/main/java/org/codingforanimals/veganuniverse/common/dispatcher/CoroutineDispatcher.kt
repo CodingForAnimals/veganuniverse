@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainCoroutineDispatcher
 import org.koin.dsl.module
 
-private class CoroutineDispatcherProviderImpl: CoroutineDispatcherProvider {
+private class CoroutineDispatcherProviderImpl : CoroutineDispatcherProvider {
     override fun main() = Dispatchers.Main
 
     override fun default() = Dispatchers.Default

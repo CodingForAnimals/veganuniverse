@@ -30,6 +30,7 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
+    implementation(project(":core:common"))
     implementation(project(":feature:onboarding:presentation"))
     implementation(project(":feature:community:presentation"))
     implementation(project(":feature:featuredtopic:presentation"))

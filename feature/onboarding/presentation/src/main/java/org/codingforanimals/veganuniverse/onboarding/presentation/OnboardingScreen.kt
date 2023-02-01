@@ -2,10 +2,13 @@
 
 package org.codingforanimals.veganuniverse.onboarding.presentation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,11 +48,41 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingViewModel.Action.OnUserDismissOnboardingScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun OnboardingScreen(
+    showOnboarding: Boolean,
     onDismiss: () -> Unit,
+) {
+    AnimatedVisibility(visible = showOnboarding, enter = fadeIn(), exit = fadeOut()) {
+        OnboardingScreen(onDismiss)
+    }
+}
+
+@Composable
+private fun OnboardingScreen(
+    onDismiss: () -> Unit,
+    viewModel: OnboardingViewModel = koinViewModel(),
+) {
+    HandleSideEffects(
+        effectsFlow = viewModel.sideEffect,
+        onDismiss = onDismiss,
+    )
+
+    OnboardingScreen(
+        onAction = viewModel::onAction,
+    )
+}
+
+@Composable
+private fun OnboardingScreen(
+    onAction: (OnboardingViewModel.Action) -> Unit,
 ) {
     BackgroundImage()
     Box {
@@ -56,13 +90,17 @@ fun OnboardingScreen(
 
         val pagerState = rememberPagerState()
         ScrollableContent(onboardingInfo, pagerState)
-        NavigationButtons(onboardingInfo, pagerState, onDismiss)
+        NavigationButtons(
+            info = onboardingInfo,
+            pagerState = pagerState,
+            onDismiss = { onAction(OnUserDismissOnboardingScreen) })
     }
 }
 
 @Composable
 private fun BackgroundImage() {
     Image(
+        modifier = Modifier.fillMaxSize(),
         painter = painterResource(R.drawable.onboarding_background),
         contentScale = ContentScale.FillBounds,
         contentDescription = "onboarding background"
@@ -216,4 +254,18 @@ private fun Indicator(isSelected: Boolean) {
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.primary)
     )
+}
+
+@Composable
+private fun HandleSideEffects(
+    effectsFlow: Flow<OnboardingViewModel.SideEffect>,
+    onDismiss: () -> Unit,
+) {
+    LaunchedEffect(Unit) {
+        effectsFlow.onEach { effect ->
+            when (effect) {
+                OnboardingViewModel.SideEffect.DismissOnboardingScreen -> onDismiss()
+            }
+        }.collect()
+    }
 }
