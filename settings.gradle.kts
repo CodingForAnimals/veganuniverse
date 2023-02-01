@@ -14,16 +14,29 @@ dependencyResolutionManagement {
 }
 rootProject.name = "veganuniverse"
 include(":app")
+
+// core
+include(":core:datastore")
+include(":core:common")
 include(":core:ui")
+
+// features
 include(":feature:community:presentation")
 include(":feature:community:model")
 include(":feature:community:data")
+
 include(":feature:featuredtopic:presentation")
+
 include(":feature:onboarding:presentation")
+
 include(":feature:recipes:presentation")
+
 include(":feature:post:presentation")
+
 include(":feature:map:presentation")
+
 include(":feature:site:presentation")
-include(":core:datastore")
-include(":core:common")
+
 include(":feature:places:presentation")
+
+include(":feature:registration:presentation")
