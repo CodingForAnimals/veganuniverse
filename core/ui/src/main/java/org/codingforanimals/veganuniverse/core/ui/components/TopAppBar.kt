@@ -3,6 +3,7 @@
 package org.codingforanimals.veganuniverse.core.ui.components
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -18,18 +19,21 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun VeganUniverseTopAppBar(
     modifier: Modifier = Modifier,
+    visible: Boolean,
     @StringRes titleRes: Int,
     actionIcon: ImageVector,
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
 ) {
-    CenterAlignedTopAppBar(
-        modifier = modifier,
-        title = { Text(stringResource(titleRes)) },
-        actions = {
-            IconButton(
-                onClick = {},
-                content = { Icon(imageVector = actionIcon, contentDescription = "") },
-            )
-        }
-    )
+    AnimatedVisibility(visible = visible) {
+        CenterAlignedTopAppBar(
+            modifier = modifier,
+            title = { Text(stringResource(titleRes)) },
+            actions = {
+                IconButton(
+                    onClick = {},
+                    content = { Icon(imageVector = actionIcon, contentDescription = "") },
+                )
+            }
+        )
+    }
 }

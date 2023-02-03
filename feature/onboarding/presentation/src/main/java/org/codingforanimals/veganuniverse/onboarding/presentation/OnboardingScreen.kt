@@ -2,13 +2,10 @@
 
 package org.codingforanimals.veganuniverse.onboarding.presentation
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -57,16 +54,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun OnboardingScreen(
-    showOnboarding: Boolean,
-    onDismiss: () -> Unit,
-) {
-    AnimatedVisibility(visible = showOnboarding, enter = fadeIn(), exit = fadeOut()) {
-        OnboardingScreen(onDismiss)
-    }
-}
-
-@Composable
-private fun OnboardingScreen(
     onDismiss: () -> Unit,
     viewModel: OnboardingViewModel = koinViewModel(),
 ) {

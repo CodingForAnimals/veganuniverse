@@ -10,8 +10,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:datastore"))
-    implementation(project(":core:common"))
+    implementation(project(":feature:onboarding:model"))
 
     implementation(libs.koinAndroid)
     implementation(libs.koinAndroidCompose)

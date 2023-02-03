@@ -40,3 +40,5 @@ include(":feature:site:presentation")
 include(":feature:places:presentation")
 
 include(":feature:registration:presentation")
+include(":feature:onboarding:data")
+include(":feature:onboarding:model")

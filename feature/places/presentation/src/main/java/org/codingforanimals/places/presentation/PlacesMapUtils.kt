@@ -40,9 +40,10 @@ fun FusedLocationProviderClient.locationFlow() = callbackFlow {
 }
 
 private fun createLocationRequest(): LocationRequest {
-    return LocationRequest.create().apply {
-        priority = Priority.PRIORITY_HIGH_ACCURACY
-    }
+    return LocationRequest
+        .Builder(Priority.PRIORITY_HIGH_ACCURACY, 20000L)
+        .build()
+
 }
 
 internal suspend fun animateToLocation(cameraPositionState: CameraPositionState, location: LatLng) {

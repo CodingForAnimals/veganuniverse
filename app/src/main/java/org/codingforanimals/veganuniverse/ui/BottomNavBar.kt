@@ -1,8 +1,6 @@
 package org.codingforanimals.veganuniverse.ui
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,16 +18,12 @@ import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 @Composable
 internal fun VeganUniverseBottomNavBar(
     modifier: Modifier = Modifier,
-    showNavBar: Boolean,
+    visible: Boolean,
     destinations: List<TopLevelDestination>,
     navigateToDestination: (TopLevelDestination) -> Unit,
     currentDestination: NavDestination?
 ) {
-    AnimatedVisibility(
-        visible = showNavBar,
-        enter = fadeIn(),
-        exit = fadeOut(),
-    ) {
+    AnimatedVisibility(visible = visible) {
         BottomNavBar(modifier = modifier) {
             destinations.forEach {
                 val isSelected = currentDestination.isTopLevelDestinationInHierarchy(it)

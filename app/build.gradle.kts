@@ -30,7 +30,6 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
-    implementation(project(":core:common"))
     implementation(project(":feature:onboarding:presentation"))
     implementation(project(":feature:community:presentation"))
     implementation(project(":feature:featuredtopic:presentation"))
@@ -40,8 +39,10 @@ dependencies {
     implementation(project(":feature:site:presentation"))
     implementation(project(":feature:places:presentation"))
 
-    implementation("com.google.maps.android:maps-compose:2.8.0")
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.maps.android:maps-compose:${versions.googleMapCompose}")
+    implementation("com.google.android.gms:play-services-maps:${versions.googleMapServices}")
+
+    implementation("androidx.core:core-splashscreen:${versions.splashScreen}")
 
     implementation(libs.koinAndroid)
 
