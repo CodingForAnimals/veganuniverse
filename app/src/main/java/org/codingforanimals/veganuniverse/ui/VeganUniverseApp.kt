@@ -20,17 +20,18 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.google.maps.android.compose.rememberCameraPositionState
 import org.codingforanimals.veganuniverse.app.R
+import org.codingforanimals.veganuniverse.app.SplashViewModel
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.icons.VeganUniverseIcons
-import org.codingforanimals.veganuniverse.ui.theme.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 
 @Composable
 internal fun VeganUniverseApp(
+    startDestination: Destination,
     appState: VeganUniverseAppState = rememberVeganUniverseAppState(),
+
 ) {
     VeganUniverseBackground {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -66,6 +67,7 @@ internal fun VeganUniverseApp(
                     )
 
                     VeganUniverseAppNavHost(
+                        startDestination = startDestination,
                         navController = appState.navController,
                         snackbarHostState = snackbarHostState,
                         cameraPositionState = appState.cameraPositionState,
@@ -75,17 +77,3 @@ internal fun VeganUniverseApp(
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    val appState = rememberVeganUniverseAppState()
-    VeganUniverseTheme {
-        VeganUniverseAppNavHost(
-            navController = appState.navController,
-            snackbarHostState = SnackbarHostState(),
-            cameraPositionState = rememberCameraPositionState(),
-        )
-    }
-}
-

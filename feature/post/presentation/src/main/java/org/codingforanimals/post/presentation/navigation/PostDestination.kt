@@ -7,23 +7,25 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.codingforanimals.post.presentation.PostScreen
+import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 
-private const val postIdArg = "post_id_arg"
-private const val postNavigationRoute = "post_route"
+object PostDestination : Destination(route = "post_route") {
+    const val postIdArgument = "post_id_arg"
+}
 
 fun NavController.navigateToPost(postId: String) {
     val encodedId = Uri.encode(postId)
-    navigate("$postNavigationRoute/$encodedId")
+    navigate("${PostDestination.route}/$encodedId")
 }
 
 fun NavGraphBuilder.postGraph() {
     composable(
-        route = "$postNavigationRoute/{$postIdArg}",
+        route = "${PostDestination.route}/{${PostDestination.postIdArgument}}",
         arguments = listOf(
-            navArgument(postIdArg) { type = NavType.StringType }
+            navArgument(PostDestination.postIdArgument) { type = NavType.StringType }
         ),
         content = {
-            val arg = it.arguments?.getString(postIdArg)
+            val arg = it.arguments?.getString(PostDestination.postIdArgument)
             PostScreen(arg)
         }
     )

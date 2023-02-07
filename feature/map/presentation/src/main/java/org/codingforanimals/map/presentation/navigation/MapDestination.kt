@@ -12,14 +12,15 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import org.codingforanimals.map.presentation.MapScreen
 import org.codingforanimals.map.presentation.argentinaLatLtn
 import org.codingforanimals.map.presentation.di.injectMapModules
+import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 
-const val mapNavigationRoute = "map_route"
+object MapDestination : Destination(route = "map_route")
 private const val latitudeArg = "latitude_arg"
 private const val longitudeArg = "longitude_arg"
 private const val zoomArg = "zoom_arg"
 
 fun NavController.navigateToMap(latitude: Double, longitude: Double, zoom: Float) {
-    navigate("$mapNavigationRoute/$latitude/$longitude/$zoom")
+    navigate("${MapDestination.route}/$latitude/$longitude/$zoom")
 }
 
 fun NavGraphBuilder.mapGraph(
@@ -29,7 +30,7 @@ fun NavGraphBuilder.mapGraph(
 ) {
     injectMapModules()
     composable(
-        route = "$mapNavigationRoute/{$latitudeArg}/{$longitudeArg}/{$zoomArg}",
+        route = "${MapDestination.route}/{$latitudeArg}/{$longitudeArg}/{$zoomArg}",
         arguments = listOf(
             navArgument(latitudeArg) { type = NavType.StringType },
             navArgument(longitudeArg) { type = NavType.StringType },

@@ -29,7 +29,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:ui"))
     implementation(project(":feature:onboarding:presentation"))
     implementation(project(":feature:community:presentation"))
     implementation(project(":feature:featuredtopic:presentation"))
@@ -38,6 +37,7 @@ dependencies {
     implementation(project(":feature:map:presentation"))
     implementation(project(":feature:site:presentation"))
     implementation(project(":feature:places:presentation"))
+    implementation(project(":feature:registration:presentation"))
 
     implementation("com.google.maps.android:maps-compose:${versions.googleMapCompose}")
     implementation("com.google.android.gms:play-services-maps:${versions.googleMapServices}")

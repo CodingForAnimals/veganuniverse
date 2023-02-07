@@ -11,7 +11,6 @@ android {
 
 dependencies {
     implementation(project(":core:common"))
-    implementation(project(":core:ui"))
 
     //testing compose google maps api
     implementation("com.google.maps.android:maps-compose:2.8.0")

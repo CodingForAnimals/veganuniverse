@@ -1,20 +1,17 @@
 package org.codingforanimals.places.presentation.navigation
 
-import android.os.Bundle
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import org.codingforanimals.places.presentation.PlacesScreen
 import org.codingforanimals.places.presentation.di.injectPlacesModule
-import org.json.JSONStringer
+import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 
-const val placesNavigationRoute = "places_route"
+object PlacesDestination : Destination(route = "places_route")
 
-fun NavController.navigateToPlaces() = navigate(placesNavigationRoute)
+fun NavController.navigateToPlaces() = navigate(PlacesDestination.route)
 
 fun NavGraphBuilder.placesGraph(
     snackbarHostState: SnackbarHostState,
@@ -23,7 +20,7 @@ fun NavGraphBuilder.placesGraph(
 ) {
     injectPlacesModule()
     composable(
-        route = placesNavigationRoute,
+        route = PlacesDestination.route,
         content = {
             PlacesScreen(
                 snackbarHostState = snackbarHostState,

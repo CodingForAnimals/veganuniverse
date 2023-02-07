@@ -11,13 +11,13 @@ import androidx.navigation.compose.rememberNavController
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.CoroutineScope
+import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.places.presentation.navigation.navigateToPlaces
-import org.codingforanimals.places.presentation.navigation.placesNavigationRoute
-import org.codingforanimals.veganuniverse.community.presentation.navigation.communityNavigationRoute
+import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.navigateToCommunity
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
+import org.codingforanimals.veganuniverse.presentation.navigation.RecipesDestination
 import org.codingforanimals.veganuniverse.presentation.navigation.navigateToRecipes
-import org.codingforanimals.veganuniverse.presentation.navigation.recipesNavigationRoute
 
 @Composable
 internal fun rememberVeganUniverseAppState(
@@ -26,7 +26,11 @@ internal fun rememberVeganUniverseAppState(
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
 ): VeganUniverseAppState {
     return remember(coroutineScope, navController, cameraPositionState) {
-        VeganUniverseAppState(navController, coroutineScope, cameraPositionState)
+        VeganUniverseAppState(
+            navController,
+            coroutineScope,
+            cameraPositionState
+        )
     }
 }
 
@@ -42,9 +46,9 @@ class VeganUniverseAppState(
 
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
-            communityNavigationRoute -> TopLevelDestination.COMMUNITY
-            placesNavigationRoute -> TopLevelDestination.PLACES
-            recipesNavigationRoute -> TopLevelDestination.RECIPES
+            CommunityDestination.route -> TopLevelDestination.COMMUNITY
+            PlacesDestination.route -> TopLevelDestination.PLACES
+            RecipesDestination.route -> TopLevelDestination.RECIPES
             else -> null
         }
 

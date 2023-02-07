@@ -1,4 +1,4 @@
-package org.codingforanimals.onboarding.data
+package org.codingforanimals.veganuniverse.onboarding.data
 
 import org.codingforanimals.veganuniverse.datastore.VeganUniverseDataStore
 

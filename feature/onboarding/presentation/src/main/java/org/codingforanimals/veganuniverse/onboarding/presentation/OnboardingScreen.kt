@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingViewModel.Action.OnUserDismissOnboardingScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -88,7 +89,7 @@ private fun OnboardingScreen(
 private fun BackgroundImage() {
     Image(
         modifier = Modifier.fillMaxSize(),
-        painter = painterResource(R.drawable.onboarding_background),
+        painter = painterResource(R.drawable.universe_background),
         contentScale = ContentScale.FillBounds,
         contentDescription = "onboarding background"
     )

@@ -11,10 +11,13 @@ import org.codingforanimals.places.presentation.navigation.placesGraph
 import org.codingforanimals.post.presentation.navigation.navigateToPost
 import org.codingforanimals.post.presentation.navigation.postGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.communityGraph
-import org.codingforanimals.veganuniverse.community.presentation.navigation.communityNavigationRoute
+import org.codingforanimals.veganuniverse.community.presentation.navigation.navigateToCommunity
+import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.featuredTopicGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigateToFeaturedTopic
 import org.codingforanimals.veganuniverse.presentation.navigation.recipesGraph
+import org.codingforanimals.veganuniverse.registration.presentation.navigation.WelcomeDestination
+import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
 import org.codingforanimals.veganuniverse.site.presentation.navigation.navigateToSite
 import org.codingforanimals.veganuniverse.site.presentation.navigation.siteGraph
 
@@ -23,11 +26,18 @@ internal fun VeganUniverseAppNavHost(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     cameraPositionState: CameraPositionState,
+    startDestination: Destination,
 ) {
     NavHost(
         navController = navController,
-        startDestination = communityNavigationRoute,
+        startDestination = startDestination.route,
     ) {
+        registrationGraph(onLoginSuccess = { previousDestination ->
+            navController.navigateToCommunity {
+                popUpTo(previousDestination.route) { inclusive = true }
+            }
+        })
+
         communityGraph(
             navigateToFeaturedTopic = navController::navigateToFeaturedTopic,
             navigateToPost = navController::navigateToPost,

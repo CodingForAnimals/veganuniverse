@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,41 +28,36 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        var splashUiState: SplashViewModel.SplashUiState by mutableStateOf(SplashViewModel.SplashUiState.Loading)
+        var launchState: SplashViewModel.LaunchState by mutableStateOf(SplashViewModel.LaunchState.Loading)
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 splashViewModel.uiState.onEach {
-                    splashUiState = it
+                    launchState = it
                 }.collect()
             }
         }
 
         splashScreen.setKeepOnScreenCondition {
-            when (splashUiState) {
-                SplashViewModel.SplashUiState.Loading -> true
-                is SplashViewModel.SplashUiState.Completed -> false
+            when (launchState) {
+                SplashViewModel.LaunchState.Loading -> true
+                is SplashViewModel.LaunchState.Completed -> false
             }
         }
 
         setContent {
             VeganUniverseTheme {
-                when (val splashState = splashUiState) {
-                    SplashViewModel.SplashUiState.Loading -> Unit
-                    is SplashViewModel.SplashUiState.Completed -> {
-                        VeganUniverseApp()
+                when (val state = launchState) {
+                    SplashViewModel.LaunchState.Loading -> Unit
+                    is SplashViewModel.LaunchState.Completed -> {
 
-                        var showOnboarding by remember { mutableStateOf(splashState.showOnboarding) }
-                        AnimatedVisibility(
-                            visible = showOnboarding,
-                            enter = fadeIn(),
-                            exit = fadeOut()
-                        ) {
-                            OnboardingScreen(
-                                onDismiss = {
-                                    splashViewModel.onboardingScreenDismissed()
-                                    showOnboarding = false
-                                })
+                        VeganUniverseApp(
+                            startDestination = state.startDestination
+                        )
+
+                        var showOnboarding by remember { mutableStateOf(state.showOnboarding) }
+                        AnimatedVisibility(visible = showOnboarding) {
+                            OnboardingScreen(onDismiss = { showOnboarding = false })
                         }
                     }
                 }

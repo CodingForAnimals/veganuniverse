@@ -6,6 +6,7 @@ configure<BaseExtension> {
         kotlinCompilerExtensionVersion = versions.composeCompiler
     }
     dependencies {
+        add("implementation", project(":core:ui"))
         implementation(libs.compose)
         debugImplementation(libs.composeDebug)
 //        val bom = platform("androidx.compose:compose-bom:2023.01.00")

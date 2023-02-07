@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.onboarding.presentation
 
-import org.codingforanimals.onboarding.model.SetOnboardingAsDismissedUseCase
-import org.codingforanimals.onboarding.model.ShowOnboardingUseCase
+import org.codingforanimals.veganuniverse.onboarding.model.SetOnboardingAsDismissedUseCase
+import org.codingforanimals.veganuniverse.onboarding.model.ShowOnboardingUseCase
 
 class OnboardingPresenter(
     private val showOnboardingUseCase: ShowOnboardingUseCase,

@@ -1,8 +1,8 @@
-package org.codingforanimals.onboarding.model.di
+package org.codingforanimals.veganuniverse.onboarding.model.di
 
-import org.codingforanimals.onboarding.data.di.onboardingDataModule
-import org.codingforanimals.onboarding.model.SetOnboardingAsDismissedUseCase
-import org.codingforanimals.onboarding.model.ShowOnboardingUseCase
+import org.codingforanimals.veganuniverse.onboarding.data.di.onboardingDataModule
+import org.codingforanimals.veganuniverse.onboarding.model.SetOnboardingAsDismissedUseCase
+import org.codingforanimals.veganuniverse.onboarding.model.ShowOnboardingUseCase
 import org.codingforanimals.veganuniverse.common.dispatcher.coroutineDispatcherModule
 import org.koin.dsl.module
 
