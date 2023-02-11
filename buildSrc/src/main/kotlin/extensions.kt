@@ -6,6 +6,10 @@ fun DependencyHandler.implementation(dependencyNotation: List<Any>) {
     }
 }
 
+fun DependencyHandler.implementation(dependencyNotation: String) {
+    add("implementation", dependencyNotation)
+}
+
 fun DependencyHandler.debugImplementation(dependencyNotation: List<Any>) {
     for (dep in dependencyNotation) {
         add("debugImplementation", dep)

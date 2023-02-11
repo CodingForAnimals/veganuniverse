@@ -10,5 +10,4 @@ android {
 
 dependencies {
     implementation(project(":core:datastore"))
-    implementation(libs.koinAndroid)
 }

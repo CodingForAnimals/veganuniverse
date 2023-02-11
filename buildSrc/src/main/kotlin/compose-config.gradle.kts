@@ -7,10 +7,14 @@ configure<BaseExtension> {
     }
     dependencies {
         add("implementation", project(":core:ui"))
+//        implementar cuando horizontal pager sea parte de compose bom
+//        val bom = platform("androidx.compose:compose-bom:${versions.composeBom}")
+//        add("implementation", bom)
         implementation(libs.compose)
         debugImplementation(libs.composeDebug)
-//        val bom = platform("androidx.compose:compose-bom:2023.01.00")
-//        add("implementation", bom)
+
+        implementation(libs.koinAndroid)
+        implementation(libs.koinAndroidCompose)
 //        add("androidTestImplementation", bom)
     }
 }

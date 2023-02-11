@@ -39,4 +39,8 @@ configure<BaseExtension> {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    dependencies {
+        implementation(libs.koinAndroid)
+    }
 }

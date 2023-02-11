@@ -62,6 +62,7 @@ class VeganUniverseAppState(
             TopLevelDestination.COMMUNITY -> navController.navigateToCommunity()
             TopLevelDestination.PLACES -> navController.navigateToPlaces()
             TopLevelDestination.RECIPES -> navController.navigateToRecipes()
+            TopLevelDestination.PROFILE -> {}
         }
     }
 

@@ -29,4 +29,10 @@ enum class TopLevelDestination(
         iconTextId = R.string.nav_label_recipes,
         titleTextId = R.string.nav_label_recipes,
     ),
+    PROFILE(
+        selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Profile),
+        unselectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Profile),
+        iconTextId = R.string.nav_label_profile,
+        titleTextId = R.string.nav_label_profile,
+    )
 }

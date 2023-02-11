@@ -3,5 +3,6 @@
     <string name="nav_label_community">Comunidad</string>
     <string name="nav_label_places">Lugares</string>
     <string name="nav_label_recipes">Recetas</string>
+    <string name="nav_label_profile">Perfil</string>
     <string name="empty_string"> </string>
 </resources>

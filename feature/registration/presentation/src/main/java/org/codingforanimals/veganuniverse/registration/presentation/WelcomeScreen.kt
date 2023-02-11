@@ -32,6 +32,7 @@ import org.codingforanimals.registration.presentation.R
 import org.codingforanimals.veganuniverse.core.ui.R.drawable.logo
 import org.codingforanimals.veganuniverse.core.ui.R.drawable.universe_background
 
+//TODO delete
 @Composable
 internal fun WelcomeScreen(
     onLoginSuccess: () -> Unit,

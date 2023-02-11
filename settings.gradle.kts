@@ -21,6 +21,8 @@ include(":core:common")
 include(":core:ui")
 
 // features
+include(":feature:profile:presentation")
+
 include(":feature:community:presentation")
 include(":feature:community:model")
 include(":feature:community:data")
