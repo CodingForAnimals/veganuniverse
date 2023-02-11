@@ -24,17 +24,17 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
-    private val splashViewModel: SplashViewModel by inject()
+    private val mainViewModel: MainViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        var launchState: SplashViewModel.LaunchState by mutableStateOf(SplashViewModel.LaunchState.Loading)
+        var launchState: MainViewModel.LaunchState by mutableStateOf(MainViewModel.LaunchState.Loading)
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                splashViewModel.uiState.onEach {
+                mainViewModel.uiState.onEach {
                     launchState = it
                 }.collect()
             }
@@ -42,19 +42,20 @@ class MainActivity : ComponentActivity() {
 
         splashScreen.setKeepOnScreenCondition {
             when (launchState) {
-                SplashViewModel.LaunchState.Loading -> true
-                is SplashViewModel.LaunchState.Completed -> false
+                MainViewModel.LaunchState.Loading -> true
+                is MainViewModel.LaunchState.Completed -> false
             }
         }
 
         setContent {
             VeganUniverseTheme {
                 when (val state = launchState) {
-                    SplashViewModel.LaunchState.Loading -> Unit
-                    is SplashViewModel.LaunchState.Completed -> {
+                    MainViewModel.LaunchState.Loading -> Unit
+                    is MainViewModel.LaunchState.Completed -> {
 
                         VeganUniverseApp(
-                            startDestination = state.startDestination
+                            startDestination = state.startDestination,
+                            onProfileIconClick = {}
                         )
 
                         var showOnboarding by remember { mutableStateOf(state.showOnboarding) }

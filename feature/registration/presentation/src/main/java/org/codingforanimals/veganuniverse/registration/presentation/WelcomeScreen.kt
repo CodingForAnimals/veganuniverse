@@ -33,7 +33,7 @@ import org.codingforanimals.veganuniverse.core.ui.R.drawable.logo
 import org.codingforanimals.veganuniverse.core.ui.R.drawable.universe_background
 
 @Composable
-fun WelcomeScreen(
+internal fun WelcomeScreen(
     onLoginSuccess: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {

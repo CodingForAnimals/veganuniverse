@@ -15,6 +15,7 @@ import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.places.presentation.navigation.navigateToPlaces
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.navigateToCommunity
+import org.codingforanimals.veganuniverse.core.ui.components.TopBarAction
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.presentation.navigation.RecipesDestination
 import org.codingforanimals.veganuniverse.presentation.navigation.navigateToRecipes
@@ -54,11 +55,17 @@ class VeganUniverseAppState(
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
 
+//    val topBarActions: List<TopBarAction>
+
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
         when (destination) {
             TopLevelDestination.COMMUNITY -> navController.navigateToCommunity()
             TopLevelDestination.PLACES -> navController.navigateToPlaces()
             TopLevelDestination.RECIPES -> navController.navigateToRecipes()
         }
+    }
+
+    fun onProfileIconClick() {
+
     }
 }

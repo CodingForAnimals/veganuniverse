@@ -3,6 +3,7 @@ package org.codingforanimals.veganuniverse.app
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,7 +16,7 @@ import org.codingforanimals.veganuniverse.user.IllegalUserState
 import org.codingforanimals.veganuniverse.user.LoggedUser
 import org.codingforanimals.veganuniverse.user.UserRepository
 
-class SplashViewModel(
+class MainViewModel(
     private val onboardingPresenter: OnboardingPresenter,
     private val userRepository: UserRepository,
 ) : ViewModel() {
@@ -42,6 +43,7 @@ class SplashViewModel(
                     showOnboarding = showOnboarding.await(),
                     startDestination = startDestination
                 )
+                cancel()
             }
         }
     }

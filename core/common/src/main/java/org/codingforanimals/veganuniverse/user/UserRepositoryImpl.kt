@@ -2,23 +2,23 @@ package org.codingforanimals.veganuniverse.user
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 
 internal class UserRepositoryImpl(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
-): UserRepository {
+) : UserRepository {
 
     private val _user: MutableSharedFlow<User> = MutableSharedFlow()
-    override val user: Flow<User> = _user
+    override val user: SharedFlow<User> = _user
 
     init {
         CoroutineScope(coroutineDispatcherProvider.io()).launch {
             delay(5_000)
-            login()
+            _user.emit(GuestUser)
         }
     }
 

@@ -21,18 +21,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import org.codingforanimals.veganuniverse.app.R
-import org.codingforanimals.veganuniverse.app.SplashViewModel
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
-import org.codingforanimals.veganuniverse.core.ui.icons.VeganUniverseIcons
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 
 @Composable
 internal fun VeganUniverseApp(
     startDestination: Destination,
+    onProfileIconClick: () -> Unit,
     appState: VeganUniverseAppState = rememberVeganUniverseAppState(),
 
-) {
+    ) {
     VeganUniverseBackground {
         val snackbarHostState = remember { SnackbarHostState() }
         val topLevelDestination = appState.currentTopLevelDestination
@@ -63,7 +62,7 @@ internal fun VeganUniverseApp(
                         visible = topLevelDestination != null,
                         titleRes = topLevelDestination?.titleTextId
                             ?: R.string.empty_string,
-                        actionIcon = VeganUniverseIcons.Profile,
+                        actions = { },
                     )
 
                     VeganUniverseAppNavHost(
