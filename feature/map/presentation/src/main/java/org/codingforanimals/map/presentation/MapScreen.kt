@@ -198,7 +198,6 @@ private fun Markers(
     onClick: (Site) -> Unit,
 ) {
     sites.forEach { site ->
-        println("composing site marker ${site.name}")
         Marker(
             state = MarkerState(position = site.latLng),
             onClick = { onClick(site); false }

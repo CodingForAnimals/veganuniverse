@@ -18,6 +18,7 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Pink80
 import org.codingforanimals.veganuniverse.core.ui.theme.Purple80
 import org.codingforanimals.veganuniverse.core.ui.theme.PurpleGrey40
 import org.codingforanimals.veganuniverse.core.ui.theme.PurpleGrey80
+import org.codingforanimals.veganuniverse.core.ui.theme.Typography
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

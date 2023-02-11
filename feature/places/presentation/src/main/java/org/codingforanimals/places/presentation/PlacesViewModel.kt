@@ -11,10 +11,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.codingforanimals.veganuniverse.common.dispatcher.CoroutineDispatcherProvider
+import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 
 class PlacesViewModel(
     context: Context,

@@ -1,9 +1,7 @@
-package org.codingforanimals.registration.presentation.di
+package org.codingforanimals.veganuniverse.registration.presentation.di
 
-import org.codingforanimals.registration.presentation.RegistrationPresenter
-import org.codingforanimals.registration.presentation.RegistrationPresenterImpl
 import org.koin.dsl.module
 
 val registrationModule = module {
-    factory<RegistrationPresenter> { RegistrationPresenterImpl() }
+
 }

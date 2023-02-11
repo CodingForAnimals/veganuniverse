@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.common.dispatcher
+package org.codingforanimals.veganuniverse.coroutines
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

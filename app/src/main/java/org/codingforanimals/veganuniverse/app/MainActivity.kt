@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,7 +24,7 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
-    val splashViewModel: SplashViewModel by inject()
+    private val splashViewModel: SplashViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -56,7 +58,11 @@ class MainActivity : ComponentActivity() {
                         )
 
                         var showOnboarding by remember { mutableStateOf(state.showOnboarding) }
-                        AnimatedVisibility(visible = showOnboarding) {
+                        AnimatedVisibility(
+                            visible = showOnboarding,
+                            enter = fadeIn(),
+                            exit = fadeOut(),
+                        ) {
                             OnboardingScreen(onDismiss = { showOnboarding = false })
                         }
                     }
