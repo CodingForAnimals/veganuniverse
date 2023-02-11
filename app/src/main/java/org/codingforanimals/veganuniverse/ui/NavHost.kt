@@ -10,6 +10,7 @@ import org.codingforanimals.map.presentation.navigation.navigateToMap
 import org.codingforanimals.places.presentation.navigation.placesGraph
 import org.codingforanimals.post.presentation.navigation.navigateToPost
 import org.codingforanimals.post.presentation.navigation.postGraph
+import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.communityGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.navigateToCommunity
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
@@ -25,7 +26,7 @@ internal fun VeganUniverseAppNavHost(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     cameraPositionState: CameraPositionState,
-    startDestination: Destination,
+    startDestination: Destination = CommunityDestination,
 ) {
     NavHost(
         navController = navController,

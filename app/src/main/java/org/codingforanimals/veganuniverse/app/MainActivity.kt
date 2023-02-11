@@ -54,7 +54,6 @@ class MainActivity : ComponentActivity() {
                     is MainViewModel.LaunchState.Completed -> {
 
                         VeganUniverseApp(
-                            startDestination = state.startDestination,
                             onProfileIconClick = {}
                         )
 

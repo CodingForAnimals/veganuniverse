@@ -27,7 +27,6 @@ import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 
 @Composable
 internal fun VeganUniverseApp(
-    startDestination: Destination,
     onProfileIconClick: () -> Unit,
     appState: VeganUniverseAppState = rememberVeganUniverseAppState(),
 
@@ -66,7 +65,6 @@ internal fun VeganUniverseApp(
                     )
 
                     VeganUniverseAppNavHost(
-                        startDestination = startDestination,
                         navController = appState.navController,
                         snackbarHostState = snackbarHostState,
                         cameraPositionState = appState.cameraPositionState,
