@@ -30,6 +30,7 @@ android {
 
 dependencies {
     implementation(project(":feature:onboarding:presentation"))
+    implementation(project(":feature:profile:presentation"))
     implementation(project(":feature:community:presentation"))
     implementation(project(":feature:featuredtopic:presentation"))
     implementation(project(":feature:recipes:presentation"))

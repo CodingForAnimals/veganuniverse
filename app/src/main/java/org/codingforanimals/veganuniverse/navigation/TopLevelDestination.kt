@@ -23,6 +23,12 @@ enum class TopLevelDestination(
         iconTextId = R.string.nav_label_places,
         titleTextId = R.string.nav_label_places,
     ),
+    CREATE(
+        selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Create),
+        unselectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Create),
+        iconTextId = R.string.nav_label_create,
+        titleTextId = R.string.nav_label_create,
+    ),
     RECIPES(
         selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Recipes),
         unselectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Recipes),

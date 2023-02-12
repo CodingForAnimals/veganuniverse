@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import org.codingforanimals.veganuniverse.core.ui.components.BottomNavBar
@@ -47,7 +48,13 @@ internal fun VeganUniverseBottomNavBar(
                             )
                         }
                     },
-                    label = { Text(stringResource(it.iconTextId)) }
+                    label = {
+                        Text(
+                            text = stringResource(it.iconTextId),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
                 )
             }
         }

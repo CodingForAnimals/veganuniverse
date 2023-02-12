@@ -16,9 +16,11 @@ import org.codingforanimals.places.presentation.navigation.navigateToPlaces
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.navigateToCommunity
 import org.codingforanimals.veganuniverse.core.ui.components.TopBarAction
+import org.codingforanimals.veganuniverse.core.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.presentation.navigation.RecipesDestination
 import org.codingforanimals.veganuniverse.presentation.navigation.navigateToRecipes
+import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
 
 @Composable
 internal fun rememberVeganUniverseAppState(
@@ -50,6 +52,7 @@ class VeganUniverseAppState(
             CommunityDestination.route -> TopLevelDestination.COMMUNITY
             PlacesDestination.route -> TopLevelDestination.PLACES
             RecipesDestination.route -> TopLevelDestination.RECIPES
+            ProfileDestination.route -> TopLevelDestination.PROFILE
             else -> null
         }
 
@@ -59,10 +62,11 @@ class VeganUniverseAppState(
 
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
         when (destination) {
-            TopLevelDestination.COMMUNITY -> navController.navigateToCommunity()
-            TopLevelDestination.PLACES -> navController.navigateToPlaces()
-            TopLevelDestination.RECIPES -> navController.navigateToRecipes()
-            TopLevelDestination.PROFILE -> {}
+            TopLevelDestination.COMMUNITY -> navController.navigate(CommunityDestination)
+            TopLevelDestination.PLACES -> navController.navigate(PlacesDestination)
+            TopLevelDestination.CREATE -> {}
+            TopLevelDestination.RECIPES -> navController.navigate(RecipesDestination)
+            TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination)
         }
     }
 

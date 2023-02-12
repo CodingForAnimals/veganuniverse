@@ -3,6 +3,8 @@ package org.codingforanimals.veganuniverse.core.ui.icons
 import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Kitchen
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.AddBox
 import androidx.compose.material.icons.outlined.Forum
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Place
@@ -13,6 +15,7 @@ object VeganUniverseIcons {
     val Places = Icons.Outlined.Place
     val Recipes = Icons.Default.Kitchen
     val Profile = Icons.Outlined.PersonOutline
+    val Create = Icons.Outlined.AddBox
 }
 
 sealed class Icon {

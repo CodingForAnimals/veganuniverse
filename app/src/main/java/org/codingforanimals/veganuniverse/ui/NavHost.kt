@@ -14,9 +14,13 @@ import org.codingforanimals.veganuniverse.community.presentation.navigation.Comm
 import org.codingforanimals.veganuniverse.community.presentation.navigation.communityGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.navigateToCommunity
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.core.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.featuredTopicGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigateToFeaturedTopic
 import org.codingforanimals.veganuniverse.presentation.navigation.recipesGraph
+import org.codingforanimals.veganuniverse.profile.presentation.navigation.profileGraph
+import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegisterDestination
+import org.codingforanimals.veganuniverse.registration.presentation.navigation.navigateToRegister
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
 import org.codingforanimals.veganuniverse.site.presentation.navigation.navigateToSite
 import org.codingforanimals.veganuniverse.site.presentation.navigation.siteGraph
@@ -32,6 +36,9 @@ internal fun VeganUniverseAppNavHost(
         navController = navController,
         startDestination = startDestination.route,
     ) {
+        profileGraph(
+            navigateToRegister = navController::navigateToRegister,
+        )
         registrationGraph(
             navController = navController,
             onLoginSuccess = { previousDestination ->

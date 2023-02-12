@@ -14,14 +14,14 @@ fun RowScope.BottomNavBarItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
-    label: @Composable () -> Unit,
+    label: @Composable (() -> Unit)? = null,
 ) {
     NavigationBarItem(
         modifier = modifier,
         selected = isSelected,
         onClick = onClick,
         icon = icon,
-        label = label,
+//        label = label,
         colors = NavigationBarItemDefaults.colors(
             selectedIconColor = VeganUniverseNavigationDefaults.navigationSelectedItemColor(),
             unselectedIconColor = VeganUniverseNavigationDefaults.navigationContentColor(),
