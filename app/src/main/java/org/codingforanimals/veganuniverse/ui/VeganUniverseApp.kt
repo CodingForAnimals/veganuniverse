@@ -23,14 +23,11 @@ import androidx.compose.ui.Modifier
 import org.codingforanimals.veganuniverse.app.R
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
-import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 
 @Composable
 internal fun VeganUniverseApp(
-    onProfileIconClick: () -> Unit,
     appState: VeganUniverseAppState = rememberVeganUniverseAppState(),
-
-    ) {
+) {
     VeganUniverseBackground {
         val snackbarHostState = remember { SnackbarHostState() }
         val topLevelDestination = appState.currentTopLevelDestination

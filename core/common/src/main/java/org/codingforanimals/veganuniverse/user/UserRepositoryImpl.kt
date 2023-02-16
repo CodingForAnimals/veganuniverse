@@ -1,33 +1,27 @@
 package org.codingforanimals.veganuniverse.user
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
-internal class UserRepositoryImpl(
-    private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
-) : UserRepository {
+internal class UserRepositoryImpl : UserRepository {
 
-    private val _user: MutableSharedFlow<User> = MutableSharedFlow()
-    override val user: SharedFlow<User> = _user
+    override var user: User = GuestUser
 
-    init {
-        CoroutineScope(coroutineDispatcherProvider.io()).launch {
-            delay(5_000)
-            _user.emit(GuestUser)
-        }
+    override suspend fun isUserLoggedIn(): Flow<User> = flow {
+        delay(1000)
+        emit(user)
     }
 
-    override suspend fun login() = withContext(coroutineDispatcherProvider.io()) {
-        val user = LoggedUser.aLoggedUser()
-        _user.emit(user)
+    override suspend fun login(): Flow<User> = flow {
+        delay(1000)
+        user = LoggedUser.aLoggedUser()
+        emit(user)
     }
 
-    override suspend fun logout() = withContext(coroutineDispatcherProvider.io()) {
-        _user.emit(GuestUser)
+    override suspend fun logout(): Flow<User> = flow {
+        delay(1000)
+        user = GuestUser
+        emit(user)
     }
 }

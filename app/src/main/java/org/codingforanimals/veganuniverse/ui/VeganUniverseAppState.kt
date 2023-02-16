@@ -12,14 +12,10 @@ import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.CoroutineScope
 import org.codingforanimals.places.presentation.navigation.PlacesDestination
-import org.codingforanimals.places.presentation.navigation.navigateToPlaces
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
-import org.codingforanimals.veganuniverse.community.presentation.navigation.navigateToCommunity
-import org.codingforanimals.veganuniverse.core.ui.components.TopBarAction
 import org.codingforanimals.veganuniverse.core.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.presentation.navigation.RecipesDestination
-import org.codingforanimals.veganuniverse.presentation.navigation.navigateToRecipes
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
 
 @Composable
@@ -32,7 +28,7 @@ internal fun rememberVeganUniverseAppState(
         VeganUniverseAppState(
             navController,
             coroutineScope,
-            cameraPositionState
+            cameraPositionState,
         )
     }
 }
@@ -58,8 +54,6 @@ class VeganUniverseAppState(
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
 
-//    val topBarActions: List<TopBarAction>
-
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
         when (destination) {
             TopLevelDestination.COMMUNITY -> navController.navigate(CommunityDestination)
@@ -68,9 +62,5 @@ class VeganUniverseAppState(
             TopLevelDestination.RECIPES -> navController.navigate(RecipesDestination)
             TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination)
         }
-    }
-
-    fun onProfileIconClick() {
-
     }
 }

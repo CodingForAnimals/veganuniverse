@@ -53,9 +53,7 @@ class MainActivity : ComponentActivity() {
                     MainViewModel.LaunchState.Loading -> Unit
                     is MainViewModel.LaunchState.Completed -> {
 
-                        VeganUniverseApp(
-                            onProfileIconClick = {}
-                        )
+                        VeganUniverseApp()
 
                         var showOnboarding by remember { mutableStateOf(state.showOnboarding) }
                         AnimatedVisibility(

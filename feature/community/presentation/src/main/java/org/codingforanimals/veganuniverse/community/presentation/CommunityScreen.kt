@@ -16,21 +16,57 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Draw
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.codingforanimals.veganuniverse.community.presentation.component.FeaturedTopicCard
 import org.codingforanimals.veganuniverse.community.presentation.component.Post
 import org.codingforanimals.veganuniverse.core.ui.components.Dropdown
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CommunityScreen(
+    navigateToFeaturedTopic: (String) -> Unit,
+    navigateToPost: (String) -> Unit,
+    viewModel: CommunityScreenViewModel = koinViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    when (uiState) {
+        CommunityScreenViewModel.UiState.Loading -> {
+            LoadingScreen()
+        }
+        is CommunityScreenViewModel.UiState.Success -> {
+            CommunityScreen(
+                navigateToFeaturedTopic = navigateToFeaturedTopic,
+                navigateToPost = navigateToPost,
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoadingScreen() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .wrapContentHeight()
+                .align(Alignment.Center),
+        )
+    }
+}
+
+@Composable
+private fun CommunityScreen(
     navigateToFeaturedTopic: (String) -> Unit,
     navigateToPost: (String) -> Unit,
 ) {

@@ -1,9 +1,10 @@
 package org.codingforanimals.veganuniverse.user
 
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
-    val user: SharedFlow<User?>
-    suspend fun login()
-    suspend fun logout()
+    val user: User
+    suspend fun isUserLoggedIn(): Flow<User>
+    suspend fun login(): Flow<User>
+    suspend fun logout(): Flow<User>
 }
