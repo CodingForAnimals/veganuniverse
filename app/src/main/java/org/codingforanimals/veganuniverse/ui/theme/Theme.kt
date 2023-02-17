@@ -3,33 +3,26 @@ package org.codingforanimals.veganuniverse.ui.theme
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
-import org.codingforanimals.veganuniverse.core.ui.theme.Green
-import org.codingforanimals.veganuniverse.core.ui.theme.LightGreen
-import org.codingforanimals.veganuniverse.core.ui.theme.LightGrey
+import org.codingforanimals.veganuniverse.core.ui.theme.Background
+import org.codingforanimals.veganuniverse.core.ui.theme.OnPrimary
 import org.codingforanimals.veganuniverse.core.ui.theme.Pink40
-import org.codingforanimals.veganuniverse.core.ui.theme.Pink80
-import org.codingforanimals.veganuniverse.core.ui.theme.Purple80
+import org.codingforanimals.veganuniverse.core.ui.theme.Primary
+import org.codingforanimals.veganuniverse.core.ui.theme.PrimaryContainer
 import org.codingforanimals.veganuniverse.core.ui.theme.PurpleGrey40
-import org.codingforanimals.veganuniverse.core.ui.theme.PurpleGrey80
 import org.codingforanimals.veganuniverse.core.ui.theme.Typography
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
 
 private val LightColorScheme = lightColorScheme(
-    primary = Green,
-    primaryContainer = LightGreen,
-    background = LightGrey,
+    primary = Primary,
+    onPrimary = OnPrimary,
+    primaryContainer = PrimaryContainer,
+    background = Background,
     secondary = PurpleGrey40,
     tertiary = Pink40
 

@@ -1,43 +1,41 @@
 package org.codingforanimals.veganuniverse.navigation
 
 import org.codingforanimals.veganuniverse.app.R
-import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.core.ui.icons.VeganUniverseIcons
 
 enum class TopLevelDestination(
-    val selectedIcon: Icon,
-    val unselectedIcon: Icon,
+    val unselectedIcon: Int,
+    val selectedIcon: Int,
     val iconTextId: Int,
     val titleTextId: Int
 ) {
-
     COMMUNITY(
-        selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Community),
-        unselectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Community),
+        unselectedIcon = VeganUniverseIcons.Community,
+        selectedIcon = VeganUniverseIcons.CommunitySelected,
         iconTextId = R.string.nav_label_community,
         titleTextId = R.string.app_name,
     ),
     PLACES(
-        selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Places),
-        unselectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Places),
+        unselectedIcon = VeganUniverseIcons.Places,
+        selectedIcon = VeganUniverseIcons.PlacesSelected,
         iconTextId = R.string.nav_label_places,
         titleTextId = R.string.nav_label_places,
     ),
     CREATE(
-        selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Create),
-        unselectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Create),
+        unselectedIcon = VeganUniverseIcons.Create,
+        selectedIcon = VeganUniverseIcons.CreateSelected,
         iconTextId = R.string.nav_label_create,
         titleTextId = R.string.nav_label_create,
     ),
     RECIPES(
-        selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Recipes),
-        unselectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Recipes),
+        unselectedIcon = VeganUniverseIcons.Recipes,
+        selectedIcon = VeganUniverseIcons.RecipesSelected,
         iconTextId = R.string.nav_label_recipes,
         titleTextId = R.string.nav_label_recipes,
     ),
     PROFILE(
-        selectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Profile),
-        unselectedIcon = Icon.ImageVectorIcon(VeganUniverseIcons.Profile),
+        unselectedIcon = VeganUniverseIcons.Profile,
+        selectedIcon = VeganUniverseIcons.ProfileSelected,
         iconTextId = R.string.nav_label_profile,
         titleTextId = R.string.nav_label_profile,
     )

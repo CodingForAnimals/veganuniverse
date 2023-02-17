@@ -2,16 +2,10 @@ package org.codingforanimals.veganuniverse.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val Primary = Color(0xFF280A5B)
+val OnPrimary = Color(0xFFF4F4F5)
+val Background = Color(0xFFE4E4E7)
+val PrimaryContainer = Color(0xFFBABFC4)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
-val DarkGreen = Color(0xFF223800)
-val Green = Color(0xFF5C950B)
-val LightGreen = Color(0xFF8DD017)
-
-val LightGrey = Color(0xFFE4E4E7)
+val PurpleGrey40 = Color(0xFF5100FF)
+val Pink40 = Color(0xFFEE0D5A)

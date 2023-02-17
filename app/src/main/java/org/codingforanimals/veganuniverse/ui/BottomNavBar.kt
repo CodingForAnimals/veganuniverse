@@ -1,6 +1,7 @@
 package org.codingforanimals.veganuniverse.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -8,11 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import org.codingforanimals.veganuniverse.core.ui.components.BottomNavBar
 import org.codingforanimals.veganuniverse.core.ui.components.BottomNavBarItem
-import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 
 
@@ -32,21 +33,12 @@ internal fun VeganUniverseBottomNavBar(
                     isSelected = isSelected,
                     onClick = { if (!isSelected) navigateToDestination(it) },
                     icon = {
-                        val icon = if (isSelected) {
-                            it.selectedIcon
-                        } else {
-                            it.unselectedIcon
-                        }
-                        when (icon) {
-                            is Icon.ImageVectorIcon -> Icon(
-                                imageVector = icon.imageVector,
-                                contentDescription = stringResource(it.iconTextId),
-                            )
-                            is Icon.DrawableResourceIcon -> Icon(
-                                painter = painterResource(icon.id),
-                                contentDescription = stringResource(it.iconTextId),
-                            )
-                        }
+                        val iconId = if (isSelected) it.selectedIcon else it.unselectedIcon
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(iconId),
+                            contentDescription = stringResource(it.iconTextId),
+                        )
                     },
                     label = {
                         Text(

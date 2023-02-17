@@ -1,24 +1,23 @@
 package org.codingforanimals.veganuniverse.core.ui.icons
 
 import androidx.annotation.DrawableRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Kitchen
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.AddBox
-import androidx.compose.material.icons.outlined.Forum
-import androidx.compose.material.icons.outlined.PersonOutline
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.ui.graphics.vector.ImageVector
+import org.codingforanimals.veganuniverse.core.ui.R
 
 object VeganUniverseIcons {
-    val Community = Icons.Outlined.Forum
-    val Places = Icons.Outlined.Place
-    val Recipes = Icons.Default.Kitchen
-    val Profile = Icons.Outlined.PersonOutline
-    val Create = Icons.Outlined.AddBox
+    val Community = R.drawable.ic_community
+    val CommunitySelected = R.drawable.ic_community_selected
+    val Places = R.drawable.ic_places
+    val PlacesSelected = R.drawable.ic_places_selected
+    val Recipes = R.drawable.ic_recipes
+    val RecipesSelected = R.drawable.ic_recipes_selected
+    val Profile = R.drawable.ic_profile
+    val ProfileSelected = R.drawable.ic_profile_selected
+    val Create = R.drawable.ic_create
+    val CreateSelected = R.drawable.ic_create_selected
 }
 
 sealed class Icon {
-    data class ImageVectorIcon(val imageVector: ImageVector): Icon()
-    data class DrawableResourceIcon(@DrawableRes val id: Int): Icon()
+    data class ImageVectorIcon(val imageVector: ImageVector) : Icon()
+    data class DrawableResourceIcon(@DrawableRes val id: Int) : Icon()
 }
