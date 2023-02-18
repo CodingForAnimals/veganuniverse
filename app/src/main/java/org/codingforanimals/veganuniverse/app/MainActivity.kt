@@ -17,9 +17,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingScreen
 import org.codingforanimals.veganuniverse.ui.VeganUniverseApp
-import org.codingforanimals.veganuniverse.ui.theme.VeganUniverseTheme
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +31,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         var launchState: MainViewModel.LaunchState by mutableStateOf(MainViewModel.LaunchState.Loading)
-
+//        window.statusBarColor = Color.Transparent.toArgb()
+//        val wic = WindowCompat.getInsetsController(window, window.decorView)
+//        wic.isAppearanceLightStatusBars = true
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.uiState.onEach {
@@ -46,7 +48,7 @@ class MainActivity : ComponentActivity() {
                 is MainViewModel.LaunchState.Completed -> false
             }
         }
-
+//
         setContent {
             VeganUniverseTheme {
                 when (val state = launchState) {

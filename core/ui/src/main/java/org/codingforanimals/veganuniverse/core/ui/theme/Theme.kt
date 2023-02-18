@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.ui.theme
+package org.codingforanimals.veganuniverse.core.ui.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -9,22 +9,17 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
-import org.codingforanimals.veganuniverse.core.ui.theme.Background
-import org.codingforanimals.veganuniverse.core.ui.theme.OnPrimary
-import org.codingforanimals.veganuniverse.core.ui.theme.Pink40
-import org.codingforanimals.veganuniverse.core.ui.theme.Primary
-import org.codingforanimals.veganuniverse.core.ui.theme.PrimaryContainer
-import org.codingforanimals.veganuniverse.core.ui.theme.PurpleGrey40
-import org.codingforanimals.veganuniverse.core.ui.theme.Typography
 
 
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
     onPrimary = OnPrimary,
     primaryContainer = PrimaryContainer,
+    secondaryContainer = SecondaryContainer,
+    surface = Surface,
     background = Background,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    tertiary = Pink40,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -48,7 +43,7 @@ fun VeganUniverseTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
+            (view.context as Activity).window.statusBarColor = colorScheme.surface.toArgb()
             ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
         }
     }

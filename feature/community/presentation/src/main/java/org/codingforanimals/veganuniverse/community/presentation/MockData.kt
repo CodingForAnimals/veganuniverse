@@ -17,8 +17,11 @@ internal val sortBy = listOf(
 
 internal val filterBy = listOf(
     "Todos",
+    "Nutrición y salud",
+    "Reemplazos",
     "Recetas",
-    "Nutrición",
     "Activismo",
+    "Lugares",
+    "Animales perdidos y encontrados",
     "Otros",
 )

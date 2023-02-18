@@ -14,15 +14,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Veganuniverse"
+        android:theme="@style/Theme.Veganuniverse.Splash"
         tools:targetApi="31">
 
         <!-- Google Maps API -->
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCGP30dacUlygYZk5R0EC2JntyQzXazFPY" />
+
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Veganuniverse">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

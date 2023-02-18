@@ -49,6 +49,9 @@ object VeganUniverseNavigationDefaults {
     fun navigationContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
 
     @Composable
+    fun navigationContainerColor() = MaterialTheme.colorScheme.surface
+
+    @Composable
     fun navigationSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer
 
     @Composable

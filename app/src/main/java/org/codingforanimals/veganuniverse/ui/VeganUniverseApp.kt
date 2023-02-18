@@ -20,6 +20,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.app.R
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
@@ -32,6 +33,7 @@ internal fun VeganUniverseApp(
         val snackbarHostState = remember { SnackbarHostState() }
         val topLevelDestination = appState.currentTopLevelDestination
         Scaffold(
+            contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
             bottomBar = {
                 VeganUniverseBottomNavBar(
                     visible = topLevelDestination != null,
