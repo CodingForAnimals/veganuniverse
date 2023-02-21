@@ -1,10 +1,13 @@
 package org.codingforanimals.veganuniverse.core.ui.icons
 
 import androidx.annotation.DrawableRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.codingforanimals.veganuniverse.core.ui.R
 
 object VeganUniverseIcons {
+    val ArrowBack = Icons.Rounded.ArrowBack
     val Community = R.drawable.ic_community
     val CommunitySelected = R.drawable.ic_community_selected
     val Places = R.drawable.ic_places

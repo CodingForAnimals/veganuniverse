@@ -16,6 +16,7 @@ import org.codingforanimals.veganuniverse.community.presentation.navigation.navi
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.featuredTopicGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigateToFeaturedTopic
+import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
 import org.codingforanimals.veganuniverse.presentation.navigation.recipesGraph
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.profileGraph
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegisterDestination
@@ -44,7 +45,9 @@ internal fun VeganUniverseAppNavHost(
                     popUpTo(RegisterDestination.route) { inclusive = true }
                 }
             })
-
+        notificationsGraph(
+            onBackClick = navController::navigateUp,
+        )
         communityGraph(
             navigateToFeaturedTopic = navController::navigateToFeaturedTopic,
             navigateToPost = navController::navigateToPost,

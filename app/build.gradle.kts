@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":feature:site:presentation"))
     implementation(project(":feature:places:presentation"))
     implementation(project(":feature:registration:presentation"))
+    implementation(project(":feature:notifications:presentation"))
     implementation(project(":core:common"))
     implementation("com.google.maps.android:maps-compose:${versions.googleMapCompose}")
     implementation("com.google.android.gms:play-services-maps:${versions.googleMapServices}")

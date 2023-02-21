@@ -21,9 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.app.R
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
+import org.codingforanimals.veganuniverse.ui.topappbar.VeganUniverseTopAppBar
 
 @Composable
 internal fun VeganUniverseApp(
@@ -57,10 +56,10 @@ internal fun VeganUniverseApp(
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     VeganUniverseTopAppBar(
-                        visible = topLevelDestination != null,
-                        titleRes = topLevelDestination?.titleTextId
-                            ?: R.string.empty_string,
-                        actions = { },
+                        topLevelDestination = topLevelDestination,
+                        onBackClick = appState::navigateBackToCommunity,
+                        actions = appState.topBarActions,
+                        onActionClick = appState::onActionClick
                     )
 
                     VeganUniverseAppNavHost(

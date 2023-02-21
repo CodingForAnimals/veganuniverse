@@ -15,8 +15,10 @@ import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.core.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
+import org.codingforanimals.veganuniverse.notifications.presentation.navigation.NotificationsDestination
 import org.codingforanimals.veganuniverse.presentation.navigation.RecipesDestination
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
+import org.codingforanimals.veganuniverse.ui.topappbar.TopBarAction
 
 @Composable
 internal fun rememberVeganUniverseAppState(
@@ -40,6 +42,11 @@ class VeganUniverseAppState(
     val cameraPositionState: CameraPositionState,
 ) {
 
+    val topBarActions: List<TopBarAction> = listOf(
+        TopBarAction.NotificationTopBarAction,
+        TopBarAction.SettingsTopBarAction,
+    )
+
     val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
@@ -61,6 +68,19 @@ class VeganUniverseAppState(
             TopLevelDestination.CREATE -> {}
             TopLevelDestination.RECIPES -> navController.navigate(RecipesDestination)
             TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination)
+        }
+    }
+
+    fun navigateBackToCommunity() {
+        navController.navigate(CommunityDestination.route) {
+            popUpTo(CommunityDestination.route) { inclusive = true }
+        }
+    }
+
+    fun onActionClick(action: TopBarAction) {
+        when (action) {
+            TopBarAction.NotificationTopBarAction -> navController.navigate(NotificationsDestination)
+            TopBarAction.SettingsTopBarAction -> {}
         }
     }
 }
