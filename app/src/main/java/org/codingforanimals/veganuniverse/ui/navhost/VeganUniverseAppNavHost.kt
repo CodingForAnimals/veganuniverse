@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.ui
+package org.codingforanimals.veganuniverse.ui.navhost
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -14,6 +14,7 @@ import org.codingforanimals.veganuniverse.community.presentation.navigation.Comm
 import org.codingforanimals.veganuniverse.community.presentation.navigation.communityGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.navigateToCommunity
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.create.presentation.navigation.createGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.featuredTopicGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigateToFeaturedTopic
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
@@ -61,6 +62,7 @@ internal fun VeganUniverseAppNavHost(
             cameraPositionState = cameraPositionState,
             navigateToMap = navController::navigateToMap,
         )
+        createGraph()
         mapGraph(
             navigateToSite = navController::navigateToSite,
             snackbarHostState = snackbarHostState,

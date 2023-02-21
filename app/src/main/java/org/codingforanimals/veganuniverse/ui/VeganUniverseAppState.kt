@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.core.ui.navigation.navigate
+import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.NotificationsDestination
 import org.codingforanimals.veganuniverse.presentation.navigation.RecipesDestination
@@ -54,6 +55,7 @@ class VeganUniverseAppState(
         @Composable get() = when (currentDestination?.route) {
             CommunityDestination.route -> TopLevelDestination.COMMUNITY
             PlacesDestination.route -> TopLevelDestination.PLACES
+            CreateDestination.route -> TopLevelDestination.CREATE
             RecipesDestination.route -> TopLevelDestination.RECIPES
             ProfileDestination.route -> TopLevelDestination.PROFILE
             else -> null
@@ -65,7 +67,7 @@ class VeganUniverseAppState(
         when (destination) {
             TopLevelDestination.COMMUNITY -> navController.navigate(CommunityDestination)
             TopLevelDestination.PLACES -> navController.navigate(PlacesDestination)
-            TopLevelDestination.CREATE -> {}
+            TopLevelDestination.CREATE -> navController.navigate(CreateDestination)
             TopLevelDestination.RECIPES -> navController.navigate(RecipesDestination)
             TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination)
         }

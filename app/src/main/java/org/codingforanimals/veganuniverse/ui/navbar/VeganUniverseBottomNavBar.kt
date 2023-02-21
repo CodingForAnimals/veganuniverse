@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.ui
+package org.codingforanimals.veganuniverse.ui.navbar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.size
