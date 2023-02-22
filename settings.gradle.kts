@@ -48,3 +48,5 @@ include(":feature:onboarding:model")
 include(":feature:notifications:presentation")
 
 include(":feature:create:presentation")
+
+include(":feature:search:presentation")

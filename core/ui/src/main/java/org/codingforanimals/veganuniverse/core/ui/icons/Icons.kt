@@ -1,9 +1,7 @@
 package org.codingforanimals.veganuniverse.core.ui.icons
 
-import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.ui.graphics.vector.ImageVector
 import org.codingforanimals.veganuniverse.core.ui.R
 
 object VeganUniverseIcons {
@@ -18,9 +16,7 @@ object VeganUniverseIcons {
     val ProfileSelected = R.drawable.ic_profile_selected
     val Create = R.drawable.ic_create
     val CreateSelected = R.drawable.ic_create_selected
-}
-
-sealed class Icon {
-    data class ImageVectorIcon(val imageVector: ImageVector) : Icon()
-    data class DrawableResourceIcon(@DrawableRes val id: Int) : Icon()
+    val Notifications = R.drawable.ic_notifications
+    val Settings = R.drawable.ic_settings
+    val Search = R.drawable.ic_search
 }

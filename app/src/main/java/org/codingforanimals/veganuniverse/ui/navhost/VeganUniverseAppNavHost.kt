@@ -23,6 +23,7 @@ import org.codingforanimals.veganuniverse.profile.presentation.navigation.profil
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegisterDestination
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.navigateToRegister
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
+import org.codingforanimals.veganuniverse.search.presentation.navigation.searchGraph
 import org.codingforanimals.veganuniverse.site.presentation.navigation.navigateToSite
 import org.codingforanimals.veganuniverse.site.presentation.navigation.siteGraph
 
@@ -47,6 +48,9 @@ internal fun VeganUniverseAppNavHost(
                 }
             })
         notificationsGraph(
+            onBackClick = navController::navigateUp,
+        )
+        searchGraph(
             onBackClick = navController::navigateUp,
         )
         communityGraph(
