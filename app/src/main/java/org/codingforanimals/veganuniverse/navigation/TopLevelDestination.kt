@@ -13,7 +13,7 @@ enum class TopLevelDestination(
         unselectedIcon = VeganUniverseIcons.Community,
         selectedIcon = VeganUniverseIcons.CommunitySelected,
         iconTextId = R.string.nav_label_community,
-        titleRes = R.string.app_name,
+        titleRes = R.string.nav_label_community,
     ),
     PLACES(
         unselectedIcon = VeganUniverseIcons.Places,

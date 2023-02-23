@@ -1,12 +1,19 @@
 package org.codingforanimals.veganuniverse.ui.navhost
 
+import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.ComposeNavigator
+import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
 import com.google.maps.android.compose.CameraPositionState
 import org.codingforanimals.map.presentation.navigation.mapGraph
 import org.codingforanimals.map.presentation.navigation.navigateToMap
+import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.places.presentation.navigation.placesGraph
 import org.codingforanimals.post.presentation.navigation.navigateToPost
 import org.codingforanimals.post.presentation.navigation.postGraph
@@ -14,11 +21,14 @@ import org.codingforanimals.veganuniverse.community.presentation.navigation.Comm
 import org.codingforanimals.veganuniverse.community.presentation.navigation.communityGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.navigateToCommunity
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
 import org.codingforanimals.veganuniverse.create.presentation.navigation.createGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.featuredTopicGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigateToFeaturedTopic
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
+import org.codingforanimals.veganuniverse.presentation.navigation.RecipesDestination
 import org.codingforanimals.veganuniverse.presentation.navigation.recipesGraph
+import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.profileGraph
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegisterDestination
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.navigateToRegister
@@ -26,6 +36,15 @@ import org.codingforanimals.veganuniverse.registration.presentation.navigation.r
 import org.codingforanimals.veganuniverse.search.presentation.navigation.searchGraph
 import org.codingforanimals.veganuniverse.site.presentation.navigation.navigateToSite
 import org.codingforanimals.veganuniverse.site.presentation.navigation.siteGraph
+
+@Composable
+internal fun rememberVeganUniverseNavController(): NavHostController {
+    val context = LocalContext.current
+    return rememberSaveable(
+        inputs = arrayOf(context),
+        saver = veganUniverseNavControllerSaver(context),
+    ) { createVeganUniverseNavController(context) }
+}
 
 @Composable
 internal fun VeganUniverseAppNavHost(
@@ -77,3 +96,34 @@ internal fun VeganUniverseAppNavHost(
         recipesGraph()
     }
 }
+
+class VeganUniverseNavHostController(context: Context) : NavHostController(context) {
+    override fun popBackStack(): Boolean {
+        return when (currentDestination?.route) {
+            PlacesDestination.route,
+            CreateDestination.route,
+            RecipesDestination.route,
+            ProfileDestination.route,
+            -> {
+                navigate(CommunityDestination.route) {
+                    popUpTo(CommunityDestination.route) { inclusive = true }
+                }
+                true
+            }
+            else -> super.popBackStack()
+        }
+    }
+}
+
+private fun veganUniverseNavControllerSaver(
+    context: Context
+): Saver<VeganUniverseNavHostController, *> = Saver(
+    save = { it.saveState() },
+    restore = { createVeganUniverseNavController(context).apply { restoreState(it) } }
+)
+
+private fun createVeganUniverseNavController(context: Context) =
+    VeganUniverseNavHostController(context).apply {
+        navigatorProvider.addNavigator(ComposeNavigator())
+        navigatorProvider.addNavigator(DialogNavigator())
+    }
