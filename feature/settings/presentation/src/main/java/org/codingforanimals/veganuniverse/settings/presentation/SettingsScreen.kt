@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.notifications.presentation
+package org.codingforanimals.veganuniverse.settings.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,18 +11,18 @@ import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
 
 @Composable
-internal fun NotificationsScreen(
+internal fun SettingsScreen(
     onBackClick: () -> Unit,
 ) {
     VeganUniverseTopAppBar(
-        title = "Notificaciones",
+        title = "Configuración",
         onBackClick = onBackClick,
     )
     Column(
         modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically)
     ) {
-        Text(text = "This is Notifications Screen")
+        Text("Settings Screen")
     }
 }

@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.ui.navhost
+package org.codingforanimals.veganuniverse.navigation
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
@@ -34,6 +34,7 @@ import org.codingforanimals.veganuniverse.registration.presentation.navigation.R
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.navigateToRegister
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
 import org.codingforanimals.veganuniverse.search.presentation.navigation.searchGraph
+import org.codingforanimals.veganuniverse.settings.presentation.navigation.settingsGraph
 import org.codingforanimals.veganuniverse.site.presentation.navigation.navigateToSite
 import org.codingforanimals.veganuniverse.site.presentation.navigation.siteGraph
 
@@ -70,6 +71,9 @@ internal fun VeganUniverseAppNavHost(
             onBackClick = navController::navigateUp,
         )
         searchGraph(
+            onBackClick = navController::navigateUp,
+        )
+        settingsGraph(
             onBackClick = navController::navigateUp,
         )
         communityGraph(

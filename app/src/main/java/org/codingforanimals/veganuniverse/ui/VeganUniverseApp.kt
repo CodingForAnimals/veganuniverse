@@ -22,8 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
+import org.codingforanimals.veganuniverse.navigation.VeganUniverseAppNavHost
 import org.codingforanimals.veganuniverse.ui.navbar.VeganUniverseBottomNavBar
-import org.codingforanimals.veganuniverse.ui.navhost.VeganUniverseAppNavHost
 import org.codingforanimals.veganuniverse.ui.topappbar.VeganUniverseTopAppBar
 
 @Composable

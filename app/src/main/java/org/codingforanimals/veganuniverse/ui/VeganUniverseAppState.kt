@@ -15,11 +15,12 @@ import org.codingforanimals.veganuniverse.community.presentation.navigation.Comm
 import org.codingforanimals.veganuniverse.core.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
+import org.codingforanimals.veganuniverse.navigation.rememberVeganUniverseNavController
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.NotificationsDestination
 import org.codingforanimals.veganuniverse.presentation.navigation.RecipesDestination
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
 import org.codingforanimals.veganuniverse.search.presentation.navigation.SearchDestination
-import org.codingforanimals.veganuniverse.ui.navhost.rememberVeganUniverseNavController
+import org.codingforanimals.veganuniverse.settings.presentation.navigation.SettingsDestination
 import org.codingforanimals.veganuniverse.ui.topappbar.TopBarAction
 
 @Composable
@@ -85,7 +86,7 @@ class VeganUniverseAppState(
         when (action) {
             TopBarAction.SearchTopBarAction -> navController.navigate(SearchDestination)
             TopBarAction.NotificationTopBarAction -> navController.navigate(NotificationsDestination)
-            TopBarAction.SettingsTopBarAction -> {}
+            TopBarAction.SettingsTopBarAction -> navController.navigate(SettingsDestination)
         }
     }
 }

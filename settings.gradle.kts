@@ -50,3 +50,5 @@ include(":feature:notifications:presentation")
 include(":feature:create:presentation")
 
 include(":feature:search:presentation")
+
+include(":feature:settings:presentation")
