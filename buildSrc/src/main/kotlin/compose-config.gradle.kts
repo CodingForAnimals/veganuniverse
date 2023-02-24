@@ -13,6 +13,8 @@ configure<BaseExtension> {
         implementation(libs.compose)
         debugImplementation(libs.composeDebug)
 
+        implementation(libs.placeholder)
+
         implementation(libs.koinAndroid)
         implementation(libs.koinAndroidCompose)
 //        add("androidTestImplementation", bom)

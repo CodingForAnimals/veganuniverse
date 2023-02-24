@@ -14,16 +14,26 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.shimmer
+import kotlinx.coroutines.delay
 import org.codingforanimals.veganuniverse.community.presentation.component.FeaturedTopicCard
 import org.codingforanimals.veganuniverse.community.presentation.component.Post
 import org.codingforanimals.veganuniverse.core.ui.components.Dropdown
@@ -36,16 +46,30 @@ fun CommunityScreen(
     viewModel: CommunityScreenViewModel = koinViewModel(),
 ) {
 
+    var placeholder by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        delay(5000)
+        placeholder = false
+    }
+
+    val placeholderModifier = Modifier.placeholder(
+        visible = placeholder,
+        color = Color.LightGray,
+        highlight = PlaceholderHighlight.shimmer(Color.White),
+        shape = CircleShape
+    )
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically)
     ) {
-        Text(text = "Community Screen")
-        Button(onClick = {}) {
+        Text(modifier = placeholderModifier, text = "Community Screen")
+        Button(modifier = placeholderModifier, onClick = {}) {
             Text(text = "This is a button")
         }
-        TextButton(onClick = {}) {
+        TextButton(modifier = placeholderModifier, onClick = {}) {
             Text(text = "Please click me")
         }
     }

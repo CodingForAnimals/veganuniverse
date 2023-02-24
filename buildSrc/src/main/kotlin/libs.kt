@@ -42,6 +42,8 @@ object libs {
         "androidx.compose.ui:ui-test-manifest:${versions.compose}"
     )
 
+    const val placeholder = "com.google.accompanist:accompanist-placeholder-material:0.29.1-alpha"
+
     const val preferencesDatastore = "androidx.datastore:datastore-preferences:${versions.datastore}"
 
     const val permissionsCompose =
