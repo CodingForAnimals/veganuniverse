@@ -59,7 +59,7 @@ internal fun VeganUniverseApp(
                 Column(modifier = Modifier.fillMaxSize()) {
                     VeganUniverseTopAppBar(
                         topLevelDestination = topLevelDestination,
-                        onBackClick = appState::navigateBackToCommunity,
+                        onBackClick = appState::navigateToCommunity,
                         actions = appState.topBarActions,
                         onActionClick = appState::onActionClick
                     )

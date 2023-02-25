@@ -12,7 +12,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.CoroutineScope
 import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
-import org.codingforanimals.veganuniverse.core.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.navigation.rememberVeganUniverseNavController
@@ -68,15 +67,15 @@ class VeganUniverseAppState(
 
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
         when (destination) {
-            TopLevelDestination.COMMUNITY -> navController.navigate(CommunityDestination)
-            TopLevelDestination.PLACES -> navController.navigate(PlacesDestination)
-            TopLevelDestination.CREATE -> navController.navigate(CreateDestination)
-            TopLevelDestination.RECIPES -> navController.navigate(RecipesDestination)
-            TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination)
+            TopLevelDestination.COMMUNITY -> navigateToCommunity()
+            TopLevelDestination.PLACES -> navController.navigate(PlacesDestination.route)
+            TopLevelDestination.CREATE -> navController.navigate(CreateDestination.route)
+            TopLevelDestination.RECIPES -> navController.navigate(RecipesDestination.route)
+            TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination.route)
         }
     }
 
-    fun navigateBackToCommunity() {
+    fun navigateToCommunity() {
         navController.navigate(CommunityDestination.route) {
             popUpTo(CommunityDestination.route) { inclusive = true }
         }
@@ -84,9 +83,9 @@ class VeganUniverseAppState(
 
     fun onActionClick(action: TopBarAction) {
         when (action) {
-            TopBarAction.SearchTopBarAction -> navController.navigate(SearchDestination)
-            TopBarAction.NotificationTopBarAction -> navController.navigate(NotificationsDestination)
-            TopBarAction.SettingsTopBarAction -> navController.navigate(SettingsDestination)
+            TopBarAction.SearchTopBarAction -> navController.navigate(SearchDestination.route)
+            TopBarAction.NotificationTopBarAction -> navController.navigate(NotificationsDestination.route)
+            TopBarAction.SettingsTopBarAction -> navController.navigate(SettingsDestination.route)
         }
     }
 }
