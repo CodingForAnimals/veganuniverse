@@ -28,6 +28,8 @@ include(":feature:community:model")
 include(":feature:community:data")
 
 include(":feature:featuredtopic:presentation")
+include(":feature:featuredtopic:data")
+include(":feature:featuredtopic:model")
 
 include(":feature:onboarding:presentation")
 

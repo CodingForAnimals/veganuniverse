@@ -60,6 +60,8 @@ fun CommunityScreen(
         shape = CircleShape
     )
 
+    FeaturedTopics(topics = featuredTopics, navigateToFeaturedTopic = navigateToFeaturedTopic)
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,

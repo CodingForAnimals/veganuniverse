@@ -80,7 +80,9 @@ internal fun VeganUniverseAppNavHost(
             navigateToFeaturedTopic = navController::navigateToFeaturedTopic,
             navigateToPost = navController::navigateToPost,
             nestedGraphs = {
-                featuredTopicGraph()
+                featuredTopicGraph(
+                    onBackClick = navController::navigateUp,
+                )
                 postGraph()
             }
         )

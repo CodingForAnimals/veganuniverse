@@ -18,13 +18,17 @@ fun NavController.navigateToFeaturedTopic(topicName: String) {
     this.navigate("${FeaturedTopicDestination.route}/$encodedDest")
 }
 
-fun NavGraphBuilder.featuredTopicGraph() {
+fun NavGraphBuilder.featuredTopicGraph(
+    onBackClick: () -> Unit,
+) {
     composable(route = "${FeaturedTopicDestination.route}/{${FeaturedTopicDestination.topicArgument}}",
         arguments = listOf(
             navArgument(FeaturedTopicDestination.topicArgument) { type = NavType.StringType }
         )
     ) {
         val arg = it.arguments?.getString(FeaturedTopicDestination.topicArgument)
-        FeaturedTopicScreen(arg)
+        FeaturedTopicScreen(
+            onBackClick = onBackClick
+        )
     }
 }

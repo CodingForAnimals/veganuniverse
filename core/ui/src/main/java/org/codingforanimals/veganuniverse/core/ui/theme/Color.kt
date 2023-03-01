@@ -8,6 +8,8 @@ val Background = Color(0xFFE4E4E7)
 val PrimaryContainer = Color(0xFFBABFC4)
 val SecondaryContainer = Color(0xFFD8DBE0)
 val Surface = Color(0xFFDFE1E3)
+val SurfaceVariant = Color(0xFFF4F4F5)
+val OnSurfaceVariant = Color(0xFF3F3F46)
 
 val PurpleGrey40 = Color(0xFF5100FF)
 val Pink40 = Color(0xFFEE0D5A)

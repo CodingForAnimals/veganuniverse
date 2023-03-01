@@ -14,6 +14,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import org.codingforanimals.veganuniverse.core.ui.components.BottomNavBar
 import org.codingforanimals.veganuniverse.core.ui.components.BottomNavBarItem
+import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 
 
@@ -33,12 +34,23 @@ internal fun VeganUniverseBottomNavBar(
                     isSelected = isSelected,
                     onClick = { if (!isSelected) navigateToDestination(it) },
                     icon = {
-                        val iconId = if (isSelected) it.selectedIcon else it.unselectedIcon
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = painterResource(iconId),
-                            contentDescription = stringResource(it.iconTextId),
-                        )
+                        when (val icon = if (isSelected) it.selectedIcon else it.unselectedIcon) {
+                            is Icon.ImageVectorIcon -> {
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    imageVector = icon.imageVector,
+                                    contentDescription = stringResource(it.iconTextId),
+                                )
+                            }
+                            is Icon.DrawableResourceIcon -> {
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    painter = painterResource(icon.id),
+                                    contentDescription = stringResource(it.iconTextId),
+                                )
+                            }
+                        }
+
                     },
                     label = {
                         Text(

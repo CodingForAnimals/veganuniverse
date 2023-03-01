@@ -1,11 +1,12 @@
 package org.codingforanimals.veganuniverse.navigation
 
 import org.codingforanimals.veganuniverse.app.R
+import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.core.ui.icons.VeganUniverseIcons
 
 enum class TopLevelDestination(
-    val unselectedIcon: Int,
-    val selectedIcon: Int,
+    val unselectedIcon: Icon,
+    val selectedIcon: Icon,
     val iconTextId: Int,
     val titleRes: Int
 ) {

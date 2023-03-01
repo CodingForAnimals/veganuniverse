@@ -11,9 +11,9 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseMediumTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.icons.VeganUniverseIcons
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
@@ -40,10 +40,10 @@ internal fun VeganUniverseTopAppBar(
             actions = {
                 actions.forEach { action ->
                     IconButton(onClick = { onActionClick(action) }) {
-                        Icon(
+                        VUIcon(
                             modifier = Modifier.size(20.dp),
-                            painter = painterResource(action.drawableRes),
-                            contentDescription = action.contentDescription
+                            icon = action.icon,
+                            contentDescription = action.contentDescription,
                         )
                     }
                 }
