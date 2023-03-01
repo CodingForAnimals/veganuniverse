@@ -17,7 +17,8 @@ object VeganUniverseIcons {
     val Comment = DrawableResourceIcon(R.drawable.ic_comment)
     val Share = DrawableResourceIcon(R.drawable.ic_share)
     val Bookmark = DrawableResourceIcon(R.drawable.ic_bookmark)
-
+    val Filter = DrawableResourceIcon(R.drawable.ic_filter)
+    val Sort = DrawableResourceIcon(R.drawable.ic_sort)
     val Community = DrawableResourceIcon(R.drawable.ic_community)
     val CommunitySelected = DrawableResourceIcon(R.drawable.ic_community_selected)
     val Places = DrawableResourceIcon(R.drawable.ic_places)

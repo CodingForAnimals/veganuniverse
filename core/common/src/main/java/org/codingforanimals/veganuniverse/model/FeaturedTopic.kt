@@ -1,7 +1,7 @@
-package org.codingforanimals.veganuniverse.featuredtopic.model
+package org.codingforanimals.veganuniverse.model
 
 import androidx.annotation.DrawableRes
-import org.codingforanimals.veganuniverse.model.Post
+import org.codingforanimals.veganuniverse.common.R
 
 data class FeaturedTopic(
     @DrawableRes val imageRes: Int,
@@ -15,15 +15,22 @@ private const val TEXTO_PRUEBA =
 private val test_post = Post(
     title = "Receta de tal o cual cosa",
     subtitle = "subtitulo • usuario",
-    description = TEXTO_PRUEBA
+    description = TEXTO_PRUEBA,
+    image = null,
+)
+private val test_post_with_image = Post(
+    title = "Receta de tal o cual cosa",
+    subtitle = "subtitulo • usuario",
+    description = TEXTO_PRUEBA,
+    image = "",
 )
 
 val test_post_list = listOf(
     test_post,
     test_post,
+    test_post_with_image,
     test_post,
-    test_post,
-    test_post,
+    test_post_with_image,
     test_post,
 )
 
@@ -31,4 +38,13 @@ val featured_topic = FeaturedTopic(
     imageRes = R.drawable.featured_topic_abc_vegan_test,
     description = "Los temas más relevantes para quienes se inician en el veganismo",
     posts = test_post_list,
+)
+
+val featured_topic_list = listOf(
+    featured_topic,
+    featured_topic,
+    featured_topic,
+    featured_topic,
+    featured_topic,
+    featured_topic,
 )

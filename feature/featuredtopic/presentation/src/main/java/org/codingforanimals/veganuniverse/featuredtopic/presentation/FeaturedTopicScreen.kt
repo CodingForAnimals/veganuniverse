@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import org.codingforanimals.veganuniverse.common.R
 import org.codingforanimals.veganuniverse.core.ui.community.Post
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
-import org.codingforanimals.veganuniverse.featuredtopic.model.R
-import org.codingforanimals.veganuniverse.featuredtopic.model.test_post_list
+import org.codingforanimals.veganuniverse.model.test_post_list
 
 @Composable
 internal fun FeaturedTopicScreen(
