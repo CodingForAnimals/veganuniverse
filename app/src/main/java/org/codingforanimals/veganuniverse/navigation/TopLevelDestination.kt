@@ -32,7 +32,7 @@ enum class TopLevelDestination(
         unselectedIcon = VeganUniverseIcons.Recipes,
         selectedIcon = VeganUniverseIcons.RecipesSelected,
         iconTextId = R.string.nav_label_recipes,
-        titleRes = R.string.nav_label_recipes,
+        titleRes = R.string.topbar_title_recipes,
     ),
     PROFILE(
         unselectedIcon = VeganUniverseIcons.Profile,

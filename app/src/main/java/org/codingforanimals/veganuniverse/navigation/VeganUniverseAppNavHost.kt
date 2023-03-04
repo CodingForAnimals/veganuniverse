@@ -26,10 +26,10 @@ import org.codingforanimals.veganuniverse.create.presentation.navigation.createG
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.featuredTopicGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigateToFeaturedTopic
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
-import org.codingforanimals.veganuniverse.presentation.navigation.RecipesDestination
-import org.codingforanimals.veganuniverse.presentation.navigation.recipesGraph
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.profileGraph
+import org.codingforanimals.veganuniverse.recipes.presentation.home.navigation.RecipeCategoriesDestination
+import org.codingforanimals.veganuniverse.recipes.presentation.navigation.recipesGraph
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegisterDestination
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.navigateToRegister
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
@@ -99,7 +99,9 @@ internal fun VeganUniverseAppNavHost(
                 siteGraph()
             }
         )
-        recipesGraph()
+        recipesGraph(
+            navController = navController,
+        )
     }
 }
 
@@ -108,7 +110,7 @@ class VeganUniverseNavHostController(context: Context) : NavHostController(conte
         return when (currentDestination?.route) {
             PlacesDestination.route,
             CreateDestination.route,
-            RecipesDestination.route,
+            RecipeCategoriesDestination.route,
             ProfileDestination.route,
             -> {
                 navigate(CommunityDestination.route) {

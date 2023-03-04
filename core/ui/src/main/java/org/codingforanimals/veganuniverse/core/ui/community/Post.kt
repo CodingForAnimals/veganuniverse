@@ -43,9 +43,10 @@ fun Post(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String,
-    description: String?,
+    description: String? = null,
     image: Boolean = false,
     onClick: () -> Unit = {},
+    details: @Composable (() -> Unit)? = null,
 ) {
     Card(
         modifier = modifier.clickable { onClick() },
@@ -54,6 +55,7 @@ fun Post(
             title = title,
             subtitle = subtitle,
         )
+        Details(details)
         Description(
             description = description,
         )
@@ -61,6 +63,21 @@ fun Post(
             ContentImage()
         }
         Actions()
+    }
+}
+
+@Composable
+private fun Details(details: @Composable (() -> Unit)?) {
+    details?.let {
+        Row(
+            modifier = Modifier.padding(
+                start = Spacing_04,
+                end = Spacing_04,
+                top = Spacing_04,
+            )
+        ) {
+            details()
+        }
     }
 }
 
