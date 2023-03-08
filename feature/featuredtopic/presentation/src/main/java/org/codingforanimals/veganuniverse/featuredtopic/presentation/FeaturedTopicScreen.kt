@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import org.codingforanimals.veganuniverse.common.R
 import org.codingforanimals.veganuniverse.core.ui.community.Post
-import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
+import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.model.test_post_list
@@ -23,7 +23,7 @@ internal fun FeaturedTopicScreen(
 ) {
     val posts = test_post_list
     Column {
-        VeganUniverseTopAppBar(title = "ABC Vegano", onBackClick = onBackClick)
+        VUTopAppBar(title = "ABC Vegano", onBackClick = onBackClick)
         LazyColumn(
             modifier = Modifier.padding(horizontal = Spacing_04),
             horizontalAlignment = Alignment.CenterHorizontally,

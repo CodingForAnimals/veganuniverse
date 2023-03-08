@@ -2,7 +2,7 @@ package org.codingforanimals.veganuniverse.navigation
 
 import org.codingforanimals.veganuniverse.app.R
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
-import org.codingforanimals.veganuniverse.core.ui.icons.VeganUniverseIcons
+import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 
 enum class TopLevelDestination(
     val unselectedIcon: Icon,
@@ -11,32 +11,32 @@ enum class TopLevelDestination(
     val titleRes: Int
 ) {
     COMMUNITY(
-        unselectedIcon = VeganUniverseIcons.Community,
-        selectedIcon = VeganUniverseIcons.CommunitySelected,
+        unselectedIcon = VUIcons.Community,
+        selectedIcon = VUIcons.CommunitySelected,
         iconTextId = R.string.nav_label_community,
         titleRes = R.string.nav_label_community,
     ),
     PLACES(
-        unselectedIcon = VeganUniverseIcons.Places,
-        selectedIcon = VeganUniverseIcons.PlacesSelected,
+        unselectedIcon = VUIcons.Places,
+        selectedIcon = VUIcons.PlacesSelected,
         iconTextId = R.string.nav_label_places,
         titleRes = R.string.nav_label_places,
     ),
     CREATE(
-        unselectedIcon = VeganUniverseIcons.Create,
-        selectedIcon = VeganUniverseIcons.CreateSelected,
+        unselectedIcon = VUIcons.Create,
+        selectedIcon = VUIcons.CreateSelected,
         iconTextId = R.string.nav_label_create,
         titleRes = R.string.nav_label_create,
     ),
     RECIPES(
-        unselectedIcon = VeganUniverseIcons.Recipes,
-        selectedIcon = VeganUniverseIcons.RecipesSelected,
+        unselectedIcon = VUIcons.Recipes,
+        selectedIcon = VUIcons.RecipesSelected,
         iconTextId = R.string.nav_label_recipes,
         titleRes = R.string.topbar_title_recipes,
     ),
     PROFILE(
-        unselectedIcon = VeganUniverseIcons.Profile,
-        selectedIcon = VeganUniverseIcons.ProfileSelected,
+        unselectedIcon = VUIcons.Profile,
+        selectedIcon = VUIcons.ProfileSelected,
         iconTextId = R.string.nav_label_profile,
         titleRes = R.string.nav_label_profile,
     )

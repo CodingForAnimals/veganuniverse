@@ -14,7 +14,7 @@ import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
-import org.codingforanimals.veganuniverse.navigation.rememberVeganUniverseNavController
+import org.codingforanimals.veganuniverse.navigation.rememberVUNavController
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.NotificationsDestination
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.home.navigation.RecipeCategoriesDestination
@@ -23,13 +23,13 @@ import org.codingforanimals.veganuniverse.settings.presentation.navigation.Setti
 import org.codingforanimals.veganuniverse.ui.topappbar.TopBarAction
 
 @Composable
-internal fun rememberVeganUniverseAppState(
-    navController: NavHostController = rememberVeganUniverseNavController(),
+internal fun rememberVUAppState(
+    navController: NavHostController = rememberVUNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
-): VeganUniverseAppState {
+): VUAppState {
     return remember(coroutineScope, navController, cameraPositionState) {
-        VeganUniverseAppState(
+        VUAppState(
             navController,
             coroutineScope,
             cameraPositionState,
@@ -38,7 +38,7 @@ internal fun rememberVeganUniverseAppState(
 }
 
 @Stable
-class VeganUniverseAppState(
+class VUAppState(
     val navController: NavHostController,
     val coroutineScope: CoroutineScope,
     val cameraPositionState: CameraPositionState,

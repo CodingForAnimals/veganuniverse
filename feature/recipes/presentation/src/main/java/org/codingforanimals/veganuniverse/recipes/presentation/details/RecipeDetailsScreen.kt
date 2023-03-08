@@ -7,13 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
+import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 
 @Composable
 internal fun RecipeDetailsScreen(
     onBackClick: () -> Unit,
 ) {
-    VeganUniverseTopAppBar(title = "Detalles", onBackClick = onBackClick)
+    VUTopAppBar(title = "Detalles", onBackClick = onBackClick)
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

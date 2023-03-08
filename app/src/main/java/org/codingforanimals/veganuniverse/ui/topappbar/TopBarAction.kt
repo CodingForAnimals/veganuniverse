@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.ui.topappbar
 
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
-import org.codingforanimals.veganuniverse.core.ui.icons.VeganUniverseIcons
+import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 
 
 sealed class TopBarAction(
@@ -9,17 +9,17 @@ sealed class TopBarAction(
     val contentDescription: String,
 ) {
     object SearchTopBarAction : TopBarAction(
-        icon = VeganUniverseIcons.Search,
+        icon = VUIcons.Search,
         contentDescription = "Buscar"
     )
 
     object NotificationTopBarAction : TopBarAction(
-        icon = VeganUniverseIcons.Notifications,
+        icon = VUIcons.Notifications,
         contentDescription = "Notificaciones",
     )
 
     object SettingsTopBarAction : TopBarAction(
-        icon = VeganUniverseIcons.Settings,
+        icon = VUIcons.Settings,
         contentDescription = "Configuración",
     )
 }

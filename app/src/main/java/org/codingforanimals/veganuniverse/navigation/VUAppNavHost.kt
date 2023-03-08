@@ -39,16 +39,16 @@ import org.codingforanimals.veganuniverse.site.presentation.navigation.navigateT
 import org.codingforanimals.veganuniverse.site.presentation.navigation.siteGraph
 
 @Composable
-internal fun rememberVeganUniverseNavController(): NavHostController {
+internal fun rememberVUNavController(): NavHostController {
     val context = LocalContext.current
     return rememberSaveable(
         inputs = arrayOf(context),
-        saver = veganUniverseNavControllerSaver(context),
-    ) { createVeganUniverseNavController(context) }
+        saver = navControllerSaver(context),
+    ) { createNavController(context) }
 }
 
 @Composable
-internal fun VeganUniverseAppNavHost(
+internal fun VUAppNavHost(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     cameraPositionState: CameraPositionState,
@@ -105,7 +105,7 @@ internal fun VeganUniverseAppNavHost(
     }
 }
 
-class VeganUniverseNavHostController(context: Context) : NavHostController(context) {
+class VUNavHostController(context: Context) : NavHostController(context) {
     override fun popBackStack(): Boolean {
         return when (currentDestination?.route) {
             PlacesDestination.route,
@@ -123,15 +123,15 @@ class VeganUniverseNavHostController(context: Context) : NavHostController(conte
     }
 }
 
-private fun veganUniverseNavControllerSaver(
+private fun navControllerSaver(
     context: Context
-): Saver<VeganUniverseNavHostController, *> = Saver(
+): Saver<VUNavHostController, *> = Saver(
     save = { it.saveState() },
-    restore = { createVeganUniverseNavController(context).apply { restoreState(it) } }
+    restore = { createNavController(context).apply { restoreState(it) } }
 )
 
-private fun createVeganUniverseNavController(context: Context) =
-    VeganUniverseNavHostController(context).apply {
+private fun createNavController(context: Context) =
+    VUNavHostController(context).apply {
         navigatorProvider.addNavigator(ComposeNavigator())
         navigatorProvider.addNavigator(DialogNavigator())
     }

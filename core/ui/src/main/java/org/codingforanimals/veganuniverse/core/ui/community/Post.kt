@@ -31,7 +31,7 @@ import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChipDefaults
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.icons.VeganUniverseIcons
+import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_07
@@ -98,7 +98,7 @@ private fun Header(
         )
         Spacer(Modifier.weight(1f))
         VUIcon(
-            icon = VeganUniverseIcons.MoreOptions,
+            icon = VUIcons.MoreOptions,
             contentDescription = "Más opciones",
             onIconClick = {},
         )
@@ -167,27 +167,27 @@ private fun Actions() {
             .padding(start = Spacing_02),
     ) {
         VUAssistChip(
-            icon = VeganUniverseIcons.Favorite,
+            icon = VUIcons.Favorite,
             label = "200",
             onClick = {},
             iconDescription = "Me gusta",
             colors = VUAssistChipDefaults.secondaryAssistChipColors(),
         )
         VUAssistChip(
-            icon = VeganUniverseIcons.Comment,
+            icon = VUIcons.Comment,
             label = "50",
             onClick = {},
             iconDescription = "Comentar",
             colors = VUAssistChipDefaults.secondaryAssistChipColors(),
         )
         VUIcon(
-            icon = VeganUniverseIcons.Share,
+            icon = VUIcons.Share,
             contentDescription = "Compartir",
             onIconClick = {},
         )
         Spacer(Modifier.weight(1f))
         VUIcon(
-            icon = VeganUniverseIcons.Bookmark,
+            icon = VUIcons.Bookmark,
             contentDescription = "Guardar",
             onIconClick = {},
         )

@@ -21,6 +21,7 @@ internal val filterBy = listOf(
     "Reemplazos",
     "Recetas",
     "Activismo",
+    "Comunicación y psicología",
     "Lugares",
     "Animales perdidos y encontrados",
     "Otros",

@@ -35,7 +35,7 @@ fun VUAssistChip(
                     .size(19.dp)
                     .padding(start = Spacing_01),
                 icon = icon,
-                contentDescription = iconDescription
+                contentDescription = iconDescription,
             )
         },
         border = null,

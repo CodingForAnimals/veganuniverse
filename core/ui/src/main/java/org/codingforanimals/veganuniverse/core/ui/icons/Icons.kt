@@ -4,13 +4,15 @@ import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon.DrawableResourceIcon
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon.ImageVectorIcon
 
-object VeganUniverseIcons {
-    val ArrowBack = Icons.Rounded.ArrowBack
+object VUIcons {
+    val ArrowBack = ImageVectorIcon(Icons.Rounded.ArrowBack)
+    val Close = ImageVectorIcon(Icons.Rounded.Close)
 
     val MoreOptions = ImageVectorIcon(Icons.Default.MoreVert)
     val Favorite = DrawableResourceIcon(R.drawable.ic_favorite)

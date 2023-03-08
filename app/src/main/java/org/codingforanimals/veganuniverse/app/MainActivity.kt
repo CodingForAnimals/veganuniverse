@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingScreen
-import org.codingforanimals.veganuniverse.ui.VeganUniverseApp
+import org.codingforanimals.veganuniverse.ui.VUApp
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     MainViewModel.LaunchState.Loading -> Unit
                     is MainViewModel.LaunchState.Completed -> {
 
-                        VeganUniverseApp()
+                        VUApp()
 
                         var showOnboarding by remember { mutableStateOf(state.showOnboarding) }
                         AnimatedVisibility(

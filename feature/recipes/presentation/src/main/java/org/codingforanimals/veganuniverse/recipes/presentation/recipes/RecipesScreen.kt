@@ -15,8 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.codingforanimals.veganuniverse.core.ui.community.Post
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
-import org.codingforanimals.veganuniverse.core.ui.icons.VeganUniverseIcons
+import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 
@@ -26,7 +26,7 @@ internal fun RecipesScreen(
     onBackClick: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        VeganUniverseTopAppBar(title = "Panificados", onBackClick = onBackClick)
+        VUTopAppBar(title = "Panificados", onBackClick = onBackClick)
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,13 +44,13 @@ internal fun RecipesScreen(
                     onClick = navigateToRecipeDetails,
                     image = true,
                     details = {
-                        VUIcon(icon = VeganUniverseIcons.Search, contentDescription = "")
+                        VUIcon(icon = VUIcons.Search, contentDescription = "")
                         Text(
                             modifier = Modifier.padding(start = Spacing_02, end = Spacing_04),
                             text = "20 min",
                             style = MaterialTheme.typography.bodyMedium,
                         )
-                        VUIcon(icon = VeganUniverseIcons.Profile, contentDescription = "")
+                        VUIcon(icon = VUIcons.Profile, contentDescription = "")
                         Text(
                             modifier = Modifier.padding(start = Spacing_02),
                             text = "4 // 500gr",

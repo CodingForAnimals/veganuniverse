@@ -8,13 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseTopAppBar
+import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 
 @Composable
 internal fun SettingsScreen(
     onBackClick: () -> Unit,
 ) {
-    VeganUniverseTopAppBar(
+    VUTopAppBar(
         title = "Configuración",
         onBackClick = onBackClick,
     )

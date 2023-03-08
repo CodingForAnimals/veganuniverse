@@ -19,7 +19,7 @@ import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 
 
 @Composable
-internal fun VeganUniverseBottomNavBar(
+internal fun VUBottomNavBar(
     modifier: Modifier = Modifier,
     visible: Boolean,
     destinations: List<TopLevelDestination>,

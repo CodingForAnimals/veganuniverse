@@ -22,13 +22,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.navigation.VeganUniverseAppNavHost
-import org.codingforanimals.veganuniverse.ui.navbar.VeganUniverseBottomNavBar
-import org.codingforanimals.veganuniverse.ui.topappbar.VeganUniverseTopAppBar
+import org.codingforanimals.veganuniverse.navigation.VUAppNavHost
+import org.codingforanimals.veganuniverse.ui.navbar.VUBottomNavBar
+import org.codingforanimals.veganuniverse.ui.topappbar.VUTopAppBar
 
 @Composable
-internal fun VeganUniverseApp(
-    appState: VeganUniverseAppState = rememberVeganUniverseAppState(),
+internal fun VUApp(
+    appState: VUAppState = rememberVUAppState(),
 ) {
     VeganUniverseBackground {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -36,7 +36,7 @@ internal fun VeganUniverseApp(
         Scaffold(
             contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
             bottomBar = {
-                VeganUniverseBottomNavBar(
+                VUBottomNavBar(
                     visible = topLevelDestination != null,
                     destinations = appState.topLevelDestinations,
                     currentDestination = appState.currentDestination,
@@ -57,14 +57,14 @@ internal fun VeganUniverseApp(
                     )
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    VeganUniverseTopAppBar(
+                    VUTopAppBar(
                         topLevelDestination = topLevelDestination,
                         onBackClick = appState::navigateToCommunity,
                         actions = appState.topBarActions,
                         onActionClick = appState::onActionClick
                     )
 
-                    VeganUniverseAppNavHost(
+                    VUAppNavHost(
                         navController = appState.navController,
                         snackbarHostState = snackbarHostState,
                         cameraPositionState = appState.cameraPositionState,

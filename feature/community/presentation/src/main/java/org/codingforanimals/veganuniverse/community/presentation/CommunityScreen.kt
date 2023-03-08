@@ -27,7 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.codingforanimals.veganuniverse.community.presentation.component.FeaturedTopicCard
 import org.codingforanimals.veganuniverse.core.ui.community.Post
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
-import org.codingforanimals.veganuniverse.core.ui.icons.VeganUniverseIcons
+import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
@@ -86,13 +86,13 @@ private fun CommunityScreen(
                     horizontalArrangement = Arrangement.spacedBy(Spacing_04)
                 ) {
                     VUAssistChip(
-                        icon = VeganUniverseIcons.Filter,
+                        icon = VUIcons.Filter,
                         label = stringResource(commonR.string.filter),
                         onClick = {},
                         iconDescription = stringResource(commonR.string.filter)
                     )
                     VUAssistChip(
-                        icon = VeganUniverseIcons.Sort,
+                        icon = VUIcons.Sort,
                         label = stringResource(commonR.string.sort),
                         onClick = {},
                         iconDescription = stringResource(commonR.string.sort),
