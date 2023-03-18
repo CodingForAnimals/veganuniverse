@@ -6,3 +6,12 @@ local.properties
 gradlew
 gradlew.bat
 *.pro
+
+#for firebase emulator configuration
+/.firebaserc
+/firebase.json
+/firebase-debug.log
+/firestore.indexes.json
+/firestore.rules
+/firestore-debug.log
+/ui-debug.log

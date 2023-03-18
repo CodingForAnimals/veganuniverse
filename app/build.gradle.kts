@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("com.google.gms.google-services")
     `android-config`
     `compose-config`
 }
@@ -29,6 +30,9 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:31.2.3"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+
     implementation(project(":feature:onboarding:presentation"))
     implementation(project(":feature:profile:presentation"))
     implementation(project(":feature:community:presentation"))
@@ -48,6 +52,14 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:${versions.googleMapServices}")
 
     implementation("androidx.core:core-splashscreen:${versions.splashScreen}")
+
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:31.2.3"))
+
+    // Declare the dependency for the Cloud Firestore library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
 
 
 //    testImplementation 'junit:junit:4.13.2'
