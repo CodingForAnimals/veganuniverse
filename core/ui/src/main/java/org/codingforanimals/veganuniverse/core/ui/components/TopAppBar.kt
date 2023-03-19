@@ -10,6 +10,7 @@ import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
@@ -42,10 +43,14 @@ fun VUMediumTopAppBar(
 
 @Composable
 fun VUTopAppBar(
+    modifier: Modifier = Modifier,
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     title: String,
     onBackClick: (() -> Unit)? = null,
 ) {
     TopAppBar(
+        modifier = modifier,
+        colors = colors,
         navigationIcon = {
             onBackClick?.let {
                 IconButton(onClick = onBackClick) {

@@ -13,3 +13,5 @@ val OnSurfaceVariant = Color(0xFF3F3F46)
 
 val PurpleGrey40 = Color(0xFF5100FF)
 val Pink40 = Color(0xFFEE0D5A)
+
+val DarkPurple = Color(0xFF280A5B)

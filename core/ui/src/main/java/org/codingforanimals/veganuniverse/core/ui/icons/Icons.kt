@@ -14,6 +14,8 @@ object VUIcons {
     val ArrowBack = ImageVectorIcon(Icons.Rounded.ArrowBack)
     val Close = ImageVectorIcon(Icons.Rounded.Close)
 
+    val Bullet = DrawableResourceIcon(R.drawable.ic_bullet)
+    val Clock = DrawableResourceIcon(R.drawable.ic_clock)
     val MoreOptions = ImageVectorIcon(Icons.Default.MoreVert)
     val Favorite = DrawableResourceIcon(R.drawable.ic_favorite)
     val Comment = DrawableResourceIcon(R.drawable.ic_comment)

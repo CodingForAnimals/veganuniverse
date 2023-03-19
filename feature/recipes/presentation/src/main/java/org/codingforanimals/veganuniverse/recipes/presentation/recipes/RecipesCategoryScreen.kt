@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package org.codingforanimals.veganuniverse.recipes.presentation.recipes
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,9 +13,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.codingforanimals.veganuniverse.core.ui.community.Post
@@ -19,12 +29,14 @@ import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
+import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsScreen
 
 @Composable
 internal fun RecipesScreen(
     navigateToRecipeDetails: () -> Unit,
     onBackClick: () -> Unit,
 ) {
+    var showCard by remember { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxSize()) {
         VUTopAppBar(title = "Panificados", onBackClick = onBackClick)
         LazyColumn(
@@ -41,10 +53,10 @@ internal fun RecipesScreen(
                     title = "Receta super piola",
                     subtitle = "@PizzaMuzza • 2 días",
                     description = "Super facil de hacer. Recomiendo para almuerzo en pareja",
-                    onClick = navigateToRecipeDetails,
+                    onClick = { showCard = true },
                     image = true,
                     details = {
-                        VUIcon(icon = VUIcons.Search, contentDescription = "")
+                        VUIcon(icon = VUIcons.Clock, contentDescription = "")
                         Text(
                             modifier = Modifier.padding(start = Spacing_02, end = Spacing_04),
                             text = "20 min",
@@ -59,6 +71,15 @@ internal fun RecipesScreen(
                     }
                 )
             }
+        }
+    }
+    AnimatedVisibility(
+        visible = showCard,
+        enter = slideInHorizontally { -it },
+        exit = slideOutHorizontally { -it }
+    ) {
+        RecipeDetailsScreen {
+            showCard = false
         }
     }
 }
