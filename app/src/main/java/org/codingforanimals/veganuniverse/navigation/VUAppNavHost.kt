@@ -12,7 +12,6 @@ import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
 import com.google.maps.android.compose.CameraPositionState
 import org.codingforanimals.map.presentation.navigation.mapGraph
-import org.codingforanimals.map.presentation.navigation.navigateToMap
 import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.places.presentation.navigation.placesGraph
 import org.codingforanimals.post.presentation.navigation.navigateToPost
@@ -89,8 +88,7 @@ internal fun VUAppNavHost(
         placesGraph(
             snackbarHostState = snackbarHostState,
             cameraPositionState = cameraPositionState,
-            navigateToMap = navController::navigateToMap,
-        )
+         )
         createGraph()
         mapGraph(
             navigateToSite = navController::navigateToSite,

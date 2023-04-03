@@ -86,7 +86,7 @@ internal fun RecipeDetailsScreen(
         }
         TopAppBar(
             modifier = Modifier.align(Alignment.TopCenter),
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Transparent),
             navigationIcon = {
                 IconButton(
                     colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),

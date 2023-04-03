@@ -13,7 +13,6 @@ object PlacesDestination : Destination(route = "places_route")
 fun NavGraphBuilder.placesGraph(
     snackbarHostState: SnackbarHostState,
     cameraPositionState: CameraPositionState,
-    navigateToMap: (Double, Double, Float) -> Unit,
 ) {
     injectPlacesModule()
     composable(
@@ -22,7 +21,6 @@ fun NavGraphBuilder.placesGraph(
             PlacesScreen(
                 snackbarHostState = snackbarHostState,
                 cameraPositionState = cameraPositionState,
-                navigateToMap = navigateToMap,
             )
         }
     )

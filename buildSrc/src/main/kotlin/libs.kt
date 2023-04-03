@@ -4,7 +4,7 @@ object versions {
     const val core = "1.8.0"
     const val lifecycle = "2.5.1"
     const val coroutines = "1.6.4"
-//    const val composeBom = "2023.02.00"
+    const val composeBom = "2023.03.00"
     const val compose = "1.3.1"
     const val composeCompiler = "1.4.0"
     const val accompanist = "0.25.1"
@@ -27,10 +27,10 @@ object libs {
         "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle}"
     )
     val compose = listOf(
-        "androidx.compose.ui:ui:${versions.compose}",
-        "androidx.compose.material3:material3:${versions.material3}",
-        "androidx.compose.material:material-icons-extended:${versions.compose}",
-        "androidx.compose.ui:ui-tooling-preview:${versions.compose}",
+        "androidx.compose.ui:ui",
+        "androidx.compose.material3:material3",
+        "androidx.compose.material:material-icons-extended",
+        "androidx.compose.ui:ui-tooling-preview",
         "androidx.activity:activity-compose:1.6.1",
         "androidx.navigation:navigation-compose:2.5.1",
         "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha04",
@@ -38,8 +38,8 @@ object libs {
     )
 
     val composeDebug = listOf(
-        "androidx.compose.ui:ui-tooling:${versions.compose}",
-        "androidx.compose.ui:ui-test-manifest:${versions.compose}"
+        "androidx.compose.ui:ui-tooling",
+        "androidx.compose.ui:ui-test-manifest"
     )
 
     const val placeholder = "com.google.accompanist:accompanist-placeholder-material:0.29.1-alpha"
@@ -82,7 +82,7 @@ object libs {
     val androidTests = listOf(
         "androidx.test.ext:junit:1.1.3",
         "androidx.test.espresso:espresso-core:3.4.0",
-        "androidx.compose.ui:ui-test-junit4:${versions.compose}"
+        "androidx.compose.ui:ui-test-junit4"
     )
     const val uiautomator =
         "androidx.test.uiautomator:uiautomator:2.2.0"

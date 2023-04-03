@@ -13,7 +13,8 @@ import org.codingforanimals.veganuniverse.core.ui.icons.Icon.ImageVectorIcon
 object VUIcons {
     val ArrowBack = ImageVectorIcon(Icons.Rounded.ArrowBack)
     val Close = ImageVectorIcon(Icons.Rounded.Close)
-
+    val Shrink = DrawableResourceIcon(R.drawable.ic_shrink)
+    val Expand = DrawableResourceIcon(R.drawable.ic_expand)
     val Bullet = DrawableResourceIcon(R.drawable.ic_bullet)
     val Clock = DrawableResourceIcon(R.drawable.ic_clock)
     val MoreOptions = ImageVectorIcon(Icons.Default.MoreVert)
@@ -36,6 +37,10 @@ object VUIcons {
     val Notifications = DrawableResourceIcon(R.drawable.ic_notifications)
     val Settings = DrawableResourceIcon(R.drawable.ic_settings)
     val Search = DrawableResourceIcon(R.drawable.ic_search)
+    val Utensils = DrawableResourceIcon(R.drawable.ic_utensils)
+    val Store = DrawableResourceIcon(R.drawable.ic_store)
+    val Star = DrawableResourceIcon(R.drawable.ic_star)
+    val StarFilled = DrawableResourceIcon(R.drawable.ic_star_filled)
 }
 
 sealed class Icon {

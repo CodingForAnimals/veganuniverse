@@ -44,7 +44,7 @@ fun VUMediumTopAppBar(
 @Composable
 fun VUTopAppBar(
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.smallTopAppBarColors(),
     title: String,
     onBackClick: (() -> Unit)? = null,
 ) {

@@ -40,7 +40,7 @@ fun RecipesHomeScreen(
         modifier = Modifier.fillMaxSize(),
         columns = StaggeredGridCells.Fixed(2),
         contentPadding = PaddingValues(spacing),
-        verticalArrangement = Arrangement.spacedBy(spacing),
+        verticalItemSpacing = spacing,
         horizontalArrangement = Arrangement.spacedBy(spacing),
         content = {
             itemsIndexed(items = list, span = { _, item ->
