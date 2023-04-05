@@ -45,8 +45,9 @@ fun VUMediumTopAppBar(
 fun VUTopAppBar(
     modifier: Modifier = Modifier,
     colors: TopAppBarColors = TopAppBarDefaults.smallTopAppBarColors(),
-    title: String,
+    title: String = "",
     onBackClick: (() -> Unit)? = null,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
         modifier = modifier,
@@ -61,7 +62,8 @@ fun VUTopAppBar(
                 }
             }
         },
-        title = { Text(title) }
+        title = { Text(title) },
+        actions = actions,
     )
 }
 

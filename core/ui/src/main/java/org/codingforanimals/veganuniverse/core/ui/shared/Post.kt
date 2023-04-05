@@ -1,14 +1,18 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package org.codingforanimals.veganuniverse.core.ui.community
+package org.codingforanimals.veganuniverse.core.ui.shared
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -36,6 +40,64 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_07
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
+
+data class HeaderData(
+    @DrawableRes val imageRes: Int,
+    val title: @Composable () -> Unit,
+    val actions: @Composable RowScope.() -> Unit,
+)
+
+@Composable
+fun GenericPost(
+    modifier: Modifier = Modifier,
+    headerData: HeaderData,
+    content: @Composable () -> Unit,
+    actions: @Composable () -> Unit = {},
+) {
+    Card(
+        modifier = modifier,
+    ) {
+        Header(headerData)
+        Column(modifier = Modifier.padding(Spacing_04)) {
+            content()
+        }
+        Row(modifier = Modifier.padding(horizontal = Spacing_02)) {
+            actions()
+        }
+    }
+}
+
+@Composable
+private fun Header(
+    headerData: HeaderData,
+) {
+    with(headerData) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+        ) {
+            Image(
+                modifier = Modifier
+                    .padding(top = Spacing_04, start = Spacing_04)
+                    .size(50.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop,
+                painter = painterResource(imageRes),
+                contentDescription = "Imágen",
+            )
+            Box(
+                modifier = Modifier
+                    .padding(top = Spacing_04, start = Spacing_04)
+                    .heightIn(max = 50.dp)
+            ) {
+                title()
+            }
+            Spacer(Modifier.weight(1f))
+            actions()
+        }
+    }
+}
 
 
 @Composable
@@ -203,5 +265,27 @@ private fun PreviewPost() {
             subtitle = "Subtitulo",
             description = "Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, Descripción, ",
         )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewGenericPost() {
+    VeganUniverseTheme {
+        GenericPost(
+            headerData = HeaderData(
+                imageRes = R.drawable.vegan_restaurant,
+                title = { Text(text = "Title") },
+                actions = {
+                    VUIcon(
+                        icon = VUIcons.MoreOptions,
+                        onIconClick = {},
+                        contentDescription = "",
+                    )
+                },
+            ),
+            content = { Text(text = "content") }) {
+
+        }
     }
 }

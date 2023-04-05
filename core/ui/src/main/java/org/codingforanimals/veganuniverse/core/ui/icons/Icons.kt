@@ -18,7 +18,8 @@ object VUIcons {
     val Bullet = DrawableResourceIcon(R.drawable.ic_bullet)
     val Clock = DrawableResourceIcon(R.drawable.ic_clock)
     val MoreOptions = ImageVectorIcon(Icons.Default.MoreVert)
-    val Favorite = DrawableResourceIcon(R.drawable.ic_favorite)
+    val Favorite = DrawableResourceIcon(R.drawable.ic_heart)
+    val FavoriteFilled = DrawableResourceIcon(R.drawable.ic_heart_filled)
     val Comment = DrawableResourceIcon(R.drawable.ic_comment)
     val Share = DrawableResourceIcon(R.drawable.ic_share)
     val Bookmark = DrawableResourceIcon(R.drawable.ic_bookmark)
@@ -39,8 +40,13 @@ object VUIcons {
     val Search = DrawableResourceIcon(R.drawable.ic_search)
     val Utensils = DrawableResourceIcon(R.drawable.ic_utensils)
     val Store = DrawableResourceIcon(R.drawable.ic_store)
+    val StoreFilled = DrawableResourceIcon(R.drawable.ic_store_filled)
     val Star = DrawableResourceIcon(R.drawable.ic_star)
     val StarFilled = DrawableResourceIcon(R.drawable.ic_star_filled)
+    val Reply = DrawableResourceIcon(R.drawable.ic_reply)
+    val Report = DrawableResourceIcon(R.drawable.ic_flag)
+    val Edit = DrawableResourceIcon(R.drawable.ic_pencil)
+    val Delete = DrawableResourceIcon(R.drawable.ic_bin)
 }
 
 sealed class Icon {

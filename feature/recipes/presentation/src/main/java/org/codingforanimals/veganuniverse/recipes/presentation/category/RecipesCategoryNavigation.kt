@@ -1,18 +1,17 @@
-package org.codingforanimals.veganuniverse.recipes.presentation.recipes.navigation
+package org.codingforanimals.veganuniverse.recipes.presentation.category
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
-import org.codingforanimals.veganuniverse.recipes.presentation.recipes.RecipesScreen
 
-object RecipesDestination : Destination(route = "category_recipes")
+object RecipesCategoryDestination : Destination(route = "recipes_category_recipes")
 
-fun NavGraphBuilder.categoryRecipesGraph(
+fun NavGraphBuilder.recipesCategoryGraph(
     navigateToRecipeDetails: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     composable(
-        route = RecipesDestination.route,
+        route = RecipesCategoryDestination.route,
     ) {
         RecipesScreen(
             navigateToRecipeDetails = navigateToRecipeDetails,

@@ -1,4 +1,4 @@
-package org.codingforanimals.places.presentation
+package org.codingforanimals.places.presentation.home
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -13,9 +13,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.codingforanimals.places.presentation.locationFlow
 import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 
-class PlacesViewModel(
+class PlacesHomeViewModel(
     context: Context,
     private val dispatchers: CoroutineDispatcherProvider,
 ) : ViewModel() {

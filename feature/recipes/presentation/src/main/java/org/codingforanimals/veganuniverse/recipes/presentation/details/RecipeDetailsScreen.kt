@@ -2,13 +2,9 @@
 
 package org.codingforanimals.veganuniverse.recipes.presentation.details
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,39 +15,33 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Badge
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.core.ui.R.drawable.vegan_restaurant
-import org.codingforanimals.veganuniverse.core.ui.community.Post
+import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
+import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChipDefaults
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.components.VUTag
+import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.DarkPurple
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_01
+import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemHero
+import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTags
+import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTitle
+import org.codingforanimals.veganuniverse.core.ui.shared.GenericPost
+import org.codingforanimals.veganuniverse.core.ui.shared.HeaderData
+import org.codingforanimals.veganuniverse.core.ui.shared.UserInfo
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
@@ -61,104 +51,61 @@ import org.codingforanimals.veganuniverse.presentation.R
 internal fun RecipeDetailsScreen(
     onBackClick: () -> Unit,
 ) {
-    BackHandler(onBack = onBackClick)
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
+        VUTopAppBar(
+            onBackClick = onBackClick,
+            actions = {
+                var showMenu by rememberSaveable { mutableStateOf(false) }
+                VUIcon(
+                    icon = VUIcons.MoreOptions,
+                    contentDescription = "",
+                    onIconClick = { showMenu = !showMenu },
+                )
+                DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                    DropdownMenuItem(
+                        text = { Text(text = "Reportar receta") },
+                        onClick = {},
+                        leadingIcon = {
+                            VUIcon(icon = VUIcons.Report, contentDescription = "")
+                        })
+                    DropdownMenuItem(
+                        text = { Text(text = "Sugerir edición") },
+                        onClick = {},
+                        leadingIcon = {
+                            VUIcon(icon = VUIcons.Edit, contentDescription = "")
+                        })
+                }
+            }
+        )
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(Spacing_04),
         ) {
-            item { Hero() }
-            item { Title() }
+            item {
+                FeatureItemHero(
+                    imageRes = org.codingforanimals.veganuniverse.core.ui.R.drawable.vegan_restaurant,
+                    icon = VUIcons.RecipesSelected
+                )
+            }
+            item {
+                FeatureItemTitle(
+                    title = "Mega muzza de papa"
+                )
+            }
             item { Details() }
             item { UserInfo() }
             item { Description() }
-            item { Tags() }
+            item { FeatureItemTags(tags) }
             item { Divider() }
             item { Ingredients() }
             item { Divider() }
             item { Steps() }
             item { Comments() }
-        }
-        TopAppBar(
-            modifier = Modifier.align(Alignment.TopCenter),
-            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Transparent),
-            navigationIcon = {
-                IconButton(
-                    colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                    onClick = onBackClick
-                ) {
-                    Icon(
-                        imageVector = VUIcons.Close.imageVector,
-                        contentDescription = "Atrás",
-                    )
-                }
-            },
-            title = {},
-        )
-    }
-}
-
-@Composable
-private fun Hero() {
-    Box(Modifier.padding(bottom = Spacing_02)) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(2f),
-            contentScale = ContentScale.Crop,
-            painter = painterResource(R.drawable.test_img_facturas),
-            contentDescription = "",
-        )
-        Spacer(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .height(Spacing_02)
-                .background(DarkPurple),
-        )
-        Card(
-            modifier = Modifier
-                .offset(y = (20).dp)
-                .align(Alignment.BottomEnd)
-                .wrapContentSize()
-                .padding(end = Spacing_06)
-                .clip(CircleShape)
-                .border(Spacing_01, MaterialTheme.colorScheme.surfaceVariant, CircleShape)
-                .align(Alignment.CenterEnd),
-            colors = CardDefaults.cardColors(
-                containerColor = DarkPurple,
-                contentColor = MaterialTheme.colorScheme.surfaceVariant,
-            )
-        ) {
-            VUIcon(
-                modifier = Modifier.padding(Spacing_04),
-                icon = VUIcons.RecipesSelected,
-                contentDescription = ""
-            )
-        }
-    }
-}
-
-@Composable
-private fun Title() {
-    Row(
-        modifier = Modifier.padding(horizontal = Spacing_06),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            modifier = Modifier.weight(1f),
-            text = "Mega muzza de papa",
-            style = MaterialTheme.typography.titleLarge
-        )
-        Row {
-            VUIcon(icon = VUIcons.Share, contentDescription = "", onIconClick = {})
-            VUIcon(icon = VUIcons.Bookmark, contentDescription = "", onIconClick = {})
         }
     }
 }
@@ -178,48 +125,11 @@ private fun Details() {
 }
 
 @Composable
-private fun UserInfo() {
-    Row(
-        modifier = Modifier.padding(horizontal = Spacing_06),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Spacing_04),
-    ) {
-        Image(
-            modifier = Modifier
-                .size(50.dp)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop,
-            painter = painterResource(vegan_restaurant),
-            contentDescription = "Imágen del usuario creador del post",
-        )
-        Column {
-            Text(text = "@PizzaMuzza", fontWeight = FontWeight.SemiBold)
-            Text(text = "Pablo Rago")
-        }
-    }
-}
-
-@Composable
 private fun Description() {
     Text(
         modifier = Modifier.padding(horizontal = Spacing_06),
         text = description,
     )
-}
-
-@Composable
-private fun Tags() {
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(unbounded = true)
-            .padding(horizontal = Spacing_06),
-        horizontalArrangement = Arrangement.spacedBy(Spacing_06),
-    ) {
-        items(items = tags, itemContent = {
-            VUTag(label = it)
-        })
-    }
 }
 
 @Composable
@@ -278,10 +188,6 @@ private fun Steps() {
 
 @Composable
 private fun Comments() {
-    val comments = listOf(
-        Pair("Nacho", "Hola! Cuánto dura en la heladera?"),
-        Pair("Pizza Muzza", "Una semana aproximadamente"),
-    )
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
@@ -294,15 +200,81 @@ private fun Comments() {
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(horizontal = Spacing_06),
         )
+
         comments.forEach {
-            Post(
-                modifier = Modifier.padding(horizontal = Spacing_06),
-                title = it.first,
-                subtitle = it.second
+            val header = HeaderData(
+                imageRes = R.drawable.test_img_panificados,
+                title = {
+                    Text(
+                        text = it.user,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                },
+                actions = {
+                    val icon = if (it.user == "El Pepe Argento") {
+                        VUIcons.Delete
+                    } else {
+                        VUIcons.Report
+                    }
+                    VUIcon(icon = icon, contentDescription = "", onIconClick = {})
+                }
             )
+            GenericPost(
+                modifier = Modifier.padding(horizontal = Spacing_06),
+                headerData = header,
+                content = {
+                    Text(text = it.comment)
+                },
+                actions = {
+                    val (favIcon, favColor) = if (it.user == "Pizza Muzza") {
+                        Pair(VUIcons.FavoriteFilled, VUAssistChipDefaults.assistChipColors())
+                    } else {
+                        Pair(VUIcons.Favorite, VUAssistChipDefaults.secondaryAssistChipColors())
+                    }
+                    VUAssistChip(
+                        icon = favIcon,
+                        onClick = {},
+                        iconDescription = "",
+                        label = it.likes.toString(),
+                        colors = favColor,
+                    )
+                    VUAssistChip(
+                        icon = VUIcons.Reply,
+                        onClick = {},
+                        iconDescription = "",
+                        label = "Responder",
+                        colors = VUAssistChipDefaults.secondaryAssistChipColors(),
+                    )
+                })
         }
     }
 }
+
+private val comments = listOf(
+    Comment(
+        user = "El Pepe Argento",
+        comment = "Hola! Cuánto dura en la heladera?",
+        likes = 1,
+    ),
+    Comment(
+        user = "Pizza Muzza",
+        comment = "@elpepe dura aprox 1 semana",
+        likes = 5,
+    ),
+    Comment(
+        user = "El Pepe Argento",
+        comment = "Bárbaro gracias :D",
+        likes = 1,
+    )
+)
+
+data class Comment(
+    val user: String,
+    val comment: String,
+    val likes: Int,
+)
+
 
 @Composable
 private fun Divider() {

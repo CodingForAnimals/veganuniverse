@@ -14,8 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import org.codingforanimals.veganuniverse.common.R
-import org.codingforanimals.veganuniverse.core.ui.community.Post
 import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.core.ui.shared.Post
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.model.test_post_list

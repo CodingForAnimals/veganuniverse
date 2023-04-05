@@ -4,7 +4,6 @@ package org.codingforanimals.veganuniverse.core.ui.components
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -14,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_01
 
@@ -22,7 +20,7 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_01
 fun VUAssistChip(
     modifier: Modifier = Modifier,
     icon: Icon,
-    label: String?,
+    label: String? = null,
     onClick: () -> Unit,
     iconDescription: String,
     colors: ChipColors = VUAssistChipDefaults.assistChipColors(),
@@ -31,9 +29,7 @@ fun VUAssistChip(
         modifier = modifier,
         leadingIcon = {
             VUIcon(
-                modifier = Modifier
-                    .size(19.dp)
-                    .padding(start = Spacing_01),
+                modifier = Modifier.padding(start = Spacing_01),
                 icon = icon,
                 contentDescription = iconDescription,
             )
@@ -43,7 +39,11 @@ fun VUAssistChip(
         onClick = onClick,
         shape = CircleShape,
         interactionSource = MutableInteractionSource(),
-        label = { label?.let { Text(it) } }
+        label = {
+            label?.let {
+                Text(it)
+            }
+        }
     )
 }
 

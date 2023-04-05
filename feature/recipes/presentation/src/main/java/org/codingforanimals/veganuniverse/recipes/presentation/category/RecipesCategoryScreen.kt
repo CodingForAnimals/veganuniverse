@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package org.codingforanimals.veganuniverse.recipes.presentation.recipes
+package org.codingforanimals.veganuniverse.recipes.presentation.category
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
@@ -23,10 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.codingforanimals.veganuniverse.core.ui.community.Post
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
+import org.codingforanimals.veganuniverse.core.ui.shared.Post
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsScreen

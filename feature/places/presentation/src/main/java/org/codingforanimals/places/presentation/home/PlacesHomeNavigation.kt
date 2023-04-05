@@ -1,26 +1,25 @@
-package org.codingforanimals.places.presentation.navigation
+package org.codingforanimals.places.presentation.home
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.google.maps.android.compose.CameraPositionState
-import org.codingforanimals.places.presentation.PlacesScreen
-import org.codingforanimals.places.presentation.di.injectPlacesModule
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 
-object PlacesDestination : Destination(route = "places_route")
+object PlacesHomeDestination : Destination(route = "places_home_route")
 
-fun NavGraphBuilder.placesGraph(
+fun NavGraphBuilder.placesHomeGraph(
     snackbarHostState: SnackbarHostState,
     cameraPositionState: CameraPositionState,
+    navigateToPlaceDetails: () -> Unit,
 ) {
-    injectPlacesModule()
     composable(
-        route = PlacesDestination.route,
+        route = PlacesHomeDestination.route,
         content = {
-            PlacesScreen(
+            PlacesHomeScreen(
                 snackbarHostState = snackbarHostState,
                 cameraPositionState = cameraPositionState,
+                onPlaceClick = navigateToPlaceDetails,
             )
         }
     )

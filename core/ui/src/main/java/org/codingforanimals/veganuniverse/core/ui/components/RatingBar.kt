@@ -9,8 +9,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -18,6 +23,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
+
+@Composable
+fun InteractiveRatingBar(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.primary,
+) {
+    var rating by remember { mutableStateOf(0) }
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(Spacing_02)
+    ) {
+        (1..5).forEach { step ->
+            val icon = when {
+                rating >= step -> VUIcons.StarFilled
+                else -> VUIcons.Star
+            }
+            IconButton(
+                onClick = { rating = step },
+            ) {
+                Icon(
+                    painter = painterResource(icon.id),
+                    contentDescription = "",
+                    tint = color
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun RatingBar(
@@ -46,7 +79,7 @@ fun RatingBar(
 
 @Preview
 @Composable
-fun RatingBarPreview() {
+private fun RatingBarPreview() {
     Column(
         Modifier
             .fillMaxSize()

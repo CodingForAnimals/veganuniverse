@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 
-package org.codingforanimals.places.presentation
+package org.codingforanimals.places.presentation.home
 
 import android.Manifest
 import android.view.MotionEvent
@@ -52,6 +52,7 @@ import com.google.maps.android.compose.MapUiSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.places.presentation.animateToLocation
 import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.components.RatingBar
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
@@ -66,10 +67,11 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PlacesScreen(
+fun PlacesHomeScreen(
     snackbarHostState: SnackbarHostState,
     cameraPositionState: CameraPositionState,
-    viewModel: PlacesViewModel = koinViewModel(),
+    onPlaceClick: () -> Unit,
+    viewModel: PlacesHomeViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -81,19 +83,21 @@ fun PlacesScreen(
     RequestLocationPermission(
         locationGranted = uiState.locationGranted,
         snackbarHostState = snackbarHostState,
-        onLocationPermissionGranted = { viewModel.onAction(PlacesViewModel.UserAction.OnLocationGranted) },
+        onLocationPermissionGranted = { viewModel.onAction(PlacesHomeViewModel.UserAction.OnLocationGranted) },
     )
 
-    PlacesScreen(
+    PlacesHomeScreen(
         cameraPositionState = cameraPositionState,
         uiState = uiState,
+        onPlaceClick = onPlaceClick,
     )
 }
 
 @Composable
-private fun PlacesScreen(
+private fun PlacesHomeScreen(
     cameraPositionState: CameraPositionState,
-    uiState: PlacesViewModel.UiState,
+    uiState: PlacesHomeViewModel.UiState,
+    onPlaceClick: () -> Unit,
 ) {
     var columnScrollEnabled by remember { mutableStateOf(true) }
 
@@ -113,7 +117,9 @@ private fun PlacesScreen(
             )
         }
         item {
-            NearbyPlaces()
+            NearbyPlaces(
+                onPlaceClick = onPlaceClick,
+            )
         }
     }
 }
@@ -195,7 +201,9 @@ private fun Map(
 }
 
 @Composable
-private fun NearbyPlaces() {
+private fun NearbyPlaces(
+    onPlaceClick: () -> Unit,
+) {
     Row(
         modifier = Modifier.padding(top = Spacing_04, end = Spacing_04, start = Spacing_04),
         horizontalArrangement = Arrangement.spacedBy(Spacing_04)
@@ -230,7 +238,7 @@ private fun NearbyPlaces() {
                 .fillMaxWidth()
                 .height(200.dp)
                 .padding(all = Spacing_04)
-                .clickable {}
+                .clickable(onClick = onPlaceClick),
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = Spacing_04, vertical = Spacing_05),
@@ -293,13 +301,13 @@ private fun NearbyPlaces() {
 
 @Composable
 private fun HandleSideEffects(
-    sideEffect: Flow<PlacesViewModel.SideEffect>,
+    sideEffect: Flow<PlacesHomeViewModel.SideEffect>,
     cameraPositionState: CameraPositionState,
 ) {
     LaunchedEffect(Unit) {
         sideEffect.onEach { effect ->
             when (effect) {
-                is PlacesViewModel.SideEffect.ZoomOnUserLocation -> {
+                is PlacesHomeViewModel.SideEffect.ZoomOnUserLocation -> {
                     animateToLocation(cameraPositionState, effect.latLng)
                 }
             }

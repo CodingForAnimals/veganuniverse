@@ -11,9 +11,8 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
 import com.google.maps.android.compose.CameraPositionState
-import org.codingforanimals.map.presentation.navigation.mapGraph
-import org.codingforanimals.places.presentation.navigation.PlacesDestination
-import org.codingforanimals.places.presentation.navigation.placesGraph
+import org.codingforanimals.places.presentation.home.PlacesHomeDestination
+import org.codingforanimals.places.presentation.placesGraph
 import org.codingforanimals.post.presentation.navigation.navigateToPost
 import org.codingforanimals.post.presentation.navigation.postGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
@@ -27,15 +26,13 @@ import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigat
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.profileGraph
-import org.codingforanimals.veganuniverse.recipes.presentation.home.navigation.RecipeCategoriesDestination
-import org.codingforanimals.veganuniverse.recipes.presentation.navigation.recipesGraph
+import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeDestination
+import org.codingforanimals.veganuniverse.recipes.presentation.recipesGraph
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegisterDestination
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.navigateToRegister
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
 import org.codingforanimals.veganuniverse.search.presentation.navigation.searchGraph
 import org.codingforanimals.veganuniverse.settings.presentation.navigation.settingsGraph
-import org.codingforanimals.veganuniverse.site.presentation.navigation.navigateToSite
-import org.codingforanimals.veganuniverse.site.presentation.navigation.siteGraph
 
 @Composable
 internal fun rememberVUNavController(): NavHostController {
@@ -86,17 +83,11 @@ internal fun VUAppNavHost(
             }
         )
         placesGraph(
+            navController = navController,
             snackbarHostState = snackbarHostState,
             cameraPositionState = cameraPositionState,
-         )
-        createGraph()
-        mapGraph(
-            navigateToSite = navController::navigateToSite,
-            snackbarHostState = snackbarHostState,
-            nestedGraphs = {
-                siteGraph()
-            }
         )
+        createGraph()
         recipesGraph(
             navController = navController,
         )
@@ -106,9 +97,9 @@ internal fun VUAppNavHost(
 class VUNavHostController(context: Context) : NavHostController(context) {
     override fun popBackStack(): Boolean {
         return when (currentDestination?.route) {
-            PlacesDestination.route,
+            PlacesHomeDestination.route,
             CreateDestination.route,
-            RecipeCategoriesDestination.route,
+            RecipesHomeDestination.route,
             ProfileDestination.route,
             -> {
                 navigate(CommunityDestination.route) {
