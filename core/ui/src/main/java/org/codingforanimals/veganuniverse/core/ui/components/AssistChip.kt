@@ -19,7 +19,7 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_01
 @Composable
 fun VUAssistChip(
     modifier: Modifier = Modifier,
-    icon: Icon,
+    icon: Icon? = null,
     label: String? = null,
     onClick: () -> Unit,
     iconDescription: String,
@@ -28,11 +28,13 @@ fun VUAssistChip(
     AssistChip(
         modifier = modifier,
         leadingIcon = {
-            VUIcon(
-                modifier = Modifier.padding(start = Spacing_01),
-                icon = icon,
-                contentDescription = iconDescription,
-            )
+            icon?.let {
+                VUIcon(
+                    modifier = Modifier.padding(start = Spacing_01),
+                    icon = icon,
+                    contentDescription = iconDescription,
+                )
+            }
         },
         border = null,
         colors = colors,
@@ -41,7 +43,7 @@ fun VUAssistChip(
         interactionSource = MutableInteractionSource(),
         label = {
             label?.let {
-                Text(it)
+                Text(label)
             }
         }
     )

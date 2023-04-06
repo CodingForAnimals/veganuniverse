@@ -20,14 +20,17 @@ import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 fun VUTag(
     modifier: Modifier = Modifier,
     label: String,
-    colors: VUTagColors = VUTagDefaults.vuTagColors()
+    onClick: (() -> Unit)? = null,
+    colors: VUTagColors = VUTagDefaults.tagColors()
 ) {
     SuggestionChip(
         modifier = modifier,
-        onClick = {},
+        onClick = { onClick?.invoke() },
         label = { Text(label) },
-        enabled = false,
+        enabled = onClick != null,
         colors = SuggestionChipDefaults.suggestionChipColors(
+            containerColor = colors.containerColor,
+            labelColor = colors.labelColor,
             disabledContainerColor = colors.containerColor,
             disabledLabelColor = colors.labelColor,
         ),
@@ -37,9 +40,16 @@ fun VUTag(
 
 object VUTagDefaults {
     @Composable
-    fun vuTagColors() = VUTagColors(
+    fun tagColors() = VUTagColors(
         containerColor = Color.Transparent,
         labelColor = MaterialTheme.colorScheme.primary,
+        borderColor = MaterialTheme.colorScheme.primary,
+    )
+
+    @Composable
+    fun invertedTagColors() = VUTagColors(
+        containerColor = MaterialTheme.colorScheme.primary,
+        labelColor = MaterialTheme.colorScheme.onPrimary,
         borderColor = MaterialTheme.colorScheme.primary,
     )
 }

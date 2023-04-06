@@ -50,6 +50,7 @@ import org.codingforanimals.veganuniverse.presentation.R
 @Composable
 internal fun RecipeDetailsScreen(
     onBackClick: () -> Unit,
+    openDialog: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -68,7 +69,7 @@ internal fun RecipeDetailsScreen(
                 DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
                     DropdownMenuItem(
                         text = { Text(text = "Reportar receta") },
-                        onClick = {},
+                        onClick = openDialog,
                         leadingIcon = {
                             VUIcon(icon = VUIcons.Report, contentDescription = "")
                         })

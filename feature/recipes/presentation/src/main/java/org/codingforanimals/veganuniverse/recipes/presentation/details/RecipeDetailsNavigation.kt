@@ -8,12 +8,14 @@ object RecipeDetailsDestination : Destination(route = "recipe_details")
 
 fun NavGraphBuilder.recipeDetailsGraph(
     onBackClick: () -> Unit,
+    openDialog: () -> Unit,
 ) {
     composable(
         route = RecipeDetailsDestination.route
     ) {
         RecipeDetailsScreen(
             onBackClick = onBackClick,
+            openDialog = openDialog,
         )
     }
 }
