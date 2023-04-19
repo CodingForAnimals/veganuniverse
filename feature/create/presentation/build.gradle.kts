@@ -10,8 +10,9 @@ android {
 }
 
 dependencies {
-    implementation(libs.googleMapCompose)
     implementation(project(":core:common"))
+    implementation(libs.googleMapCompose)
+    implementation(libs.imageCropper)
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

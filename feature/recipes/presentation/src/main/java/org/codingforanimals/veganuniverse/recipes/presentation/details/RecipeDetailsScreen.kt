@@ -88,7 +88,7 @@ internal fun RecipeDetailsScreen(
         ) {
             item {
                 ItemDetailHero(
-                    imageRes = org.codingforanimals.veganuniverse.core.ui.R.drawable.vegan_restaurant,
+//                    imageUri = org.codingforanimals.veganuniverse.core.ui.R.drawable.vegan_restaurant,
                     icon = VUIcons.RecipesFilled,
                     onImageClick = {},
                 )

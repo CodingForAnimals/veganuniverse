@@ -1,13 +1,21 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package org.codingforanimals.veganuniverse.create.presentation.place
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHero
 import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHeroColors
@@ -24,15 +32,42 @@ internal fun CreatePlaceScreen(
     viewModel: CreatePlaceViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val cropImage = rememberLauncherForActivityResult(
+        contract = CropImageContract(),
+        onResult = { result ->
+            if (result.isSuccessful) {
+                imageUri = result.uriContent
+            } else {
+                Log.e(
+                    "CreatePlaceScreen.kt",
+                    "Error cropping image: ${result.error?.stackTraceToString()}"
+                )
+            }
+        },
+    )
+
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            uri?.let {
+                cropImage.launch(CropImageContractOptions(uri, CropImageOptions()))
+            }
+        },
+    )
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(Spacing_05),
     ) {
         item {
             ItemDetailHero(
+                imageUri = imageUri,
                 icon = VUIcons.PlacesFilled,
-                onImageClick = {},
-                colors = ItemDetailHeroColors.secondaryColors(),
+                onImageClick = {
+                    imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                },
+                colors = if (imageUri == null) ItemDetailHeroColors.secondaryColors() else ItemDetailHeroColors.primaryColors(),
             )
         }
         item {

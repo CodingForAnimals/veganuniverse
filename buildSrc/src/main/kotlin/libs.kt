@@ -49,6 +49,8 @@ object libs {
         "com.google.android.gms:play-services-location:21.0.1",
     )
 
+    const val imageCropper = "com.vanniktech:android-image-cropper:4.5.0"
+
     const val placeholder = "com.google.accompanist:accompanist-placeholder-material:0.29.1-alpha"
 
     const val preferencesDatastore =

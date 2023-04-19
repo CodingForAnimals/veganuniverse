@@ -2,6 +2,7 @@
 
 package org.codingforanimals.veganuniverse.core.ui.shared
 
+import android.net.Uri
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.components.VUTag
@@ -71,21 +73,22 @@ data class ItemDetailHeroColors(
 
 @Composable
 fun ItemDetailHero(
-    imageRes: Int? = null,
+    imageUri: Uri? = null,
     icon: Icon,
     onImageClick: () -> Unit,
     colors: ItemDetailHeroColors = ItemDetailHeroColors.primaryColors(),
 ) {
+    val uri = rememberAsyncImagePainter(imageUri)
     Box {
         val heroImageModifier = Modifier
             .fillMaxWidth()
             .aspectRatio(2f)
             .padding(bottom = 20.dp)
             .clickable(onClick = onImageClick)
-        if (imageRes != null) {
+        if (imageUri != null) {
             Image(
                 modifier = heroImageModifier,
-                painter = painterResource(imageRes), contentDescription = "",
+                painter = uri, contentDescription = "",
                 contentScale = ContentScale.Crop,
             )
         } else {
@@ -210,33 +213,5 @@ fun FeatureItemTags(
         horizontalArrangement = Arrangement.spacedBy(Spacing_06),
     ) {
         tags.forEach { VUTag(label = it) }
-    }
-}
-
-@Composable
-fun FeatureItemComments() {
-    val comments = listOf(
-        Pair("Nacho", "Hola! Cuánto dura en la heladera?"),
-        Pair("Pizza Muzza", "Una semana aproximadamente"),
-    )
-    Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .padding(vertical = Spacing_06),
-        verticalArrangement = Arrangement.spacedBy(Spacing_04),
-    ) {
-        Text(
-            text = "¿Qué dice la comunidad?",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(horizontal = Spacing_06),
-        )
-        comments.forEach {
-            Post(
-                modifier = Modifier.padding(horizontal = Spacing_06),
-                title = it.first,
-                subtitle = it.second
-            )
-        }
     }
 }
