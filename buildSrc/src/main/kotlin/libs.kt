@@ -42,9 +42,17 @@ object libs {
         "androidx.compose.ui:ui-test-manifest"
     )
 
+    val googleMapCompose = listOf(
+        "com.google.maps.android:maps-compose:2.8.0",
+        "com.google.maps.android:android-maps-utils:2.3.0",
+        "com.google.android.gms:play-services-maps:18.1.0",
+        "com.google.android.gms:play-services-location:21.0.1",
+    )
+
     const val placeholder = "com.google.accompanist:accompanist-placeholder-material:0.29.1-alpha"
 
-    const val preferencesDatastore = "androidx.datastore:datastore-preferences:${versions.datastore}"
+    const val preferencesDatastore =
+        "androidx.datastore:datastore-preferences:${versions.datastore}"
 
     const val permissionsCompose =
         "com.google.accompanist:accompanist-permissions:${versions.accompanist}"
@@ -56,7 +64,8 @@ object libs {
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
 
     const val koinAndroid = "io.insert-koin:koin-android:${versions.koinAndroid}"
-    const val koinAndroidCompose = "io.insert-koin:koin-androidx-compose:${versions.koinAndroidCompose}"
+    const val koinAndroidCompose =
+        "io.insert-koin:koin-androidx-compose:${versions.koinAndroidCompose}"
 
     val retrofit = listOf(
         "com.squareup.retrofit2:retrofit:${versions.retrofit}",

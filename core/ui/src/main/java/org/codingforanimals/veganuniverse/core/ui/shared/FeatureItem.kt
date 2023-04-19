@@ -2,10 +2,10 @@
 
 package org.codingforanimals.veganuniverse.core.ui.shared
 
-import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,20 +16,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,53 +37,115 @@ import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.components.VUTag
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.DarkPurple
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_01
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
+import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 
+data class ItemDetailHeroColors(
+    val imageBackground: Color,
+    val divider: Color,
+    val iconContainer: Color,
+    val iconTint: Color,
+    val iconBorder: Color,
+) {
+    companion object ItemDetailHeroDefaults {
+        @Composable
+        fun primaryColors() = ItemDetailHeroColors(
+            imageBackground = MaterialTheme.colorScheme.surfaceVariant,
+            divider = MaterialTheme.colorScheme.primary,
+            iconContainer = MaterialTheme.colorScheme.primary,
+            iconTint = MaterialTheme.colorScheme.surfaceVariant,
+            iconBorder = MaterialTheme.colorScheme.surfaceVariant,
+        )
+
+        @Composable
+        fun secondaryColors() = ItemDetailHeroColors(
+            imageBackground = MaterialTheme.colorScheme.surfaceVariant,
+            divider = MaterialTheme.colorScheme.secondaryContainer,
+            iconContainer = MaterialTheme.colorScheme.secondaryContainer,
+            iconTint = MaterialTheme.colorScheme.surfaceVariant,
+            iconBorder = MaterialTheme.colorScheme.secondaryContainer,
+        )
+    }
+}
 
 @Composable
-fun FeatureItemHero(
-    @DrawableRes imageRes: Int,
+fun ItemDetailHero(
+    imageRes: Int? = null,
     icon: Icon,
+    onImageClick: () -> Unit,
+    colors: ItemDetailHeroColors = ItemDetailHeroColors.primaryColors(),
 ) {
-    Box(Modifier.padding(bottom = Spacing_02)) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(2f),
-            contentScale = ContentScale.Crop,
-            painter = painterResource(imageRes),
-            contentDescription = "",
-        )
-        Spacer(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .height(Spacing_02)
-                .background(DarkPurple),
-        )
-        Card(
-            modifier = Modifier
-                .offset(y = (20).dp)
-                .align(Alignment.BottomEnd)
-                .wrapContentSize()
-                .padding(end = Spacing_06)
-                .clip(CircleShape)
-                .border(Spacing_01, MaterialTheme.colorScheme.surfaceVariant, CircleShape)
-                .align(Alignment.CenterEnd),
-            colors = CardDefaults.cardColors(
-                containerColor = DarkPurple,
-                contentColor = MaterialTheme.colorScheme.surfaceVariant,
+    Box {
+        val heroImageModifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(2f)
+            .padding(bottom = 20.dp)
+            .clickable(onClick = onImageClick)
+        if (imageRes != null) {
+            Image(
+                modifier = heroImageModifier,
+                painter = painterResource(imageRes), contentDescription = "",
+                contentScale = ContentScale.Crop,
             )
+        } else {
+            Column(
+                modifier = heroImageModifier.background(colors.imageBackground),
+                verticalArrangement = Arrangement.spacedBy(Spacing_03, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                VUIcon(
+                    modifier = Modifier.size(24.dp),
+                    icon = VUIcons.Pictures,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.primaryContainer
+                )
+                Text(
+                    text = "Subir foto",
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                )
+            }
+        }
+        Box(
+            modifier = Modifier
+                .height(40.dp)
+                .align(Alignment.BottomCenter),
         ) {
-            VUIcon(
-                modifier = Modifier.padding(Spacing_04),
-                icon = icon,
-                contentDescription = ""
+            Spacer(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .height(4.dp)
+                    .fillMaxWidth()
+                    .background(colors.divider)
             )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = Spacing_06),
+            ) {
+                Box {
+                    Canvas(
+                        modifier = Modifier.size(30.dp),
+                        onDraw = {
+                            drawCircle(
+                                radius = 20.dp.toPx(),
+                                color = colors.iconContainer,
+                            )
+                            drawCircle(
+                                radius = 20.dp.toPx(),
+                                color = colors.iconBorder,
+                                style = Stroke(3.dp.toPx())
+                            )
+                        },
+                    )
+                    VUIcon(
+                        modifier = Modifier.align(Alignment.Center),
+                        icon = icon,
+                        contentDescription = "",
+                        tint = colors.iconTint,
+                    )
+                }
+            }
         }
     }
 }

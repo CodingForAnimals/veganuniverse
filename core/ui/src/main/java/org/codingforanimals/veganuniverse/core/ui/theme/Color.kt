@@ -2,7 +2,7 @@ package org.codingforanimals.veganuniverse.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Primary = Color(0xFF541FAD)
+val Primary = Color(0xFF3B0F8A)
 val PrimaryLight = Color(0xFF7132E4)
 val OnPrimary = Color(0xFFF4F4F5)
 val Background = Color(0xFFE4E4E7)
@@ -10,9 +10,5 @@ val PrimaryContainer = Color(0xFFBABFC4)
 val SecondaryContainer = Color(0xFFD8DBE0)
 val Surface = Color(0xFFDFE1E3)
 val SurfaceVariant = Color(0xFFF4F4F5)
-val OnSurfaceVariant = Color(0xFF3F3F46)
-
-val PurpleGrey40 = Color(0xFF5100FF)
-val Pink40 = Color(0xFFEE0D5A)
-
-val DarkPurple = Color(0xFF280A5B)
+val OnSurfaceVariant = Color(0xFF4D4D55)
+val Secondary = Color(0xFFE0D2F9)

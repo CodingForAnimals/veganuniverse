@@ -12,31 +12,31 @@ enum class TopLevelDestination(
 ) {
     COMMUNITY(
         unselectedIcon = VUIcons.Community,
-        selectedIcon = VUIcons.CommunitySelected,
+        selectedIcon = VUIcons.CommunityFilled,
         iconTextId = R.string.nav_label_community,
         titleRes = R.string.nav_label_community,
     ),
     PLACES(
         unselectedIcon = VUIcons.Places,
-        selectedIcon = VUIcons.PlacesSelected,
+        selectedIcon = VUIcons.PlacesFilled,
         iconTextId = R.string.nav_label_places,
         titleRes = R.string.nav_label_places,
     ),
     CREATE(
         unselectedIcon = VUIcons.Create,
-        selectedIcon = VUIcons.CreateSelected,
+        selectedIcon = VUIcons.CreateFilled,
         iconTextId = R.string.nav_label_create,
         titleRes = R.string.nav_label_create,
     ),
     RECIPES(
         unselectedIcon = VUIcons.Recipes,
-        selectedIcon = VUIcons.RecipesSelected,
+        selectedIcon = VUIcons.RecipesFilled,
         iconTextId = R.string.nav_label_recipes,
         titleRes = R.string.topbar_title_recipes,
     ),
     PROFILE(
         unselectedIcon = VUIcons.Profile,
-        selectedIcon = VUIcons.ProfileSelected,
+        selectedIcon = VUIcons.ProfileFilled,
         iconTextId = R.string.nav_label_profile,
         titleRes = R.string.nav_label_profile,
     )

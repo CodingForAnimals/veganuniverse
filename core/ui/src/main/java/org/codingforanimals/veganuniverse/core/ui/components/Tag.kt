@@ -2,8 +2,13 @@
 
 package org.codingforanimals.veganuniverse.core.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
@@ -14,7 +19,73 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.codingforanimals.veganuniverse.core.ui.icons.Icon
+import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
+
+@Composable
+fun VUSelectableChip(
+    modifier: Modifier = Modifier,
+    label: String,
+    selected: Boolean,
+    selectedIcon: Icon = VUIcons.Check,
+    onClick: () -> Unit,
+) {
+    val color =
+        if (selected) VUSelectableChipDefaults.selectedColors() else VUSelectableChipDefaults.idleColors()
+    val containerColor = animateColorAsState(color.containerColor)
+    val borderColor = animateColorAsState(color.borderColor)
+
+    val textPadding = animateDpAsState(targetValue = if (!selected) 10.dp else 0.dp)
+    AssistChip(
+        modifier = modifier,
+        onClick = onClick,
+        label = {
+            Text(
+                modifier = Modifier.padding(horizontal = textPadding.value),
+                text = label
+            )
+        },
+        leadingIcon = {
+            AnimatedVisibility(visible = selected) {
+                VUIcon(
+                    icon = selectedIcon,
+                    contentDescription = ""
+                )
+            }
+        },
+        colors = AssistChipDefaults.assistChipColors(
+            containerColor = containerColor.value,
+            labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
+        border = AssistChipDefaults.assistChipBorder(
+            borderColor = borderColor.value
+        )
+    )
+
+}
+
+object VUSelectableChipDefaults {
+    @Composable
+    fun selectedColors() = VUSelectableChipColors(
+        containerColor = MaterialTheme.colorScheme.secondary,
+        labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        borderColor = MaterialTheme.colorScheme.secondary,
+    )
+
+    @Composable
+    fun idleColors() = VUSelectableChipColors(
+        containerColor = MaterialTheme.colorScheme.surface,
+        labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        borderColor = MaterialTheme.colorScheme.primary,
+    )
+}
+
+data class VUSelectableChipColors(
+    val containerColor: Color,
+    val labelColor: Color,
+    val borderColor: Color,
+)
 
 @Composable
 fun VUTag(

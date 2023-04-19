@@ -12,10 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -27,20 +23,21 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 @Composable
 fun InteractiveRatingBar(
     modifier: Modifier = Modifier,
+    value: Int,
+    onValueChange: (Int) -> Unit,
     color: Color = MaterialTheme.colorScheme.primary,
 ) {
-    var rating by remember { mutableStateOf(0) }
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(Spacing_02)
     ) {
-        (1..5).forEach { step ->
+        (1..5).forEach { starIndex ->
             val icon = when {
-                rating >= step -> VUIcons.StarFilled
+                value >= starIndex -> VUIcons.StarFilled
                 else -> VUIcons.Star
             }
             IconButton(
-                onClick = { rating = step },
+                onClick = { onValueChange(starIndex) },
             ) {
                 Icon(
                     painter = painterResource(icon.id),
@@ -54,7 +51,7 @@ fun InteractiveRatingBar(
 
 @Composable
 fun RatingBar(
-    rating: Float,
+    rating: Int,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
 ) {
@@ -86,7 +83,7 @@ private fun RatingBarPreview() {
             .background(Color.White)
     ) {
         RatingBar(
-            3.8f,
+            3,
             modifier = Modifier.height(20.dp)
         )
     }

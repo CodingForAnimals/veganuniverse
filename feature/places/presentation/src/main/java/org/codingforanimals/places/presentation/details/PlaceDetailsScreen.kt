@@ -2,6 +2,7 @@
 
 package org.codingforanimals.places.presentation.details
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -35,11 +37,11 @@ import org.codingforanimals.veganuniverse.core.ui.components.RatingBar
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemHero
 import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTags
 import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTitle
 import org.codingforanimals.veganuniverse.core.ui.shared.GenericPost
 import org.codingforanimals.veganuniverse.core.ui.shared.HeaderData
+import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHero
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 
@@ -84,7 +86,7 @@ internal fun PlaceDetailsScreen(
 
 @Composable
 private fun PlaceDetailsScreenData() {
-    val latlng = LatLng(-34.603722, -58.381592)
+    val latlng = LatLng(-37.331928, -59.139309)
     val camera = CameraPositionState(
         position = CameraPosition.fromLatLngZoom(
             latlng,
@@ -98,22 +100,23 @@ private fun PlaceDetailsScreenData() {
         verticalArrangement = Arrangement.spacedBy(Spacing_04),
     ) {
         item {
-            FeatureItemHero(
+            ItemDetailHero(
                 imageRes = org.codingforanimals.veganuniverse.core.ui.R.drawable.vegan_restaurant,
-                icon = VUIcons.StoreFilled
+                icon = VUIcons.StoreFilled,
+                onImageClick = {},
             )
         }
         item {
             FeatureItemTitle(
                 title = "Todo Vegano",
-                subtitle = { RatingBar(rating = 4f) }
+                subtitle = { RatingBar(rating = 4) }
             )
         }
         item { CoreData() }
         item { Description() }
         item { FeatureItemTags(tags) }
         item { Map(camera) }
-        item { ReviewStars() }
+        item { AddReview() }
         item {
             Column(
                 modifier = Modifier
@@ -188,16 +191,45 @@ private fun Map(cameraPositionState: CameraPositionState) {
 }
 
 @Composable
-private fun ReviewStars() {
-    Text(
-        text = "Aporta tu reseña",
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.padding(horizontal = Spacing_06, vertical = Spacing_04),
-    )
-    InteractiveRatingBar(
-        modifier = Modifier.padding(horizontal = Spacing_06),
-    )
+private fun AddReview() {
+    var isPlaceAlreadyReviewedByUser by remember { mutableStateOf(false) }
+    AnimatedVisibility(visible = !isPlaceAlreadyReviewedByUser) {
+        Column {
+            Text(
+                text = "Aporta tu reseña",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(horizontal = Spacing_06, vertical = Spacing_04),
+            )
+
+            var addingReview by rememberSaveable { mutableStateOf(false) }
+            var rating by rememberSaveable { mutableStateOf(0) }
+            InteractiveRatingBar(
+                modifier = Modifier.padding(horizontal = Spacing_06),
+                value = rating,
+                onValueChange = { addingReview = true; rating = it }
+            )
+
+            AnimatedVisibility(visible = addingReview) {
+                var isDiscardingReview by rememberSaveable { mutableStateOf(false) }
+                AddReviewPost(
+                    rating = rating,
+                    showDiscardReviewDialog = { isDiscardingReview = true },
+                    submitReview = { isPlaceAlreadyReviewedByUser = true },
+                )
+                if (isDiscardingReview) {
+                    DiscardReviewDialog(
+                        onDismissRequest = { isDiscardingReview = false },
+                        onConfirmClick = {
+                            rating = 0
+                            addingReview = false
+                            isDiscardingReview = false
+                        }
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -211,7 +243,7 @@ private fun Review(review: Review) {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
-                RatingBar(rating = review.rating.toFloat())
+                RatingBar(rating = review.rating)
             }
         },
         actions = {

@@ -101,10 +101,12 @@ private fun PlacesHomeScreen(
 ) {
     var columnScrollEnabled by remember { mutableStateOf(true) }
 
-    LaunchedEffect(cameraPositionState.isMoving, columnScrollEnabled) {
-        if (!cameraPositionState.isMoving) {
-            columnScrollEnabled = true
-        }
+    /*
+    After ACTION_DOWN is detected, we interrupt the click flow and set 'columnScrollEnabled' to false.
+    Immediately after we can re-enable scrolling behaviour, because user is now scrolling inside the map.
+     */
+    LaunchedEffect(columnScrollEnabled) {
+        columnScrollEnabled = true
     }
 
     LazyColumn(userScrollEnabled = columnScrollEnabled) {
@@ -113,7 +115,6 @@ private fun PlacesHomeScreen(
                 cameraPositionState = cameraPositionState,
                 isLocationGranted = uiState.locationGranted,
                 onMapTouched = { columnScrollEnabled = false },
-                onMapReleased = { columnScrollEnabled = true },
             )
         }
         item {
@@ -151,7 +152,6 @@ private fun Map(
     cameraPositionState: CameraPositionState,
     isLocationGranted: Boolean,
     onMapTouched: () -> Unit,
-    onMapReleased: () -> Unit,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     val aspectRatio by animateFloatAsState(
@@ -168,10 +168,6 @@ private fun Map(
                         when (it.action) {
                             MotionEvent.ACTION_DOWN -> {
                                 onMapTouched()
-                                false
-                            }
-                            MotionEvent.ACTION_UP -> {
-                                onMapReleased()
                                 false
                             }
                             else -> {
@@ -266,7 +262,7 @@ private fun NearbyPlaces(
                             )
                         }
                         RatingBar(
-                            rating = 4.5f,
+                            rating = 4,
                             color = PrimaryLight,
                         )
                     }

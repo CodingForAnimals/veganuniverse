@@ -3,9 +3,9 @@
 package org.codingforanimals.veganuniverse.core.ui.shared
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
@@ -53,9 +55,13 @@ fun GenericPost(
     headerData: HeaderData,
     content: @Composable () -> Unit,
     actions: @Composable () -> Unit = {},
+    border: BorderStroke? = null,
+    elevation: CardElevation? = null,
 ) {
     Card(
         modifier = modifier,
+        border = border,
+        elevation = elevation ?: CardDefaults.cardElevation(),
     ) {
         Header(headerData)
         Column(modifier = Modifier.padding(Spacing_04)) {
@@ -86,7 +92,7 @@ private fun Header(
                 painter = painterResource(imageRes),
                 contentDescription = "Imágen",
             )
-            Box(
+            Column(
                 modifier = Modifier
                     .padding(top = Spacing_04, start = Spacing_04)
                     .heightIn(max = 50.dp)
@@ -284,8 +290,6 @@ private fun PreviewGenericPost() {
                     )
                 },
             ),
-            content = { Text(text = "content") }) {
-
-        }
+            content = { Text(text = "content") })
     }
 }

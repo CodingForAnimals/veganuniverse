@@ -1,8 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package org.codingforanimals.veganuniverse.recipes.presentation.details
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,11 +35,11 @@ import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChipDefault
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemHero
 import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTags
 import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTitle
 import org.codingforanimals.veganuniverse.core.ui.shared.GenericPost
 import org.codingforanimals.veganuniverse.core.ui.shared.HeaderData
+import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHero
 import org.codingforanimals.veganuniverse.core.ui.shared.UserInfo
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
@@ -88,9 +87,10 @@ internal fun RecipeDetailsScreen(
             verticalArrangement = Arrangement.spacedBy(Spacing_04),
         ) {
             item {
-                FeatureItemHero(
+                ItemDetailHero(
                     imageRes = org.codingforanimals.veganuniverse.core.ui.R.drawable.vegan_restaurant,
-                    icon = VUIcons.RecipesSelected
+                    icon = VUIcons.RecipesFilled,
+                    onImageClick = {},
                 )
             }
             item {
