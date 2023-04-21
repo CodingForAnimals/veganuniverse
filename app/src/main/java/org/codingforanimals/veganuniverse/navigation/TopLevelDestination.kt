@@ -17,8 +17,8 @@ enum class TopLevelDestination(
         titleRes = R.string.nav_label_community,
     ),
     PLACES(
-        unselectedIcon = VUIcons.Places,
-        selectedIcon = VUIcons.PlacesFilled,
+        unselectedIcon = VUIcons.Location,
+        selectedIcon = VUIcons.LocationFilled,
         iconTextId = R.string.nav_label_places,
         titleRes = R.string.nav_label_places,
     ),

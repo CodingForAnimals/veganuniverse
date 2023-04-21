@@ -102,7 +102,7 @@ private fun PlaceDetailsScreenData() {
         item {
             ItemDetailHero(
 //                imageUri = org.codingforanimals.veganuniverse.core.ui.R.drawable.vegan_restaurant,
-                icon = VUIcons.StoreFilled,
+                icon = VUIcons.Store,
                 onImageClick = {},
             )
         }
@@ -145,7 +145,7 @@ private fun CoreData() {
         verticalArrangement = Arrangement.spacedBy(Spacing_04),
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing_04)) {
-            VUIcon(icon = VUIcons.Places, contentDescription = "")
+            VUIcon(icon = VUIcons.Location, contentDescription = "")
             Text(text = "Bme. Mitre 696 - Monte Grande")
         }
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing_04)) {

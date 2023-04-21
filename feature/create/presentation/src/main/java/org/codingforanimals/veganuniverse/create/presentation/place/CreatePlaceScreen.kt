@@ -63,7 +63,7 @@ internal fun CreatePlaceScreen(
         item {
             ItemDetailHero(
                 imageUri = imageUri,
-                icon = VUIcons.PlacesFilled,
+                icon = VUIcons.LocationFilled,
                 onImageClick = {
                     imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 },
@@ -94,7 +94,7 @@ internal fun CreatePlaceScreen(
                 addressCandidates = uiState.addressCandidates,
                 onAddressSearch = { viewModel.onAction(Action.OnAddressSearch) },
                 onDialogDismissed = { viewModel.onAction(Action.OnCandidatesDialogDismissed) },
-                onCandidateSelected = { viewModel.onAction(Action.OnCandidateSelected(it)) }
+                onCandidateSelected = { viewModel.onAction(Action.OnCandidateSelected(it)) },
             )
         }
         item {

@@ -21,6 +21,7 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_10
+import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel
 
 @Composable
 internal fun SelectTags() {
@@ -36,23 +37,14 @@ internal fun SelectTags() {
             .padding(start = Spacing_05, end = Spacing_05, top = Spacing_03, bottom = Spacing_10),
         horizontalArrangement = Arrangement.spacedBy(Spacing_04),
     ) {
-        tags.forEach {
+        CreatePlaceViewModel.PlaceTag.values().forEach {
             var selected by remember { mutableStateOf(false) }
             VUSelectableChip(
-                label = it,
+                label = it.label,
+                icon = it.icon,
                 selected = selected,
                 onClick = { selected = !selected },
             )
         }
     }
 }
-
-private val tags = listOf(
-    "Tienda",
-    "Restaurant",
-    "Delivery",
-    "Take away",
-    "Sin tacc",
-    "100% vegan",
-    "Cafetería",
-)

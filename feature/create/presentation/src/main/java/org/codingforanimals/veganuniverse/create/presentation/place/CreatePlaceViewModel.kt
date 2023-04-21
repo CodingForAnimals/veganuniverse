@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.create.presentation.place
 
+import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
@@ -28,6 +29,12 @@ internal class CreatePlaceViewModel(
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     private var searchJob: Job? = null
+
+    var icon: Bitmap? = null
+
+    init {
+
+    }
 
     fun onAction(action: Action) {
         when (action) {
@@ -109,6 +116,7 @@ internal class CreatePlaceViewModel(
         val description: String,
         val type: PlaceType?,
         val address: String,
+        val selectedTags: List<PlaceTag>,
         val addressCandidates: List<PlaceAddress>,
         val location: LatLng?,
     ) {
@@ -119,6 +127,7 @@ internal class CreatePlaceViewModel(
                 description = "",
                 type = null,
                 address = "",
+                selectedTags = emptyList(),
                 addressCandidates = emptyList(),
                 location = null,
             )
@@ -144,9 +153,17 @@ internal class CreatePlaceViewModel(
         val latLng: LatLng,
     )
 
+    enum class PlaceTag(val label: String, val icon: Icon) {
+        GLUTEN_FREE(label = "Sin tacc", icon = VUIcons.GlutenFree),
+        FULL_VEGAN(label = "100% vegano", icon = VUIcons.VeganLogo),
+        DELIVERY(label = "Delivery", icon = VUIcons.Delivery),
+        TAKEAWAY(label = "Take away", icon = VUIcons.Bag),
+        DINE_IN(label = "Consumo en el lugar", icon = VUIcons.Chairs)
+    }
+
     enum class PlaceType(val label: String, val icon: Icon) {
         MARKET(label = "Mercado", icon = VUIcons.Store),
-        RESTAURANT(label = "Restaurante", icon = VUIcons.Utensils),
-        CAFE(label = "Café", icon = VUIcons.FavoriteFilled),
+        RESTAURANT(label = "Restaurante", icon = VUIcons.Restaurant),
+        CAFE(label = "Café", icon = VUIcons.CoffeeMug),
     }
 }

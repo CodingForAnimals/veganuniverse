@@ -2,9 +2,8 @@
 
 package org.codingforanimals.veganuniverse.core.ui.components
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
@@ -27,6 +26,7 @@ import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 fun VUSelectableChip(
     modifier: Modifier = Modifier,
     label: String,
+    icon: Icon,
     selected: Boolean,
     selectedIcon: Icon = VUIcons.Check,
     onClick: () -> Unit,
@@ -36,22 +36,23 @@ fun VUSelectableChip(
     val containerColor = animateColorAsState(color.containerColor)
     val borderColor = animateColorAsState(color.borderColor)
 
-    val textPadding = animateDpAsState(targetValue = if (!selected) 10.dp else 0.dp)
     AssistChip(
         modifier = modifier,
         onClick = onClick,
-        label = {
-            Text(
-                modifier = Modifier.padding(horizontal = textPadding.value),
-                text = label
-            )
-        },
+        label = { Text(label) },
         leadingIcon = {
-            AnimatedVisibility(visible = selected) {
-                VUIcon(
-                    icon = selectedIcon,
-                    contentDescription = ""
-                )
+            Crossfade(targetState = selected) {
+                if (it) {
+                    VUIcon(
+                        icon = selectedIcon,
+                        contentDescription = ""
+                    )
+                } else {
+                    VUIcon(
+                        icon = icon,
+                        contentDescription = "",
+                    )
+                }
             }
         },
         colors = AssistChipDefaults.assistChipColors(

@@ -45,10 +45,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -57,6 +61,7 @@ import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.components.RatingBar
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.core.ui.components.rememberBitmap
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.permissions.PermissionAction
 import org.codingforanimals.veganuniverse.core.ui.permissions.PermissionDialog
@@ -179,7 +184,28 @@ private fun Map(
             cameraPositionState = cameraPositionState,
             uiSettings = MapUiSettings(mapToolbarEnabled = false, zoomControlsEnabled = false),
             properties = MapProperties(isMyLocationEnabled = isLocationGranted),
-        )
+        ) {
+            val restaurantMarker = rememberBitmap(resId = R.drawable.ic_marker_restaurant)
+            val storeMarker = rememberBitmap(resId = R.drawable.ic_marker_store)
+            val cafeMarker = rememberBitmap(resId = R.drawable.ic_marker_cafe)
+            val restaurantIcon = BitmapDescriptorFactory.fromBitmap(restaurantMarker)
+            val storeIcon = BitmapDescriptorFactory.fromBitmap(storeMarker)
+            val cafeIcon = BitmapDescriptorFactory.fromBitmap(cafeMarker)
+            Marker(
+                state = rememberMarkerState(position = LatLng(-34.625549, -58.403355)),
+                icon = restaurantIcon,
+            )
+            Marker(
+                state = rememberMarkerState(position = LatLng(-34.699210, -58.426726)),
+                icon = storeIcon,
+            )
+            Marker(
+                state = rememberMarkerState(
+                    position = LatLng(-34.772792, -58.249990),
+                ),
+                icon = cafeIcon,
+            )
+        }
         FloatingActionButton(
             modifier = Modifier
                 .align(Alignment.TopStart)
@@ -253,7 +279,7 @@ private fun NearbyPlaces(
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(Spacing_04)
                         ) {
-                            val icon = if (index % 2 == 0) VUIcons.Store else VUIcons.Utensils
+                            val icon = if (index % 2 == 0) VUIcons.Store else VUIcons.Restaurant
                             VUIcon(icon = icon, contentDescription = "")
                             Text(
                                 text = name,
@@ -269,7 +295,7 @@ private fun NearbyPlaces(
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(Spacing_02),
                     ) {
-                        VUIcon(icon = VUIcons.Places, contentDescription = "")
+                        VUIcon(icon = VUIcons.Location, contentDescription = "")
                         Text(
                             text = "Bmé Mitre 695", fontWeight = FontWeight.Light,
                             style = MaterialTheme.typography.bodyMedium,
