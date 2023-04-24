@@ -12,6 +12,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
@@ -19,6 +20,15 @@ private const val TAG = "RequestPermission"
 
 fun checkIfPermissionGranted(context: Context, permission: String): Boolean =
     ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+
+@Composable
+fun checkIfPermissionGranted(permission: String): Boolean {
+    val context = LocalContext.current
+    return ContextCompat.checkSelfPermission(
+        context,
+        permission
+    ) == PackageManager.PERMISSION_GRANTED
+}
 
 fun shouldShowPermissionRationale(context: Context, permission: String): Boolean {
     val activity = context as? Activity?

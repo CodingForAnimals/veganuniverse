@@ -4,30 +4,19 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.DpSize
 import androidx.core.content.ContextCompat
 
+
 @Composable
-fun rememberBitmap(resId: Int, size: DpSize? = null, tint: Color? = null): Bitmap {
+fun rememberBitmap(resId: Int, key: String? = null): Bitmap {
     val context = LocalContext.current
-    val density = LocalDensity.current
-    return rememberSaveable {
+    return rememberSaveable(key = key) {
         ContextCompat.getDrawable(context, resId)?.let { drawable ->
-            val (widthPx, heightPx) = with(density) {
-                Pair(
-                    size?.width?.roundToPx() ?: drawable.intrinsicWidth,
-                    size?.height?.roundToPx() ?: drawable.intrinsicHeight
-                )
-            }
-            drawable.setBounds(0, 0, widthPx, heightPx)
-            tint?.let { drawable.setTint(tint.toArgb()) }
+            drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
             val bitmap = Bitmap.createBitmap(
-                widthPx,
-                heightPx,
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
                 Bitmap.Config.ARGB_8888,
             )
             val canvas = Canvas(bitmap)

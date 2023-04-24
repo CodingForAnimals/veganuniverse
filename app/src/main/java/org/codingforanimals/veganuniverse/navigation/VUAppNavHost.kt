@@ -50,6 +50,18 @@ internal fun VUAppNavHost(
     cameraPositionState: CameraPositionState,
     startDestination: Destination = CommunityDestination,
 ) {
+    // estoy tratando de encontrar una solucion.
+    // el problema es que si este viewmodel es un singleton,
+    // pierde la referencia del composable que es su view lifecycle owner
+    // entonces todos los viewmodelscope.launch no funcionan
+    // pero si a este lo inicio desde aca, estoy violando varios principios
+    // parece una solucion rapida pero ya trae problemas en la interfaz
+    // una posible solucion a considerar es llevar parte del estado
+    // y guardarlo en unas clases que sean data class
+    // y que eso sea lo singleton
+    // y que el viewmodel en la creacion lea de ese estado
+    // y actue como corresponde.
+
     NavHost(
         navController = navController,
         startDestination = startDestination.route,
@@ -87,7 +99,9 @@ internal fun VUAppNavHost(
             snackbarHostState = snackbarHostState,
             cameraPositionState = cameraPositionState,
         )
-        createGraph()
+        createGraph(
+            navController = navController,
+        )
         recipesGraph(
             navController = navController,
         )

@@ -3,65 +3,175 @@ package org.codingforanimals.veganuniverse.create.presentation.place
 import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
+import android.net.Uri
 import android.os.Build
+import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.codingforanimals.veganuniverse.core.ui.icons.Icon
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
+import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
+import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
+import org.codingforanimals.veganuniverse.create.domain.ContentCreator
+import org.codingforanimals.veganuniverse.create.domain.place.PlaceFormDomainEntity
 
 internal class CreatePlaceViewModel(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val geocoder: Geocoder,
+    private val contentCreator: ContentCreator,
 ) : ViewModel() {
 
     private val ioDispatcher = coroutineDispatcherProvider.io()
     private val mainDispatcher = coroutineDispatcherProvider.main()
 
-    private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(UiState.initState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    var uiState by mutableStateOf(UiState.initState())
+
+    private val _sideEffects: Channel<SideEffect> = Channel()
+    val sideEffects: Flow<SideEffect> = _sideEffects.receiveAsFlow()
 
     private var searchJob: Job? = null
 
     var icon: Bitmap? = null
 
-    init {
-
-    }
-
     fun onAction(action: Action) {
         when (action) {
-            is Action.OnFormChanged -> with(action) {
-                name?.let { _uiState.value = _uiState.value.copy(name = it) }
-                openingHours?.let { _uiState.value = _uiState.value.copy(openingHours = it) }
-                description?.let { _uiState.value = _uiState.value.copy(description = it) }
-                type?.let { _uiState.value = _uiState.value.copy(type = it) }
-                address?.let { _uiState.value = _uiState.value.copy(address = it) }
-            }
+            is Action.OnFormChange -> onFormChange(action)
             Action.OnAddressSearch -> fetchAddressCandidates()
             Action.OnCandidatesDialogDismissed -> {
-                _uiState.value = _uiState.value.copy(addressCandidates = emptyList())
+                uiState = uiState.copy(addressCandidates = emptyList())
             }
             is Action.OnCandidateSelected -> {
-                val newAddress = uiState.value.addressCandidates[action.index]
-                _uiState.value = _uiState.value.copy(
-                    address = newAddress.address,
-                    location = newAddress.latLng,
+                val newAddress = uiState.addressCandidates[action.index]
+                uiState = uiState.copy(
+                    form = uiState.form.copy(
+                        address = newAddress.address,
+                        location = newAddress.latLng,
+                        locationError = false,
+                    ),
                     addressCandidates = emptyList(),
                 )
+            }
+            Action.SubmitPlace -> submit()
+            is Action.OnTagClick -> onTagClick(action.tag)
+        }
+    }
+
+    private fun onTagClick(tag: PlaceTag) {
+        val tags = uiState.form.selectedTags.toMutableList()
+        if (!tags.remove(tag)) {
+            tags.add(tag)
+        }
+        uiState = uiState.copy(form = uiState.form.copy(selectedTags = tags))
+    }
+
+    private fun onFormChange(onFormChange: Action.OnFormChange) {
+        with(onFormChange) {
+            val form = uiState.form
+            imageUri?.let {
+                uiState = uiState.copy(form = form.copy(imageUri = it, imageUriError = false))
+            }
+            type?.let {
+                uiState = uiState.copy(form = form.copy(type = it, typeError = false))
+            }
+            name?.let {
+                uiState = uiState.copy(form = form.copy(name = it, nameError = false))
+            }
+            description?.let {
+                uiState = uiState.copy(form = form.copy(description = it, descriptionError = false))
+            }
+            openingHours?.let {
+                uiState =
+                    uiState.copy(form = form.copy(openingHours = it, openingHoursError = false))
+            }
+            address?.let {
+                uiState = uiState.copy(
+                    form = form.copy(location = null, address = it, addressError = false)
+                )
+            }
+        }
+        uiState = uiState.copy(isPublishButtonEnabled = true)
+    }
+
+    private fun createForm(): PlaceFormDomainEntity? =
+        try {
+            with(uiState.form) {
+                PlaceFormViewEntity(
+                    type = type!!,
+                    name = name,
+                    openingHours = openingHours,
+                    description = description,
+                    address = address,
+                    latitude = location!!.latitude,
+                    longitude = location.longitude,
+                    tags = selectedTags,
+                ).toDomainEntity()
+            }
+        } catch (e: Throwable) {
+            Log.e("CreatePlaceViewModel.kt", "Invalid form. Msg: ${e.stackTraceToString()}")
+            reviewFormValidity()
+            null
+        }
+
+    private fun submit() {
+        if (!reviewFormValidity()) return
+        val form = createForm() ?: return
+        uiState = uiState.copy(isLoading = true)
+        viewModelScope.launch(ioDispatcher) {
+            val createPlaceResult = contentCreator.createPlace(form)
+            withContext(mainDispatcher) {
+                uiState = uiState.copy(isLoading = false)
+                val resultEvent = if (createPlaceResult.isSuccess) {
+                    SideEffect.NavigateToThankYouScreen
+                } else {
+                    SideEffect.ShowTryAgainDialog
+                }
+                _sideEffects.send(resultEvent)
             }
         }
     }
 
+    private fun reviewFormValidity(): Boolean =
+        with(uiState.form) {
+            val imageUriError = imageUri == null
+            val typeError = type == null
+            val nameError = name.isBlank()
+            val descriptionError = description.isBlank()
+            val openingHoursError = openingHours.isBlank()
+            val addressError = address.isBlank()
+            val locationError = location == null
+
+            val isFormInvalid =
+                imageUriError || typeError || nameError || descriptionError || openingHoursError || addressError || locationError
+            if (isFormInvalid) {
+                val form = uiState.form
+                uiState = uiState.copy(
+                    form = form.copy(
+                        imageUriError = imageUriError,
+                        typeError = typeError,
+                        nameError = nameError,
+                        descriptionError = descriptionError,
+                        openingHoursError = openingHoursError,
+                        addressError = addressError,
+                        locationError = locationError,
+                    ),
+                    isPublishButtonEnabled = false,
+                )
+                return@with false
+            }
+            return true
+        }
+
     private fun fetchAddressCandidates() {
-        val address = uiState.value.address
+        val address = uiState.form.address
         if (address.isBlank()) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             geocoder.getFromLocationName(address, 5) { data ->
@@ -85,12 +195,15 @@ internal class CreatePlaceViewModel(
     private fun handleAddressCandidatesStateUpdate(candidates: List<PlaceAddress>) {
         if (candidates.size == 1) {
             val onlyCandidate = candidates.first()
-            _uiState.value = _uiState.value.copy(
-                address = onlyCandidate.address,
-                location = onlyCandidate.latLng,
+            uiState = uiState.copy(
+                form = uiState.form.copy(
+                    address = onlyCandidate.address,
+                    location = onlyCandidate.latLng,
+                    locationError = false,
+                ),
             )
         } else {
-            _uiState.value = _uiState.value.copy(addressCandidates = candidates)
+            uiState = uiState.copy(addressCandidates = candidates)
         }
     }
 
@@ -111,59 +224,86 @@ internal class CreatePlaceViewModel(
     private fun Address.getLatLng() = LatLng(latitude, longitude)
 
     data class UiState(
-        val name: String,
-        val openingHours: String,
-        val description: String,
-        val type: PlaceType?,
-        val address: String,
+        val form: Form,
         val selectedTags: List<PlaceTag>,
         val addressCandidates: List<PlaceAddress>,
-        val location: LatLng?,
+        val isLoading: Boolean,
+        val isPublishButtonEnabled: Boolean,
     ) {
         companion object {
             fun initState() = UiState(
-                name = "",
-                openingHours = "",
-                description = "",
-                type = null,
-                address = "",
+                form = Form.initialState(),
                 selectedTags = emptyList(),
                 addressCandidates = emptyList(),
+                isLoading = false,
+                isPublishButtonEnabled = true,
+            )
+        }
+    }
+
+    data class Form(
+        val imageUri: Uri?,
+        val imageUriError: Boolean,
+        val type: PlaceType?,
+        val typeError: Boolean,
+        val name: String,
+        val nameError: Boolean,
+        val openingHours: String,
+        val openingHoursError: Boolean,
+        val description: String,
+        val descriptionError: Boolean,
+        val address: String,
+        val addressError: Boolean,
+        val location: LatLng?,
+        val locationError: Boolean,
+        val selectedTags: List<PlaceTag>,
+    ) {
+        companion object {
+            fun initialState() = Form(
+                imageUri = null,
+                imageUriError = false,
+                type = null,
+                typeError = false,
+                name = "",
+                nameError = false,
+                openingHours = "",
+                openingHoursError = false,
+                description = "",
+                descriptionError = false,
+                address = "",
+                addressError = false,
                 location = null,
+                locationError = false,
+                selectedTags = emptyList(),
             )
         }
     }
 
     sealed class Action {
-        data class OnFormChanged(
+        data class OnFormChange(
+            val imageUri: Uri? = null,
             val name: String? = null,
             val openingHours: String? = null,
             val description: String? = null,
             val type: PlaceType? = null,
             val address: String? = null,
+            val location: LatLng? = null,
         ) : Action()
 
         object OnAddressSearch : Action()
         object OnCandidatesDialogDismissed : Action()
         data class OnCandidateSelected(val index: Int) : Action()
+        object SubmitPlace : Action()
+        data class OnTagClick(val tag: PlaceTag) : Action()
+    }
+
+    sealed class SideEffect {
+        object NavigateToThankYouScreen : SideEffect()
+        object ShowTryAgainDialog : SideEffect()
     }
 
     data class PlaceAddress(
         val address: String,
         val latLng: LatLng,
     )
-
-    enum class PlaceTag(val label: String, val icon: Icon) {
-        GLUTEN_FREE(label = "Sin tacc", icon = VUIcons.GlutenFree),
-        FULL_VEGAN(label = "100% vegano", icon = VUIcons.VeganLogo),
-        DELIVERY(label = "Delivery", icon = VUIcons.Delivery),
-        TAKEAWAY(label = "Take away", icon = VUIcons.Bag),
-        DINE_IN(label = "Consumo en el lugar", icon = VUIcons.Chairs)
-    }
-
-    enum class PlaceType(val label: String, val icon: Icon) {
-        MARKET(label = "Mercado", icon = VUIcons.Store),
-        RESTAURANT(label = "Restaurante", icon = VUIcons.Restaurant),
-        CAFE(label = "Café", icon = VUIcons.CoffeeMug),
-    }
 }

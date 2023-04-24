@@ -20,7 +20,9 @@ import org.codingforanimals.veganuniverse.create.presentation.product.CreateProd
 import org.codingforanimals.veganuniverse.create.presentation.recipe.CreateRecipeScreen
 
 @Composable
-internal fun CreateScreen() {
+internal fun CreateScreen(
+    navigateToThankYouScreen: () -> Unit,
+) {
     val coroutineScope = rememberCoroutineScope()
     Box(modifier = Modifier.fillMaxSize()) {
         val state = rememberPagerState()
@@ -31,7 +33,9 @@ internal fun CreateScreen() {
         ) {
             when (products[it]) {
                 is PostScreenId -> CreatePostScreen()
-                is PlaceScreenId -> CreatePlaceScreen()
+                is PlaceScreenId -> CreatePlaceScreen(
+                    onCreateSuccess = navigateToThankYouScreen,
+                )
                 is ProductScreenId -> CreateProductScreen()
                 is RecipeScreenId -> CreateRecipeScreen()
                 is OtherScreenId -> {

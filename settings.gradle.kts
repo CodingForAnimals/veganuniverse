@@ -54,3 +54,7 @@ include(":feature:create:presentation")
 include(":feature:search:presentation")
 
 include(":feature:settings:presentation")
+include(":firebase")
+include(":feature:create:domain")
+include(":feature:places:domain")
+include(":core:location")

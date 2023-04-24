@@ -6,17 +6,22 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.core.location.UserLocationManager
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingPresenter
 
 class MainViewModel(
     private val onboardingPresenter: OnboardingPresenter,
+    private val userLocationManager: UserLocationManager,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<LaunchState> = MutableStateFlow(LaunchState.Loading)
     val uiState: StateFlow<LaunchState> = _uiState
 
-    init {
+    fun onPermissionsChange(fineLocation: Boolean?, coarseLocation: Boolean?) {
         checkUserState()
+        if (fineLocation == true) {
+            userLocationManager.fetchUserLocation()
+        }
     }
 
     private fun checkUserState() {

@@ -7,5 +7,5 @@ import org.koin.dsl.module
 
 internal val createPlaceModule = module {
     factory { Geocoder(get(), Locale.getDefault()) }
-    viewModel { CreatePlaceViewModel(get(), get()) }
+    viewModel { CreatePlaceViewModel(get(), get(), get()) }
 }

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonColors
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,6 +26,7 @@ fun VURadioButton(
     onClick: () -> Unit,
     icon: Icon? = null,
     paddingValues: PaddingValues? = null,
+    colors: RadioButtonColors = RadioButtonDefaults.colors(),
 ) {
     val paddingModifier = paddingValues?.let { Modifier.padding(it) } ?: Modifier
     Row(
@@ -41,6 +44,7 @@ fun VURadioButton(
         RadioButton(
             selected = selected,
             onClick = null,
+            colors = colors,
         )
         icon?.let {
             VUIcon(

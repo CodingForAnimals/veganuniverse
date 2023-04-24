@@ -1,14 +1,23 @@
 package org.codingforanimals.places.presentation.di
 
+import com.google.maps.android.compose.CameraPositionState
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel
-import org.codingforanimals.veganuniverse.coroutines.coroutineDispatcherModule
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.codingforanimals.places.presentation.home.state.PlacesHomeSavedStateHandler
+import org.codingforanimals.places.presentation.home.usecase.GetPlacesUseCase
+import org.codingforanimals.places.presentation.home.usecase.GetUserLocationUseCase
+import org.codingforanimals.veganuniverse.places.domain.placesDomainModule
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
 
 private val placesModule = module {
-    includes(coroutineDispatcherModule)
-    viewModel { PlacesHomeViewModel(get(), get()) }
+    includes(placesDomainModule)
+    factory { GetUserLocationUseCase(get()) }
+    factory { GetPlacesUseCase(get()) }
+    single { CameraPositionState() }
+    single { PlacesHomeSavedStateHandler() }
+    viewModelOf(::PlacesHomeViewModel)
+
 }
 
-internal fun injectPlacesModule() = loadKoinModules(placesModule)
+fun injectPlacesModule() = loadKoinModules(placesModule)

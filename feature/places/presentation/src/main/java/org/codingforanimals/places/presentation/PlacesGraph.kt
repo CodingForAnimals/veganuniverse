@@ -15,11 +15,10 @@ fun NavGraphBuilder.placesGraph(
     cameraPositionState: CameraPositionState,
 ) {
     injectPlacesModule()
-
     placesHomeGraph(
         snackbarHostState = snackbarHostState,
         cameraPositionState = cameraPositionState,
-        navigateToPlaceDetails = { navController.navigate(PlaceDetailsDestination.route) }
+        navigateToPlaceDetails = { navController.navigate(PlaceDetailsDestination.route) },
     )
 
     placeDetailsGraph(

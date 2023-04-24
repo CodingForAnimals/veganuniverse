@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.codingforanimals.veganuniverse.core.ui.R
@@ -15,8 +16,8 @@ object VUIcons {
     // Bottom nav icons although they can be and are used in other parts as well
     val Community = DrawableResourceIcon(R.drawable.ic_community)
     val CommunityFilled = DrawableResourceIcon(R.drawable.ic_community_filled)
-    val Location = DrawableResourceIcon(R.drawable.ic_places)
-    val LocationFilled = DrawableResourceIcon(R.drawable.ic_places_filled)
+    val Location = DrawableResourceIcon(R.drawable.ic_location)
+    val LocationFilled = DrawableResourceIcon(R.drawable.ic_location_filled)
     val Recipes = DrawableResourceIcon(R.drawable.ic_recipes)
     val RecipesFilled = DrawableResourceIcon(R.drawable.ic_recipes_filled)
     val Profile = DrawableResourceIcon(R.drawable.ic_profile)
@@ -75,8 +76,13 @@ object VUIcons {
     val Shrink = DrawableResourceIcon(R.drawable.ic_shrink)
     val Expand = DrawableResourceIcon(R.drawable.ic_expand)
     val MarkerCafe = DrawableResourceIcon(R.drawable.ic_marker_cafe)
+    val MarkerCafeSelected = DrawableResourceIcon(R.drawable.ic_marker_cafe_selected)
     val MarkerRestaurant = DrawableResourceIcon(R.drawable.ic_marker_restaurant)
+    val MarkerRestaurantSelected = DrawableResourceIcon(R.drawable.ic_marker_restaurant_selected)
     val MarkerStore = DrawableResourceIcon(R.drawable.ic_marker_store)
+    val MarkerStoreSelected = DrawableResourceIcon(R.drawable.ic_marker_store_selected)
+
+    val a = ImageVectorIcon(Icons.Rounded.ArrowUpward)
 }
 
 sealed class Icon {

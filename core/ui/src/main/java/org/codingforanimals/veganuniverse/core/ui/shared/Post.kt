@@ -239,14 +239,14 @@ private fun Actions() {
             label = "200",
             onClick = {},
             iconDescription = "Me gusta",
-            colors = VUAssistChipDefaults.secondaryAssistChipColors(),
+            colors = VUAssistChipDefaults.secondaryColors(),
         )
         VUAssistChip(
             icon = VUIcons.Comment,
             label = "50",
             onClick = {},
             iconDescription = "Comentar",
-            colors = VUAssistChipDefaults.secondaryAssistChipColors(),
+            colors = VUAssistChipDefaults.secondaryColors(),
         )
         VUIcon(
             icon = VUIcons.Share,

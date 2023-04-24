@@ -1,44 +1,79 @@
 package org.codingforanimals.veganuniverse.create.presentation.place
 
-import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHero
 import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHeroColors
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
+import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_10
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.Action
-import org.codingforanimals.veganuniverse.create.presentation.place.components.EnterLocation
-import org.codingforanimals.veganuniverse.create.presentation.place.components.PlaceForm
-import org.codingforanimals.veganuniverse.create.presentation.place.components.SelectPlaceType
-import org.codingforanimals.veganuniverse.create.presentation.place.components.SelectTags
+import org.codingforanimals.veganuniverse.create.presentation.place.composables.EnterLocation
+import org.codingforanimals.veganuniverse.create.presentation.place.composables.PlaceForm
+import org.codingforanimals.veganuniverse.create.presentation.place.composables.SelectTags
+import org.codingforanimals.veganuniverse.create.presentation.place.composables.TryAgainAlertDialog
 import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
 internal fun CreatePlaceScreen(
+    onCreateSuccess: () -> Unit,
     viewModel: CreatePlaceViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var isTryAgainDialogVisible by remember { mutableStateOf(false) }
+    if (isTryAgainDialogVisible) {
+        TryAgainAlertDialog(
+            dismissDialog = { isTryAgainDialogVisible = false },
+            tryAgain = {
+                isTryAgainDialogVisible = false
+                viewModel.onAction(Action.SubmitPlace)
+            },
+        )
+    }
+
+    HandleSideEffects(
+        sideEffects = viewModel.sideEffects,
+        onCreateSuccess = onCreateSuccess,
+        showTryAgainDialog = { isTryAgainDialogVisible = true }
+    )
+
+    val uiState = viewModel.uiState
 
     val cropImage = rememberLauncherForActivityResult(
         contract = CropImageContract(),
         onResult = { result ->
             if (result.isSuccessful) {
-                imageUri = result.uriContent
+                viewModel.onAction(Action.OnFormChange(imageUri = result.uriContent))
             } else {
                 Log.e(
                     "CreatePlaceScreen.kt",
@@ -56,50 +91,99 @@ internal fun CreatePlaceScreen(
             }
         },
     )
+    CreatePlaceScreen(
+        uiState = uiState,
+        onImageClick = {
+            imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        },
+        onAction = { viewModel.onAction(it) }
+    )
 
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(Spacing_05),
-    ) {
-        item {
-            ItemDetailHero(
-                imageUri = imageUri,
-                icon = VUIcons.LocationFilled,
-                onImageClick = {
-                    imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                },
-                colors = if (imageUri == null) ItemDetailHeroColors.secondaryColors() else ItemDetailHeroColors.primaryColors(),
+    AnimatedVisibility(visible = uiState.isLoading) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .clickable {}) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
             )
-        }
-        item {
-            PlaceForm(
-                name = uiState.name,
-                onNameChange = { viewModel.onAction(Action.OnFormChanged(name = it)) },
-                openingHours = uiState.openingHours,
-                onOpeningHoursChange = { viewModel.onAction(Action.OnFormChanged(openingHours = it)) },
-                description = uiState.description,
-                onDescriptionChange = { viewModel.onAction(Action.OnFormChanged(description = it)) },
-            )
-        }
-        item {
-            SelectPlaceType(
-                selectedPlaceType = uiState.type,
-                onButtonClick = { viewModel.onAction(Action.OnFormChanged(type = it)) },
-            )
-        }
-        item {
-            EnterLocation(
-                address = uiState.address,
-                location = uiState.location,
-                onAddressChange = { viewModel.onAction(Action.OnFormChanged(address = it)) },
-                addressCandidates = uiState.addressCandidates,
-                onAddressSearch = { viewModel.onAction(Action.OnAddressSearch) },
-                onDialogDismissed = { viewModel.onAction(Action.OnCandidatesDialogDismissed) },
-                onCandidateSelected = { viewModel.onAction(Action.OnCandidateSelected(it)) },
-            )
-        }
-        item {
-            SelectTags()
         }
     }
 }
 
+@Composable
+private fun CreatePlaceScreen(
+    uiState: CreatePlaceViewModel.UiState,
+    onImageClick: () -> Unit,
+    onAction: (Action) -> Unit,
+) {
+    LazyColumn {
+        item {
+            val heroColors = if (uiState.form.imageUri == null) {
+                if (uiState.form.imageUriError) {
+                    ItemDetailHeroColors.errorColors()
+                } else {
+                    ItemDetailHeroColors.secondaryColors()
+                }
+            } else {
+                ItemDetailHeroColors.primaryColors()
+            }
+            ItemDetailHero(
+                imageUri = uiState.form.imageUri,
+                icon = VUIcons.LocationFilled,
+                onImageClick = onImageClick,
+                colors = heroColors,
+            )
+            PlaceForm(
+                form = uiState.form,
+                onTypeSelect = { onAction(Action.OnFormChange(type = it)) },
+                onNameChange = { onAction(Action.OnFormChange(name = it)) },
+                onOpeningHoursChange = { onAction(Action.OnFormChange(openingHours = it)) },
+                onDescriptionChange = { onAction(Action.OnFormChange(description = it)) },
+            )
+            EnterLocation(
+                address = uiState.form.address,
+                addressError = uiState.form.addressError,
+                location = uiState.form.location,
+                locationError = uiState.form.locationError,
+                onAddressChange = { onAction(Action.OnFormChange(address = it)) },
+                addressCandidates = uiState.addressCandidates,
+                onAddressSearch = { onAction(Action.OnAddressSearch) },
+                onDialogDismissed = { onAction(Action.OnCandidatesDialogDismissed) },
+                onCandidateSelected = { onAction(Action.OnCandidateSelected(it)) },
+            )
+            SelectTags(
+                selectedTags = uiState.form.selectedTags,
+                onTagClick = { onAction(Action.OnTagClick(it)) }
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                Button(
+                    modifier = Modifier.padding(horizontal = Spacing_05),
+                    onClick = { onAction(Action.SubmitPlace) },
+                    enabled = uiState.isPublishButtonEnabled,
+                ) {
+                    Text(text = "Publicar")
+                }
+            }
+            Spacer(modifier = Modifier.height(Spacing_10))
+        }
+    }
+}
+
+@Composable
+private fun HandleSideEffects(
+    sideEffects: Flow<CreatePlaceViewModel.SideEffect>,
+    onCreateSuccess: () -> Unit,
+    showTryAgainDialog: () -> Unit,
+) {
+    LaunchedEffect(Unit) {
+        sideEffects.onEach { sideEffect ->
+            when (sideEffect) {
+                CreatePlaceViewModel.SideEffect.NavigateToThankYouScreen -> onCreateSuccess()
+                CreatePlaceViewModel.SideEffect.ShowTryAgainDialog -> showTryAgainDialog()
+            }
+        }.collect()
+    }
+}

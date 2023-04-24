@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
@@ -29,6 +30,7 @@ fun VUSelectableChip(
     icon: Icon,
     selected: Boolean,
     selectedIcon: Icon = VUIcons.Check,
+    shape: Shape = AssistChipDefaults.shape,
     onClick: () -> Unit,
 ) {
     val color =
@@ -38,6 +40,7 @@ fun VUSelectableChip(
 
     AssistChip(
         modifier = modifier,
+        shape = shape,
         onClick = onClick,
         label = { Text(label) },
         leadingIcon = {
@@ -76,7 +79,7 @@ object VUSelectableChipDefaults {
 
     @Composable
     fun idleColors() = VUSelectableChipColors(
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = Color.Transparent,
         labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
         borderColor = MaterialTheme.colorScheme.primary,
     )

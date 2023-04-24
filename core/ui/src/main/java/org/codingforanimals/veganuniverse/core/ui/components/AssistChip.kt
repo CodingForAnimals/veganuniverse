@@ -1,20 +1,21 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package org.codingforanimals.veganuniverse.core.ui.components
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ChipColors
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
+import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_01
+import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 
 @Composable
 fun VUAssistChip(
@@ -23,7 +24,7 @@ fun VUAssistChip(
     label: String? = null,
     onClick: () -> Unit,
     iconDescription: String,
-    colors: ChipColors = VUAssistChipDefaults.assistChipColors(),
+    colors: ChipColors = VUAssistChipDefaults.primaryColors(),
 ) {
     AssistChip(
         modifier = modifier,
@@ -51,15 +52,63 @@ fun VUAssistChip(
 
 object VUAssistChipDefaults {
     @Composable
-    fun assistChipColors() = AssistChipDefaults.assistChipColors(
+    fun primarySelectedColors() = AssistChipDefaults.assistChipColors(
+        containerColor = MaterialTheme.colorScheme.primary,
+        labelColor = MaterialTheme.colorScheme.onPrimary,
+        leadingIconContentColor = MaterialTheme.colorScheme.onPrimary,
+    )
+
+    @Composable
+    fun primaryColors() = AssistChipDefaults.assistChipColors(
         labelColor = MaterialTheme.colorScheme.primary,
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
     )
 
     @Composable
-    fun secondaryAssistChipColors() = AssistChipDefaults.assistChipColors(
+    fun secondaryColors() = AssistChipDefaults.assistChipColors(
         labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
     )
+}
+
+@Composable
+@Preview
+private fun PreviewVUAssistChip() {
+    VeganUniverseTheme {
+        Column {
+            VUAssistChip(
+                label = "Assist chip",
+                onClick = {},
+                iconDescription = "",
+            )
+            VUAssistChip(
+                label = "Assist chip",
+                icon = VUIcons.Filter,
+                onClick = {},
+                iconDescription = "",
+            )
+            VUAssistChip(
+                label = "Assist chip",
+                icon = VUIcons.Filter,
+                onClick = {},
+                iconDescription = "",
+                colors = VUAssistChipDefaults.primarySelectedColors(),
+            )
+            VUAssistChip(
+                label = "Assist chip",
+                icon = VUIcons.Filter,
+                onClick = {},
+                iconDescription = "",
+                colors = VUAssistChipDefaults.secondaryColors(),
+            )
+            VUAssistChip(
+                label = "Assist chip",
+                icon = VUIcons.Filter,
+                onClick = {},
+                iconDescription = "",
+                colors = VUAssistChipDefaults.primaryColors(),
+            )
+        }
+    }
 }

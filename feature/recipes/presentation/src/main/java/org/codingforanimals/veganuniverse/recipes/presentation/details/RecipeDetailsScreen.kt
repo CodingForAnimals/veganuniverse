@@ -229,9 +229,9 @@ private fun Comments() {
                 },
                 actions = {
                     val (favIcon, favColor) = if (it.user == "Pizza Muzza") {
-                        Pair(VUIcons.FavoriteFilled, VUAssistChipDefaults.assistChipColors())
+                        Pair(VUIcons.FavoriteFilled, VUAssistChipDefaults.primaryColors())
                     } else {
-                        Pair(VUIcons.Favorite, VUAssistChipDefaults.secondaryAssistChipColors())
+                        Pair(VUIcons.Favorite, VUAssistChipDefaults.secondaryColors())
                     }
                     VUAssistChip(
                         icon = favIcon,
@@ -245,7 +245,7 @@ private fun Comments() {
                         onClick = {},
                         iconDescription = "",
                         label = "Responder",
-                        colors = VUAssistChipDefaults.secondaryAssistChipColors(),
+                        colors = VUAssistChipDefaults.secondaryColors(),
                     )
                 })
         }

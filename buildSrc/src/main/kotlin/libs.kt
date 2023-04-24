@@ -4,7 +4,7 @@ object versions {
     const val core = "1.8.0"
     const val lifecycle = "2.5.1"
     const val coroutines = "1.6.4"
-    const val composeBom = "2023.03.00"
+    const val composeBom = "2023.04.01"
     const val compose = "1.3.1"
     const val composeCompiler = "1.4.0"
     const val accompanist = "0.25.1"
@@ -12,7 +12,7 @@ object versions {
     const val moshi = "1.14.0"
     const val room = "2.4.3"
     const val mockk = "1.12.5"
-    const val material3 = "1.1.0-alpha03"
+    const val material3 = "1.1.0-rc01"
     const val datastore = "1.0.0"
     const val koinAndroid = "3.3.2"
     const val koinAndroidCompose = "3.4.1"
@@ -22,9 +22,18 @@ object versions {
 }
 
 object libs {
+    val firebaseBom = "com.google.firebase:firebase-bom:31.2.3"
+    val firebaseDeps = listOf(
+        "com.google.firebase:firebase-firestore-ktx",
+        "com.google.firebase:firebase-analytics-ktx",
+        "com.google.firebase:firebase-functions-ktx",
+    )
+
+    val material3 = "androidx.compose.material3:material3:${versions.material3}"
+
     val android = listOf(
         "androidx.core:core-ktx:${versions.core}",
-        "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle}"
+        "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle}",
     )
     val compose = listOf(
         "androidx.compose.ui:ui",
@@ -48,6 +57,8 @@ object libs {
         "com.google.android.gms:play-services-maps:18.1.0",
         "com.google.android.gms:play-services-location:21.0.1",
     )
+
+    const val googleServicesLocation = "com.google.android.gms:play-services-location:21.0.1"
 
     const val imageCropper = "com.vanniktech:android-image-cropper:4.5.0"
 

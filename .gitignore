@@ -15,3 +15,6 @@ gradlew.bat
 /firestore.rules
 /firestore-debug.log
 /ui-debug.log
+
+#for firebase functions
+/functions

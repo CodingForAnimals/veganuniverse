@@ -13,13 +13,13 @@ fun NavGraphBuilder.placesHomeGraph(
     cameraPositionState: CameraPositionState,
     navigateToPlaceDetails: () -> Unit,
 ) {
+
     composable(
         route = PlacesHomeDestination.route,
         content = {
             PlacesHomeScreen(
                 snackbarHostState = snackbarHostState,
-                cameraPositionState = cameraPositionState,
-                onPlaceClick = navigateToPlaceDetails,
+                navigateToPlaceDetails = navigateToPlaceDetails,
             )
         }
     )

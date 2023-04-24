@@ -19,6 +19,7 @@ android {
 dependencies {
     val bom = platform("androidx.compose:compose-bom:${versions.composeBom}")
     add("implementation", bom)
+    implementation(libs.material3)
     implementation(libs.compose)
     debugImplementation(libs.composeDebug)
 
