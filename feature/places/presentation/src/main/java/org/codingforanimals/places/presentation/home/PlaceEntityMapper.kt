@@ -20,10 +20,12 @@ internal fun PlaceDomainEntity.toViewEntity(): PlaceViewEntity? {
         tags = getTags(),
         name = name,
         rating = rating,
+        reviewCount = reviewCount,
         address = address,
         city = city,
         state = MarkerState(location),
-        marker = getMarker(type)
+        marker = getMarker(type),
+        timestamp = timestamp,
     )
 }
 

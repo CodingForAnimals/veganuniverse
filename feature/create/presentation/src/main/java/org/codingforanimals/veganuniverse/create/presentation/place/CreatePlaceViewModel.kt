@@ -1,17 +1,24 @@
 package org.codingforanimals.veganuniverse.create.presentation.place
 
+import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPhotoRequest
+import com.google.android.libraries.places.widget.Autocomplete
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -24,8 +31,11 @@ import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.create.domain.ContentCreator
 import org.codingforanimals.veganuniverse.create.domain.place.PlaceFormDomainEntity
 
+private const val TAG = "CreatePlaceViewModel"
+
 internal class CreatePlaceViewModel(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
+    context: Context,
     private val geocoder: Geocoder,
     private val contentCreator: ContentCreator,
 ) : ViewModel() {
@@ -41,6 +51,8 @@ internal class CreatePlaceViewModel(
     private var searchJob: Job? = null
 
     var icon: Bitmap? = null
+
+    private val googlePlacesApi by lazy { Places.createClient(context) }
 
     fun onAction(action: Action) {
         when (action) {
@@ -62,6 +74,57 @@ internal class CreatePlaceViewModel(
             }
             Action.SubmitPlace -> submit()
             is Action.OnTagClick -> onTagClick(action.tag)
+            Action.OnLocationFieldClick -> {
+                viewModelScope.launch {
+                    _sideEffects.send(SideEffect.OpenAddressSearchOverlay)
+                }
+            }
+            Action.OnImageClick -> {
+                viewModelScope.launch {
+                    _sideEffects.send(SideEffect.OpenImageSelector)
+                }
+            }
+            is Action.OnAddressSelected -> {
+                val intent = action.activityResult.data
+                if (action.activityResult.resultCode == Activity.RESULT_OK && intent != null) {
+                    val place = Autocomplete.getPlaceFromIntent(intent)
+                    val metadata = place.photoMetadatas
+                    if (metadata == null || metadata.isEmpty()) {
+                        Log.e("pepe", "photo metadata vacia paaa")
+                        return
+                    }
+                    val data = metadata.first()
+                    val attributions = data.attributions
+                    Log.e("pepe", "attributions $attributions")
+                    val photoRequest = FetchPhotoRequest.builder(data).build()
+                    googlePlacesApi.fetchPhoto(photoRequest)
+                        .addOnSuccessListener {
+                            Log.e("pepe", "bitmap success")
+                            uiState = uiState.copy(form = uiState.form.copy(bitmap = it.bitmap))
+                        }
+                        .addOnFailureListener {
+                            Log.e("pepe", "error pa ${it.stackTraceToString()}")
+                        }
+
+                    Log.e("pepe", "place $place")
+
+                    place.types?.let { types ->
+                        when {
+                            types.contains(Place.Type.ESTABLISHMENT) -> {
+                                Log.e("pepe", "establishment pa $types")
+                            }
+                            types.contains(Place.Type.STREET_ADDRESS) -> {
+                                Log.e("pepe", "street number $types")
+                            }
+                            else -> {
+                                Log.e("pepe", "otro $types")
+                            }
+                        }
+                    }
+                } else {
+                    Log.e("pepe", "error pa ${action.activityResult.data?.extras}")
+                }
+            }
         }
     }
 
@@ -125,19 +188,21 @@ internal class CreatePlaceViewModel(
         if (!reviewFormValidity()) return
         val form = createForm() ?: return
         uiState = uiState.copy(isLoading = true)
-        viewModelScope.launch(ioDispatcher) {
-            val createPlaceResult = contentCreator.createPlace(form)
-            withContext(mainDispatcher) {
-                uiState = uiState.copy(isLoading = false)
-                val resultEvent = if (createPlaceResult.isSuccess) {
-                    SideEffect.NavigateToThankYouScreen
-                } else {
-                    SideEffect.ShowTryAgainDialog
+        viewModelScope.launch {
+            val createPlaceResult = withContext(ioDispatcher) { contentCreator.createPlace(form) }
+            uiState = uiState.copy(isLoading = false)
+            val resultEvent = if (createPlaceResult.isSuccess) {
+                SideEffect.NavigateToThankYouScreen
+            } else {
+                createPlaceResult.exceptionOrNull()?.let {
+                    Log.e(TAG, "Error creating place. ${it.stackTraceToString()}")
                 }
-                _sideEffects.send(resultEvent)
+                SideEffect.ShowTryAgainDialog
             }
+            _sideEffects.send(resultEvent)
         }
     }
+
 
     private fun reviewFormValidity(): Boolean =
         with(uiState.form) {
@@ -243,6 +308,7 @@ internal class CreatePlaceViewModel(
 
     data class Form(
         val imageUri: Uri?,
+        val bitmap: Bitmap?,
         val imageUriError: Boolean,
         val type: PlaceType?,
         val typeError: Boolean,
@@ -261,6 +327,7 @@ internal class CreatePlaceViewModel(
         companion object {
             fun initialState() = Form(
                 imageUri = null,
+                bitmap = null,
                 imageUriError = false,
                 type = null,
                 typeError = false,
@@ -295,11 +362,16 @@ internal class CreatePlaceViewModel(
         data class OnCandidateSelected(val index: Int) : Action()
         object SubmitPlace : Action()
         data class OnTagClick(val tag: PlaceTag) : Action()
+        object OnImageClick : Action()
+        object OnLocationFieldClick : Action()
+        data class OnAddressSelected(val activityResult: ActivityResult) : Action()
     }
 
     sealed class SideEffect {
         object NavigateToThankYouScreen : SideEffect()
         object ShowTryAgainDialog : SideEffect()
+        object OpenImageSelector : SideEffect()
+        object OpenAddressSearchOverlay : SideEffect()
     }
 
     data class PlaceAddress(

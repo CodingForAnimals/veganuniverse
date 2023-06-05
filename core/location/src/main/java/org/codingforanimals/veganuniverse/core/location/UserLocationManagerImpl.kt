@@ -49,7 +49,6 @@ internal class UserLocationManagerImpl(
     override fun fetchUserLocation() {
         userLocationJob?.cancel()
         userLocationJob = scope.launch {
-            Log.e("pepe", "loading")
             _userLocation.value = LocationResponse.LocationLoading
             fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                 .addOnSuccessListener { location -> handleSuccess(location) }

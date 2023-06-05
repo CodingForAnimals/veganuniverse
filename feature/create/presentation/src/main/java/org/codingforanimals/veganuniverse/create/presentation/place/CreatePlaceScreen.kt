@@ -1,7 +1,9 @@
 package org.codingforanimals.veganuniverse.create.presentation.place
 
+import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -26,9 +28,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -38,6 +45,7 @@ import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHeroColors
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_10
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.Action
+import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.SideEffect
 import org.codingforanimals.veganuniverse.create.presentation.place.composables.EnterLocation
 import org.codingforanimals.veganuniverse.create.presentation.place.composables.PlaceForm
 import org.codingforanimals.veganuniverse.create.presentation.place.composables.SelectTags
@@ -61,13 +69,10 @@ internal fun CreatePlaceScreen(
         )
     }
 
-    HandleSideEffects(
-        sideEffects = viewModel.sideEffects,
-        onCreateSuccess = onCreateSuccess,
-        showTryAgainDialog = { isTryAgainDialogVisible = true }
+    val placesApiLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { viewModel.onAction(Action.OnAddressSelected(it)) }
     )
-
-    val uiState = viewModel.uiState
 
     val cropImage = rememberLauncherForActivityResult(
         contract = CropImageContract(),
@@ -91,11 +96,19 @@ internal fun CreatePlaceScreen(
             }
         },
     )
+
+    HandleSideEffects(
+        sideEffects = viewModel.sideEffects,
+        onCreateSuccess = onCreateSuccess,
+        showTryAgainDialog = { isTryAgainDialogVisible = true },
+        imagePicker = imagePicker,
+        addressPicker = placesApiLauncher,
+    )
+
+    val uiState = viewModel.uiState
+
     CreatePlaceScreen(
         uiState = uiState,
-        onImageClick = {
-            imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        },
         onAction = { viewModel.onAction(it) }
     )
 
@@ -113,7 +126,6 @@ internal fun CreatePlaceScreen(
 @Composable
 private fun CreatePlaceScreen(
     uiState: CreatePlaceViewModel.UiState,
-    onImageClick: () -> Unit,
     onAction: (Action) -> Unit,
 ) {
     LazyColumn {
@@ -129,8 +141,9 @@ private fun CreatePlaceScreen(
             }
             ItemDetailHero(
                 imageUri = uiState.form.imageUri,
+                bitmap = uiState.form.bitmap,
                 icon = VUIcons.LocationFilled,
-                onImageClick = onImageClick,
+                onImageClick = { onAction(Action.OnImageClick) },
                 colors = heroColors,
             )
             PlaceForm(
@@ -145,6 +158,7 @@ private fun CreatePlaceScreen(
                 addressError = uiState.form.addressError,
                 location = uiState.form.location,
                 locationError = uiState.form.locationError,
+                onAction = onAction,
                 onAddressChange = { onAction(Action.OnFormChange(address = it)) },
                 addressCandidates = uiState.addressCandidates,
                 onAddressSearch = { onAction(Action.OnAddressSearch) },
@@ -174,15 +188,33 @@ private fun CreatePlaceScreen(
 
 @Composable
 private fun HandleSideEffects(
-    sideEffects: Flow<CreatePlaceViewModel.SideEffect>,
+    sideEffects: Flow<SideEffect>,
     onCreateSuccess: () -> Unit,
     showTryAgainDialog: () -> Unit,
+    imagePicker: ActivityResultLauncher<PickVisualMediaRequest>,
+    addressPicker: ActivityResultLauncher<Intent>
 ) {
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         sideEffects.onEach { sideEffect ->
             when (sideEffect) {
-                CreatePlaceViewModel.SideEffect.NavigateToThankYouScreen -> onCreateSuccess()
-                CreatePlaceViewModel.SideEffect.ShowTryAgainDialog -> showTryAgainDialog()
+                SideEffect.NavigateToThankYouScreen -> {
+                    onCreateSuccess()
+                }
+                SideEffect.ShowTryAgainDialog -> {
+                    showTryAgainDialog()
+                }
+                SideEffect.OpenImageSelector -> {
+                    imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                }
+                SideEffect.OpenAddressSearchOverlay -> {
+                    Places.initialize(context, "AIzaSyATDgK_LBizEIapwfzy90-_BI4tVAyKenE")
+                    val fields = listOf(Place.Field.ID)
+                    val intent =
+                        Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                            .build(context)
+                    addressPicker.launch(intent)
+                }
             }
         }.collect()
     }

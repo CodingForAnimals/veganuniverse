@@ -54,14 +54,14 @@ class PlacesHomeSavedStateHandler {
     }
 
     private data class PlacesHomeSavedState(
-        val userLocationState: PlacesHomeViewModel.UserLocationState,
+        val userLocationState: UserLocationState,
         val latLng: LatLng,
         val zoom: Float,
         val bearing: Float,
-        val placesState: PlacesHomeViewModel.PlacesState,
+        val placesState: PlacesState,
         val selectedPlace: PlaceViewEntity?,
         val isFocused: Boolean,
-        val filterState: PlacesHomeViewModel.FilterState,
+        val filterState: FilterState,
         val snackbarPreviouslyShown: Boolean,
         val initialSheetValue: SheetValue,
     )

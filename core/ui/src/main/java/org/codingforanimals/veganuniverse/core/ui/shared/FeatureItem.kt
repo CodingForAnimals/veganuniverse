@@ -2,6 +2,7 @@
 
 package org.codingforanimals.veganuniverse.core.ui.shared
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -33,6 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
@@ -91,6 +93,7 @@ data class ItemDetailHeroColors(
 @Composable
 fun ItemDetailHero(
     imageUri: Uri? = null,
+    bitmap: Bitmap? = null,
     icon: Icon,
     onImageClick: () -> Unit,
     colors: ItemDetailHeroColors = ItemDetailHeroColors.primaryColors(),
@@ -107,6 +110,13 @@ fun ItemDetailHero(
                 modifier = heroImageModifier,
                 painter = uri, contentDescription = "",
                 contentScale = ContentScale.Crop,
+            )
+        } else if (bitmap != null) {
+            AsyncImage(
+                modifier = heroImageModifier,
+                contentScale = ContentScale.Crop,
+                model = bitmap,
+                contentDescription = "",
             )
         } else {
             Column(

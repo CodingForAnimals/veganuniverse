@@ -9,15 +9,6 @@ plugins {
 android {
     namespace = "org.codingforanimals.veganuniverse.app"
 
-    signingConfigs {
-        create("release") {
-            storeFile = file("C:\\Users\\agusm\\Dev\\codingforanimals\\vegauniversekey.jks")
-            storePassword = "123123"
-            keyAlias = "Vegan Universe"
-            keyPassword = "123123"
-        }
-    }
-
     defaultConfig {
         applicationId = "org.codingforanimals.veganuniverse"
         versionCode = 2
@@ -25,6 +16,26 @@ android {
 
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\agusm\\Dev\\codingforanimals\\veganuniverse\\vukey.jks")
+            storePassword = "123123"
+            keyAlias = "vukey"
+            keyPassword = "123123"
+        }
+    }
+
+    buildTypes {
+        named("release") {
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }

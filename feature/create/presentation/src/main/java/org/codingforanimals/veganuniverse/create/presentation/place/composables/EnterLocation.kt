@@ -6,6 +6,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,10 +48,8 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import org.codingforanimals.veganuniverse.core.ui.R.drawable.ic_location_filled
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.components.VUTextFieldDefaults
-import org.codingforanimals.veganuniverse.core.ui.components.rememberBitmap
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
@@ -58,6 +57,7 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.create.presentation.R
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel
+import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.Action
 
 
 @Composable
@@ -66,6 +66,7 @@ internal fun EnterLocation(
     addressError: Boolean,
     location: LatLng?,
     locationError: Boolean,
+    onAction: (Action) -> Unit,
     onAddressChange: (String) -> Unit,
     onAddressSearch: () -> Unit,
     addressCandidates: List<CreatePlaceViewModel.PlaceAddress>,
@@ -87,11 +88,13 @@ internal fun EnterLocation(
 
     OutlinedTextField(
         modifier = Modifier
+            .clickable { onAction(Action.OnLocationFieldClick) }
             .fillMaxWidth()
             .padding(horizontal = Spacing_06, vertical = Spacing_02)
             .animateContentSize(),
         value = address,
         isError = addressError,
+        readOnly = true,
         onValueChange = onAddressChange,
         placeholder = { Text(text = "Dirección") },
         supportingText = { Text(text = "Ingresar dirección y ciudad") },
@@ -120,6 +123,7 @@ internal fun EnterLocation(
     )
     Box(
         modifier = Modifier
+            .clickable { onAction(Action.OnLocationFieldClick) }
             .padding(Spacing_05)
             .fillMaxWidth()
             .aspectRatio(2f)
@@ -142,12 +146,7 @@ internal fun EnterLocation(
                         zoomGesturesEnabled = false
                     ),
                 ) {
-                    val bitmap = rememberBitmap(
-                        resId = ic_location_filled,
-//                        size = DpSize(30.dp, 30.dp),
-//                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                    val bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap)
+                    val bitmapDescriptor = BitmapDescriptorFactory.defaultMarker()
                     Marker(
                         icon = bitmapDescriptor,
                         state = markerState,

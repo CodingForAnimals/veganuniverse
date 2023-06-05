@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
@@ -17,7 +18,6 @@ import org.codingforanimals.post.presentation.navigation.navigateToPost
 import org.codingforanimals.post.presentation.navigation.postGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.communityGraph
-import org.codingforanimals.veganuniverse.community.presentation.navigation.navigateToCommunity
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
 import org.codingforanimals.veganuniverse.create.presentation.navigation.createGraph
@@ -70,11 +70,8 @@ internal fun VUAppNavHost(
             navigateToRegister = navController::navigateToRegister,
         )
         registrationGraph(
-            navigateToCommunity = {
-                navController.navigateToCommunity {
-                    popUpTo(RegisterDestination.route) { inclusive = true }
-                }
-            })
+            navigateToCommunity = navController::navigateToCommunityPoppingBackstack,
+        )
         notificationsGraph(
             onBackClick = navController::navigateUp,
         )
@@ -105,6 +102,12 @@ internal fun VUAppNavHost(
         recipesGraph(
             navController = navController,
         )
+    }
+}
+
+private fun NavController.navigateToCommunityPoppingBackstack() {
+    navigate(CommunityDestination.route) {
+        popUpTo(RegisterDestination.route) { inclusive = true }
     }
 }
 

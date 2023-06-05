@@ -23,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
@@ -30,8 +32,8 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerInfoWindow
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel.Action
-import org.codingforanimals.places.presentation.home.PlacesHomeViewModel.PlacesState
-import org.codingforanimals.places.presentation.home.PlacesHomeViewModel.UserLocationState
+import org.codingforanimals.places.presentation.home.state.PlacesState
+import org.codingforanimals.places.presentation.home.state.UserLocationState
 import org.codingforanimals.places.presentation.utils.mapStyleJson
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
@@ -49,11 +51,15 @@ internal fun PlacesHomeScreenContent(
 ) = with(uiState) {
     Box(modifier = modifier.fillMaxSize()) {
         GoogleMap(
-
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
                 isMyLocationEnabled = userLocationState is UserLocationState.Success,
                 mapStyleOptions = MapStyleOptions(mapStyleJson),
+                latLngBoundsForCameraTarget = LatLngBounds(
+                    LatLng(-55.0, -74.0),
+                    LatLng(-22.0, -53.0),
+                ),
+                minZoomPreference = 5f
             ),
             onMapLoaded = onMapLoaded,
             uiSettings = MapUiSettings(
@@ -130,7 +136,7 @@ internal fun PlacesHomeScreenContent(
         }
 
         AnimatedVisibility(
-            visible = canRefreshPlaces,
+            visible = isRefreshButtonVisible,
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = Spacing_02),
@@ -144,7 +150,7 @@ internal fun PlacesHomeScreenContent(
                 )
             }
         )
-
+//
         Button(
             modifier = Modifier
                 .align(Alignment.BottomCenter)

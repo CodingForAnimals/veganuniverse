@@ -5,28 +5,12 @@ data class PlaceDomainEntity(
     val imageRef: String = "",
     val type: String = "",
     val name: String = "",
-    val timestamp: String = "",
     val rating: Int = -1,
+    val reviewCount: Int = 0,
     val address: String = "",
     val city: String = "",
     val tags: List<String> = emptyList(),
-)
-
-data class PlaceCardDomainEntity(
-    val id: String = "",
-    val imageRef: String = "",
-    val type: String = "",
-    val name: String = "",
-    val timestamp: String = "",
-    val rating: Int = -1,
-    val address: String = "",
-    val city: String = "",
-    val tags: List<String> = emptyList(),
-)
-
-data class PlaceMarkerDomainEntity(
-    val type: String = "",
-    val name: String = "",
+    val timestamp: Long = 0,
 )
 
 data class PlaceQueryBound(

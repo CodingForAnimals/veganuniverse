@@ -22,11 +22,11 @@ import androidx.compose.ui.unit.dp
 import org.codingforanimals.places.presentation.home.PlaceViewEntity
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel.Action
-import org.codingforanimals.places.presentation.home.PlacesHomeViewModel.FilterState
-import org.codingforanimals.places.presentation.home.PlacesHomeViewModel.PlacesState
 import org.codingforanimals.places.presentation.home.composables.FilterDialog
 import org.codingforanimals.places.presentation.home.composables.PlaceCard
 import org.codingforanimals.places.presentation.home.composables.SortDialog
+import org.codingforanimals.places.presentation.home.state.FilterState
+import org.codingforanimals.places.presentation.home.state.PlacesState
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChipDefaults
 import org.codingforanimals.veganuniverse.core.ui.components.VUImage
@@ -55,7 +55,7 @@ internal fun SuccessSheet(
                 rating = selectedPlace.rating,
                 address = selectedPlace.address,
                 city = selectedPlace.city,
-                onCardClick = {},
+                onCardClick = { onAction(Action.OnPlaceClick(selectedPlace)) },
                 border = selectedPlaceCardBorder,
             )
         } else {

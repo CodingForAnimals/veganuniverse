@@ -31,12 +31,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel.Action
-import org.codingforanimals.places.presentation.home.PlacesHomeViewModel.PlacesState
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel.SideEffect
 import org.codingforanimals.places.presentation.home.bottomsheet.ErrorSheet
 import org.codingforanimals.places.presentation.home.bottomsheet.LoadingSheet
 import org.codingforanimals.places.presentation.home.bottomsheet.PlacesHomeScreenContent
 import org.codingforanimals.places.presentation.home.bottomsheet.SuccessSheet
+import org.codingforanimals.places.presentation.home.state.PlacesState
 import org.codingforanimals.veganuniverse.core.ui.lifecycle.LifecycleObserver
 import org.koin.androidx.compose.koinViewModel
 
