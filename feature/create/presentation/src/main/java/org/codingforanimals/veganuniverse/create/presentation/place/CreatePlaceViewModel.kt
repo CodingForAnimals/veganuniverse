@@ -1,27 +1,24 @@
 package org.codingforanimals.veganuniverse.create.presentation.place
 
 import android.app.Activity
-import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
-import android.location.Address
-import android.location.Geocoder
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import androidx.activity.result.ActivityResult
+import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FetchPhotoRequest
-import com.google.android.libraries.places.widget.Autocomplete
-import kotlinx.coroutines.Job
+import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,100 +27,128 @@ import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.create.domain.ContentCreator
 import org.codingforanimals.veganuniverse.create.domain.place.PlaceFormDomainEntity
+import org.codingforanimals.veganuniverse.create.presentation.R
+import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.CreatePlaceFormItem.Map
+import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.CreatePlaceFormItem.NameField
+import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.CreatePlaceFormItem.OpeningHoursField
+import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.CreatePlaceFormItem.Picture
+import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetAutoCompleteIntentUseCase
+import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetPlaceDataStatus
+import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetPlaceDataUseCase
 
 private const val TAG = "CreatePlaceViewModel"
 
 internal class CreatePlaceViewModel(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
-    context: Context,
-    private val geocoder: Geocoder,
     private val contentCreator: ContentCreator,
+    private val getPlaceDataUseCase: GetPlaceDataUseCase,
+    private val getAutoCompleteIntentUseCase: GetAutoCompleteIntentUseCase,
 ) : ViewModel() {
 
     private val ioDispatcher = coroutineDispatcherProvider.io()
-    private val mainDispatcher = coroutineDispatcherProvider.main()
 
-    var uiState by mutableStateOf(UiState.initState())
+    var uiState by mutableStateOf(UiState())
 
     private val _sideEffects: Channel<SideEffect> = Channel()
     val sideEffects: Flow<SideEffect> = _sideEffects.receiveAsFlow()
 
-    private var searchJob: Job? = null
-
     var icon: Bitmap? = null
 
-    private val googlePlacesApi by lazy { Places.createClient(context) }
+    val createPlaceFormItems = listOf(
+        Map,
+        NameField,
+        OpeningHoursField,
+        Picture,
+    )
+
+    sealed class CreatePlaceFormItem {
+        object Map : CreatePlaceFormItem()
+        object NameField : CreatePlaceFormItem()
+        object OpeningHoursField : CreatePlaceFormItem()
+        object Picture : CreatePlaceFormItem()
+    }
 
     fun onAction(action: Action) {
         when (action) {
             is Action.OnFormChange -> onFormChange(action)
-            Action.OnAddressSearch -> fetchAddressCandidates()
-            Action.OnCandidatesDialogDismissed -> {
-                uiState = uiState.copy(addressCandidates = emptyList())
-            }
-            is Action.OnCandidateSelected -> {
-                val newAddress = uiState.addressCandidates[action.index]
-                uiState = uiState.copy(
-                    form = uiState.form.copy(
-                        address = newAddress.address,
-                        location = newAddress.latLng,
-                        locationError = false,
-                    ),
-                    addressCandidates = emptyList(),
-                )
-            }
-            Action.SubmitPlace -> submit()
             is Action.OnTagClick -> onTagClick(action.tag)
-            Action.OnLocationFieldClick -> {
-                viewModelScope.launch {
-                    _sideEffects.send(SideEffect.OpenAddressSearchOverlay)
+            is Action.OnPlaceSelected -> getPlaceData(action.activityResult)
+            Action.OnSearchMapClick -> openAutoCompleteOverlay()
+            Action.OnImagePickerClick -> openImageSelector()
+            Action.OnErrorDialogDismissRequest -> dismissErrorDialog()
+            Action.SubmitPlace -> submit()
+        }
+    }
+
+    private fun openAutoCompleteOverlay() {
+        viewModelScope.launch {
+            _sideEffects.send(SideEffect.OpenAutoCompleteOverlay(getAutoCompleteIntentUseCase()))
+        }
+    }
+
+    private fun openImageSelector() {
+        viewModelScope.launch {
+            _sideEffects.send(SideEffect.OpenImageSelector)
+        }
+    }
+
+    private fun dismissErrorDialog() {
+        uiState = uiState.copy(errorDialog = null, isLoading = false)
+    }
+
+    private fun getPlaceData(activityResult: ActivityResult) {
+        val intent = activityResult.data
+        if (activityResult.resultCode == Activity.RESULT_OK && intent != null) {
+            viewModelScope.launch {
+                getPlaceDataUseCase(intent).collectLatest { placeDataStatus ->
+                    updateUiWithPlaceDataStatus(placeDataStatus)
                 }
             }
-            Action.OnImageClick -> {
-                viewModelScope.launch {
-                    _sideEffects.send(SideEffect.OpenImageSelector)
-                }
+        }
+    }
+
+    private suspend fun updateUiWithPlaceDataStatus(placeDataStatus: GetPlaceDataStatus) {
+        when (placeDataStatus) {
+            GetPlaceDataStatus.EstablishmentPictureException -> {
+                val form = uiState.form.copy(bitmap = null)
+                uiState = uiState.copy(form = form, isLoading = false)
             }
-            is Action.OnAddressSelected -> {
-                val intent = action.activityResult.data
-                if (action.activityResult.resultCode == Activity.RESULT_OK && intent != null) {
-                    val place = Autocomplete.getPlaceFromIntent(intent)
-                    val metadata = place.photoMetadatas
-                    if (metadata == null || metadata.isEmpty()) {
-                        Log.e("pepe", "photo metadata vacia paaa")
-                        return
-                    }
-                    val data = metadata.first()
-                    val attributions = data.attributions
-                    Log.e("pepe", "attributions $attributions")
-                    val photoRequest = FetchPhotoRequest.builder(data).build()
-                    googlePlacesApi.fetchPhoto(photoRequest)
-                        .addOnSuccessListener {
-                            Log.e("pepe", "bitmap success")
-                            uiState = uiState.copy(form = uiState.form.copy(bitmap = it.bitmap))
-                        }
-                        .addOnFailureListener {
-                            Log.e("pepe", "error pa ${it.stackTraceToString()}")
-                        }
-
-                    Log.e("pepe", "place $place")
-
-                    place.types?.let { types ->
-                        when {
-                            types.contains(Place.Type.ESTABLISHMENT) -> {
-                                Log.e("pepe", "establishment pa $types")
-                            }
-                            types.contains(Place.Type.STREET_ADDRESS) -> {
-                                Log.e("pepe", "street number $types")
-                            }
-                            else -> {
-                                Log.e("pepe", "otro $types")
-                            }
-                        }
-                    }
-                } else {
-                    Log.e("pepe", "error pa ${action.activityResult.data?.extras}")
-                }
+            is GetPlaceDataStatus.EstablishmentData -> {
+                val form = Form(
+                    name = placeDataStatus.name,
+                    openingHours = placeDataStatus.openingHours,
+                )
+                val location = Location(placeDataStatus.latLng, placeDataStatus.address)
+                uiState =
+                    uiState.copy(form = form, location = location, isLoading = false)
+                _sideEffects.send(SideEffect.ZoomInLocation(placeDataStatus.latLng))
+            }
+            is GetPlaceDataStatus.EstablishmentPicture -> {
+                val form = uiState.form.copy(bitmap = placeDataStatus.bitmap)
+                uiState = uiState.copy(isLoading = false, form = form)
+            }
+            GetPlaceDataStatus.Loading -> {
+                uiState = uiState.copy(isLoading = true)
+            }
+            is GetPlaceDataStatus.StreetAddressData -> {
+                val location = Location(placeDataStatus.latLng, placeDataStatus.address)
+                uiState = uiState.copy(location = location, isLoading = false)
+                _sideEffects.send(SideEffect.ZoomInLocation(placeDataStatus.latLng))
+            }
+            GetPlaceDataStatus.PlaceTypeException -> {
+                uiState =
+                    uiState.copy(errorDialog = ErrorDialog.PlaceTypeErrorDialog, isLoading = false)
+            }
+            GetPlaceDataStatus.MissingCriticalFieldException -> {
+                uiState =
+                    uiState.copy(
+                        errorDialog = ErrorDialog.MissingCriticalFieldErrorDialog,
+                        isLoading = false
+                    )
+            }
+            GetPlaceDataStatus.UnknownException -> {
+                uiState =
+                    uiState.copy(errorDialog = ErrorDialog.UnknownErrorDialog, isLoading = false)
             }
         }
     }
@@ -140,7 +165,13 @@ internal class CreatePlaceViewModel(
         with(onFormChange) {
             val form = uiState.form
             imageUri?.let {
-                uiState = uiState.copy(form = form.copy(imageUri = it, imageUriError = false))
+                uiState = uiState.copy(
+                    form = form.copy(
+                        imageUri = it,
+                        imageUriError = false,
+                        bitmap = null
+                    )
+                )
             }
             type?.let {
                 uiState = uiState.copy(form = form.copy(type = it, typeError = false))
@@ -235,115 +266,63 @@ internal class CreatePlaceViewModel(
             return true
         }
 
-    private fun fetchAddressCandidates() {
-        val address = uiState.form.address
-        if (address.isBlank()) return
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            geocoder.getFromLocationName(address, 5) { data ->
-                data.mapToPlaceAddress()?.let { candidates ->
-                    handleAddressCandidatesStateUpdate(candidates)
-                }
-            }
-        } else {
-            searchJob?.cancel()
-            searchJob = viewModelScope.launch(ioDispatcher) {
-                val data = geocoder.getFromLocationName(address, 5)
-                data?.mapToPlaceAddress()?.let { candidates ->
-                    withContext(mainDispatcher) {
-                        handleAddressCandidatesStateUpdate(candidates)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun handleAddressCandidatesStateUpdate(candidates: List<PlaceAddress>) {
-        if (candidates.size == 1) {
-            val onlyCandidate = candidates.first()
-            uiState = uiState.copy(
-                form = uiState.form.copy(
-                    address = onlyCandidate.address,
-                    location = onlyCandidate.latLng,
-                    locationError = false,
-                ),
-            )
-        } else {
-            uiState = uiState.copy(addressCandidates = candidates)
-        }
-    }
-
-    private fun List<Address>.mapToPlaceAddress() = mapNotNull {
-        if (it.thoroughfare == null ||
-            it.subThoroughfare == null ||
-            it.locality == null
-        ) return@mapNotNull null
-        PlaceAddress(
-            address = it.getMappedAddress(),
-            latLng = it.getLatLng(),
-        )
-    }.takeUnless { it.isEmpty() }
-
-    private fun Address.getMappedAddress() =
-        "$thoroughfare $subThoroughfare, $locality"
-
-    private fun Address.getLatLng() = LatLng(latitude, longitude)
-
     data class UiState(
-        val form: Form,
-        val selectedTags: List<PlaceTag>,
-        val addressCandidates: List<PlaceAddress>,
-        val isLoading: Boolean,
-        val isPublishButtonEnabled: Boolean,
+        val form: Form = Form(),
+        val location: Location? = null,
+        val errorDialog: ErrorDialog? = null,
+        val cameraPositionState: CameraPositionState = CameraPositionState(defaultCameraPosition),
+        val isLoading: Boolean = false,
+        val isPublishButtonEnabled: Boolean = true,
     ) {
         companion object {
-            fun initState() = UiState(
-                form = Form.initialState(),
-                selectedTags = emptyList(),
-                addressCandidates = emptyList(),
-                isLoading = false,
-                isPublishButtonEnabled = true,
+            private val defaultCameraPosition = CameraPosition.fromLatLngZoom(
+                LatLng(-34.0, -64.0),
+                5f
             )
         }
     }
+
+    data class Location(
+        val latLng: LatLng,
+        val address: String,
+    )
 
     data class Form(
-        val imageUri: Uri?,
-        val bitmap: Bitmap?,
-        val imageUriError: Boolean,
-        val type: PlaceType?,
-        val typeError: Boolean,
-        val name: String,
-        val nameError: Boolean,
-        val openingHours: String,
-        val openingHoursError: Boolean,
-        val description: String,
-        val descriptionError: Boolean,
-        val address: String,
-        val addressError: Boolean,
-        val location: LatLng?,
-        val locationError: Boolean,
-        val selectedTags: List<PlaceTag>,
-    ) {
-        companion object {
-            fun initialState() = Form(
-                imageUri = null,
-                bitmap = null,
-                imageUriError = false,
-                type = null,
-                typeError = false,
-                name = "",
-                nameError = false,
-                openingHours = "",
-                openingHoursError = false,
-                description = "",
-                descriptionError = false,
-                address = "",
-                addressError = false,
-                location = null,
-                locationError = false,
-                selectedTags = emptyList(),
+        val imageUri: Uri? = null,
+        val bitmap: Bitmap? = null,
+        val imageUriError: Boolean = false,
+        val type: PlaceType? = null,
+        val typeError: Boolean = false,
+        val name: String = "",
+        val nameError: Boolean = false,
+        val openingHours: String = "",
+        val openingHoursError: Boolean = false,
+        val description: String = "",
+        val descriptionError: Boolean = false,
+        val address: String = "",
+        val addressError: Boolean = false,
+        val location: LatLng? = null,
+        val locationError: Boolean = false,
+        val selectedTags: List<PlaceTag> = emptyList(),
+    )
+
+    sealed class ErrorDialog(@StringRes val title: Int, @StringRes val message: Int) {
+        object UnknownErrorDialog : ErrorDialog(
+            title = R.string.error_title_unknown,
+            message = R.string.error_message_unknown,
+        )
+
+        object PlaceTypeErrorDialog :
+            ErrorDialog(
+                title = R.string.error_title_place_type,
+                message = R.string.error_message_place_type
             )
-        }
+
+        object MissingCriticalFieldErrorDialog :
+            ErrorDialog(
+                title = R.string.error_title_missing_critical_field,
+                message = R.string.error_message_missing_critical_field
+            )
     }
 
     sealed class Action {
@@ -357,25 +336,27 @@ internal class CreatePlaceViewModel(
             val location: LatLng? = null,
         ) : Action()
 
-        object OnAddressSearch : Action()
-        object OnCandidatesDialogDismissed : Action()
-        data class OnCandidateSelected(val index: Int) : Action()
         object SubmitPlace : Action()
         data class OnTagClick(val tag: PlaceTag) : Action()
-        object OnImageClick : Action()
-        object OnLocationFieldClick : Action()
-        data class OnAddressSelected(val activityResult: ActivityResult) : Action()
+        object OnImagePickerClick : Action()
+        object OnSearchMapClick : Action()
+        data class OnPlaceSelected(val activityResult: ActivityResult) : Action()
+        object OnErrorDialogDismissRequest : Action()
     }
 
     sealed class SideEffect {
         object NavigateToThankYouScreen : SideEffect()
         object ShowTryAgainDialog : SideEffect()
         object OpenImageSelector : SideEffect()
-        object OpenAddressSearchOverlay : SideEffect()
-    }
+        data class OpenAutoCompleteOverlay(val autocompleteIntent: Intent) : SideEffect()
+        data class ZoomInLocation(private val latLng: LatLng) : SideEffect() {
+            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ANIMATION_ZOOM)
+            val duration = DEFAULT_ANIMATION_DURATION
 
-    data class PlaceAddress(
-        val address: String,
-        val latLng: LatLng,
-    )
+            companion object {
+                private const val DEFAULT_ANIMATION_ZOOM = 15f
+                private const val DEFAULT_ANIMATION_DURATION = 750
+            }
+        }
+    }
 }

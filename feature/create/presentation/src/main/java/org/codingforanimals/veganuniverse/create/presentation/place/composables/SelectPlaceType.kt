@@ -22,7 +22,7 @@ internal fun SelectPlaceType(
 ) {
     Text(
         modifier = Modifier.padding(horizontal = Spacing_06),
-        text = "Tipo de negocio",
+        text = "Cuál te parece la categoría más acertada para este lugar?",
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.SemiBold,
     )

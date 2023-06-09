@@ -33,6 +33,7 @@ private fun getMarker(type: PlaceType) = when (type) {
     PlaceType.RESTAURANT -> Markers.restaurantMarker
     PlaceType.CAFE -> Markers.cafeMarker
     PlaceType.STORE -> Markers.storeMarker
+    PlaceType.BAR -> Markers.storeMarker
 }
 
 internal fun PlaceDomainEntity.getTags(): List<PlaceTag> {

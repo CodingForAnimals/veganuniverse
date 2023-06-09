@@ -51,8 +51,8 @@ data class ItemDetailHeroColors(
     val iconContainer: Color,
     val typeIconTint: Color,
     val typeIconBorder: Color,
-    val galeryIconTint: Color,
-    val galeryTextColor: Color,
+    val galleryIconTint: Color,
+    val galleryTextColor: Color,
 ) {
     companion object ItemDetailHeroDefaults {
         @Composable
@@ -62,8 +62,8 @@ data class ItemDetailHeroColors(
             iconContainer = MaterialTheme.colorScheme.primary,
             typeIconTint = MaterialTheme.colorScheme.surfaceVariant,
             typeIconBorder = MaterialTheme.colorScheme.surfaceVariant,
-            galeryIconTint = MaterialTheme.colorScheme.primaryContainer,
-            galeryTextColor = MaterialTheme.colorScheme.primaryContainer,
+            galleryIconTint = MaterialTheme.colorScheme.primaryContainer,
+            galleryTextColor = MaterialTheme.colorScheme.primaryContainer,
         )
 
         @Composable
@@ -73,8 +73,8 @@ data class ItemDetailHeroColors(
             iconContainer = MaterialTheme.colorScheme.secondaryContainer,
             typeIconTint = MaterialTheme.colorScheme.surfaceVariant,
             typeIconBorder = MaterialTheme.colorScheme.secondaryContainer,
-            galeryIconTint = MaterialTheme.colorScheme.primaryContainer,
-            galeryTextColor = MaterialTheme.colorScheme.primaryContainer,
+            galleryIconTint = MaterialTheme.colorScheme.primaryContainer,
+            galleryTextColor = MaterialTheme.colorScheme.primaryContainer,
         )
 
         @Composable
@@ -84,8 +84,8 @@ data class ItemDetailHeroColors(
             iconContainer = MaterialTheme.colorScheme.secondaryContainer,
             typeIconTint = MaterialTheme.colorScheme.surfaceVariant,
             typeIconBorder = MaterialTheme.colorScheme.secondaryContainer,
-            galeryIconTint = MaterialTheme.colorScheme.error,
-            galeryTextColor = MaterialTheme.colorScheme.error,
+            galleryIconTint = MaterialTheme.colorScheme.error,
+            galleryTextColor = MaterialTheme.colorScheme.error,
         )
     }
 }
@@ -128,11 +128,11 @@ fun ItemDetailHero(
                     modifier = Modifier.size(24.dp),
                     icon = VUIcons.Pictures,
                     contentDescription = "",
-                    tint = colors.galeryIconTint,
+                    tint = colors.galleryIconTint,
                 )
                 Text(
                     text = "Subir foto",
-                    color = colors.galeryTextColor,
+                    color = colors.galleryTextColor,
                 )
             }
         }

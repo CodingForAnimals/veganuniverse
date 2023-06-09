@@ -71,6 +71,7 @@ object VUIcons {
     val SugarFree = DrawableResourceIcon(R.drawable.ic_sugar_free)
     val Shaker = DrawableResourceIcon(R.drawable.ic_shaker)
     val Pie = DrawableResourceIcon(R.drawable.ic_pie)
+    val Beer = DrawableResourceIcon(R.drawable.ic_beer)
 
     // Map related icons
     val Shrink = DrawableResourceIcon(R.drawable.ic_shrink)

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.location.Location
-import android.util.Log
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
@@ -71,10 +70,8 @@ internal class UserLocationManagerImpl(
 
     private fun handleSuccess(location: Location?) {
         val userLocationSuccessResponse = if (location == null) {
-            Log.e(TAG, "pepe Location services disabled")
             LocationResponse.LocationServiceDisabled
         } else {
-            Log.e(TAG, "pepe Location fetched successfully $location")
             LocationResponse.LocationGranted(location.latitude, location.longitude)
         }
         _userLocation.value = userLocationSuccessResponse
@@ -83,14 +80,9 @@ internal class UserLocationManagerImpl(
     private fun handleException(exception: Throwable) {
         val userLocationErrorResponse = when (exception) {
             is SecurityException -> {
-                Log.e(
-                    TAG,
-                    "pepe Location permissions not granted. ${exception.stackTraceToString()}"
-                )
                 LocationResponse.PermissionsNotGranted
             }
             else -> {
-                Log.e(TAG, "pepe Failure getting user location")
                 LocationResponse.UnknownError
             }
         }

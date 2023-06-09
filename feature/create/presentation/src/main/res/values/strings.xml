@@ -1,0 +1,9 @@
+<resources>
+    <string name="error_title_unknown">Oops, algo salió mal…</string>
+    <string name="error_message_unknown">Lo sentimos, ocurrió un error inesperado</string>
+    <string name="error_title_place_type">Tipo de lugar no permitido</string>
+    <string name="error_message_place_type">Buscá un lugar o por nombre para que autocompletemos la información, o busca un lugar por dirección y completa la información vos mismo</string>
+    <string name="error_title_missing_critical_field">Error en lugar seleccionado</string>
+    <string name="error_message_missing_critical_field">El lugar seleccionado no contiene la información necesaria para autocompletar. Podés probar de nuevo o agregarlo manualmente buscando su dirección</string>
+    <string name="ok">OK</string>
+</resources>

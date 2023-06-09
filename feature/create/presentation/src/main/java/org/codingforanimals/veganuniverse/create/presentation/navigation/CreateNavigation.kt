@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.create.domain.createContentModule
 import org.codingforanimals.veganuniverse.create.presentation.CreateScreen
-import org.codingforanimals.veganuniverse.create.presentation.place.createPlaceModule
+import org.codingforanimals.veganuniverse.create.presentation.place.di.createPlaceModule
 import org.codingforanimals.veganuniverse.create.presentation.thankyou.ThankYouScreen
 import org.koin.core.context.loadKoinModules
 
