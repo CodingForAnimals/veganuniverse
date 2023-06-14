@@ -1,4 +1,4 @@
-package org.codingforanimals.places.presentation.home.composables
+package org.codingforanimals.veganuniverse.core.ui.place
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,40 +7,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 
-object Markers {
-    val restaurantMarker = PlaceMarker(
-        defaultIcon = VUIcons.MarkerRestaurant,
-        selectedIcon = VUIcons.MarkerRestaurantSelected,
-    )
-
-    val storeMarker = PlaceMarker(
-        defaultIcon = VUIcons.MarkerStore,
-        selectedIcon = VUIcons.MarkerStoreSelected,
-    )
-
-    val cafeMarker = PlaceMarker(
-        defaultIcon = VUIcons.MarkerCafe,
-        selectedIcon = VUIcons.MarkerCafeSelected,
-    )
-}
-
-data class PlaceMarker(
+sealed class PlaceMarker(
     private val defaultIcon: Icon.DrawableResourceIcon,
     private val selectedIcon: Icon.DrawableResourceIcon,
 ) {
     @Composable
-    fun getDisplayMarker(isSelected: Boolean): BitmapDescriptor {
+    fun getDisplayMarker(isSelected: Boolean): Bitmap? {
         val context = LocalContext.current
         return remember(key1 = isSelected) {
             val resId = if (isSelected) selectedIcon.id else defaultIcon.id
-            createBitmap(context, resId)?.let {
-                BitmapDescriptorFactory.fromBitmap(it)
-            } ?: BitmapDescriptorFactory.defaultMarker()
+            createBitmap(context, resId)
         }
     }
 
@@ -57,4 +36,29 @@ data class PlaceMarker(
             bitmap
         }
     }
+
+    object RestaurantMarker : PlaceMarker(
+        defaultIcon = VUIcons.MarkerRestaurant,
+        selectedIcon = VUIcons.MarkerRestaurantSelected,
+    )
+
+    object StoreMarker : PlaceMarker(
+        defaultIcon = VUIcons.MarkerStore,
+        selectedIcon = VUIcons.MarkerStoreSelected,
+    )
+
+    object CafeMarker : PlaceMarker(
+        defaultIcon = VUIcons.MarkerCafe,
+        selectedIcon = VUIcons.MarkerCafeSelected,
+    )
+
+    object BarMarker : PlaceMarker(
+        defaultIcon = VUIcons.Beer,
+        selectedIcon = VUIcons.Beer,
+    )
+
+    object DefaultMarker : PlaceMarker(
+        defaultIcon = VUIcons.LocationFilled,
+        selectedIcon = VUIcons.LocationFilled,
+    )
 }

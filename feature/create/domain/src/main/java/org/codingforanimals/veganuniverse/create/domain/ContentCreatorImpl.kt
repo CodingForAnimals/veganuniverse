@@ -16,9 +16,10 @@ class ContentCreatorImpl : ContentCreator {
     override suspend fun createPlace(form: PlaceFormDomainEntity): Result<Unit> =
         runCatching {
             val existingPlaceQueryResult =
-                firebase.collection(PLACES_COLLECTION).whereEqualTo("id", form.id).get().await()
+                firebase.collection(PLACES_COLLECTION).whereEqualTo("id", form.latLngUID).get()
+                    .await()
             if (!existingPlaceQueryResult.isEmpty) {
-                throw ContentCreatorException.PlaceAlreadyExists
+                throw ContentCreatorException.AlreadyExistsException
             }
             firebase.collection(PLACES_COLLECTION).add(form.toFirebaseEntity()).await()
             return@runCatching
@@ -26,7 +27,7 @@ class ContentCreatorImpl : ContentCreator {
 }
 
 sealed class ContentCreatorException : Exception() {
-    object PlaceAlreadyExists : ContentCreatorException()
+    object AlreadyExistsException : ContentCreatorException()
 }
 
 private data class PlaceFormFirebaseEntity(
@@ -42,5 +43,5 @@ private data class PlaceFormFirebaseEntity(
 )
 
 private fun PlaceFormDomainEntity.toFirebaseEntity() = PlaceFormFirebaseEntity(
-    id, name, openingHours, type, address, city, tags, geoHash
+    latLngUID, name, openingHours, type, "address", "city", tags, geoHash
 )

@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
-import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetPlaceDataStatus.EstablishmentData
 
 private const val TAG = "GetPlaceDataUseCase"
 
@@ -37,35 +36,44 @@ class GetPlaceDataUseCase(
         }
     }
 
-    private suspend fun FlowCollector<GetPlaceDataStatus>.getEstablishmentData(place: Place) {
-        try {
-            val address = getAddress(place)!!
+    private suspend fun FlowCollector<GetPlaceDataStatus>.getEstablishmentData(place: Place) = try {
+        place.addressComponents!!.asList().map { it.name }
+        with(place.addressComponents!!.asList()) {
+            val streetName = first { it.types.contains(STREET_NAME) }.name
+            val streetNumber = first { it.types.contains(STREET_NUMBER) }.name
+            val locality = first { it.types.contains(LOCALITY) }.name
+            val province = first { it.types.contains("administrative_area_level_2") }.name
+            val country = first { it.types.contains(COUNTRY) }.name
             val latLng = place.latLng!!
             val name = place.name!!
             val openingHours = place.openingHours?.weekdayText?.joinToString("\n").orEmpty()
-            val establishmentData = EstablishmentData(
+            val establishmentData = GetPlaceDataStatus.EstablishmentData(
                 latLng = latLng,
                 name = name,
-                address = address,
+                streetAddress = "$streetName $streetNumber, $locality",
+                province = province,
+                locality = locality,
+                country = country,
                 openingHours = openingHours
             )
             emit(establishmentData)
+        }
 
-            place.photoMetadatas?.firstOrNull()?.let { photoMetadata ->
-                val photoRequest = FetchPhotoRequest.builder(photoMetadata).build()
-                val task = placesClient.fetchPhoto(photoRequest)
-                val bitmap = withContext(ioDispatcher) { Tasks.await(task) }.bitmap
-                emit(GetPlaceDataStatus.EstablishmentPicture(bitmap))
-            }
+        place.photoMetadatas?.firstOrNull()?.let { photoMetadata ->
+            val photoRequest = FetchPhotoRequest.builder(photoMetadata).build()
+            val task = placesClient.fetchPhoto(photoRequest)
+            val bitmap = withContext(ioDispatcher) { Tasks.await(task) }.bitmap
+            emit(GetPlaceDataStatus.EstablishmentPicture(bitmap))
+        }
 
-        } catch (e: Throwable) {
-            when (e) {
-                is ApiException,
-                is ExecutionException,
-                is InterruptedException -> emit(GetPlaceDataStatus.EstablishmentPictureException)
-                is NullPointerException -> emit(GetPlaceDataStatus.MissingCriticalFieldException)
-                else -> emit(GetPlaceDataStatus.UnknownException)
-            }
+    } catch (e: Throwable) {
+        when (e) {
+            is ApiException,
+            is ExecutionException,
+            is InterruptedException -> emit(GetPlaceDataStatus.EstablishmentPictureException)
+            is NoSuchElementException,
+            is NullPointerException -> emit(GetPlaceDataStatus.MissingCriticalFieldException)
+            else -> emit(GetPlaceDataStatus.UnknownException)
         }
     }
 
@@ -108,7 +116,23 @@ class GetPlaceDataUseCase(
     companion object AddressComponents {
         private const val STREET_NAME = "route"
         private const val STREET_NUMBER = "street_number"
+
+        /**
+         * Locality in Argentina, i.e. Monte Grande
+         */
         private const val LOCALITY = "locality"
+
+        /**
+         * Municipality in Argentina, i.e. Esteban Echeverría
+         */
+        private const val ADMIN_AREA_2 = "administrative_area_level_2"
+
+        /**
+         * Province in Argentina, i.e. Mendoza
+         */
+        private const val ADMIN_AREA_1 = "administrative_area_level_1"
+
+        private const val COUNTRY = "country"
     }
 }
 
@@ -117,7 +141,10 @@ sealed class GetPlaceDataStatus {
     data class EstablishmentData(
         val latLng: LatLng,
         val name: String,
-        val address: String,
+        val streetAddress: String,
+        val province: String,
+        val locality: String,
+        val country: String,
         val openingHours: String,
     ) : GetPlaceDataStatus()
 

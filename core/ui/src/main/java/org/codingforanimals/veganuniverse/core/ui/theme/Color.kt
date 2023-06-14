@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.core.ui.theme
 
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 val Primary = Color(0xFF3B0F8A)
@@ -12,3 +13,17 @@ val Surface = Color(0xFFDFE1E3)
 val SurfaceVariant = Color(0xFFF4F4F5)
 val OnSurfaceVariant = Color(0xFF4D4D55)
 val Secondary = Color(0xFFE0D2F9)
+val Outline = Color(0xFFBABFC4)
+
+internal val LightColorScheme = lightColorScheme(
+    primary = Primary,
+    onPrimary = OnPrimary,
+    primaryContainer = PrimaryContainer,
+    secondary = Secondary,
+    secondaryContainer = SecondaryContainer,
+    surface = Surface,
+    surfaceVariant = SurfaceVariant,
+    onSurfaceVariant = OnSurfaceVariant,
+    background = Background,
+    outline = Outline,
+)

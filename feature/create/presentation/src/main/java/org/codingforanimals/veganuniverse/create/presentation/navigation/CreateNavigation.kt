@@ -15,6 +15,7 @@ object ThankYouDestination : Destination(route = "thank_you_route")
 
 fun NavGraphBuilder.createGraph(
     navController: NavController,
+    navigateToPlaceDetails: () -> Unit,
 ) {
     loadKoinModules(
         listOf(
@@ -26,7 +27,8 @@ fun NavGraphBuilder.createGraph(
         route = CreateDestination.route
     ) {
         CreateScreen(
-            navigateToThankYouScreen = { navController.navigate(ThankYouDestination.route) }
+            navigateToThankYouScreen = { navController.navigate(ThankYouDestination.route) },
+            navigateToAlreadyExistingPlace = navigateToPlaceDetails,
         )
     }
     composable(

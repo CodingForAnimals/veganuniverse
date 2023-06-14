@@ -46,6 +46,7 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 
 data class ItemDetailHeroColors(
+    val contentColor: Color,
     val imageBackground: Color,
     val divider: Color,
     val iconContainer: Color,
@@ -57,6 +58,7 @@ data class ItemDetailHeroColors(
     companion object ItemDetailHeroDefaults {
         @Composable
         fun primaryColors() = ItemDetailHeroColors(
+            contentColor = MaterialTheme.colorScheme.primary,
             imageBackground = MaterialTheme.colorScheme.surfaceVariant,
             divider = MaterialTheme.colorScheme.primary,
             iconContainer = MaterialTheme.colorScheme.primary,
@@ -68,6 +70,7 @@ data class ItemDetailHeroColors(
 
         @Composable
         fun secondaryColors() = ItemDetailHeroColors(
+            contentColor = MaterialTheme.colorScheme.primary,
             imageBackground = MaterialTheme.colorScheme.surfaceVariant,
             divider = MaterialTheme.colorScheme.secondaryContainer,
             iconContainer = MaterialTheme.colorScheme.secondaryContainer,
@@ -79,9 +82,10 @@ data class ItemDetailHeroColors(
 
         @Composable
         fun errorColors() = ItemDetailHeroColors(
+            contentColor = MaterialTheme.colorScheme.error,
             imageBackground = MaterialTheme.colorScheme.surfaceVariant,
-            divider = MaterialTheme.colorScheme.secondaryContainer,
-            iconContainer = MaterialTheme.colorScheme.secondaryContainer,
+            divider = MaterialTheme.colorScheme.error,
+            iconContainer = MaterialTheme.colorScheme.error,
             typeIconTint = MaterialTheme.colorScheme.surfaceVariant,
             typeIconBorder = MaterialTheme.colorScheme.secondaryContainer,
             galleryIconTint = MaterialTheme.colorScheme.error,

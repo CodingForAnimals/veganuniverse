@@ -8,10 +8,8 @@ object VUTextFieldDefaults {
 
     @Composable
     fun colors() = OutlinedTextFieldDefaults.colors(
-        unfocusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
         unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
         focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        errorContainerColor = MaterialTheme.colorScheme.surfaceVariant,
     )
 }

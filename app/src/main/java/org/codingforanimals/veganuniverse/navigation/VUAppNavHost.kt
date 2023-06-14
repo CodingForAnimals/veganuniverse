@@ -12,6 +12,7 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
 import com.google.maps.android.compose.CameraPositionState
+import org.codingforanimals.places.presentation.details.PlaceDetailsDestination
 import org.codingforanimals.places.presentation.home.PlacesHomeDestination
 import org.codingforanimals.places.presentation.placesGraph
 import org.codingforanimals.post.presentation.navigation.navigateToPost
@@ -98,6 +99,7 @@ internal fun VUAppNavHost(
         )
         createGraph(
             navController = navController,
+            navigateToPlaceDetails = { navController.navigate(PlaceDetailsDestination.route) }
         )
         recipesGraph(
             navController = navController,

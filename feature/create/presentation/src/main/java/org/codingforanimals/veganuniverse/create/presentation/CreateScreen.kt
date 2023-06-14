@@ -22,6 +22,7 @@ import org.codingforanimals.veganuniverse.create.presentation.recipe.CreateRecip
 @Composable
 internal fun CreateScreen(
     navigateToThankYouScreen: () -> Unit,
+    navigateToAlreadyExistingPlace: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     Box(modifier = Modifier.fillMaxSize()) {
@@ -35,6 +36,7 @@ internal fun CreateScreen(
                 is PostScreenId -> CreatePostScreen()
                 is PlaceScreenId -> CreatePlaceScreen(
                     onCreateSuccess = navigateToThankYouScreen,
+                    navigateToAlreadyExistingPlace = navigateToAlreadyExistingPlace,
                 )
                 is ProductScreenId -> CreateProductScreen()
                 is RecipeScreenId -> CreateRecipeScreen()
