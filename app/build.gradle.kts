@@ -50,8 +50,6 @@ dependencies {
     implementation(project(":feature:featuredtopic:presentation"))
     implementation(project(":feature:recipes:presentation"))
     implementation(project(":feature:post:presentation"))
-    implementation(project(":feature:map:presentation"))
-    implementation(project(":feature:site:presentation"))
     implementation(project(":feature:places:presentation"))
     implementation(project(":feature:registration:presentation"))
     implementation(project(":feature:notifications:presentation"))

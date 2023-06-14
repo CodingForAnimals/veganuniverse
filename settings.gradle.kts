@@ -19,6 +19,7 @@ include(":app")
 include(":core:datastore")
 include(":core:common")
 include(":core:ui")
+include(":core:location")
 
 // features
 include(":feature:profile:presentation")
@@ -37,11 +38,8 @@ include(":feature:recipes:presentation")
 
 include(":feature:post:presentation")
 
-include(":feature:map:presentation")
-
-include(":feature:site:presentation")
-
 include(":feature:places:presentation")
+include(":feature:places:domain")
 
 include(":feature:registration:presentation")
 include(":feature:onboarding:data")
@@ -50,11 +48,9 @@ include(":feature:onboarding:model")
 include(":feature:notifications:presentation")
 
 include(":feature:create:presentation")
+include(":feature:create:domain")
 
 include(":feature:search:presentation")
 
 include(":feature:settings:presentation")
-include(":firebase")
-include(":feature:create:domain")
-include(":feature:places:domain")
-include(":core:location")
+
