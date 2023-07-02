@@ -4,8 +4,8 @@ import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import org.codingforanimals.veganuniverse.create.domain.place.PlaceAddressDomainEntity
 import org.codingforanimals.veganuniverse.create.domain.place.PlaceFormDomainEntity
-import org.codingforanimals.veganuniverse.create.presentation.common.AddressField
-import org.codingforanimals.veganuniverse.create.presentation.common.LocationField
+import org.codingforanimals.veganuniverse.create.presentation.model.AddressField
+import org.codingforanimals.veganuniverse.create.presentation.model.LocationField
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel
 
 internal fun CreatePlaceViewModel.UiState.toPlaceForm(): PlaceFormDomainEntity? {

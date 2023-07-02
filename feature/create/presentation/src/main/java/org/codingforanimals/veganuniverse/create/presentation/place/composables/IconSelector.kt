@@ -16,7 +16,7 @@ import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_07
 import org.codingforanimals.veganuniverse.create.presentation.R
-import org.codingforanimals.veganuniverse.create.presentation.common.TypeField
+import org.codingforanimals.veganuniverse.create.presentation.model.TypeField
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel
 
 @Composable

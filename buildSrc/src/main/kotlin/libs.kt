@@ -21,14 +21,19 @@ object versions {
     const val googleMapServices = "18.1.0"
 }
 
-object libs {
-    val firebaseBom = "com.google.firebase:firebase-bom:31.2.3"
-    val firebaseDeps = listOf(
-        "com.google.firebase:firebase-firestore-ktx",
-        "com.google.firebase:firebase-analytics-ktx",
-        "com.google.firebase:firebase-functions-ktx",
-    )
+object Firebase {
+    const val BOM = "com.google.firebase:firebase-bom:32.1.1"
+    const val FIRESTORE = "com.google.firebase:firebase-firestore-ktx"
+    const val ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
+    const val FUNCTIONS = "com.google.firebase:firebase-functions-ktx"
+    const val AUTH = "com.google.firebase:firebase-auth-ktx"
+}
 
+object Google {
+    const val AUTH = "com.google.android.gms:play-services-auth:20.5.0"
+}
+
+object libs {
     val material3 = "androidx.compose.material3:material3:${versions.material3}"
 
     val android = listOf(

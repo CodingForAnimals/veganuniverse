@@ -82,8 +82,11 @@ object VUIcons {
     val MarkerRestaurantSelected = DrawableResourceIcon(R.drawable.ic_marker_restaurant_selected)
     val MarkerStore = DrawableResourceIcon(R.drawable.ic_marker_store)
     val MarkerStoreSelected = DrawableResourceIcon(R.drawable.ic_marker_store_selected)
+    val ArrowUpward = ImageVectorIcon(Icons.Rounded.ArrowUpward)
 
-    val a = ImageVectorIcon(Icons.Rounded.ArrowUpward)
+    // Registration icons
+    val Email = DrawableResourceIcon(R.drawable.ic_email)
+    val Lock = DrawableResourceIcon(R.drawable.ic_lock)
 }
 
 sealed class Icon {

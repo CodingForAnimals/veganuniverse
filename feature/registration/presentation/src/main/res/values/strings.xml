@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="register_screen_title">¡Únete a nuestra comunindad!</string>
+    <string name="register_screen_email_placeholder">Correo electrónico</string>
+    <string name="register_screen_username_placeholder">Nombre de usuario</string>
+    <string name="register_screen_password_placeholder">Ingresar contraseña</string>
+    <string name="register_screen_confirm_password_placeholder">Confirmar contraseña</string>
+
+    <string name="register_error_user_already_exists_title">Usuario ya existente</string>
+    <string name="register_error_user_already_exists_message">Ya hay un usuario con ese correo</string>
+    <string name="register_error_invalid_credentials_title">Error en el formulario</string>
+    <string name="register_error_invalid_credentials_message">Los campos en el formulario no son correctos. Por favor revisalos</string>
+    <string name="register_error_unknown_failure_title">Oops, ocurrió un error</string>
+    <string name="register_error_unknown_failure_message">Ocurrió un error inesperado. Podés volver a intentarlo</string>
+    <string name="register_error_dismiss_button_label">Volver</string>
+    <string name="register_error_invalid_user_title">Error al crear usuario</string>
+    <string name="register_error_invalid_user_message">Este usuario es inválido o ha sido deshabilitado para participar de la comunidad de Universo Vegano. Podés intentar con otros datos</string>
+
+    <string name="prompt_screen_message">No importa si sos vegan nivel 6 o si recién empezás tu viaje en este universo.\n\nRegistrarte  es la clave para participar activamente en la comunidad y hacerla crecer.</string>
+    <string name="prompt_screen_title">Necesitamos tu registro</string>
+
+    <string name="register_button_label">Registrarte</string>
+    <string name="sign_in_button_label">Iniciar sesión</string>
+</resources>

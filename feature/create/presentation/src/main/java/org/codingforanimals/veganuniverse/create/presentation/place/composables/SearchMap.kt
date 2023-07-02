@@ -35,18 +35,18 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.core.ui.components.VUTextField
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.create.presentation.R
-import org.codingforanimals.veganuniverse.create.presentation.common.AddressField
-import org.codingforanimals.veganuniverse.create.presentation.common.LocationField
-import org.codingforanimals.veganuniverse.create.presentation.common.TypeField
+import org.codingforanimals.veganuniverse.create.presentation.model.AddressField
+import org.codingforanimals.veganuniverse.create.presentation.model.LocationField
+import org.codingforanimals.veganuniverse.create.presentation.model.TypeField
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.Action
-import org.codingforanimals.veganuniverse.create.presentation.place.VUTextField
 
 @Composable
 internal fun SearchMap(

@@ -28,7 +28,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.registration.presentation.R
 import org.codingforanimals.veganuniverse.core.ui.R.drawable.logo
 import org.codingforanimals.veganuniverse.core.ui.R.drawable.universe_background
 
@@ -131,14 +130,14 @@ private fun SocialMediaAuth() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            SocialMediaButton(
-                iconResId = R.drawable.ic_facebook,
-                contentDescription = "Inicia sesión con Facebook"
-            )
-            SocialMediaButton(
-                iconResId = R.drawable.ic_google,
-                contentDescription = "Inicia sesión con Google"
-            )
+//            SocialMediaButton(
+//                iconResId = R.drawable.ic_facebook,
+//                contentDescription = "Inicia sesión con Facebook"
+//            )
+//            SocialMediaButton(
+//                iconResId = R.drawable.ic_google,
+//                contentDescription = "Inicia sesión con Google"
+//            )
         }
     }
 }

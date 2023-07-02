@@ -7,18 +7,26 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class ProfileScreenViewModel: ViewModel() {
+class ProfileScreenViewModel : ViewModel() {
 
     private val _sideEffect = Channel<SideEffect>()
     val sideEffect: Flow<SideEffect> = _sideEffect.receiveAsFlow()
 
-    fun onRegisterClick() {
+    fun onAction(action: Action) = when (action) {
+        Action.OnCreateUserButtonClick -> navigateToRegisterScreen()
+    }
+
+    private fun navigateToRegisterScreen() {
         viewModelScope.launch {
             _sideEffect.send(SideEffect.NavigateToRegister)
         }
     }
 
+    sealed class Action {
+        object OnCreateUserButtonClick : Action()
+    }
+
     sealed class SideEffect {
-        object NavigateToRegister: SideEffect()
+        object NavigateToRegister : SideEffect()
     }
 }

@@ -8,10 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,11 +19,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,11 +42,10 @@ import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.core.ui.components.VUSelectableChip
-import org.codingforanimals.veganuniverse.core.ui.components.VUTextFieldDefaults
+import org.codingforanimals.veganuniverse.core.ui.components.VUTextField
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
@@ -142,15 +135,7 @@ internal fun CreatePlaceScreen(
         onAction = { viewModel.onAction(it) },
     )
 
-    AnimatedVisibility(visible = viewModel.uiState.isLoading) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .clickable {}) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
-    }
+    VUCircularProgressIndicator(visible = viewModel.uiState.isLoading)
 
 
     // TODO this will most likely need reworking to fit new designs in the future
@@ -261,38 +246,6 @@ private fun CreatePlaceScreen(
             },
         )
     }
-}
-
-@Composable
-fun VUTextField(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String? = null,
-    isError: Boolean = false,
-    leadingIcon: Icon? = null,
-    maxLines: Int = Int.MAX_VALUE,
-) {
-    OutlinedTextField(
-        modifier = modifier,
-        value = value,
-        onValueChange = onValueChange,
-        isError = isError,
-        placeholder = placeholder?.let {
-            { Text(text = placeholder) }
-        },
-        shape = ShapeDefaults.Medium,
-        colors = VUTextFieldDefaults.colors(),
-        leadingIcon = leadingIcon?.let {
-            {
-                VUIcon(
-                    icon = leadingIcon,
-                    contentDescription = ""
-                )
-            }
-        },
-        maxLines = maxLines,
-    )
 }
 
 @Composable

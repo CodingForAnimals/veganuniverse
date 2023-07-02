@@ -29,8 +29,7 @@ import org.codingforanimals.veganuniverse.profile.presentation.navigation.Profil
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.profileGraph
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.recipesGraph
-import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegisterDestination
-import org.codingforanimals.veganuniverse.registration.presentation.navigation.navigateToRegister
+import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
 import org.codingforanimals.veganuniverse.search.presentation.navigation.searchGraph
 import org.codingforanimals.veganuniverse.settings.presentation.navigation.settingsGraph
@@ -68,9 +67,10 @@ internal fun VUAppNavHost(
         startDestination = startDestination.route,
     ) {
         profileGraph(
-            navigateToRegister = navController::navigateToRegister,
+            navigateToRegister = { navController.navigate(RegistrationDestination.Prompt.route) },
         )
         registrationGraph(
+            navController = navController,
             navigateToCommunity = navController::navigateToCommunityPoppingBackstack,
         )
         notificationsGraph(
@@ -109,7 +109,7 @@ internal fun VUAppNavHost(
 
 private fun NavController.navigateToCommunityPoppingBackstack() {
     navigate(CommunityDestination.route) {
-        popUpTo(RegisterDestination.route) { inclusive = true }
+//        popUpTo(RegisterDestination.route) { inclusive = true }
     }
 }
 
@@ -132,7 +132,7 @@ class VUNavHostController(context: Context) : NavHostController(context) {
 }
 
 private fun navControllerSaver(
-    context: Context
+    context: Context,
 ): Saver<VUNavHostController, *> = Saver(
     save = { it.saveState() },
     restore = { createNavController(context).apply { restoreState(it) } }

@@ -1,8 +1,16 @@
 package org.codingforanimals.veganuniverse.core.ui.components
 
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.VisualTransformation
+import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 
 object VUTextFieldDefaults {
 
@@ -11,5 +19,43 @@ object VUTextFieldDefaults {
         unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
         focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
         errorContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+    )
+}
+
+@Composable
+fun VUTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String? = null,
+    isError: Boolean = false,
+    leadingIcon: Icon? = null,
+    maxLines: Int = Int.MAX_VALUE,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+) {
+    OutlinedTextField(
+        modifier = modifier,
+        value = value,
+        onValueChange = onValueChange,
+        isError = isError,
+        placeholder = placeholder?.let {
+            { Text(text = placeholder) }
+        },
+        shape = ShapeDefaults.Medium,
+        colors = VUTextFieldDefaults.colors(),
+        leadingIcon = leadingIcon?.let {
+            {
+                VUIcon(
+                    icon = leadingIcon,
+                    contentDescription = ""
+                )
+            }
+        },
+        maxLines = maxLines,
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
     )
 }

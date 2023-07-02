@@ -1,8 +1,5 @@
-package org.codingforanimals.veganuniverse.create.presentation.common
+package org.codingforanimals.veganuniverse.create.presentation.model
 
-import android.graphics.Bitmap
-import android.net.Uri
-import android.os.Parcelable
 import androidx.compose.runtime.Composable
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -10,16 +7,13 @@ import com.google.android.gms.maps.model.LatLng
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceMarker
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
-
-sealed class ValidationField {
-    abstract val isValid: Boolean
-}
+import org.codingforanimals.veganuniverse.core.ui.viewmodel.ValidationField
+import org.codingforanimals.veganuniverse.utils.areNotBlank
 
 data class LocationField(
-    val latLng: LatLng? = null
+    val latLng: LatLng? = null,
 ) : ValidationField() {
-    override val isValid: Boolean
-        get() = latLng != null
+    override val isValid: Boolean = latLng != null
 }
 
 data class AddressField(
@@ -28,35 +22,13 @@ data class AddressField(
     val province: String = "",
     val country: String = "",
 ) : ValidationField() {
-    override val isValid: Boolean
-        get() = areNotBlank(streetAddress, locality, province, country)
-}
-
-private fun areNotBlank(vararg strings: String?): Boolean {
-    for (string in strings) {
-        if (string?.isBlank() == true) {
-            return false
-        }
-    }
-    return true
-}
-
-data class PictureField(
-    val model: Parcelable? = null,
-) : ValidationField() {
-    override val isValid: Boolean
-        get() = when (model) {
-            is Bitmap,
-            is Uri -> true
-            else -> false
-        }
+    override val isValid: Boolean = areNotBlank(streetAddress, locality, province, country)
 }
 
 data class TypeField(
     val value: PlaceType? = null,
 ) : ValidationField() {
-    override val isValid: Boolean
-        get() = value != null
+    override val isValid: Boolean = value != null
 
     @Composable
     fun getIcon(): BitmapDescriptor {
@@ -85,8 +57,7 @@ data class TypeField(
 data class SelectedTagsField(
     val tags: List<PlaceTag> = emptyList(),
 ) : ValidationField() {
-    override val isValid: Boolean
-        get() = true
+    override val isValid: Boolean = true
 
     fun getUpdatedSelectedTags(tag: PlaceTag): SelectedTagsField {
         val list = tags.toMutableList()
@@ -99,11 +70,4 @@ data class SelectedTagsField(
     fun contains(tag: PlaceTag): Boolean {
         return tags.contains(tag)
     }
-}
-
-class StringField(
-    val value: String = ""
-) : ValidationField() {
-    override val isValid: Boolean
-        get() = value.isNotBlank()
 }

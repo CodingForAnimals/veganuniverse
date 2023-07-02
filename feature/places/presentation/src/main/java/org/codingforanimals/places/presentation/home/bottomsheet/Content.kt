@@ -161,7 +161,7 @@ internal fun PlacesHomeScreenContent(
                 contentColor = MaterialTheme.colorScheme.primary,
             ),
             onClick = { onAction(Action.OnExpandSheetButtonClick) },
-            content = { VUIcon(icon = VUIcons.a, contentDescription = "") },
+            content = { VUIcon(icon = VUIcons.ArrowUpward, contentDescription = "") },
         )
     }
 }
