@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package org.codingforanimals.veganuniverse.community.presentation
 
 import androidx.compose.foundation.layout.Arrangement
@@ -13,17 +11,12 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.codingforanimals.veganuniverse.community.presentation.component.FeaturedTopicCard
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
@@ -37,38 +30,22 @@ import org.codingforanimals.veganuniverse.common.R as commonR
 
 @Composable
 fun CommunityScreen(
+    navigateToRegister: () -> Unit,
     navigateToFeaturedTopic: (String) -> Unit,
     navigateToPost: (String) -> Unit,
     viewModel: CommunityScreenViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    CommunityScreen(
+        navigateToRegister = navigateToRegister,
+        navigateToFeaturedTopic = navigateToFeaturedTopic,
+        navigateToPost = navigateToPost,
+    )
 
-    when (uiState) {
-        CommunityScreenViewModel.UiState.Loading -> {
-            LoadingScreen()
-        }
-        is CommunityScreenViewModel.UiState.Success -> {
-            CommunityScreen(
-                navigateToFeaturedTopic = navigateToFeaturedTopic,
-                navigateToPost = navigateToPost,
-            )
-        }
-    }
-}
-
-@Composable
-private fun LoadingScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .wrapContentHeight()
-                .align(Alignment.Center),
-        )
-    }
 }
 
 @Composable
 private fun CommunityScreen(
+    navigateToRegister: () -> Unit,
     navigateToFeaturedTopic: (String) -> Unit,
     navigateToPost: (String) -> Unit,
 ) {
@@ -88,7 +65,7 @@ private fun CommunityScreen(
                     VUAssistChip(
                         icon = VUIcons.Filter,
                         label = stringResource(commonR.string.filter),
-                        onClick = {},
+                        onClick = navigateToRegister,
                         iconDescription = stringResource(commonR.string.filter)
                     )
                     VUAssistChip(
@@ -150,7 +127,7 @@ private fun Title(
 
 @Composable
 private fun PostList(
-    navigateToPost: (String) -> Unit
+    navigateToPost: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(

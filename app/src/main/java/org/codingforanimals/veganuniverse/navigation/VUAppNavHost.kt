@@ -67,7 +67,9 @@ internal fun VUAppNavHost(
         startDestination = startDestination.route,
     ) {
         profileGraph(
-            navigateToRegister = { navController.navigate(RegistrationDestination.Prompt.route) },
+            navigateToRegister = {
+                navController.navigate("${RegistrationDestination.Prompt.route}/${ProfileDestination.route}")
+            },
         )
         registrationGraph(
             navController = navController,
@@ -83,6 +85,9 @@ internal fun VUAppNavHost(
             onBackClick = navController::navigateUp,
         )
         communityGraph(
+            navigateToRegister = {
+                navController.navigate("${RegistrationDestination.Prompt.route}/${CommunityDestination.route}")
+            },
             navigateToFeaturedTopic = navController::navigateToFeaturedTopic,
             navigateToPost = navController::navigateToPost,
             nestedGraphs = {

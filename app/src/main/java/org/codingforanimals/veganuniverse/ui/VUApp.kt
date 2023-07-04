@@ -5,15 +5,11 @@ package org.codingforanimals.veganuniverse.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -21,7 +17,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.navigation.VUAppNavHost
 import org.codingforanimals.veganuniverse.ui.navbar.VUBottomNavBar
@@ -35,7 +30,7 @@ internal fun VUApp(
         val snackbarHostState = remember { SnackbarHostState() }
         val topLevelDestination = appState.currentTopLevelDestination
         Scaffold(
-            contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
+//            contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
             bottomBar = {
                 VUBottomNavBar(
                     visible = topLevelDestination != null,
@@ -52,11 +47,7 @@ internal fun VUApp(
                     .padding(padding)
                     .consumeWindowInsets(padding)
                     .imePadding()
-                    .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Horizontal,
-                        )
-                    )
+                    .safeDrawingPadding()
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     VUTopAppBar(

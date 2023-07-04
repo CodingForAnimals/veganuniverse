@@ -1,8 +1,5 @@
 package org.codingforanimals.veganuniverse.registration.presentation.prompt
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -32,22 +29,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.facebook.login.LoginManager
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.registration.presentation.R
+import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
+import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_08
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_09
 import org.codingforanimals.veganuniverse.registration.presentation.icons.RegisterIcons
@@ -58,7 +51,10 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun PromptScreen(
+    navigateUp: () -> Unit,
     navigateToEmailRegistration: () -> Unit,
+    navigateToEmailSignIn: () -> Unit,
+    navigateToOriginDestination: () -> Unit,
     viewModel: PromptScreenViewModel = koinViewModel(),
 ) {
 
@@ -70,7 +66,16 @@ internal fun PromptScreen(
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,
         navigateToEmailRegistration = navigateToEmailRegistration,
+        navigateToEmailSignIn = navigateToEmailSignIn,
+        navigateToOriginDestination = navigateToOriginDestination,
         providerSignInActivityLauncher = providerSignInActivityLauncher,
+    )
+
+    VUIcon(
+        modifier = Modifier.padding(Spacing_06),
+        icon = VUIcons.Close,
+        contentDescription = "",
+        onIconClick = navigateUp,
     )
 
     PromptScreen(
@@ -84,7 +89,6 @@ private fun PromptScreen(
     content: List<RegistrationScreenItem>,
     onAction: (Action) -> Unit,
 ) {
-    val c = LocalContext.current
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -113,12 +117,9 @@ private fun PromptScreen(
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                         content = { Text(text = stringResource(R.string.register_button_label)) },
                     )
-                    RegistrationScreenItem.SignInButton -> TextButton(onClick = {
-                        Firebase.auth.signOut()
-                        GoogleSignIn.getClient(c, GoogleSignInOptions.DEFAULT_SIGN_IN).signOut()
-                            .addOnSuccessListener { Log.e("pepe", "success logout") }
-                            .addOnFailureListener { Log.e("pepe", "error logout") }
-                    }) {
+                    RegistrationScreenItem.SignInButton -> TextButton(
+                        onClick = { onAction(Action.OnSignInButtonClick) },
+                    ) {
                         Text(text = stringResource(R.string.sign_in_button_label))
                     }
                 }
@@ -127,20 +128,10 @@ private fun PromptScreen(
     }
 }
 
-fun Context.findActivity(): Activity? {
-    return when (this) {
-        is Activity -> this
-        is ContextWrapper -> baseContext.findActivity()
-        else -> null
-    }
-}
-
 @Composable
 private fun Providers(
     onAction: (Action) -> Unit,
 ) {
-    val a = LocalSavedStateRegistryOwner.current
-    val c = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,26 +143,8 @@ private fun Providers(
             .clip(CircleShape)
         Image(
             modifier = modifier
-                .clickable {
-                    LoginManager.getInstance()
-                        .logInWithReadPermissions(c.findActivity()!!, listOf("email"))
-                    onAction(
-                        Action.Test
-                    )
-                },
-            imageVector = ImageVector.vectorResource(RegisterIcons.Facebook.id),
-            contentDescription = "",
-        )
-        Image(
-            modifier = modifier
                 .clickable { onAction(Action.OnProviderAuthButtonClick(AuthProvider.Gmail)) },
             imageVector = ImageVector.vectorResource(RegisterIcons.Google.id),
-            contentDescription = "",
-        )
-        Image(
-            modifier = modifier
-                .clickable {},
-            imageVector = ImageVector.vectorResource(RegisterIcons.Twitter.id),
             contentDescription = "",
         )
     }
@@ -181,6 +154,8 @@ private fun Providers(
 private fun HandleSideEffects(
     sideEffects: Flow<PromptScreenViewModel.SideEffect>,
     navigateToEmailRegistration: () -> Unit,
+    navigateToEmailSignIn: () -> Unit,
+    navigateToOriginDestination: () -> Unit,
     providerSignInActivityLauncher: ActivityResultLauncher<Intent>,
 ) {
     LaunchedEffect(Unit) {
@@ -188,6 +163,12 @@ private fun HandleSideEffects(
             when (sideEffect) {
                 PromptScreenViewModel.SideEffect.NavigateToEmailRegistration -> {
                     navigateToEmailRegistration()
+                }
+                PromptScreenViewModel.SideEffect.NavigateToEmailSignIn -> {
+                    navigateToEmailSignIn()
+                }
+                PromptScreenViewModel.SideEffect.NavigateToOriginDestination -> {
+                    navigateToOriginDestination()
                 }
                 is PromptScreenViewModel.SideEffect.LaunchProviderActivity -> {
                     try {
@@ -200,5 +181,3 @@ private fun HandleSideEffects(
         }.collect()
     }
 }
-
-const val gauthid = "381536040984-lsa3iuh30oim6q4rhu8ou0gj4mvockpg.apps.googleusercontent.com"

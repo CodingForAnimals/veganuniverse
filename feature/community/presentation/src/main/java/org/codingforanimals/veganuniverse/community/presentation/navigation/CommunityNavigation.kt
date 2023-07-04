@@ -10,6 +10,7 @@ import org.koin.core.context.loadKoinModules
 object CommunityDestination : Destination(route = "community_route")
 
 fun NavGraphBuilder.communityGraph(
+    navigateToRegister: () -> Unit,
     navigateToFeaturedTopic: (String) -> Unit,
     navigateToPost: (String) -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit,
@@ -17,6 +18,7 @@ fun NavGraphBuilder.communityGraph(
     loadKoinModules(communityModule)
     composable(route = CommunityDestination.route) {
         CommunityScreen(
+            navigateToRegister = navigateToRegister,
             navigateToFeaturedTopic = navigateToFeaturedTopic,
             navigateToPost = navigateToPost,
         )

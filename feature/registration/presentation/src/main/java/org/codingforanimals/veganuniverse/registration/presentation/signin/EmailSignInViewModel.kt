@@ -1,81 +1,72 @@
-package org.codingforanimals.veganuniverse.registration.presentation.emailregistration
+package org.codingforanimals.veganuniverse.registration.presentation.signin
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.StringField
 import org.codingforanimals.veganuniverse.core.ui.viewmodel.areFieldsValid
-import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.usecase.EmailAndPasswordRegistrationUseCase
-import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.usecase.GetEmailRegistrationScreenContent
-import org.codingforanimals.veganuniverse.registration.presentation.model.RegistrationStatus
+import org.codingforanimals.veganuniverse.registration.presentation.model.EmailSignInStatus
+import org.codingforanimals.veganuniverse.registration.presentation.signin.usecase.EmailSignInUseCase
+import org.codingforanimals.veganuniverse.registration.presentation.signin.usecase.GetEmailSignInScreenContent
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.EmailField
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.PasswordField
 
-class EmailRegistrationViewModel(
-    getRegisterScreenContent: GetEmailRegistrationScreenContent,
-    private val emailAndPasswordRegistration: EmailAndPasswordRegistrationUseCase,
+class EmailSignInViewModel(
+    getEmailSignInScreenContent: GetEmailSignInScreenContent,
+    private val emailSignInUseCase: EmailSignInUseCase,
 ) : ViewModel() {
 
-    private var createAccountJob: Job? = null
+    val content = getEmailSignInScreenContent()
 
-    private val _sideEffects = Channel<SideEffect>()
+    private val _sideEffects: Channel<SideEffect> = Channel()
     val sideEffects: Flow<SideEffect> = _sideEffects.receiveAsFlow()
 
-    val content = getRegisterScreenContent()
-
     var uiState by mutableStateOf(UiState())
+        private set
 
     fun onAction(action: Action) {
         when (action) {
             is Action.OnFormChange -> updateForm(action)
-            Action.OnCreateAccountButtonClick -> registrationAttempt()
+            Action.OnSignInButtonClick -> attemptSignIn()
             Action.OnErrorDialogDismissRequest -> dismissErrorDialog()
         }
     }
 
     private fun updateForm(action: Action.OnFormChange) {
         action.email?.let { uiState = uiState.copy(emailField = EmailField(it)) }
-        action.username?.let { uiState = uiState.copy(usernameField = StringField(it)) }
         action.password?.let { uiState = uiState.copy(passwordField = PasswordField(it)) }
-        action.confirmPassword?.let {
-            uiState = uiState.copy(confirmPasswordField = PasswordField(it))
-        }
     }
 
-    private fun registrationAttempt() {
+    private fun attemptSignIn() {
         if (uiState.areFieldsValid) {
-            registerUser()
+            signIn()
         } else {
             uiState = uiState.copy(isValidating = true)
         }
     }
 
-    private fun registerUser() {
-        createAccountJob?.cancel()
-        createAccountJob = viewModelScope.launch {
-            emailAndPasswordRegistration(
+    private fun signIn() {
+        viewModelScope.launch {
+            emailSignInUseCase(
                 email = uiState.emailField.value,
                 password = uiState.passwordField.value,
-            ).collectLatest { status ->
+            ).collect { status ->
                 when (status) {
-                    RegistrationStatus.Loading -> {
-                        uiState = uiState.copy(isLoading = true)
+                    EmailSignInStatus.Loading -> {
+                        uiState = uiState.copy(loading = true)
                     }
-                    RegistrationStatus.Success -> {
-                        uiState = uiState.copy(isLoading = false)
-                        _sideEffects.send(SideEffect.NavigateToValidateEmailScreen)
+                    EmailSignInStatus.Success -> {
+                        uiState = uiState.copy(loading = false)
                     }
-                    is RegistrationStatus.Exception -> {
+                    is EmailSignInStatus.Exception -> {
                         uiState = uiState.copy(
-                            isLoading = false,
+                            loading = false,
                             errorDialog = ErrorDialog(
                                 title = status.title,
                                 message = status.message,
@@ -92,36 +83,31 @@ class EmailRegistrationViewModel(
     }
 
     data class UiState(
+        val loading: Boolean = false,
         val isValidating: Boolean = false,
-        val isLoading: Boolean = false,
         val errorDialog: ErrorDialog? = null,
         val emailField: EmailField = EmailField(),
-        val usernameField: StringField = StringField(),
         val passwordField: PasswordField = PasswordField(),
-        val confirmPasswordField: PasswordField = PasswordField(),
     ) {
-        val areFieldsValid =
-            areFieldsValid(emailField, usernameField, passwordField, confirmPasswordField)
+        val areFieldsValid = areFieldsValid(emailField, passwordField)
     }
 
     data class ErrorDialog(
-        val title: Int,
-        val message: Int,
+        @StringRes val title: Int,
+        @StringRes val message: Int,
     )
 
     sealed class Action {
         data class OnFormChange(
             val email: String? = null,
-            val username: String? = null,
             val password: String? = null,
-            val confirmPassword: String? = null,
         ) : Action()
 
-        object OnCreateAccountButtonClick : Action()
+        object OnSignInButtonClick : Action()
         object OnErrorDialogDismissRequest : Action()
     }
 
     sealed class SideEffect {
-        object NavigateToValidateEmailScreen : SideEffect()
+
     }
 }

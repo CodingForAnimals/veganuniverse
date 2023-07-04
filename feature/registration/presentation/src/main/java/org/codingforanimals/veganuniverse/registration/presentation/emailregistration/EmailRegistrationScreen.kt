@@ -59,6 +59,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun EmailRegistrationScreen(
+    navigateUp: () -> Unit,
     navigateToEmailValidationScreen: () -> Unit,
     viewModel: EmailRegistrationViewModel = koinViewModel(),
 ) {
@@ -68,7 +69,10 @@ internal fun EmailRegistrationScreen(
     )
 
     Column {
-        VUTopAppBar(title = "Crea tu usuario", onBackClick = {})
+        VUTopAppBar(
+            title = "Crea tu usuario",
+            onBackClick = navigateUp,
+        )
 
         EmailRegistrationScreen(
             content = viewModel.content,
@@ -117,7 +121,7 @@ private fun EmailRegistrationScreen(
                     modifier = Modifier.fillMaxWidth(),
                     value = emailField.value,
                     onValueChange = { onAction(Action.OnFormChange(email = it)) },
-                    placeholder = stringResource(R.string.register_screen_email_placeholder),
+                    placeholder = stringResource(R.string.email_field_placeholder),
                     leadingIcon = VUIcons.Email,
                     isError = isValidating && !emailField.isValid,
                     keyboardOptions = KeyboardOptions(
@@ -142,7 +146,7 @@ private fun EmailRegistrationScreen(
                     modifier = Modifier.fillMaxWidth(),
                     value = passwordField.value,
                     onValueChange = { onAction(Action.OnFormChange(password = it)) },
-                    placeholder = stringResource(R.string.register_screen_password_placeholder),
+                    placeholder = stringResource(R.string.password_field_placeholder),
                     leadingIcon = VUIcons.Lock,
                     isError = isValidating && !passwordField.isValid,
                     visualTransformation = PasswordVisualTransformation(),
@@ -157,7 +161,7 @@ private fun EmailRegistrationScreen(
                     modifier = Modifier.fillMaxWidth(),
                     value = confirmPasswordField.value,
                     onValueChange = { onAction(Action.OnFormChange(confirmPassword = it)) },
-                    placeholder = stringResource(R.string.register_screen_password_placeholder),
+                    placeholder = stringResource(R.string.password_field_placeholder),
                     leadingIcon = VUIcons.Lock,
                     isError = isValidating && !confirmPasswordField.isValid,
                     visualTransformation = PasswordVisualTransformation(),

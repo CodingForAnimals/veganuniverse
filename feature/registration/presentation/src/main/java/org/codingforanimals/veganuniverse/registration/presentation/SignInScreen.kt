@@ -1,2 +1,0 @@
-package org.codingforanimals.veganuniverse.registration.presentation
-

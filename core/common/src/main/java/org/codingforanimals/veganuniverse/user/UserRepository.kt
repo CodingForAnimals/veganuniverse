@@ -1,10 +1,22 @@
 package org.codingforanimals.veganuniverse.user
 
-import kotlinx.coroutines.flow.Flow
+import android.content.Intent
+import kotlinx.coroutines.flow.StateFlow
+import org.codingforanimals.veganuniverse.user.model.LoginResponse
+import org.codingforanimals.veganuniverse.user.model.LogoutResponse
+import org.codingforanimals.veganuniverse.user.model.RegistrationResponse
+import org.codingforanimals.veganuniverse.user.model.User
 
 interface UserRepository {
-    val user: User
-    suspend fun isUserLoggedIn(): Flow<User>
-    suspend fun login(): Flow<User>
-    suspend fun logout(): Flow<User>
+    val user: StateFlow<User>
+    val gmailAuthIntent: Intent
+    suspend fun loginWithEmailAndPassword(email: String, password: String): LoginResponse
+    suspend fun createUserWithEmailAndPassword(
+        email: String,
+        password: String,
+    ): RegistrationResponse
+
+    suspend fun authenticateWithGmail(intent: Intent): RegistrationResponse
+
+    suspend fun logout(): LogoutResponse
 }

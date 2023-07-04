@@ -1,13 +1,17 @@
-package org.codingforanimals.veganuniverse.registration.presentation.usecase
+package org.codingforanimals.veganuniverse.registration.presentation.model
 
 import androidx.annotation.StringRes
 import org.codingforanimals.registration.presentation.R
 
-sealed class UserAuthStatus {
-    object Success : UserAuthStatus()
-    object Loading : UserAuthStatus()
+/**
+ * Used for registration and provider auth
+ */
+sealed class RegistrationStatus {
+    object Success : RegistrationStatus()
+    object Loading : RegistrationStatus()
     sealed class Exception(@StringRes val title: Int, @StringRes val message: Int) :
-        UserAuthStatus() {
+        RegistrationStatus() {
+
         object UserAlreadyExists : Exception(
             title = R.string.register_error_user_already_exists_title,
             message = R.string.register_error_user_already_exists_message,
@@ -30,8 +34,13 @@ sealed class UserAuthStatus {
         )
 
         object UnknownFailure : Exception(
-            title = R.string.register_error_unknown_failure_title,
-            message = R.string.register_error_unknown_failure_message,
+            title = R.string.error_unknown_failure_title,
+            message = R.string.error_unknown_failure_message,
+        )
+
+        object ConnectionError : Exception(
+            title = R.string.sign_in_connection_error_title,
+            message = R.string.sign_in_connection_error_message,
         )
     }
 }

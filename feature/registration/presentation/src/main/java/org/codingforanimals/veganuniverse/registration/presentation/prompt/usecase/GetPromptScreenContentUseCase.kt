@@ -2,7 +2,7 @@ package org.codingforanimals.veganuniverse.registration.presentation.prompt.usec
 
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewmodel.RegistrationScreenItem
 
-class GetPromptScreenContent {
+class GetPromptScreenContentUseCase {
     operator fun invoke() = listOf(
         RegistrationScreenItem.Title,
         RegistrationScreenItem.Text,

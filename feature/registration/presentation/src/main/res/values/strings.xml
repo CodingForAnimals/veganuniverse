@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="email_field_placeholder">Correo electrónico</string>
+    <string name="password_field_placeholder">Ingresar contraseña</string>
+    <string name="register_button_label">Registrarte</string>
+
+    <string name="sign_in_button_label">Iniciar sesión</string>
+
     <string name="register_screen_title">¡Únete a nuestra comunindad!</string>
-    <string name="register_screen_email_placeholder">Correo electrónico</string>
     <string name="register_screen_username_placeholder">Nombre de usuario</string>
-    <string name="register_screen_password_placeholder">Ingresar contraseña</string>
     <string name="register_screen_confirm_password_placeholder">Confirmar contraseña</string>
 
     <string name="register_error_user_already_exists_title">Usuario ya existente</string>
     <string name="register_error_user_already_exists_message">Ya hay un usuario con ese correo</string>
     <string name="register_error_invalid_credentials_title">Error en el formulario</string>
     <string name="register_error_invalid_credentials_message">Los campos en el formulario no son correctos. Por favor revisalos</string>
-    <string name="register_error_unknown_failure_title">Oops, ocurrió un error</string>
-    <string name="register_error_unknown_failure_message">Ocurrió un error inesperado. Podés volver a intentarlo</string>
     <string name="register_error_dismiss_button_label">Volver</string>
     <string name="register_error_invalid_user_title">Error al crear usuario</string>
     <string name="register_error_invalid_user_message">Este usuario es inválido o ha sido deshabilitado para participar de la comunidad de Universo Vegano. Podés intentar con otros datos</string>
+    <string name="sign_in_connection_error_title">Error de conexión</string>
+    <string name="sign_in_connection_error_message">Ha ocurrido un error de conexión. Verificaste que tengas una buena conexión a internet?</string>
+    <string name="sign_in_invalid_password_title">Contraseña inválida</string>
+    <string name="sign_in_invalid_password_message">La contraseña que has ingresado no es correcta</string>
+    <string name="sign_in_user_not_found_title">Usuario inexistente</string>
+    <string name="sign_in_user_not_found_message">No hay un usuario con ese email en Universo Vegano</string>
 
     <string name="prompt_screen_message">No importa si sos vegan nivel 6 o si recién empezás tu viaje en este universo.\n\nRegistrarte  es la clave para participar activamente en la comunidad y hacerla crecer.</string>
     <string name="prompt_screen_title">Necesitamos tu registro</string>
 
-    <string name="register_button_label">Registrarte</string>
-    <string name="sign_in_button_label">Iniciar sesión</string>
+    <string name="error_unknown_failure_title">Oops, ocurrió un error</string>
+    <string name="error_unknown_failure_message">Ocurrió un error inesperado. Podés volver a intentarlo</string>
+
+    <string name="email_sign_in_topbar_text">Inicia sesión</string>
+    <string name="email_sign_in_title">¡Qué bueno verte otra vez!</string>
+    <string name="email_sign_in_button_label">Iniciar sesi</string>
 </resources>
