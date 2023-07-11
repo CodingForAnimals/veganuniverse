@@ -1,11 +1,13 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.usecase
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.util.Log
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks
+import com.google.android.libraries.places.api.model.DayOfWeek
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.PlacesClient
@@ -16,11 +18,13 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
+import org.codingforanimals.veganuniverse.create.presentation.R
 
 private const val TAG = "GetPlaceDataUseCase"
 
 class GetPlaceDataUseCase(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
+    private val context: Context,
     private val placesClient: PlacesClient,
 ) {
 
@@ -46,7 +50,21 @@ class GetPlaceDataUseCase(
             val country = first { it.types.contains(COUNTRY) }.name
             val latLng = place.latLng!!
             val name = place.name!!
-            val openingHours = place.openingHours?.weekdayText?.joinToString("\n").orEmpty()
+
+            //TODO this needs correction when the design for opening hours are done
+            val openingHours = mutableListOf<String>()
+            place.openingHours?.periods?.forEach { period ->
+                Log.e("pepe", "$period")
+                val day = period.open?.day?.getDayName(context) ?: return@forEach
+                val openingHour = period.open?.time?.hours ?: return@forEach
+                var openingMinutes = period.open?.time?.minutes?.toString() ?: return@forEach
+                if (openingMinutes == "0") openingMinutes = "00"
+                val closingHour = period.close?.time?.hours ?: return@forEach
+                var closingMinutes = period.close?.time?.minutes?.toString() ?: return@forEach
+                if (closingMinutes == "0") closingMinutes = "00"
+                openingHours.add("$day $openingHour:$openingMinutes - $closingHour:$closingMinutes")
+            }
+
             val establishmentData = GetPlaceDataStatus.EstablishmentData(
                 latLng = latLng,
                 name = name,
@@ -54,7 +72,7 @@ class GetPlaceDataUseCase(
                 province = province,
                 locality = locality,
                 country = country,
-                openingHours = openingHours
+                openingHours = openingHours.joinToString("\n")
             )
             emit(establishmentData)
         }
@@ -70,9 +88,11 @@ class GetPlaceDataUseCase(
         when (e) {
             is ApiException,
             is ExecutionException,
-            is InterruptedException -> emit(GetPlaceDataStatus.EstablishmentPictureException)
+            is InterruptedException,
+            -> emit(GetPlaceDataStatus.EstablishmentPictureException)
             is NoSuchElementException,
-            is NullPointerException -> emit(GetPlaceDataStatus.MissingCriticalFieldException)
+            is NullPointerException,
+            -> emit(GetPlaceDataStatus.MissingCriticalFieldException)
             else -> emit(GetPlaceDataStatus.UnknownException)
         }
     }
@@ -134,6 +154,19 @@ class GetPlaceDataUseCase(
 
         private const val COUNTRY = "country"
     }
+}
+
+private fun DayOfWeek.getDayName(context: Context): String {
+    val dayOfWeekStringRes = when (this) {
+        DayOfWeek.SUNDAY -> R.string.day_of_week_sunday
+        DayOfWeek.MONDAY -> R.string.day_of_week_monday
+        DayOfWeek.TUESDAY -> R.string.day_of_week_tuesday
+        DayOfWeek.WEDNESDAY -> R.string.day_of_week_wednesday
+        DayOfWeek.THURSDAY -> R.string.day_of_week_thursday
+        DayOfWeek.FRIDAY -> R.string.day_of_week_friday
+        DayOfWeek.SATURDAY -> R.string.day_of_week_saturday
+    }
+    return context.getString(dayOfWeekStringRes)
 }
 
 sealed class GetPlaceDataStatus {

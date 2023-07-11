@@ -19,7 +19,7 @@ internal class UserRepositoryImpl(
 
     override val gmailAuthIntent: Intent = gmailAuthUseCase.intent
 
-    private var _user = MutableStateFlow<User>(User.GuestUser)
+    private var _user = MutableStateFlow<User?>(null)
     override val user = _user.asStateFlow()
 
     override suspend fun loginWithEmailAndPassword(
@@ -66,7 +66,7 @@ internal class UserRepositoryImpl(
         when (response) {
             LogoutResponse.Exception -> Unit
             LogoutResponse.Success -> {
-                _user.emit(User.GuestUser)
+                _user.emit(null)
             }
         }
         return response

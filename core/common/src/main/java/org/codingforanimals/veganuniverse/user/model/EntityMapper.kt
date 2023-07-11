@@ -7,8 +7,8 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 
-fun FirebaseUser.toUser(): User.LoggedUser {
-    return User.LoggedUser(
+fun FirebaseUser.toUser(): User {
+    return User(
         id = uid,
         name = displayName ?: email ?: "",
         email = email ?: "",

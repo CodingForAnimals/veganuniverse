@@ -12,9 +12,8 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
 import com.google.maps.android.compose.CameraPositionState
-import org.codingforanimals.places.presentation.details.PlaceDetailsDestination
-import org.codingforanimals.places.presentation.home.PlacesHomeDestination
-import org.codingforanimals.places.presentation.placesGraph
+import org.codingforanimals.places.presentation.navigation.PlacesDestination
+import org.codingforanimals.places.presentation.navigation.placesGraph
 import org.codingforanimals.post.presentation.navigation.navigateToPost
 import org.codingforanimals.post.presentation.navigation.postGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
@@ -100,11 +99,10 @@ internal fun VUAppNavHost(
         placesGraph(
             navController = navController,
             snackbarHostState = snackbarHostState,
-            cameraPositionState = cameraPositionState,
         )
         createGraph(
             navController = navController,
-            navigateToPlaceDetails = { navController.navigate(PlaceDetailsDestination.route) }
+            navigateToPlaceDetails = { navController.navigate(PlacesDestination.Details.route) }
         )
         recipesGraph(
             navController = navController,
@@ -121,7 +119,7 @@ private fun NavController.navigateToCommunityPoppingBackstack() {
 class VUNavHostController(context: Context) : NavHostController(context) {
     override fun popBackStack(): Boolean {
         return when (currentDestination?.route) {
-            PlacesHomeDestination.route,
+            PlacesDestination.Home.route,
             CreateDestination.route,
             RecipesHomeDestination.route,
             ProfileDestination.route,

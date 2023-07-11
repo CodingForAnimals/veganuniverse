@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="place_details_report_place_button_label">Reportar lugar</string>
+    <string name="place_details_suggest_edit_button_label">Sugerir edición</string>
+
+    <string name="error_unknown_failure_title">Oops, ocurrió un error</string>
+    <string name="error_unknown_failure_message">Ocurrió un error inesperado. Podés volver a intentarlo</string>
+    <string name="error_dismiss_button_label">Volver</string>
+
+    <string name="empty_reviews_message">No tenemos reseñas para este lugar, ¡Todavía! Si conoces este lugar, dejanos tu opinión</string>
+    <string name="submit_review_error_guest_user_title">Necesitas ser usuario registrado</string>
+    <string name="submit_review_error_guest_user_message">Para dejar una reseña, necesitas estar registrado dentro del Universo Vegano</string>
+    <string name="submit_review_error_review_already_exists_title">Ya has dejado una reseña</string>
+    <string name="submit_review_error_review_already_exists_message">Tenemos en nuestra base de datos una reseña para este lugar con este usuario, solo permitimos una</string>
+</resources>

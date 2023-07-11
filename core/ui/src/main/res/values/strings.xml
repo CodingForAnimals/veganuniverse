@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tag_label_gluten_free">Sin tacc</string>
+    <string name="tag_label_full_vegan">100% vegano</string>
+    <string name="tag_label_delivery">Delivery</string>
+    <string name="tag_label_take_away">Take away</string>
+    <string name="tag_label_dine_in">Consumo en el lugar</string>
+</resources>

@@ -27,6 +27,7 @@ object Firebase {
     const val ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
     const val FUNCTIONS = "com.google.firebase:firebase-functions-ktx"
     const val AUTH = "com.google.firebase:firebase-auth-ktx"
+    const val GEO_FIRE = "com.firebase:geofire-android-common:3.2.0"
 }
 
 object Google {

@@ -1,7 +1,7 @@
 package org.codingforanimals.places.presentation.home.state
 
 import com.google.android.gms.maps.model.LatLng
-import org.codingforanimals.places.presentation.home.PlaceViewEntity
+import org.codingforanimals.places.presentation.model.PlaceViewEntity
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
 
 sealed class PlacesState {

@@ -4,7 +4,7 @@ package org.codingforanimals.veganuniverse.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -17,6 +17,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.navigation.VUAppNavHost
 import org.codingforanimals.veganuniverse.ui.navbar.VUBottomNavBar
@@ -30,7 +31,7 @@ internal fun VUApp(
         val snackbarHostState = remember { SnackbarHostState() }
         val topLevelDestination = appState.currentTopLevelDestination
         Scaffold(
-//            contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
+            contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
             bottomBar = {
                 VUBottomNavBar(
                     visible = topLevelDestination != null,
@@ -41,7 +42,7 @@ internal fun VUApp(
             },
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { padding ->
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
@@ -49,20 +50,18 @@ internal fun VUApp(
                     .imePadding()
                     .safeDrawingPadding()
             ) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    VUTopAppBar(
-                        topLevelDestination = topLevelDestination,
-                        onBackClick = appState::navigateToCommunity,
-                        actions = appState.topBarActions,
-                        onActionClick = appState::onActionClick
-                    )
+                VUTopAppBar(
+                    topLevelDestination = topLevelDestination,
+                    onBackClick = appState::navigateToCommunity,
+                    actions = appState.topBarActions,
+                    onActionClick = appState::onActionClick
+                )
 
-                    VUAppNavHost(
-                        navController = appState.navController,
-                        snackbarHostState = snackbarHostState,
-                        cameraPositionState = appState.cameraPositionState,
-                    )
-                }
+                VUAppNavHost(
+                    navController = appState.navController,
+                    snackbarHostState = snackbarHostState,
+                    cameraPositionState = appState.cameraPositionState,
+                )
             }
         }
     }

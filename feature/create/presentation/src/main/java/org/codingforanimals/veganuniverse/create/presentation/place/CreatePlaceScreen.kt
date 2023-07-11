@@ -74,7 +74,6 @@ import org.codingforanimals.veganuniverse.create.presentation.place.entity.Creat
 import org.codingforanimals.veganuniverse.create.presentation.place.error.ErrorDialog
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
 internal fun CreatePlaceScreen(
     onCreateSuccess: () -> Unit,
@@ -226,7 +225,7 @@ private fun CreatePlaceScreen(
                             for (tag in PlaceTag.values()) {
                                 val selected = uiState.selectedTagsField.contains(tag)
                                 VUSelectableChip(
-                                    label = tag.label,
+                                    label = stringResource(tag.label),
                                     icon = tag.icon,
                                     selected = selected,
                                     onClick = { onAction(Action.OnFormChange(tag = tag)) },

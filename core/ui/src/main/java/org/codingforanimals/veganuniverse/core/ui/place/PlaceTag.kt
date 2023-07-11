@@ -1,12 +1,14 @@
 package org.codingforanimals.veganuniverse.core.ui.place
 
+import androidx.annotation.StringRes
+import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 
-enum class PlaceTag(val label: String, val icon: Icon) {
-    GLUTEN_FREE(label = "Sin tacc", icon = VUIcons.GlutenFree),
-    FULL_VEGAN(label = "100% vegano", icon = VUIcons.VeganLogo),
-    DELIVERY(label = "Delivery", icon = VUIcons.Delivery),
-    TAKEAWAY(label = "Take away", icon = VUIcons.Bag),
-    DINE_IN(label = "Consumo en el lugar", icon = VUIcons.Chairs)
+enum class PlaceTag(@StringRes val label: Int, val icon: Icon) {
+    GLUTEN_FREE(label = R.string.tag_label_gluten_free, icon = VUIcons.GlutenFree),
+    FULL_VEGAN(label = R.string.tag_label_full_vegan, icon = VUIcons.VeganLogo),
+    DELIVERY(label = R.string.tag_label_delivery, icon = VUIcons.Delivery),
+    TAKEAWAY(label = R.string.tag_label_take_away, icon = VUIcons.Bag),
+    DINE_IN(label = R.string.tag_label_dine_in, icon = VUIcons.Chairs)
 }

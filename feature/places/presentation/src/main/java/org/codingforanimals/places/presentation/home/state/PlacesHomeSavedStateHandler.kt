@@ -7,8 +7,8 @@ import androidx.compose.material3.SheetValue
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
-import org.codingforanimals.places.presentation.home.PlaceViewEntity
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel
+import org.codingforanimals.places.presentation.model.PlaceViewEntity
 
 class PlacesHomeSavedStateHandler {
     private var savedState: PlacesHomeSavedState? = null

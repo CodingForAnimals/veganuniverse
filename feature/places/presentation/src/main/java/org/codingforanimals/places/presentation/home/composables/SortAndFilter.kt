@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
 import org.codingforanimals.veganuniverse.core.ui.components.VURadioButton
@@ -94,7 +95,7 @@ internal fun FilterDialog(
                     PlaceTag.values().forEach {
                         val selected = selectedPlaceTags.contains(it)
                         VUSelectableChip(
-                            label = it.label,
+                            label = stringResource(it.label),
                             icon = it.icon,
                             selected = selected,
                             onClick = { onTagClick(it) },

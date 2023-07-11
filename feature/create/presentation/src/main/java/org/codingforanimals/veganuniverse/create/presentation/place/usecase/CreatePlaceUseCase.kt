@@ -5,7 +5,7 @@ import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.create.domain.ContentCreator
 import org.codingforanimals.veganuniverse.create.domain.ContentCreatorException
-import org.codingforanimals.veganuniverse.create.domain.place.PlaceFormDomainEntity
+import org.codingforanimals.veganuniverse.create.domain.model.PlaceFormDomainEntity
 
 class CreatePlaceUseCase(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,

@@ -115,7 +115,11 @@ internal fun PlacesHomeScreenContent(
                                     }
                                 )
                                 LaunchedEffect(selected) {
-                                    if (selected) entity.state.showInfoWindow()
+                                    if (selected) {
+                                        entity.state.showInfoWindow()
+                                    } else {
+                                        entity.state.hideInfoWindow()
+                                    }
                                 }
                             }
                         }

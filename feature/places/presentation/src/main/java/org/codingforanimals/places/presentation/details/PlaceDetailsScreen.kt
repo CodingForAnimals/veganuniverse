@@ -1,91 +1,189 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalLayoutApi::class)
 
 package org.codingforanimals.places.presentation.details
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.rememberMarkerState
-import org.codingforanimals.veganuniverse.core.ui.components.InteractiveRatingBar
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.Action
+import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.DetailsState
+import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.ReviewsState
+import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.UiState
+import org.codingforanimals.places.presentation.details.composables.AddressAndOpeningHours
+import org.codingforanimals.places.presentation.details.composables.DiscardReviewDialog
+import org.codingforanimals.places.presentation.details.composables.ErrorDialog
+import org.codingforanimals.places.presentation.details.composables.FlowRowTags
+import org.codingforanimals.places.presentation.details.composables.PlaceDetailsTopAppBar
+import org.codingforanimals.places.presentation.details.composables.Reviews
+import org.codingforanimals.places.presentation.details.composables.StaticMap
+import org.codingforanimals.places.presentation.details.composables.UserReview
+import org.codingforanimals.places.presentation.details.model.PlaceDetailsScreenItem
 import org.codingforanimals.veganuniverse.core.ui.components.RatingBar
+import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTags
 import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTitle
-import org.codingforanimals.veganuniverse.core.ui.shared.GenericPost
-import org.codingforanimals.veganuniverse.core.ui.shared.HeaderData
 import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHero
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
+import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_08
+import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun PlaceDetailsScreen(
     onBackClick: () -> Unit,
+    viewModel: PlaceDetailsViewModel = koinViewModel(),
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surfaceVariant),
-    ) {
-        VUTopAppBar(
-            onBackClick = onBackClick,
-            actions = {
-                var showMenu by rememberSaveable { mutableStateOf(false) }
-                VUIcon(
-                    icon = VUIcons.MoreOptions,
-                    contentDescription = "",
-                    onIconClick = { showMenu = !showMenu },
-                )
-                DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                    DropdownMenuItem(
-                        text = { Text(text = "Reportar lugar") },
-                        onClick = {},
-                        leadingIcon = {
-                            VUIcon(icon = VUIcons.Report, contentDescription = "")
-                        })
-                    DropdownMenuItem(
-                        text = { Text(text = "Sugerir edición") },
-                        onClick = {},
-                        leadingIcon = {
-                            VUIcon(icon = VUIcons.Edit, contentDescription = "")
-                        })
-                }
-            }
-        )
 
-        PlaceDetailsScreenData()
+    HandleSideEffects(
+        sideEffects = viewModel.sideEffects,
+    )
+
+    PlaceDetailsScreen(
+        uiState = viewModel.uiState,
+        onBackClick = onBackClick,
+        onAction = viewModel::onAction,
+    )
+}
+
+@Composable
+private fun PlaceDetailsScreen(
+    uiState: UiState,
+    onBackClick: () -> Unit,
+    onAction: (Action) -> Unit,
+) {
+    PlaceDetails(
+        uiState = uiState,
+        onBackClick = onBackClick,
+        onAction = onAction,
+    )
+
+    when (val dialog = uiState.alertDialog) {
+        PlaceDetailsViewModel.AlertDialog.None -> Unit
+        PlaceDetailsViewModel.AlertDialog.DiscardReview -> DiscardReviewDialog(
+            onDismissRequest = { onAction(Action.OnAlertDialogDismissRequest) },
+            onConfirmClick = { onAction(Action.OnConfirmDiscardReviewButtonClick) }
+        )
+        is PlaceDetailsViewModel.AlertDialog.Error -> ErrorDialog(
+            title = stringResource(dialog.title),
+            message = stringResource(dialog.message),
+            onConfirmButtonClick = onBackClick,
+        )
     }
 }
 
 @Composable
-private fun PlaceDetailsScreenData() {
+private fun PlaceDetails(
+    uiState: UiState,
+    onAction: (Action) -> Unit,
+    onBackClick: () -> Unit,
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        PlaceDetailsTopAppBar(
+            onBackClick = onBackClick,
+            onReportPlaceClick = { onAction(Action.OnReportPlaceClick) },
+            onEditPlaceClick = { onAction(Action.OnEditPlaceClick) }
+        )
+        when (val detailsState = uiState.detailsState) {
+            DetailsState.Loading -> VUCircularProgressIndicator(visible = true)
+            is DetailsState.Success -> {
+                LazyColumn(
+                    modifier = Modifier.padding(bottom = Spacing_08),
+                    verticalArrangement = Arrangement.spacedBy(Spacing_06),
+                    content = {
+                        items(
+                            items = detailsState.content,
+                            key = { it.hashCode() },
+                            itemContent = { item ->
+                                when (item) {
+                                    is PlaceDetailsScreenItem.Hero -> ItemDetailHero(
+                                        icon = VUIcons.Store,
+                                        onImageClick = {},
+                                    )
+                                    is PlaceDetailsScreenItem.Header -> FeatureItemTitle(
+                                        title = item.title,
+                                        subtitle = { RatingBar(item.rating) }
+                                    )
+                                    is PlaceDetailsScreenItem.AddressAndOpeningHours -> AddressAndOpeningHours(
+                                        address = item.address,
+                                        openingHours = item.openingHours
+                                    )
+                                    is PlaceDetailsScreenItem.Description -> Text(
+                                        modifier = Modifier.padding(horizontal = Spacing_06),
+                                        text = item.description,
+                                    )
+                                    is PlaceDetailsScreenItem.Tags -> FlowRowTags(tags = item.tags)
+                                    is PlaceDetailsScreenItem.StaticMap -> StaticMap(
+                                        marker = item.marker,
+                                        cameraPositionState = item.cameraPositionState,
+                                    )
+                                    PlaceDetailsScreenItem.UserReview -> UserReview(
+                                        userReviewState = uiState.userReviewState,
+                                        onAction = onAction,
+                                    )
+                                    PlaceDetailsScreenItem.Reviews -> when (uiState.reviewsState) {
+                                        ReviewsState.Error -> Text(text = "ERROR")
+                                        ReviewsState.Loading -> Text(text = "LOADING")
+                                        is ReviewsState.Success ->
+                                            Reviews(
+                                                reviews = uiState.reviewsState.reviews,
+                                                containsUserReview = uiState.reviewsState.containsUserReview,
+                                                userReviewState = uiState.userReviewState,
+                                                onAction = onAction,
+                                            )
+                                    }
+                                }
+                            },
+                        )
+                    },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun HandleSideEffects(
+    sideEffects: Flow<PlaceDetailsViewModel.SideEffect>,
+) {
+    LaunchedEffect(Unit) {
+        sideEffects.onEach { sideEffect ->
+            when (sideEffect) {
+                else -> {}
+            }
+        }.collect()
+    }
+}
+
+@Composable
+private fun PlaceDetailsScreenData(
+    uiState: UiState,
+    onAction: (Action) -> Unit,
+) {
+
     val latlng = LatLng(-37.331928, -59.139309)
     val camera = CameraPositionState(
         position = CameraPosition.fromLatLngZoom(
@@ -107,16 +205,16 @@ private fun PlaceDetailsScreenData() {
             )
         }
         item {
-            FeatureItemTitle(
-                title = "Todo Vegano",
-                subtitle = { RatingBar(rating = 4) }
-            )
+//            FeatureItemTitle(
+////                title = uiState.place.name,
+//                subtitle = { RatingBar(rating = 4) }
+//            )
         }
         item { CoreData() }
         item { Description() }
         item { FeatureItemTags(tags) }
-        item { Map(camera) }
-        item { AddReview() }
+//        item { Map(camera) }
+//        item { AddReview(onAction = onAction) }
         item {
             Column(
                 modifier = Modifier
@@ -130,8 +228,16 @@ private fun PlaceDetailsScreenData() {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                 )
-                reviews.forEach {
-                    Review(it)
+                when (uiState.reviewsState) {
+                    ReviewsState.Error -> {
+                        Text(text = "ERROR")
+                    }
+                    ReviewsState.Loading -> {
+                        Text(text = "LOADING")
+                    }
+                    is ReviewsState.Success -> {
+
+                    }
                 }
             }
         }
@@ -165,137 +271,19 @@ private fun Description() {
     )
 }
 
-@Composable
-private fun Map(cameraPositionState: CameraPositionState) {
-    GoogleMap(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Spacing_06)
-            .aspectRatio(2f),
-        cameraPositionState = cameraPositionState,
-        uiSettings = MapUiSettings(
-            compassEnabled = false,
-            indoorLevelPickerEnabled = false,
-            mapToolbarEnabled = false,
-            myLocationButtonEnabled = false,
-            rotationGesturesEnabled = false,
-            scrollGesturesEnabled = false,
-            scrollGesturesEnabledDuringRotateOrZoom = false,
-            tiltGesturesEnabled = false,
-            zoomControlsEnabled = false,
-            zoomGesturesEnabled = false,
-        )
-    ) {
-        Marker(state = rememberMarkerState(position = cameraPositionState.position.target))
-    }
-}
-
-@Composable
-private fun AddReview() {
-    var isPlaceAlreadyReviewedByUser by remember { mutableStateOf(false) }
-    AnimatedVisibility(visible = !isPlaceAlreadyReviewedByUser) {
-        Column {
-            Text(
-                text = "Aporta tu reseña",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(horizontal = Spacing_06, vertical = Spacing_04),
-            )
-
-            var addingReview by rememberSaveable { mutableStateOf(false) }
-            var rating by rememberSaveable { mutableStateOf(0) }
-            InteractiveRatingBar(
-                modifier = Modifier.padding(horizontal = Spacing_06),
-                value = rating,
-                onValueChange = { addingReview = true; rating = it }
-            )
-
-            AnimatedVisibility(visible = addingReview) {
-                var isDiscardingReview by rememberSaveable { mutableStateOf(false) }
-                AddReviewPost(
-                    rating = rating,
-                    showDiscardReviewDialog = { isDiscardingReview = true },
-                    submitReview = { isPlaceAlreadyReviewedByUser = true },
-                )
-                if (isDiscardingReview) {
-                    DiscardReviewDialog(
-                        onDismissRequest = { isDiscardingReview = false },
-                        onConfirmClick = {
-                            rating = 0
-                            addingReview = false
-                            isDiscardingReview = false
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun Review(review: Review) {
-    val header = HeaderData(
-        imageRes = org.codingforanimals.veganuniverse.core.ui.R.drawable.vegan_restaurant,
-        title = {
-            Column {
-                Text(
-                    text = review.user,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                RatingBar(rating = review.rating)
-            }
-        },
-        actions = {
-            val icon = if (review.rating == 4) {
-                VUIcons.Delete
-            } else {
-                VUIcons.Report
-            }
-            VUIcon(
-                icon = icon,
-                contentDescription = "",
-                onIconClick = {},
-            )
-        }
-    )
-    GenericPost(
-        modifier = Modifier.padding(horizontal = Spacing_06),
-        headerData = header,
-        content = {
-            Text(text = review.title, fontWeight = FontWeight.SemiBold)
-            Text(text = review.description, style = MaterialTheme.typography.bodyMedium)
-        },
-    )
-}
-
-data class Review(
-    val user: String,
-    val rating: Int,
-    val title: String,
-    val description: String,
-)
-
-val review1 = Review(
-    user = "Dani.ella",
-    rating = 4,
-    title = "Tienen un montón de opciones veganas",
-    description = "Me pedí una hamburguesa notco con cheddar y estaba riquisima. Vi que en el menú tenían otros sanguches y wraps, además de alguna ensalada. La verdad 100% recomendable!!!"
-)
-
-val review2 = Review(
-    user = "Pepe Argento",
-    rating = 2,
-    title = "La mesa se movía",
-    description = "La comida estaba buena, el choripán vegano muy rico, pero la mesa se movía para todos lados, unas ganas de fajar a mi hijo."
-)
-
-private val reviews = listOf(
-    review1,
-    review2,
-    review2,
-    review2,
-)
-
 private const val description =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec condimentum nulla in odio tincidunt, ut blandit tellus semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec condimentum nulla in odio tincidunt, ut blandit tellus semper. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+
+@Preview
+@Composable
+private fun PreviewPlaceDetailsScreen() {
+    VeganUniverseTheme {
+        VeganUniverseBackground {
+            PlaceDetailsScreen(
+                uiState = UiState(),
+                onBackClick = {},
+                onAction = {},
+            )
+        }
+    }
+}

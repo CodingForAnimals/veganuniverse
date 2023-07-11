@@ -23,7 +23,7 @@ import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.core.ui.viewmodel.PictureField
 import org.codingforanimals.veganuniverse.core.ui.viewmodel.StringField
-import org.codingforanimals.veganuniverse.create.domain.place.PlaceFormDomainEntity
+import org.codingforanimals.veganuniverse.create.domain.model.PlaceFormDomainEntity
 import org.codingforanimals.veganuniverse.create.presentation.model.AddressField
 import org.codingforanimals.veganuniverse.create.presentation.model.LocationField
 import org.codingforanimals.veganuniverse.create.presentation.model.SelectedTagsField

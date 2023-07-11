@@ -10,7 +10,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.CoroutineScope
-import org.codingforanimals.places.presentation.home.PlacesHomeDestination
+import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
@@ -56,7 +56,7 @@ class VUAppState(
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
             CommunityDestination.route -> TopLevelDestination.COMMUNITY
-            PlacesHomeDestination.route -> TopLevelDestination.PLACES
+            PlacesDestination.Home.route -> TopLevelDestination.PLACES
             CreateDestination.route -> TopLevelDestination.CREATE
             RecipesHomeDestination.route -> TopLevelDestination.RECIPES
             ProfileDestination.route -> TopLevelDestination.PROFILE
@@ -68,7 +68,7 @@ class VUAppState(
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
         when (destination) {
             TopLevelDestination.COMMUNITY -> navigateToCommunity()
-            TopLevelDestination.PLACES -> navController.navigate(PlacesHomeDestination.route)
+            TopLevelDestination.PLACES -> navController.navigate(PlacesDestination.Home.route)
             TopLevelDestination.CREATE -> navController.navigate(CreateDestination.route)
             TopLevelDestination.RECIPES -> navController.navigate(RecipesHomeDestination.route)
             TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination.route)

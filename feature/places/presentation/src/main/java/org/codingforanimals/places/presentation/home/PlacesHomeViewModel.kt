@@ -28,6 +28,7 @@ import org.codingforanimals.places.presentation.home.state.PlacesHomeSavedStateH
 import org.codingforanimals.places.presentation.home.state.PlacesState
 import org.codingforanimals.places.presentation.home.state.UserLocationState
 import org.codingforanimals.places.presentation.home.usecase.GetPlacesUseCase
+import org.codingforanimals.places.presentation.model.PlaceViewEntity
 import org.codingforanimals.places.presentation.utils.visibleRadius
 import org.codingforanimals.veganuniverse.core.location.LocationResponse
 import org.codingforanimals.veganuniverse.core.location.UserLocationManager
@@ -62,6 +63,9 @@ class PlacesHomeViewModel(
 
     fun onAction(action: Action) {
         when (action) {
+            Action.OnBackClick -> {
+                handleBackClick()
+            }
             Action.OnExpandSheetButtonClick -> {
                 viewModelScope.launch {
                     _sideEffects.send(SideEffect.PartiallyExpand)
@@ -113,6 +117,16 @@ class PlacesHomeViewModel(
         } else {
             viewModelScope.launch {
                 _sideEffects.send(SideEffect.ShowSnackbar(Snackbar.LocationDisabled))
+            }
+        }
+    }
+
+    private fun handleBackClick() {
+        if (uiState.isFocused) {
+            uiState = uiState.copy(isFocused = false)
+        } else {
+            viewModelScope.launch {
+                _sideEffects.send(SideEffect.NavigateUp)
             }
         }
     }
@@ -247,7 +261,7 @@ class PlacesHomeViewModel(
     private fun onPlaceClick(place: PlaceViewEntity) {
         if (uiState.isPlaceSelected(place)) {
             viewModelScope.launch {
-                _sideEffects.send(SideEffect.NavigateToPlaceDetails)
+                _sideEffects.send(SideEffect.NavigateToPlaceDetails(place.id))
             }
         } else {
             focusOnPlace(place)
@@ -309,6 +323,7 @@ class PlacesHomeViewModel(
     }
 
     sealed class Action {
+        object OnBackClick : Action()
         object OnExpandSheetButtonClick : Action()
         object OnSettingsScreenDismissed : Action()
         object OnRefreshPlacesButtonClick : Action()
@@ -325,7 +340,8 @@ class PlacesHomeViewModel(
     }
 
     sealed class SideEffect {
-        object NavigateToPlaceDetails : SideEffect()
+        data class NavigateToPlaceDetails(val id: String) : SideEffect()
+        object NavigateUp : SideEffect()
         object PartiallyExpand : SideEffect()
         data class LocationServiceEnableRequest(val intent: IntentSenderRequest) : SideEffect()
         data class ShowSnackbar(val snackbar: Snackbar) : SideEffect()

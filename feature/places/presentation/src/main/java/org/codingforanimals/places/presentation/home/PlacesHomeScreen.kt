@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -42,12 +43,15 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun PlacesHomeScreen(
+    navigateUp: () -> Unit,
     snackbarHostState: SnackbarHostState,
-    navigateToPlaceDetails: () -> Unit,
+    navigateToPlaceDetails: (String) -> Unit,
     viewModel: PlacesHomeViewModel = koinViewModel(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
 ) {
     val uiState = viewModel.uiState
+
+    BackHandler(onBack = { viewModel.onAction(Action.OnBackClick) })
 
     val enableLocationActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
@@ -78,6 +82,7 @@ internal fun PlacesHomeScreen(
         enableLocationActivityLauncher = enableLocationActivityLauncher,
         scaffoldState = scaffoldState,
         navigateToPlaceDetails = navigateToPlaceDetails,
+        navigateUp = navigateUp,
     )
 
     PlacesHomeScreen(
@@ -131,13 +136,15 @@ private fun HandleSideEffects(
     snackbarHostState: SnackbarHostState,
     appSettingsActivityLauncher: ActivityResultLauncher<Intent>,
     enableLocationActivityLauncher: ActivityResultLauncher<IntentSenderRequest>,
-    navigateToPlaceDetails: () -> Unit,
+    navigateToPlaceDetails: (String) -> Unit,
+    navigateUp: () -> Unit,
 ) {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         sideEffects.onEach { effect ->
             when (effect) {
-                SideEffect.NavigateToPlaceDetails -> navigateToPlaceDetails()
+                SideEffect.NavigateUp -> navigateUp()
+                is SideEffect.NavigateToPlaceDetails -> navigateToPlaceDetails(effect.id)
                 is SideEffect.ZoomInLocation -> {
                     try {
                         cameraPositionState.animate(effect.cameraUpdate, effect.duration)
