@@ -6,14 +6,17 @@ import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
+import org.codingforanimals.veganuniverse.services.firebase.places.model.PaginationCursor
 import org.codingforanimals.veganuniverse.services.firebase.places.model.PlaceFirebaseEntity
 import org.codingforanimals.veganuniverse.services.firebase.places.model.PlaceLocationQueryParams
 import org.codingforanimals.veganuniverse.services.firebase.places.model.PlaceQueryBound
 import org.codingforanimals.veganuniverse.services.firebase.places.model.ReviewFirebaseEntity
+import org.codingforanimals.veganuniverse.services.firebase.places.model.ReviewsPaginatedResponse
 import org.codingforanimals.veganuniverse.services.firebase.places.model.dto.ReviewDTO
 import org.codingforanimals.veganuniverse.services.firebase.places.model.dto.ReviewFormDTO
 import org.codingforanimals.veganuniverse.services.firebase.places.model.toFirebaseEntity
@@ -69,18 +72,48 @@ class PlacesFirestoreApi(
         return snap.documents.firstOrNull()?.toObject(ReviewFirebaseEntity::class.java)
     }
 
-    //    private var lastDocument: DocumentSnapshot? = null
-    override suspend fun fetchReviews(id: String): List<ReviewFirebaseEntity> {
-        val snap = firebase.collection(COLLECTION_PLACES)
-            .document(id)
+    /**
+     * Fetches 3 documents returning 2 in response, and uses the 3rd document as indication that there's more items
+     */
+    private var lastDocSnap: DocumentSnapshot? = null
+    private var cursor: PaginationCursor = PaginationCursor.FreshStart
+    override suspend fun fetchReviews(placeId: String): ReviewsPaginatedResponse {
+        var query = firebase
+            .collection(COLLECTION_PLACES)
+            .document(placeId)
             .collection(COLLECTION_REVIEWS)
-            .orderBy(FIELD_TIMESTAMP)
-//            .startAt(lastDocument)
+            .orderBy(FIELD_TIMESTAMP, Query.Direction.DESCENDING)
+
+        when (val currentCursor = cursor) {
+            PaginationCursor.FreshStart -> Unit
+            PaginationCursor.Finished -> return ReviewsPaginatedResponse(emptyList(), false)
+            is PaginationCursor.Current -> {
+                query = query.startAt(currentCursor.cursor)
+            }
+        }
+//        lastDocSnap?.let {
+//            query = query.startAt(it)
+//        }
+
+        val snap = query
             .limit(3)
-            .get()
-            .await()
-//        lastDocument = snap.documents.lastOrNull()
-        return snap.documents.mapNotNull { it.toObject(ReviewFirebaseEntity::class.java) }
+            .get().await()
+
+        val reviews = snap.documents.toMutableList()
+        val (hasMoreItems, updatedCursor) = if (reviews.size == 3) {
+            Pair(true, PaginationCursor.Current(reviews.removeLast()))
+        } else {
+            Pair(false, PaginationCursor.Finished)
+        }
+
+        cursor = updatedCursor
+
+//        lastDocSnap = exceedingDocument
+
+        return ReviewsPaginatedResponse(
+            reviews = reviews.mapNotNull { it.toObject(ReviewFirebaseEntity::class.java) },
+            hasMoreItems = hasMoreItems,
+        )
     }
 
     private fun Query.getGeoHashQuery(bound: PlaceQueryBound): Query {

@@ -20,7 +20,6 @@ import org.codingforanimals.places.presentation.details.usecase.GetPlaceReviewsU
 import org.codingforanimals.places.presentation.details.usecase.SubmitReviewUseCase
 import org.codingforanimals.places.presentation.model.GetPlaceDetailsStatus
 import org.codingforanimals.places.presentation.model.GetPlaceReviewsStatus
-import org.codingforanimals.places.presentation.model.PlaceViewEntity
 import org.codingforanimals.places.presentation.model.ReviewViewEntity
 import org.codingforanimals.places.presentation.navigation.selected_place_id
 
@@ -39,7 +38,6 @@ internal class PlaceDetailsViewModel(
         private set
 
     private val placeId = checkNotNull(savedStateHandle.get<String>(selected_place_id))
-    private lateinit var place: PlaceViewEntity
 
     init {
         viewModelScope.launch {
@@ -57,8 +55,7 @@ internal class PlaceDetailsViewModel(
                         )
                     }
                     is GetPlaceDetailsStatus.Success -> {
-                        place = status.place
-                        val content = getPlaceDetailsScreenContent(status.place, status.userReview)
+                        val content = getPlaceDetailsScreenContent(status.place)
                         uiState = uiState.copy(detailsState = DetailsState.Success(content))
                         fetchReviews()
                     }
@@ -72,13 +69,12 @@ internal class PlaceDetailsViewModel(
             getPlaceReviewsUseCase(placeId).collectLatest { status ->
                 val state = when (status) {
                     GetPlaceReviewsStatus.Loading -> ReviewsState.Loading
-                    GetPlaceReviewsStatus.Exception -> ReviewsState.Error
-                    is GetPlaceReviewsStatus.Success -> {
-                        when (val reviewsState = uiState.reviewsState) {
-                            is ReviewsState.Success -> reviewsState.copy(otherReviews = status.reviews)
-                            else -> ReviewsState.Success(otherReviews = status.reviews)
-                        }
-                    }
+                    is GetPlaceReviewsStatus.Exception -> ReviewsState.Error(status.error)
+                    is GetPlaceReviewsStatus.Success -> ReviewsState.Success(
+                        userReview = status.userReview,
+                        otherReviews = status.paginatedReviews,
+                        hasMoreReviews = status.hasMoreReviews,
+                    )
                 }
                 uiState = uiState.copy(reviewsState = state)
             }
@@ -102,6 +98,7 @@ internal class PlaceDetailsViewModel(
             is Action.OnUserReviewTitleUpdate -> updateReviewTitle(action.title)
             Action.OnAlertDialogDismissRequest -> uiState =
                 uiState.copy(alertDialog = AlertDialog.None)
+            Action.OnGetMoreReviewsButtonClick -> getMoreReviews()
         }
     }
 
@@ -125,6 +122,28 @@ internal class PlaceDetailsViewModel(
         uiState = uiState.copy(
             userReviewState = uiState.userReviewState.copy(description = description),
         )
+    }
+
+    private fun getMoreReviews() {
+        viewModelScope.launch {
+            getPlaceReviewsUseCase.getMoreReviews(placeId).collectLatest { status ->
+                val reviewsState = uiState.reviewsState
+                if (reviewsState !is ReviewsState.Success) return@collectLatest
+                val state = when (status) {
+                    is GetPlaceReviewsStatus.Exception -> reviewsState.copy(loadingMore = false)
+                    GetPlaceReviewsStatus.Loading -> reviewsState.copy(loadingMore = true)
+                    is GetPlaceReviewsStatus.Success -> {
+                        val reviews = reviewsState.otherReviews + status.paginatedReviews
+                        reviewsState.copy(
+                            otherReviews = reviews,
+                            hasMoreReviews = status.hasMoreReviews,
+                            loadingMore = false,
+                        )
+                    }
+                }
+                uiState = uiState.copy(reviewsState = state)
+            }
+        }
     }
 
     private fun submitReview() {
@@ -151,16 +170,15 @@ internal class PlaceDetailsViewModel(
                         )
                     }
                     is SubmitReviewStatus.Success -> {
-                        uiState.detailsState.removeUserReviewItem()?.let { newDetailsState ->
-                            val reviewsState = when (val reviewsState = uiState.reviewsState) {
-                                is ReviewsState.Success -> reviewsState.copy(userReview = status.reviewViewEntity)
-                                else -> ReviewsState.Success(userReview = status.reviewViewEntity)
+                        when (val reviewsState = uiState.reviewsState) {
+                            is ReviewsState.Success -> {
+                                uiState = uiState.copy(
+                                    reviewsState = reviewsState.copy(
+                                        userReview = status.reviewViewEntity,
+                                    )
+                                )
                             }
-                            uiState = uiState.copy(
-                                userReviewState = UserReviewState(),
-                                detailsState = newDetailsState,
-                                reviewsState = reviewsState
-                            )
+                            else -> Unit
                         }
                     }
                 }
@@ -188,17 +206,6 @@ internal class PlaceDetailsViewModel(
     sealed class DetailsState {
         object Loading : DetailsState()
         data class Success(val content: List<PlaceDetailsScreenItem>) : DetailsState()
-
-        fun removeUserReviewItem(): Success? {
-            return when (this) {
-                Loading -> null
-                is Success -> {
-                    val content = content.toMutableList()
-                    content.remove(PlaceDetailsScreenItem.UserReview)
-                    Success(content)
-                }
-            }
-        }
     }
 
     data class UserReviewState(
@@ -213,18 +220,14 @@ internal class PlaceDetailsViewModel(
 
     sealed class ReviewsState {
         object Loading : ReviewsState()
-        object Error : ReviewsState()
+        data class Error(@StringRes val message: Int) : ReviewsState()
         data class Success(
-            private val userReview: ReviewViewEntity? = null,
-            private val otherReviews: List<ReviewViewEntity> = emptyList(),
+            val userReview: ReviewViewEntity? = null,
+            val otherReviews: List<ReviewViewEntity> = emptyList(),
+            val loadingMore: Boolean = false,
+            val hasMoreReviews: Boolean = true,
         ) : ReviewsState() {
-
-            val reviews: List<ReviewViewEntity> = if (userReview != null) {
-                listOf(userReview, *otherReviews.toTypedArray())
-            } else {
-                otherReviews
-            }
-
+            val isEmpty = userReview == null && otherReviews.isEmpty()
             val containsUserReview: Boolean = userReview != null
         }
     }
@@ -238,6 +241,7 @@ internal class PlaceDetailsViewModel(
         object OnAlertDialogDismissRequest : Action()
         object OnDiscardReviewIconClick : Action()
         object OnConfirmDiscardReviewButtonClick : Action()
+        object OnGetMoreReviewsButtonClick : Action()
         object SubmitReview : Action()
     }
 

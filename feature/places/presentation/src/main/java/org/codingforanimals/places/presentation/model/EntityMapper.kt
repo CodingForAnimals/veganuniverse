@@ -56,12 +56,12 @@ private fun getType(type: String): PlaceType? {
     }
 }
 
-fun ReviewDomainEntity.toViewEntity(): ReviewViewEntity {
+fun ReviewDomainEntity.toViewEntity(): ReviewViewEntity? {
     return ReviewViewEntity(
         username = username,
         rating = rating,
         title = title,
         description = description,
-        timestamp = timestamp.toString()
+        timestamp = timestamp?.toString() ?: return null
     )
 }

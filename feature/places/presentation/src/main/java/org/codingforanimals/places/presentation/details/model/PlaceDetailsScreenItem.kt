@@ -34,7 +34,5 @@ sealed class PlaceDetailsScreenItem {
         }
     }
 
-    object UserReview : PlaceDetailsScreenItem()
-
     object Reviews : PlaceDetailsScreenItem()
 }

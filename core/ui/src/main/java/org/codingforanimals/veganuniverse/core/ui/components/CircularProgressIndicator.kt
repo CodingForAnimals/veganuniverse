@@ -11,9 +11,10 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun VUCircularProgressIndicator(
+    modifier: Modifier = Modifier,
     visible: Boolean,
 ) {
-    AnimatedVisibility(visible = visible) {
+    AnimatedVisibility(modifier = modifier, visible = visible) {
         Box(modifier = Modifier
             .fillMaxSize()
             .clickable {}) {

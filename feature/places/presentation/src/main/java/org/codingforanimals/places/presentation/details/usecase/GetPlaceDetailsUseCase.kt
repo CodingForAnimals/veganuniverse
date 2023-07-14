@@ -8,14 +8,12 @@ import org.codingforanimals.places.presentation.model.GetPlaceDetailsStatus
 import org.codingforanimals.places.presentation.model.toViewEntity
 import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.places.domain.PlacesRepository
-import org.codingforanimals.veganuniverse.user.UserRepository
 
 private const val TAG = "GetPlaceDetailsUseCase"
 
 class GetPlaceDetailsUseCase(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val placesRepository: PlacesRepository,
-    private val userRepository: UserRepository,
 ) {
     private val ioDispatcher = coroutineDispatcherProvider.io()
 
@@ -23,14 +21,10 @@ class GetPlaceDetailsUseCase(
         flow {
             emit(GetPlaceDetailsStatus.Loading)
             val status = try {
-                val (place, review) = withContext(ioDispatcher) {
-                    val place = placesRepository.getPlace(placeId).toViewEntity()!!
-                    val userReview = userRepository.user.value?.id?.let { userId ->
-                        placesRepository.getReview(placeId, userId)?.toViewEntity()
-                    }
-                    Pair(place, userReview)
+                val place = withContext(ioDispatcher) {
+                    placesRepository.getPlace(placeId).toViewEntity()!!
                 }
-                GetPlaceDetailsStatus.Success(place, review)
+                GetPlaceDetailsStatus.Success(place)
             } catch (e: Throwable) {
                 Log.e(TAG, e.stackTraceToString())
                 GetPlaceDetailsStatus.Exception.UnknownException

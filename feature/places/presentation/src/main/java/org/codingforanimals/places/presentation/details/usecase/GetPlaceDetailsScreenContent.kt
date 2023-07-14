@@ -2,15 +2,11 @@ package org.codingforanimals.places.presentation.details.usecase
 
 import org.codingforanimals.places.presentation.details.model.PlaceDetailsScreenItem
 import org.codingforanimals.places.presentation.model.PlaceViewEntity
-import org.codingforanimals.places.presentation.model.ReviewViewEntity
 
 class GetPlaceDetailsScreenContent {
-    operator fun invoke(
-        placeViewEntity: PlaceViewEntity,
-        userReviewViewEntity: ReviewViewEntity?,
-    ): List<PlaceDetailsScreenItem> {
+    operator fun invoke(placeViewEntity: PlaceViewEntity): List<PlaceDetailsScreenItem> {
         val fullAddress = "Bme. Mitre 123, Monte Grande, Buenos Aires"
-        val items = mutableListOf(
+        return mutableListOf(
             PlaceDetailsScreenItem.Hero(
                 imageUrl = placeViewEntity.imageRef,
             ),
@@ -31,15 +27,8 @@ class GetPlaceDetailsScreenContent {
             PlaceDetailsScreenItem.StaticMap(
                 marker = placeViewEntity.marker,
                 latLng = placeViewEntity.state.position,
-            )
+            ),
+            PlaceDetailsScreenItem.Reviews,
         )
-
-//        if (userReviewViewEntity == null) {
-//            items.add(PlaceDetailsScreenItem.UserReview)
-//        }
-
-        items.add(PlaceDetailsScreenItem.Reviews)
-
-        return items
     }
 }

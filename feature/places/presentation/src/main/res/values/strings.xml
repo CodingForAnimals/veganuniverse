@@ -12,4 +12,8 @@
     <string name="submit_review_error_guest_user_message">Para dejar una reseña, necesitas estar registrado dentro del Universo Vegano</string>
     <string name="submit_review_error_review_already_exists_title">Ya has dejado una reseña</string>
     <string name="submit_review_error_review_already_exists_message">Tenemos en nuestra base de datos una reseña para este lugar con este usuario, solo permitimos una</string>
+
+    <string name="place_details_review_list_header_title">Reseñas de la comunidad</string>
+    <string name="place_details_add_review_header_title">Aporta tu reseña</string>
+    <string name="place_details_reviews_load_more">Ver más</string>
 </resources>

@@ -5,10 +5,7 @@ import org.codingforanimals.places.presentation.R
 
 sealed class GetPlaceDetailsStatus {
     object Loading : GetPlaceDetailsStatus()
-    data class Success(
-        val place: PlaceViewEntity,
-        val userReview: ReviewViewEntity?,
-    ) : GetPlaceDetailsStatus()
+    data class Success(val place: PlaceViewEntity) : GetPlaceDetailsStatus()
 
     sealed class Exception(
         @StringRes val title: Int,

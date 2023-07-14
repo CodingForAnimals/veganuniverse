@@ -26,21 +26,19 @@ class SubmitReviewUseCase(
             emit(SubmitReviewStatus.Loading)
             val user = userRepository.user.value
                 ?: return@flow emit(SubmitReviewStatus.Exception.GuestUserException)
-            val review = getReviewDomainEntity(rating, title, description, user)
-            val result = try {
+            val form = getReviewDomainEntity(rating, title, description, user)
+            try {
                 val existingUserReview = placesRepository.getReview(placeId, user.id)
-                if (existingUserReview == null) {
-                    val uploadedReview =
-                        placesRepository.submitReview(placeId, review).toViewEntity()
-                    SubmitReviewStatus.Success(uploadedReview)
-                } else {
-                    SubmitReviewStatus.Exception.ReviewAlreadyExists
+                if (existingUserReview != null) {
+                    return@flow emit(SubmitReviewStatus.Exception.ReviewAlreadyExists)
                 }
+                val uploadedReview = placesRepository.submitReview(placeId, form).toViewEntity()
+                    ?: return@flow emit(SubmitReviewStatus.Exception.UnknownException)
+                emit(SubmitReviewStatus.Success(uploadedReview))
             } catch (e: Throwable) {
                 Log.e(TAG, e.stackTraceToString())
-                SubmitReviewStatus.Exception.UnknownException
+                emit(SubmitReviewStatus.Exception.UnknownException)
             }
-            emit(result)
         }
 
     private fun getReviewDomainEntity(
