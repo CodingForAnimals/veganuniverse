@@ -2,13 +2,14 @@ package org.codingforanimals.places.presentation.details
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -18,10 +19,13 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.places.presentation.R
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.Action
+import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.AlertDialog
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.DetailsState
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.ReviewsState
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.UiState
+import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.UserReviewState
 import org.codingforanimals.places.presentation.details.composables.AddressAndOpeningHours
 import org.codingforanimals.places.presentation.details.composables.DiscardReviewDialog
 import org.codingforanimals.places.presentation.details.composables.ErrorDialog
@@ -38,7 +42,6 @@ import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTitle
 import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHero
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_08
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -65,97 +68,136 @@ private fun PlaceDetailsScreen(
     onBackClick: () -> Unit,
     onAction: (Action) -> Unit,
 ) {
-    PlaceDetails(
-        uiState = uiState,
-        onBackClick = onBackClick,
-        onAction = onAction,
-    )
+    Column {
+        PlaceDetailsTopAppBar(
+            onBackClick = onBackClick,
+            onReportPlaceClick = { onAction(Action.OnReportPlaceClick) },
+            onEditPlaceClick = { onAction(Action.OnEditPlaceClick) }
+        )
 
-    when (val dialog = uiState.alertDialog) {
-        PlaceDetailsViewModel.AlertDialog.None -> Unit
-        PlaceDetailsViewModel.AlertDialog.DiscardReview -> DiscardReviewDialog(
+        when (uiState.detailsState) {
+            DetailsState.Loading -> VUCircularProgressIndicator(visible = true)
+            DetailsState.Error -> ErrorDialog(
+                title = stringResource(R.string.error_unknown_failure_title),
+                message = stringResource(R.string.error_unknown_failure_message),
+                onConfirmButtonClick = onBackClick,
+            )
+            is DetailsState.Success -> {
+                PlaceDetails(
+                    detailsState = uiState.detailsState,
+                    onAction = onAction,
+                    reviewsState = uiState.reviewsState,
+                    userReviewState = uiState.userReviewState,
+                )
+                uiState.alertDialog?.let { alertDialog ->
+                    HandleAlertDialog(alertDialog, onAction)
+                }
+            }
+        }
+    }
+
+    VUCircularProgressIndicator(visible = uiState.loading)
+}
+
+@Composable
+private fun HandleAlertDialog(
+    alertDialog: AlertDialog,
+    onAction: (Action) -> Unit,
+) {
+    when (alertDialog) {
+        AlertDialog.DiscardReview -> DiscardReviewDialog(
             onDismissRequest = { onAction(Action.OnAlertDialogDismissRequest) },
             onConfirmClick = { onAction(Action.OnConfirmDiscardReviewButtonClick) }
         )
-        is PlaceDetailsViewModel.AlertDialog.Error -> ErrorDialog(
-            title = stringResource(dialog.title),
-            message = stringResource(dialog.message),
-            onConfirmButtonClick = onBackClick,
+        is AlertDialog.DeleteReview -> AlertDialog(
+            onDismissRequest = { onAction(Action.OnAlertDialogDismissRequest) },
+            title = { Text(text = stringResource(R.string.alert_dialog_delete_review_title)) },
+            text = { Text(text = stringResource(R.string.alert_dialog_delete_review_text)) },
+            confirmButton = {
+                TextButton(
+                    onClick = { onAction(Action.OnConfirmDeleteReviewButtonClick) },
+                    content = { Text(text = stringResource(R.string.alert_dialog_delete_review_confirm_button_label)) },
+                )
+            },
+        )
+        AlertDialog.ReportReview -> AlertDialog(
+            onDismissRequest = { onAction(Action.OnAlertDialogDismissRequest) },
+            confirmButton = {
+                TextButton(
+                    onClick = { onAction(Action.OnConfirmReportReviewButtonClick) },
+                    content = { Text(text = stringResource(R.string.alert_dialog_report_review_confirm_button_label)) },
+                )
+            },
+            title = { Text(text = stringResource(R.string.alert_dialog_report_review_title)) },
+            text = { Text(text = stringResource(R.string.alert_dialog_report_review_text)) }
+        )
+        is AlertDialog.Error -> ErrorDialog(
+            title = stringResource(alertDialog.title),
+            message = stringResource(alertDialog.message),
+            onConfirmButtonClick = { onAction(Action.OnAlertDialogDismissRequest) },
         )
     }
 }
 
 @Composable
 private fun PlaceDetails(
-    uiState: UiState,
+    detailsState: DetailsState.Success,
+    reviewsState: ReviewsState,
+    userReviewState: UserReviewState,
     onAction: (Action) -> Unit,
-    onBackClick: () -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        PlaceDetailsTopAppBar(
-            onBackClick = onBackClick,
-            onReportPlaceClick = { onAction(Action.OnReportPlaceClick) },
-            onEditPlaceClick = { onAction(Action.OnEditPlaceClick) }
-        )
-        when (val detailsState = uiState.detailsState) {
-            DetailsState.Loading -> VUCircularProgressIndicator(visible = true)
-            is DetailsState.Success -> {
-                LazyColumn(
-                    modifier = Modifier.padding(bottom = Spacing_08),
-                    verticalArrangement = Arrangement.spacedBy(Spacing_06),
-                    content = {
-                        items(
-                            items = detailsState.content,
-                            key = { it.hashCode() },
-                            itemContent = { item ->
-                                when (item) {
-                                    is PlaceDetailsScreenItem.Hero -> ItemDetailHero(
-                                        icon = VUIcons.Store,
-                                        onImageClick = {},
-                                    )
-                                    is PlaceDetailsScreenItem.Header -> FeatureItemTitle(
-                                        title = item.title,
-                                        subtitle = { RatingBar(item.rating) }
-                                    )
-                                    is PlaceDetailsScreenItem.AddressAndOpeningHours -> AddressAndOpeningHours(
-                                        address = item.address,
-                                        openingHours = item.openingHours
-                                    )
-                                    is PlaceDetailsScreenItem.Description -> Text(
-                                        modifier = Modifier.padding(horizontal = Spacing_06),
-                                        text = item.description,
-                                    )
-                                    is PlaceDetailsScreenItem.Tags -> FlowRowTags(tags = item.tags)
-                                    is PlaceDetailsScreenItem.StaticMap -> StaticMap(
-                                        marker = item.marker,
-                                        cameraPositionState = item.cameraPositionState,
-                                    )
-                                    PlaceDetailsScreenItem.Reviews ->
-                                        when (val reviewsState = uiState.reviewsState) {
-                                            is ReviewsState.Error ->
-                                                ErrorView(message = reviewsState.message)
-                                            ReviewsState.Loading ->
-                                                VUCircularProgressIndicator(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .height(200.dp),
-                                                    visible = true,
-                                                )
-                                            is ReviewsState.Success ->
-                                                Reviews(
-                                                    reviewsState = reviewsState,
-                                                    userReviewState = uiState.userReviewState,
-                                                    onAction = onAction,
-                                                )
-                                        }
-                                }
-                            },
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(Spacing_06),
+        content = {
+            items(
+                items = detailsState.content,
+                key = { it.hashCode() },
+                itemContent = { item ->
+                    when (item) {
+                        is PlaceDetailsScreenItem.Hero -> ItemDetailHero(
+                            icon = VUIcons.Store,
+                            onImageClick = {},
                         )
-                    },
-                )
-            }
-        }
-    }
+                        is PlaceDetailsScreenItem.Header -> FeatureItemTitle(
+                            title = item.title,
+                            subtitle = { RatingBar(item.rating) }
+                        )
+                        is PlaceDetailsScreenItem.AddressAndOpeningHours -> AddressAndOpeningHours(
+                            address = item.address,
+                            openingHours = item.openingHours
+                        )
+                        is PlaceDetailsScreenItem.Description -> Text(
+                            modifier = Modifier.padding(horizontal = Spacing_06),
+                            text = item.description,
+                        )
+                        is PlaceDetailsScreenItem.Tags -> FlowRowTags(tags = item.tags)
+                        is PlaceDetailsScreenItem.StaticMap -> StaticMap(
+                            marker = item.marker,
+                            cameraPositionState = item.cameraPositionState,
+                        )
+                        PlaceDetailsScreenItem.Reviews ->
+                            when (reviewsState) {
+                                is ReviewsState.Error ->
+                                    ErrorView(message = reviewsState.message)
+                                ReviewsState.Loading ->
+                                    VUCircularProgressIndicator(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(200.dp),
+                                        visible = true,
+                                    )
+                                is ReviewsState.Success ->
+                                    Reviews(
+                                        reviewsState = reviewsState,
+                                        userReviewState = userReviewState,
+                                        onAction = onAction,
+                                    )
+                            }
+                    }
+                },
+            )
+        },
+    )
 }
 
 @Composable

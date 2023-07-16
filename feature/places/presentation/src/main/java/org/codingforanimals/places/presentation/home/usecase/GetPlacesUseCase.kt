@@ -1,10 +1,15 @@
 package org.codingforanimals.places.presentation.home.usecase
 
+import android.util.Log
 import com.google.android.gms.maps.model.LatLng
-import org.codingforanimals.places.presentation.model.PlaceViewEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import org.codingforanimals.places.presentation.model.GetPlacesStatus
 import org.codingforanimals.places.presentation.model.toViewEntity
 import org.codingforanimals.veganuniverse.places.domain.PlacesRepository
 import org.codingforanimals.veganuniverse.places.domain.model.PlaceLocationQueryParams
+
+private const val TAG = "GetPlacesUseCase"
 
 class GetPlacesUseCase(
     private val placesRepository: PlacesRepository,
@@ -12,9 +17,16 @@ class GetPlacesUseCase(
     suspend operator fun invoke(
         center: LatLng,
         radiusInMeters: Double,
-    ): Result<List<PlaceViewEntity>> = runCatching {
-        val params = getLocationQueryParams(center, radiusInMeters)
-        placesRepository.getPlaces(params).mapNotNull { it.toViewEntity() }
+    ): Flow<GetPlacesStatus> = flow {
+        emit(GetPlacesStatus.Loading)
+        try {
+            val params = getLocationQueryParams(center, radiusInMeters)
+            val places = placesRepository.getPlaces(params).mapNotNull { it.toViewEntity() }
+            emit(GetPlacesStatus.Success(places))
+        } catch (e: Throwable) {
+            Log.e(TAG, e.stackTraceToString())
+            emit(GetPlacesStatus.Error)
+        }
     }
 
     private fun getLocationQueryParams(

@@ -67,9 +67,9 @@ fun GenericPost(
         Column(modifier = Modifier.padding(Spacing_04)) {
             content()
         }
-        Row(modifier = Modifier.padding(horizontal = Spacing_02)) {
+//        Row(modifier = Modifier.padding(horizontal = Spacing_02)) {
             actions()
-        }
+//        }
     }
 }
 

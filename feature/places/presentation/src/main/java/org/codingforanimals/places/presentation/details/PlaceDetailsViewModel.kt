@@ -7,13 +7,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.codingforanimals.places.presentation.R
+import org.codingforanimals.places.presentation.details.model.DeleteUserReviewStatus
 import org.codingforanimals.places.presentation.details.model.PlaceDetailsScreenItem
 import org.codingforanimals.places.presentation.details.model.SubmitReviewStatus
+import org.codingforanimals.places.presentation.details.usecase.DeleteUserReviewUseCase
 import org.codingforanimals.places.presentation.details.usecase.GetPlaceDetailsScreenContent
 import org.codingforanimals.places.presentation.details.usecase.GetPlaceDetailsUseCase
 import org.codingforanimals.places.presentation.details.usecase.GetPlaceReviewsUseCase
@@ -29,7 +33,12 @@ internal class PlaceDetailsViewModel(
     private val getPlaceDetailsUseCase: GetPlaceDetailsUseCase,
     private val getPlaceReviewsUseCase: GetPlaceReviewsUseCase,
     private val submitReviewUseCase: SubmitReviewUseCase,
+    private val deleteUserReviewUseCase: DeleteUserReviewUseCase,
 ) : ViewModel() {
+
+    private var submitReviewJob: Job? = null
+    private var fetchReviewsJob: Job? = null
+    private var deleteUserReviewJob: Job? = null
 
     private val _sideEffects: Channel<SideEffect> = Channel()
     val sideEffects: Flow<SideEffect> = _sideEffects.receiveAsFlow()
@@ -47,12 +56,7 @@ internal class PlaceDetailsViewModel(
                         uiState = uiState.copy(detailsState = DetailsState.Loading)
                     }
                     is GetPlaceDetailsStatus.Exception -> {
-                        uiState = uiState.copy(
-                            alertDialog = AlertDialog.Error(
-                                title = status.title,
-                                message = status.message
-                            )
-                        )
+                        uiState = uiState.copy(detailsState = DetailsState.Error)
                     }
                     is GetPlaceDetailsStatus.Success -> {
                         val content = getPlaceDetailsScreenContent(status.place)
@@ -65,7 +69,8 @@ internal class PlaceDetailsViewModel(
     }
 
     private fun fetchReviews() {
-        viewModelScope.launch {
+        fetchReviewsJob?.cancel()
+        fetchReviewsJob = viewModelScope.launch {
             getPlaceReviewsUseCase(placeId).collectLatest { status ->
                 val state = when (status) {
                     GetPlaceReviewsStatus.Loading -> ReviewsState.Loading
@@ -90,15 +95,21 @@ internal class PlaceDetailsViewModel(
                 alertDialog = AlertDialog.DiscardReview,
             )
             Action.OnConfirmDiscardReviewButtonClick -> uiState = uiState.copy(
-                alertDialog = AlertDialog.None,
+                alertDialog = null,
                 userReviewState = UserReviewState(),
             )
             is Action.OnUserReviewDescriptionUpdate -> updateReviewDescription(action.description)
             is Action.OnUserReviewRatingUpdate -> updateReviewRating(action.rating)
             is Action.OnUserReviewTitleUpdate -> updateReviewTitle(action.title)
             Action.OnAlertDialogDismissRequest -> uiState =
-                uiState.copy(alertDialog = AlertDialog.None)
+                uiState.copy(alertDialog = null)
             Action.OnGetMoreReviewsButtonClick -> getMoreReviews()
+            Action.OnDeleteReviewIconClick -> uiState =
+                uiState.copy(alertDialog = AlertDialog.DeleteReview)
+            Action.OnReportReviewIconClick -> uiState =
+                uiState.copy(alertDialog = AlertDialog.ReportReview)
+            Action.OnConfirmDeleteReviewButtonClick -> deleteUserReview()
+            Action.OnConfirmReportReviewButtonClick -> Unit
         }
     }
 
@@ -125,7 +136,8 @@ internal class PlaceDetailsViewModel(
     }
 
     private fun getMoreReviews() {
-        viewModelScope.launch {
+        fetchReviewsJob?.cancel()
+        fetchReviewsJob = viewModelScope.launch {
             getPlaceReviewsUseCase.getMoreReviews(placeId).collectLatest { status ->
                 val reviewsState = uiState.reviewsState
                 if (reviewsState !is ReviewsState.Success) return@collectLatest
@@ -146,8 +158,34 @@ internal class PlaceDetailsViewModel(
         }
     }
 
+    private fun deleteUserReview() {
+        deleteUserReviewJob?.cancel()
+        deleteUserReviewJob = viewModelScope.launch {
+            deleteUserReviewUseCase(placeId).collectLatest { status ->
+                when (status) {
+                    DeleteUserReviewStatus.Loading -> uiState =
+                        uiState.copy(alertDialog = null, loading = true)
+                    DeleteUserReviewStatus.Error -> uiState =
+                        uiState.copy(alertDialog = AlertDialog.Error(), loading = false)
+                    DeleteUserReviewStatus.Success -> uiState =
+                        when (val reviewsState = uiState.reviewsState) {
+                            is ReviewsState.Success -> {
+                                uiState.copy(
+                                    alertDialog = null,
+                                    reviewsState = reviewsState.copy(userReview = null),
+                                    loading = false,
+                                )
+                            }
+                            else -> uiState.copy(alertDialog = AlertDialog.Error(), loading = false)
+                        }
+                }
+            }
+        }
+    }
+
     private fun submitReview() {
-        viewModelScope.launch {
+        submitReviewJob?.cancel()
+        submitReviewJob = viewModelScope.launch {
             submitReviewUseCase(
                 placeId = placeId,
                 rating = uiState.userReviewState.rating,
@@ -173,6 +211,7 @@ internal class PlaceDetailsViewModel(
                         when (val reviewsState = uiState.reviewsState) {
                             is ReviewsState.Success -> {
                                 uiState = uiState.copy(
+                                    userReviewState = UserReviewState(),
                                     reviewsState = reviewsState.copy(
                                         userReview = status.reviewViewEntity,
                                     )
@@ -190,21 +229,24 @@ internal class PlaceDetailsViewModel(
         val detailsState: DetailsState = DetailsState.Loading,
         val reviewsState: ReviewsState = ReviewsState.Loading,
         val userReviewState: UserReviewState = UserReviewState(),
-        val alertDialog: AlertDialog = AlertDialog.None,
+        val alertDialog: AlertDialog? = null,
+        val loading: Boolean = false,
     )
 
     sealed class AlertDialog {
         data class Error(
-            @StringRes val title: Int,
-            @StringRes val message: Int,
+            @StringRes val title: Int = R.string.error_unknown_failure_title,
+            @StringRes val message: Int = R.string.error_unknown_failure_message,
         ) : AlertDialog()
 
         object DiscardReview : AlertDialog()
-        object None : AlertDialog()
+        object DeleteReview : AlertDialog()
+        object ReportReview : AlertDialog()
     }
 
     sealed class DetailsState {
         object Loading : DetailsState()
+        object Error : DetailsState()
         data class Success(val content: List<PlaceDetailsScreenItem>) : DetailsState()
     }
 
@@ -242,6 +284,10 @@ internal class PlaceDetailsViewModel(
         object OnDiscardReviewIconClick : Action()
         object OnConfirmDiscardReviewButtonClick : Action()
         object OnGetMoreReviewsButtonClick : Action()
+        object OnReportReviewIconClick : Action()
+        object OnDeleteReviewIconClick : Action()
+        object OnConfirmDeleteReviewButtonClick : Action()
+        object OnConfirmReportReviewButtonClick : Action()
         object SubmitReview : Action()
     }
 

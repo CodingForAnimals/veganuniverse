@@ -44,6 +44,10 @@ class PlacesRepositoryImpl(
     ): ReviewDomainEntity {
         return placesApi.submitReview(placeId, reviewForm.toDto()).toDomainEntity()
     }
+
+    override suspend fun deleteReview(placeId: String, userId: String) {
+        placesApi.deleteReview(placeId, userId)
+    }
 }
 
 class CurrentPlacesWrapper {

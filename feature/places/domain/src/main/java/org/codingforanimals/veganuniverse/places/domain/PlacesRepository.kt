@@ -15,4 +15,6 @@ interface PlacesRepository {
         placeId: String,
         reviewForm: ReviewFormDomainEntity,
     ): ReviewDomainEntity
+
+    suspend fun deleteReview(placeId: String, userId: String)
 }

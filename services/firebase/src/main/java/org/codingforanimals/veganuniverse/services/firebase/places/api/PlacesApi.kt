@@ -12,4 +12,5 @@ interface PlacesApi {
     suspend fun fetchReview(placeId: String, userId: String): ReviewFirebaseEntity?
     suspend fun fetchReviews(placeId: String): ReviewsPaginatedResponse
     suspend fun submitReview(placeId: String, reviewFormDTO: ReviewFormDTO): ReviewDTO
+    suspend fun deleteReview(placeId: String, userId: String)
 }

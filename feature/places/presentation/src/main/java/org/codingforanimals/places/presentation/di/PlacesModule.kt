@@ -1,6 +1,7 @@
 package org.codingforanimals.places.presentation.di
 
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel
+import org.codingforanimals.places.presentation.details.usecase.DeleteUserReviewUseCase
 import org.codingforanimals.places.presentation.details.usecase.GetPlaceDetailsScreenContent
 import org.codingforanimals.places.presentation.details.usecase.GetPlaceDetailsUseCase
 import org.codingforanimals.places.presentation.details.usecase.GetPlaceReviewsUseCase
@@ -24,5 +25,6 @@ internal val placesModule = module {
     factoryOf(::GetPlaceReviewsUseCase)
     factoryOf(::GetPlaceDetailsUseCase)
     factoryOf(::SubmitReviewUseCase)
+    factoryOf(::DeleteUserReviewUseCase)
     viewModelOf(::PlaceDetailsViewModel)
 }

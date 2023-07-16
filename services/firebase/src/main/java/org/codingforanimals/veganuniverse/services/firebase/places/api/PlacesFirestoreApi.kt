@@ -6,7 +6,6 @@ import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
@@ -29,13 +28,13 @@ class PlacesFirestoreApi(
         val tasks = mutableListOf<Task<QuerySnapshot>>()
         val collection = firebase.collection(COLLECTION_PLACES)
         getBounds(params).forEach { bound ->
-            val query = collection.getGeoHashQuery(bound)
+            val query = collection.getGeoHashQuery(bound).whereEqualTo("verified", true)
             tasks.add(query.get())
         }
         val result = mutableListOf<PlaceFirebaseEntity>()
-        Tasks.whenAllComplete(tasks).await()
-        for (task in tasks) {
-            task.result.documents.forEach { doc ->
+        val taskResults = Tasks.whenAllSuccess<QuerySnapshot>(tasks).await()
+        for (taskResult in taskResults) {
+            taskResult.documents.forEach { doc ->
                 try {
                     val card = doc.toObject(PlaceFirebaseEntity::class.java) ?: return@forEach
                     result.add(card)
@@ -47,6 +46,20 @@ class PlacesFirestoreApi(
                 }
             }
         }
+//        Tasks.whenAllComplete(tasks)
+//        for (task in tasks) {
+//            task.result.documents.forEach { doc ->
+//                try {
+//                    val card = doc.toObject(PlaceFirebaseEntity::class.java) ?: return@forEach
+//                    result.add(card)
+//                } catch (e: Throwable) {
+//                    Log.e(
+//                        "PlacesFirestoreApi.kt",
+//                        "Unable to parse object. Msg: ${e.stackTraceToString()}"
+//                    )
+//                }
+//            }
+//        }
         return result
     }
 
@@ -75,7 +88,6 @@ class PlacesFirestoreApi(
     /**
      * Fetches 3 documents returning 2 in response, and uses the 3rd document as indication that there's more items
      */
-    private var lastDocSnap: DocumentSnapshot? = null
     private var cursor: PaginationCursor = PaginationCursor.FreshStart
     override suspend fun fetchReviews(placeId: String): ReviewsPaginatedResponse {
         var query = firebase
@@ -91,9 +103,6 @@ class PlacesFirestoreApi(
                 query = query.startAt(currentCursor.cursor)
             }
         }
-//        lastDocSnap?.let {
-//            query = query.startAt(it)
-//        }
 
         val snap = query
             .limit(3)
@@ -108,12 +117,21 @@ class PlacesFirestoreApi(
 
         cursor = updatedCursor
 
-//        lastDocSnap = exceedingDocument
-
         return ReviewsPaginatedResponse(
             reviews = reviews.mapNotNull { it.toObject(ReviewFirebaseEntity::class.java) },
             hasMoreItems = hasMoreItems,
         )
+    }
+
+    override suspend fun deleteReview(placeId: String, userId: String) {
+        firebase
+            .collection(COLLECTION_PLACES)
+            .document(placeId)
+            .collection(COLLECTION_REVIEWS)
+            .whereEqualTo(FIELD_USER_ID, userId)
+            .get().await()
+            .documents.first().reference
+            .delete().await()
     }
 
     private fun Query.getGeoHashQuery(bound: PlaceQueryBound): Query {

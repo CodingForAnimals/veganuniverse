@@ -28,6 +28,7 @@ import org.codingforanimals.places.presentation.home.state.PlacesHomeSavedStateH
 import org.codingforanimals.places.presentation.home.state.PlacesState
 import org.codingforanimals.places.presentation.home.state.UserLocationState
 import org.codingforanimals.places.presentation.home.usecase.GetPlacesUseCase
+import org.codingforanimals.places.presentation.model.GetPlacesStatus
 import org.codingforanimals.places.presentation.model.PlaceViewEntity
 import org.codingforanimals.places.presentation.utils.visibleRadius
 import org.codingforanimals.veganuniverse.core.location.LocationResponse
@@ -44,7 +45,6 @@ class PlacesHomeViewModel(
     private val getPlacesUseCase: GetPlacesUseCase,
 ) : ViewModel() {
 
-    private val ioDispatcher = coroutineDispatcherProvider.io()
     private val mainDispatcher = coroutineDispatcherProvider.main()
 
     private var userLocationJob: Job? = null
@@ -206,26 +206,23 @@ class PlacesHomeViewModel(
     private fun refreshPlaces() {
         getPlacesJob?.cancel()
         getPlacesJob = viewModelScope.launch {
-            uiState = uiState.copy(placesState = PlacesState.Loading)
             _sideEffects.send(SideEffect.PartiallyExpand)
             val center = uiState.cameraPositionState.position.target
             val radiusInMeters = uiState.cameraPositionState.visibleRadius()
-            val placesState = withContext(ioDispatcher) {
-                val result = getPlacesUseCase(center, radiusInMeters).getOrNull()
-                if (result != null) {
-                    val filter = uiState.filterState
-                    PlacesState.Success(
-                        rawContent = result,
-                        filterState = filter,
+            getPlacesUseCase(center, radiusInMeters).collectLatest { status ->
+                val placesState = when (status) {
+                    GetPlacesStatus.Error -> PlacesState.Error
+                    GetPlacesStatus.Loading -> PlacesState.Loading
+                    is GetPlacesStatus.Success -> PlacesState.Success(
+                        rawContent = status.places,
+                        filterState = uiState.filterState,
                         searchCenter = center,
                         searchRadiusInMeters = radiusInMeters,
                         zoom = uiState.cameraPositionState.position.zoom,
                     )
-                } else {
-                    PlacesState.Error
                 }
+                uiState = uiState.copy(placesState = placesState)
             }
-            uiState = uiState.copy(placesState = placesState)
         }
     }
 
@@ -331,7 +328,7 @@ class PlacesHomeViewModel(
         object OnSortChipClick : Action()
         object OnFilterDialogDismissRequest : Action()
         data class OnFilterRequest(
-            val newPlaceType: PlaceType?, val newActiveTags: List<PlaceTag>
+            val newPlaceType: PlaceType?, val newActiveTags: List<PlaceTag>,
         ) : Action()
 
         data class OnSortRequest(val newSorter: PlaceSorter) : Action()
