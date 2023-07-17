@@ -1,7 +1,6 @@
 package org.codingforanimals.veganuniverse.core.location
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.content.Context
 import android.location.Location
 import com.google.android.gms.common.api.ResolvableApiException
@@ -13,15 +12,12 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.bind
-import org.koin.dsl.module
+import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
+import org.codingforanimals.veganuniverse.core.location.model.LocationResponse
 
 private const val TAG = "UserLocationManagerImpl"
 
@@ -88,24 +84,4 @@ internal class UserLocationManagerImpl(
         }
         _userLocation.value = userLocationErrorResponse
     }
-}
-
-sealed class LocationResponse {
-    object LocationLoading : LocationResponse()
-    object LocationNotRequested : LocationResponse()
-    object PermissionsNotGranted : LocationResponse()
-    object LocationServiceDisabled : LocationResponse()
-    object UnknownError : LocationResponse()
-    data class LocationGranted(val latitude: Double, val longitude: Double) : LocationResponse()
-}
-
-
-interface UserLocationManager {
-    val userLocation: Flow<LocationResponse>
-    fun fetchUserLocation()
-    fun requestUserEnableLocationService(): Flow<PendingIntent>
-}
-
-val userLocationModule = module {
-    singleOf(::UserLocationManagerImpl) bind UserLocationManager::class
 }

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
+import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.create.presentation.R
 
 private const val TAG = "GetPlaceDataUseCase"

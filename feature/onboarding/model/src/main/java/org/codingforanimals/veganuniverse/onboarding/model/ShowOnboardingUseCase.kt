@@ -1,8 +1,8 @@
 package org.codingforanimals.veganuniverse.onboarding.model
 
 import kotlinx.coroutines.withContext
+import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.onboarding.data.OnboardingDataStoreManager
-import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 
 class ShowOnboardingUseCase(
     private val onboardingDataStoreManager: OnboardingDataStoreManager,

@@ -8,14 +8,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
-import org.codingforanimals.veganuniverse.registration.presentation.di.registrationModule
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationScreen
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailRegistration
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailSignIn
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.Prompt
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreen
 import org.codingforanimals.veganuniverse.registration.presentation.signin.EmailSignInScreen
-import org.koin.core.context.loadKoinModules
 
 sealed class RegistrationDestination(route: String) : Destination(route) {
     object Prompt : RegistrationDestination("registration_prompt")
@@ -31,8 +29,6 @@ fun NavGraphBuilder.registrationGraph(
     navController: NavController,
     navigateToCommunity: () -> Unit,
 ) {
-    loadKoinModules(registrationModule)
-
     composable(
         route = "${Prompt.route}/{$origin_destination}",
         arguments = listOf(navArgument(origin_destination) { type = NavType.StringType }),

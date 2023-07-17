@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.auth.UserRepository
 import org.codingforanimals.veganuniverse.auth.model.LoginResponse
-import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
+import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.registration.presentation.model.EmailSignInStatus
 import org.codingforanimals.veganuniverse.registration.presentation.model.toEmailSignInException
 

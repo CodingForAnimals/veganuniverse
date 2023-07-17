@@ -4,6 +4,6 @@ import org.codingforanimals.veganuniverse.community.presentation.CommunityScreen
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
-internal val communityModule = module {
+val communityFeatureModule = module {
     viewModelOf(::CommunityScreenViewModel)
 }

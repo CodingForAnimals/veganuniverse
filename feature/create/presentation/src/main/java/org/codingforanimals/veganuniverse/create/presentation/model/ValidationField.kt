@@ -4,11 +4,11 @@ import androidx.compose.runtime.Composable
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import org.codingforanimals.veganuniverse.common.utils.areNotBlank
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceMarker
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.core.ui.viewmodel.ValidationField
-import org.codingforanimals.veganuniverse.utils.areNotBlank
 
 data class LocationField(
     val latLng: LatLng? = null,

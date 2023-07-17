@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.model
+package org.codingforanimals.veganuniverse.common
 
 data class Post(
     val title: String,

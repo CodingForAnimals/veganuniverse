@@ -7,6 +7,7 @@ import org.codingforanimals.veganuniverse.services.firebase.auth.GoogleSignInWra
 import org.codingforanimals.veganuniverse.services.firebase.auth.LogoutUseCase
 import org.codingforanimals.veganuniverse.services.firebase.di.firebaseServiceModule
 import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val firebaseAuthModule = module {
@@ -14,5 +15,5 @@ val firebaseAuthModule = module {
     factoryOf(::GmailAuthenticator)
     factoryOf(::GoogleSignInWrapper)
     factoryOf(::LogoutUseCase)
-    factory<EmailAuthenticator> { FirebaseEmailAuthenticator(get()) }
+    factoryOf(::FirebaseEmailAuthenticator) bind EmailAuthenticator::class
 }

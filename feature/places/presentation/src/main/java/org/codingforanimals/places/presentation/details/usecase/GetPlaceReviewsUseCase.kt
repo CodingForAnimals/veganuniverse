@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import org.codingforanimals.places.presentation.model.GetPlaceReviewsStatus
 import org.codingforanimals.places.presentation.model.toViewEntity
 import org.codingforanimals.veganuniverse.auth.UserRepository
-import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
+import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.places.domain.PlacesRepository
 
 private const val TAG = "GetPlaceReviewsUseCase"

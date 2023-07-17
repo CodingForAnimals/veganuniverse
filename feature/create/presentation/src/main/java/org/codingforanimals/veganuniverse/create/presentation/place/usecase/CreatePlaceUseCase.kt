@@ -2,9 +2,9 @@ package org.codingforanimals.veganuniverse.create.presentation.place.usecase
 
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
+import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.create.domain.ContentCreator
-import org.codingforanimals.veganuniverse.create.domain.ContentCreatorException
+import org.codingforanimals.veganuniverse.create.domain.model.ContentCreatorException
 import org.codingforanimals.veganuniverse.create.domain.model.PlaceFormDomainEntity
 
 class CreatePlaceUseCase(

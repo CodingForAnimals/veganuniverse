@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.create.domain
 
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import org.codingforanimals.veganuniverse.create.domain.model.ContentCreatorException
 import org.codingforanimals.veganuniverse.create.domain.model.PlaceFormDomainEntity
 import org.codingforanimals.veganuniverse.create.domain.model.toFirebaseEntity
 
@@ -23,8 +24,4 @@ class ContentCreatorImpl : ContentCreator {
             firebase.collection(PLACES_COLLECTION).add(form.toFirebaseEntity()).await()
             return@runCatching
         }
-}
-
-sealed class ContentCreatorException : Exception() {
-    object AlreadyExistsException : ContentCreatorException()
 }

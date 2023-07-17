@@ -15,7 +15,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-internal val placesModule = module {
+val placesFeatureModule = module {
     includes(placesDomainModule)
     factoryOf(::GetPlacesUseCase)
     singleOf(::PlacesHomeSavedStateHandler)

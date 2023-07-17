@@ -4,6 +4,8 @@ import org.codingforanimals.veganuniverse.places.domain.CurrentPlacesWrapper
 import org.codingforanimals.veganuniverse.places.domain.PlacesRepository
 import org.codingforanimals.veganuniverse.places.domain.PlacesRepositoryImpl
 import org.codingforanimals.veganuniverse.services.firebase.api.places.di.firebasePlacesModule
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val placesDomainModule = module {
@@ -14,5 +16,5 @@ val placesDomainModule = module {
      * Cache will retain
      */
     single { CurrentPlacesWrapper() }
-    factory<PlacesRepository> { PlacesRepositoryImpl(get(), get()) }
+    factoryOf(::PlacesRepositoryImpl) bind PlacesRepository::class
 }

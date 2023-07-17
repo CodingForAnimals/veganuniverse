@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.utils
+package org.codingforanimals.veganuniverse.common.utils
 
 fun areNotBlank(vararg strings: String?): Boolean {
     for (string in strings) {

@@ -7,10 +7,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.codingforanimals.places.presentation.details.PlaceDetailsScreen
-import org.codingforanimals.places.presentation.di.placesModule
 import org.codingforanimals.places.presentation.home.PlacesHomeScreen
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
-import org.koin.core.context.loadKoinModules
 
 sealed class PlacesDestination(route: String) : Destination(route) {
     object Home : PlacesDestination("places_home")
@@ -23,8 +21,6 @@ fun NavGraphBuilder.placesGraph(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
 ) {
-    loadKoinModules(placesModule)
-
     composable(
         route = PlacesDestination.Home.route,
         content = {

@@ -1,13 +1,4 @@
-package org.codingforanimals.veganuniverse.model
-
-import androidx.annotation.DrawableRes
-import org.codingforanimals.veganuniverse.common.R
-
-data class FeaturedTopic(
-    @DrawableRes val imageRes: Int,
-    val description: String?,
-    val posts: List<Post>,
-)
+package org.codingforanimals.veganuniverse.common
 
 private const val TEXTO_PRUEBA =
     "Esta receta es de las mejores que probé, es bastante sencilla, pero requiere de tu tiempo y atención. Ponete una buena canción y hacete un favor con esta receta, creeme que me vas a estar agradeciendo! Para comer vos solo/a o para compartir en familia y amigos!"
@@ -32,19 +23,4 @@ val test_post_list = listOf(
     test_post,
     test_post_with_image,
     test_post,
-)
-
-val featured_topic = FeaturedTopic(
-    imageRes = R.drawable.featured_topic_abc_vegan_test,
-    description = "Los temas más relevantes para quienes se inician en el veganismo",
-    posts = test_post_list,
-)
-
-val featured_topic_list = listOf(
-    featured_topic,
-    featured_topic,
-    featured_topic,
-    featured_topic,
-    featured_topic,
-    featured_topic,
 )

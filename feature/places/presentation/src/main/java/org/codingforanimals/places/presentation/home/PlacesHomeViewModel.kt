@@ -31,12 +31,12 @@ import org.codingforanimals.places.presentation.home.usecase.GetPlacesUseCase
 import org.codingforanimals.places.presentation.model.GetPlacesStatus
 import org.codingforanimals.places.presentation.model.PlaceViewEntity
 import org.codingforanimals.places.presentation.utils.visibleRadius
-import org.codingforanimals.veganuniverse.core.location.LocationResponse
+import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.core.location.UserLocationManager
+import org.codingforanimals.veganuniverse.core.location.model.LocationResponse
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
-import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 
 class PlacesHomeViewModel(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
