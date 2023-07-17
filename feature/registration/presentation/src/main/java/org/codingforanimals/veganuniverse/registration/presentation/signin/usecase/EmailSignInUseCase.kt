@@ -3,11 +3,11 @@ package org.codingforanimals.veganuniverse.registration.presentation.signin.usec
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import org.codingforanimals.veganuniverse.auth.UserRepository
+import org.codingforanimals.veganuniverse.auth.model.LoginResponse
 import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.registration.presentation.model.EmailSignInStatus
 import org.codingforanimals.veganuniverse.registration.presentation.model.toEmailSignInException
-import org.codingforanimals.veganuniverse.user.UserRepository
-import org.codingforanimals.veganuniverse.user.model.LoginResponse
 
 class EmailSignInUseCase(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,

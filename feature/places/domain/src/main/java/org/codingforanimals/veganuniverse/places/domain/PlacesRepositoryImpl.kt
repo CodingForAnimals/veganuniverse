@@ -8,7 +8,7 @@ import org.codingforanimals.veganuniverse.places.domain.model.ReviewsPaginatedRe
 import org.codingforanimals.veganuniverse.places.domain.model.toDomainEntity
 import org.codingforanimals.veganuniverse.places.domain.model.toDto
 import org.codingforanimals.veganuniverse.places.domain.model.toFirebaseQueryParams
-import org.codingforanimals.veganuniverse.services.firebase.places.api.PlacesApi
+import org.codingforanimals.veganuniverse.services.firebase.api.places.PlacesApi
 
 class PlacesRepositoryImpl(
     private val placesApi: PlacesApi,

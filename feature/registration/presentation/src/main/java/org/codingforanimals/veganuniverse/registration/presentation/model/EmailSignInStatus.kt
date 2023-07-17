@@ -26,6 +26,11 @@ sealed class EmailSignInStatus {
             message = R.string.sign_in_invalid_password_message,
         )
 
+        object InvalidUser : Exception(
+            title = R.string.sign_in_invalid_user_title,
+            message = R.string.sign_in_invalid_user_message,
+        )
+
         object ConnectionError : Exception(
             title = R.string.sign_in_connection_error_title,
             message = R.string.sign_in_connection_error_message,

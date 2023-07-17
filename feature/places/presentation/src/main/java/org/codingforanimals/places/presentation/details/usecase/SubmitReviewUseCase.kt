@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.codingforanimals.places.presentation.details.model.SubmitReviewStatus
 import org.codingforanimals.places.presentation.model.toViewEntity
+import org.codingforanimals.veganuniverse.auth.UserRepository
+import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.places.domain.PlacesRepository
 import org.codingforanimals.veganuniverse.places.domain.model.ReviewFormDomainEntity
-import org.codingforanimals.veganuniverse.user.UserRepository
-import org.codingforanimals.veganuniverse.user.model.User
 
 private const val TAG = "SubmitReviewUseCase"
 

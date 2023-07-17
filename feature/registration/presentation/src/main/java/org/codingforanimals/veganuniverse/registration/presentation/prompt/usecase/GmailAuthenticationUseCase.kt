@@ -4,11 +4,11 @@ import android.content.Intent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import org.codingforanimals.veganuniverse.auth.UserRepository
+import org.codingforanimals.veganuniverse.auth.model.RegistrationResponse
 import org.codingforanimals.veganuniverse.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.registration.presentation.model.RegistrationStatus
 import org.codingforanimals.veganuniverse.registration.presentation.model.toUserAuthException
-import org.codingforanimals.veganuniverse.user.UserRepository
-import org.codingforanimals.veganuniverse.user.model.RegistrationResponse
 
 class GmailAuthenticationUseCase(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,

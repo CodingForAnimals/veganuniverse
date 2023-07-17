@@ -1,10 +1,11 @@
 package org.codingforanimals.veganuniverse.services.firebase.di
 
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import org.codingforanimals.veganuniverse.services.firebase.places.di.placesFirebaseModule
+import com.google.firebase.ktx.Firebase
 import org.koin.dsl.module
 
 val firebaseServiceModule = module {
     factory { FirebaseFirestore.getInstance() }
-    includes(placesFirebaseModule)
+    factory { Firebase.auth }
 }

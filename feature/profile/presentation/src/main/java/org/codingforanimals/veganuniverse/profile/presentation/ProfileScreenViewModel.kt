@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.user.UserRepository
+import org.codingforanimals.veganuniverse.auth.UserRepository
 
 class ProfileScreenViewModel(
     private val userRepository: UserRepository,

@@ -12,8 +12,9 @@ dependencies {
     implementation(project(":core:common"))
     bomImplementation(
         Firebase.BOM,
-        listOf(Firebase.FIRESTORE, Firebase.ANALYTICS, Firebase.GEO_FIRE)
+        listOf(Firebase.FIRESTORE, Firebase.ANALYTICS, Firebase.GEO_FIRE, Firebase.AUTH)
     )
+    implementation(Google.AUTH)
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

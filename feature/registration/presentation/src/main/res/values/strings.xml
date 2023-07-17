@@ -21,6 +21,8 @@
     <string name="sign_in_connection_error_message">Ha ocurrido un error de conexión. Verificaste que tengas una buena conexión a internet?</string>
     <string name="sign_in_invalid_password_title">Contraseña inválida</string>
     <string name="sign_in_invalid_password_message">La contraseña que has ingresado no es correcta</string>
+    <string name="sign_in_invalid_user_title">Usuario inválido</string>
+    <string name="sign_in_invalid_user_message">Este usuario es inválido o ha sido deshabilitado para participar de la comunidad de Universo Vegano. Podés intentar con otros datos</string>
     <string name="sign_in_user_not_found_title">Usuario inexistente</string>
     <string name="sign_in_user_not_found_message">No hay un usuario con ese email en Universo Vegano</string>
 

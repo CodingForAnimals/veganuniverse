@@ -11,6 +11,7 @@ android {
 
 dependencies {
     implementation(project(":core:common"))
+    implementation(project(":core:auth"))
     implementation(project(":core:location"))
     implementation(project(":feature:places:domain"))
     implementation(libs.googleMapCompose)

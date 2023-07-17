@@ -55,3 +55,4 @@ include(":feature:search:presentation")
 include(":feature:settings:presentation")
 
 include(":services:firebase")
+include(":core:auth")
