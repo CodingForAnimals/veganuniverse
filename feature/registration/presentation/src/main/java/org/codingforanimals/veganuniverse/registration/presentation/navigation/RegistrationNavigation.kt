@@ -22,6 +22,7 @@ sealed class RegistrationDestination(route: String) : Destination(route) {
 }
 
 private const val origin_destination = "origin_destination_argument"
+const val origin_sub_destination = "origin_sub_destination_argument"
 val NavBackStackEntry.registrationOriginDestination
     get() = arguments?.getString(origin_destination)
 
@@ -31,16 +32,24 @@ fun NavGraphBuilder.registrationGraph(
 ) {
     composable(
         route = "${Prompt.route}/{$origin_destination}",
-        arguments = listOf(navArgument(origin_destination) { type = NavType.StringType }),
+        arguments = listOf(
+            navArgument(origin_destination) {
+                type = NavType.StringType
+            },
+        ),
         content = { backStackEntry ->
             PromptScreen(
                 navigateUp = navController::navigateUp,
                 navigateToEmailRegistration = { navController.navigate(EmailRegistration.route) },
                 navigateToEmailSignIn = { navController.navigate(EmailSignIn.route) },
                 navigateToOriginDestination = {
-                    backStackEntry.registrationOriginDestination?.let { originDestination ->
-                        navController.navigate(originDestination)
-                    } ?: navigateToCommunity()
+                    backStackEntry.registrationOriginDestination?.let { origin ->
+                        val dest = navController.backQueue.map { it.destination.route }
+                            .first { it?.contains(origin) == true }
+                        dest?.let {
+                            navController.popBackStack(route = it, inclusive = false)
+                        } ?: navigateToCommunity()
+                    }
                 }
             )
         },

@@ -26,9 +26,12 @@ import org.codingforanimals.places.presentation.model.GetPlaceDetailsStatus
 import org.codingforanimals.places.presentation.model.GetPlaceReviewsStatus
 import org.codingforanimals.places.presentation.model.ReviewViewEntity
 import org.codingforanimals.places.presentation.navigation.selected_place_id
+import org.codingforanimals.veganuniverse.auth.model.User
+import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
 
 internal class PlaceDetailsViewModel(
     savedStateHandle: SavedStateHandle,
+    getUserStatus: GetUserStatus,
     private val getPlaceDetailsScreenContent: GetPlaceDetailsScreenContent,
     private val getPlaceDetailsUseCase: GetPlaceDetailsUseCase,
     private val getPlaceReviewsUseCase: GetPlaceReviewsUseCase,
@@ -37,7 +40,8 @@ internal class PlaceDetailsViewModel(
 ) : ViewModel() {
 
     private var submitReviewJob: Job? = null
-    private var fetchReviewsJob: Job? = null
+    private var getPlaceReviewsJob: Job? = null
+    private var getMoreReviewsJob: Job? = null
     private var deleteUserReviewJob: Job? = null
 
     private val _sideEffects: Channel<SideEffect> = Channel()
@@ -51,37 +55,41 @@ internal class PlaceDetailsViewModel(
     init {
         viewModelScope.launch {
             getPlaceDetailsUseCase(placeId).collectLatest { status ->
-                when (status) {
+                uiState = when (status) {
                     GetPlaceDetailsStatus.Loading -> {
-                        uiState = uiState.copy(detailsState = DetailsState.Loading)
+                        uiState.copy(detailsState = DetailsState.Loading)
                     }
                     is GetPlaceDetailsStatus.Exception -> {
-                        uiState = uiState.copy(detailsState = DetailsState.Error)
+                        uiState.copy(detailsState = DetailsState.Error)
                     }
                     is GetPlaceDetailsStatus.Success -> {
                         val content = getPlaceDetailsScreenContent(status.place)
-                        uiState = uiState.copy(detailsState = DetailsState.Success(content))
-                        fetchReviews()
+                        uiState.copy(detailsState = DetailsState.Success(content))
                     }
                 }
             }
         }
-    }
-
-    private fun fetchReviews() {
-        fetchReviewsJob?.cancel()
-        fetchReviewsJob = viewModelScope.launch {
-            getPlaceReviewsUseCase(placeId).collectLatest { status ->
-                val state = when (status) {
-                    GetPlaceReviewsStatus.Loading -> ReviewsState.Loading
-                    is GetPlaceReviewsStatus.Exception -> ReviewsState.Error(status.error)
-                    is GetPlaceReviewsStatus.Success -> ReviewsState.Success(
-                        userReview = status.userReview,
-                        otherReviews = status.paginatedReviews,
-                        hasMoreReviews = status.hasMoreReviews,
-                    )
+        viewModelScope.launch {
+            getUserStatus().collectLatest { user ->
+                uiState = uiState.copy(
+                    user = user,
+                    userReviewState = uiState.userReviewState.copy(username = user?.name)
+                )
+                getPlaceReviewsJob?.cancel()
+                getPlaceReviewsJob = launch {
+                    getPlaceReviewsUseCase(placeId).collectLatest { status ->
+                        val state = when (status) {
+                            GetPlaceReviewsStatus.Loading -> ReviewsState.Loading
+                            is GetPlaceReviewsStatus.Exception -> ReviewsState.Error(status.error)
+                            is GetPlaceReviewsStatus.Success -> ReviewsState.Success(
+                                userReview = status.userReview,
+                                otherReviews = status.paginatedReviews,
+                                hasMoreReviews = status.hasMoreReviews,
+                            )
+                        }
+                        uiState = uiState.copy(reviewsState = state)
+                    }
                 }
-                uiState = uiState.copy(reviewsState = state)
             }
         }
     }
@@ -120,6 +128,9 @@ internal class PlaceDetailsViewModel(
                 visible = true
             )
         )
+        if (uiState.user == null) {
+            navigateToAuthenticateScreen()
+        }
     }
 
     private fun updateReviewTitle(title: String) {
@@ -136,8 +147,8 @@ internal class PlaceDetailsViewModel(
     }
 
     private fun getMoreReviews() {
-        fetchReviewsJob?.cancel()
-        fetchReviewsJob = viewModelScope.launch {
+        getMoreReviewsJob?.cancel()
+        getMoreReviewsJob = viewModelScope.launch {
             getPlaceReviewsUseCase.getMoreReviews(placeId).collectLatest { status ->
                 val reviewsState = uiState.reviewsState
                 if (reviewsState !is ReviewsState.Success) return@collectLatest
@@ -183,41 +194,51 @@ internal class PlaceDetailsViewModel(
         }
     }
 
+    private fun navigateToAuthenticateScreen() {
+        viewModelScope.launch {
+            _sideEffects.send(SideEffect.NavigateToAuthenticateScreen(placeId))
+        }
+    }
+
     private fun submitReview() {
-        submitReviewJob?.cancel()
-        submitReviewJob = viewModelScope.launch {
-            submitReviewUseCase(
-                placeId = placeId,
-                rating = uiState.userReviewState.rating,
-                title = uiState.userReviewState.title,
-                description = uiState.userReviewState.description,
-            ).collectLatest { status ->
-                when (status) {
-                    SubmitReviewStatus.Loading -> {
-                        uiState = uiState.copy(
-                            userReviewState = uiState.userReviewState.copy(loading = true),
-                        )
-                    }
-                    is SubmitReviewStatus.Exception -> {
-                        uiState = uiState.copy(
-                            userReviewState = uiState.userReviewState.copy(loading = false),
-                            alertDialog = AlertDialog.Error(
-                                title = status.title,
-                                message = status.message
-                            ),
-                        )
-                    }
-                    is SubmitReviewStatus.Success -> {
-                        when (val reviewsState = uiState.reviewsState) {
-                            is ReviewsState.Success -> {
-                                uiState = uiState.copy(
-                                    userReviewState = UserReviewState(),
-                                    reviewsState = reviewsState.copy(
-                                        userReview = status.reviewViewEntity,
+        if (uiState.user == null) {
+            navigateToAuthenticateScreen()
+        } else {
+            submitReviewJob?.cancel()
+            submitReviewJob = viewModelScope.launch {
+                submitReviewUseCase(
+                    placeId = placeId,
+                    rating = uiState.userReviewState.rating,
+                    title = uiState.userReviewState.title,
+                    description = uiState.userReviewState.description,
+                ).collectLatest { status ->
+                    when (status) {
+                        SubmitReviewStatus.Loading -> {
+                            uiState = uiState.copy(
+                                userReviewState = uiState.userReviewState.copy(loading = true),
+                            )
+                        }
+                        is SubmitReviewStatus.Exception -> {
+                            uiState = uiState.copy(
+                                userReviewState = uiState.userReviewState.copy(loading = false),
+                                alertDialog = AlertDialog.Error(
+                                    title = status.title,
+                                    message = status.message
+                                ),
+                            )
+                        }
+                        is SubmitReviewStatus.Success -> {
+                            when (val reviewsState = uiState.reviewsState) {
+                                is ReviewsState.Success -> {
+                                    uiState = uiState.copy(
+                                        userReviewState = UserReviewState(),
+                                        reviewsState = reviewsState.copy(
+                                            userReview = status.reviewViewEntity,
+                                        )
                                     )
-                                )
+                                }
+                                else -> Unit
                             }
-                            else -> Unit
                         }
                     }
                 }
@@ -231,6 +252,7 @@ internal class PlaceDetailsViewModel(
         val userReviewState: UserReviewState = UserReviewState(),
         val alertDialog: AlertDialog? = null,
         val loading: Boolean = false,
+        val user: User? = null,
     )
 
     sealed class AlertDialog {
@@ -252,6 +274,7 @@ internal class PlaceDetailsViewModel(
 
     data class UserReviewState(
         val rating: Int = 0,
+        val username: String? = null,
         val title: String = "",
         val description: String = "",
         val loading: Boolean = false,
@@ -292,7 +315,7 @@ internal class PlaceDetailsViewModel(
     }
 
     sealed class SideEffect {
-
+        data class NavigateToAuthenticateScreen(val placeId: String) : SideEffect()
     }
 
     companion object {

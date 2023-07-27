@@ -11,9 +11,7 @@ import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.auth.model.toDomainEntity
 import org.codingforanimals.veganuniverse.auth.model.toLoginResponse
 import org.codingforanimals.veganuniverse.auth.model.toRegistrationResponse
-import org.codingforanimals.veganuniverse.services.firebase.auth.EmailAuthenticator
-import org.codingforanimals.veganuniverse.services.firebase.auth.GmailAuthenticator
-import org.codingforanimals.veganuniverse.services.firebase.auth.LogoutUseCase
+import org.codingforanimals.veganuniverse.services.firebase.auth.Authenticator
 import org.codingforanimals.veganuniverse.services.firebase.auth.model.EmailLoginResponse
 import org.codingforanimals.veganuniverse.services.firebase.auth.model.EmailRegistrationResponse
 import org.codingforanimals.veganuniverse.services.firebase.auth.model.ProviderAuthenticationResponse
@@ -21,12 +19,10 @@ import org.codingforanimals.veganuniverse.services.firebase.auth.model.ProviderA
 private const val TAG = "UserRepositoryImpl"
 
 internal class UserRepositoryImpl(
-    private val emailAuthenticator: EmailAuthenticator,
-    private val gmailAuthenticator: GmailAuthenticator,
-    private val logoutUseCase: LogoutUseCase,
+    private val authenticator: Authenticator,
 ) : UserRepository {
 
-    override val gmailAuthIntent: Intent = gmailAuthenticator.intent
+    override val googleSignInIntent: Intent = authenticator.googleSignInIntent
 
     private var _user = MutableStateFlow<User?>(null)
     override val user = _user.asStateFlow()
@@ -35,7 +31,7 @@ internal class UserRepositoryImpl(
         email: String,
         password: String,
     ): LoginResponse {
-        val response = emailAuthenticator.login(email, password)
+        val response = authenticator.emailLogin(email, password)
         when (response) {
             is EmailLoginResponse.Exception -> Unit
             is EmailLoginResponse.Success -> {
@@ -49,7 +45,7 @@ internal class UserRepositoryImpl(
         email: String,
         password: String,
     ): RegistrationResponse {
-        val response = emailAuthenticator.register(email, password)
+        val response = authenticator.emailRegistration(email, password)
         when (response) {
             is EmailRegistrationResponse.Exception -> Unit
             is EmailRegistrationResponse.Success -> {
@@ -60,7 +56,7 @@ internal class UserRepositoryImpl(
     }
 
     override suspend fun authenticateWithGmail(intent: Intent): RegistrationResponse {
-        val response = gmailAuthenticator(intent)
+        val response = authenticator.gmailAuthentication(intent)
         when (response) {
             is ProviderAuthenticationResponse.Exception -> Unit
             is ProviderAuthenticationResponse.Success -> {
@@ -72,7 +68,7 @@ internal class UserRepositoryImpl(
 
     override suspend fun logout(): LogoutResponse {
         return try {
-            logoutUseCase()
+            authenticator.logout()
             _user.emit(null)
             LogoutResponse.Success
         } catch (e: Throwable) {

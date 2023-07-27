@@ -1,7 +1,6 @@
 package org.codingforanimals.places.presentation.details.usecase
 
 import android.util.Log
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.codingforanimals.places.presentation.details.model.DeleteUserReviewStatus
@@ -17,7 +16,6 @@ class DeleteUserReviewUseCase(
     suspend operator fun invoke(placeId: String): Flow<DeleteUserReviewStatus> = flow {
         emit(DeleteUserReviewStatus.Loading)
         try {
-            delay(20000)
             val userId =
                 userRepository.user.value?.id ?: return@flow emit(DeleteUserReviewStatus.Error)
             placesRepository.deleteReview(placeId, userId)

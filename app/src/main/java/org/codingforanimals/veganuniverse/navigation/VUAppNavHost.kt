@@ -99,6 +99,10 @@ internal fun VUAppNavHost(
         placesGraph(
             navController = navController,
             snackbarHostState = snackbarHostState,
+            navigateToAuthenticateScreen = {
+                navController
+                    .navigate("${RegistrationDestination.Prompt.route}/${PlacesDestination.Details.route}")
+            }
         )
         createGraph(
             navController = navController,

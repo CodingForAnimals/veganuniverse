@@ -24,6 +24,7 @@ import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.Ac
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.AlertDialog
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.DetailsState
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.ReviewsState
+import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.SideEffect.NavigateToAuthenticateScreen
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.UiState
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.UserReviewState
 import org.codingforanimals.places.presentation.details.composables.AddressAndOpeningHours
@@ -48,11 +49,13 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun PlaceDetailsScreen(
     onBackClick: () -> Unit,
+    navigateToAuthenticateScreen: (String) -> Unit,
     viewModel: PlaceDetailsViewModel = koinViewModel(),
 ) {
 
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,
+        navigateToAuthenticateScreen = navigateToAuthenticateScreen,
     )
 
     PlaceDetailsScreen(
@@ -203,11 +206,14 @@ private fun PlaceDetails(
 @Composable
 private fun HandleSideEffects(
     sideEffects: Flow<PlaceDetailsViewModel.SideEffect>,
+    navigateToAuthenticateScreen: (String) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         sideEffects.onEach { sideEffect ->
             when (sideEffect) {
-                else -> {}
+                is NavigateToAuthenticateScreen -> {
+                    navigateToAuthenticateScreen(sideEffect.placeId)
+                }
             }
         }.collect()
     }

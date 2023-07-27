@@ -1,11 +1,11 @@
 package org.codingforanimals.places.presentation.details.usecase
 
 import android.util.Log
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.codingforanimals.places.presentation.model.GetPlaceReviewsStatus
+import org.codingforanimals.places.presentation.model.GetUserReviewStatus
 import org.codingforanimals.places.presentation.model.toViewEntity
 import org.codingforanimals.veganuniverse.auth.UserRepository
 import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
@@ -23,7 +23,6 @@ class GetPlaceReviewsUseCase(
 
     suspend operator fun invoke(placeId: String): Flow<GetPlaceReviewsStatus> = flow {
         emit(GetPlaceReviewsStatus.Loading)
-        delay(1000)
         val status = try {
             val userId = userRepository.user.value?.id
             val (userReview, paginationResponse) = withContext(ioDispatcher) {
@@ -45,9 +44,22 @@ class GetPlaceReviewsUseCase(
         emit(status)
     }
 
+    suspend fun getUserReview(placeId: String): Flow<GetUserReviewStatus> = flow {
+        emit(GetUserReviewStatus.Loading)
+        val status = try {
+            val userReview = userRepository.user.value?.id?.let { userId ->
+                withContext(ioDispatcher) { placesRepository.getReview(placeId, userId) }
+            }
+            GetUserReviewStatus.Success(userReview = userReview?.toViewEntity())
+        } catch (e: Throwable) {
+            Log.e(TAG, e.stackTraceToString())
+            GetUserReviewStatus.Exception()
+        }
+        emit(status)
+    }
+
     suspend fun getMoreReviews(placeId: String): Flow<GetPlaceReviewsStatus> = flow {
         emit(GetPlaceReviewsStatus.Loading)
-        delay(1000)
         val status = try {
             val userId = userRepository.user.value?.id
             val paginationResponse = placesRepository.getReviews(placeId)

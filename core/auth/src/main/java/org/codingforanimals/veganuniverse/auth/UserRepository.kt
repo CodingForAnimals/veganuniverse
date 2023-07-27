@@ -9,7 +9,7 @@ import org.codingforanimals.veganuniverse.auth.model.User
 
 interface UserRepository {
     val user: StateFlow<User?>
-    val gmailAuthIntent: Intent
+    val googleSignInIntent: Intent
     suspend fun loginWithEmailAndPassword(email: String, password: String): LoginResponse
     suspend fun createUserWithEmailAndPassword(
         email: String,

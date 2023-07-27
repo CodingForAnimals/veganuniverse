@@ -15,7 +15,7 @@ class GmailAuthenticationUseCase(
     private val userRepository: UserRepository,
 ) {
     private val ioDispatcher = coroutineDispatcherProvider.io()
-    val intent = userRepository.gmailAuthIntent
+    val intent = userRepository.googleSignInIntent
 
     suspend operator fun invoke(intent: Intent): Flow<RegistrationStatus> = flow {
         emit(RegistrationStatus.Loading)

@@ -1,7 +1,6 @@
 package org.codingforanimals.places.presentation.details.usecase
 
 import android.util.Log
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.codingforanimals.places.presentation.details.model.SubmitReviewStatus
@@ -25,7 +24,6 @@ class SubmitReviewUseCase(
     ): Flow<SubmitReviewStatus> =
         flow {
             emit(SubmitReviewStatus.Loading)
-            delay(2000)
             val user = userRepository.user.value
                 ?: return@flow emit(SubmitReviewStatus.Exception.GuestUserException)
             val form = getReviewDomainEntity(rating, title, description, user)

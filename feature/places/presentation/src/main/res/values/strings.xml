@@ -17,6 +17,7 @@
     <string name="place_details_add_review_header_title">Aporta tu reseña</string>
     <string name="place_details_reviews_load_more">Ver más</string>
     <string name="place_details_add_review_submit_button_label">Publicar reseña</string>
+    <string name="place_details_get_user_review_error_message">Ocurrió un error al buscar tu reseña de este lugar</string>
 
     <string name="alert_dialog_delete_review_title">Confirmar acción</string>
     <string name="alert_dialog_delete_review_text">Estás a punto de borrar tu reseña. Podrás dejar una nueva reseña</string>
@@ -24,4 +25,5 @@
     <string name="alert_dialog_report_review_text">Gracias por reportar esta reseña. La revisaremos en breve y tomaremos una desición</string>
     <string name="alert_dialog_report_review_confirm_button_label">Reportar</string>
     <string name="alert_dialog_delete_review_confirm_button_label">Eliminar</string>
+    <string name="place_details_add_review_username_placeholder">Mi usuario</string>
 </resources>

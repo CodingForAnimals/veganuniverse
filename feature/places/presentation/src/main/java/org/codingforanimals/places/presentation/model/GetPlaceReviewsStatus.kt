@@ -15,3 +15,14 @@ sealed class GetPlaceReviewsStatus {
         val hasMoreReviews: Boolean,
     ) : GetPlaceReviewsStatus()
 }
+
+sealed class GetUserReviewStatus {
+    object Loading : GetUserReviewStatus()
+    data class Exception(
+        @StringRes val message: Int = R.string.place_details_get_user_review_error_message,
+    ) : GetUserReviewStatus()
+
+    data class Success(
+        val userReview: ReviewViewEntity?,
+    ) : GetUserReviewStatus()
+}
