@@ -1,7 +1,7 @@
 package org.codingforanimals.places.presentation.model
 
 import androidx.annotation.StringRes
-import org.codingforanimals.places.presentation.R
+import org.codingforanimals.veganuniverse.places.presentation.R
 
 sealed class GetPlaceReviewsStatus {
     object Loading : GetPlaceReviewsStatus()

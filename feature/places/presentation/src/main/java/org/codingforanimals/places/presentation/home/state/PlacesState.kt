@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng
 import org.codingforanimals.places.presentation.model.PlaceViewEntity
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
 
-sealed class PlacesState {
+internal sealed class PlacesState {
     object Error : PlacesState()
     object Loading : PlacesState()
     data class Success(

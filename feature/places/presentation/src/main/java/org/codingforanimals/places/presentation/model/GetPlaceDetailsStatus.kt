@@ -1,9 +1,9 @@
 package org.codingforanimals.places.presentation.model
 
 import androidx.annotation.StringRes
-import org.codingforanimals.places.presentation.R
+import org.codingforanimals.veganuniverse.places.presentation.R
 
-sealed class GetPlaceDetailsStatus {
+internal sealed class GetPlaceDetailsStatus {
     object Loading : GetPlaceDetailsStatus()
     data class Success(val place: PlaceViewEntity) : GetPlaceDetailsStatus()
 

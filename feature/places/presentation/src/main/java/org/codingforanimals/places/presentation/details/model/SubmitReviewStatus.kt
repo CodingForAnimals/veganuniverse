@@ -1,8 +1,8 @@
 package org.codingforanimals.places.presentation.details.model
 
 import androidx.annotation.StringRes
-import org.codingforanimals.places.presentation.R
 import org.codingforanimals.places.presentation.model.ReviewViewEntity
+import org.codingforanimals.veganuniverse.places.presentation.R
 
 sealed class SubmitReviewStatus {
     object Loading : SubmitReviewStatus()

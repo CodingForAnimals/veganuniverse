@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 
-sealed class PlaceDetailsScreenItem {
+internal sealed class PlaceDetailsScreenItem {
     data class Hero(val imageUrl: String) : PlaceDetailsScreenItem()
 
     data class Header(
@@ -15,7 +15,7 @@ sealed class PlaceDetailsScreenItem {
 
     data class AddressAndOpeningHours(
         val address: String,
-        val openingHours: String,
+        val openingHours: List<OpeningHours>,
     ) : PlaceDetailsScreenItem()
 
     data class Description(val description: String) : PlaceDetailsScreenItem()

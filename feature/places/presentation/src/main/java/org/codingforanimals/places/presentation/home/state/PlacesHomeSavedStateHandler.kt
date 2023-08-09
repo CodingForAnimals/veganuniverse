@@ -10,7 +10,16 @@ import com.google.maps.android.compose.CameraPositionState
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel
 import org.codingforanimals.places.presentation.model.PlaceViewEntity
 
-class PlacesHomeSavedStateHandler {
+/**
+ * TODO
+ * this class saves the whole state of the view model
+ * when in reality it should store only the essentials
+ * when initiating the screen, we need to get the places and camera.
+ * based on whether we already have places loaded or not we should fetch new or not
+ * and depending on whether the camera was initialized before we need to
+ * initialize it or not.
+ */
+internal class PlacesHomeSavedStateHandler {
     private var savedState: PlacesHomeSavedState? = null
 
     fun saveState(uiState: PlacesHomeViewModel.UiState) {

@@ -1,5 +1,7 @@
 package org.codingforanimals.veganuniverse.places.domain.model
 
+import org.codingforanimals.veganuniverse.shared.entity.places.OpeningHours
+
 data class PlaceDomainEntity(
     val id: String,
     val imageRef: String,
@@ -15,5 +17,5 @@ data class PlaceDomainEntity(
     val longitude: Double,
     val geoHash: String,
     val timestamp: Long,
-    val openingHours: String,
+    val openingHours: List<OpeningHours>,
 )

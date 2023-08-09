@@ -11,7 +11,7 @@ import org.codingforanimals.veganuniverse.places.domain.PlacesRepository
 
 private const val TAG = "GetPlaceDetailsUseCase"
 
-class GetPlaceDetailsUseCase(
+internal class GetPlaceDetailsUseCase(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val placesRepository: PlacesRepository,
 ) {

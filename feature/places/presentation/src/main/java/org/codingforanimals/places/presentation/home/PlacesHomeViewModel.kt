@@ -38,7 +38,7 @@ import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 
-class PlacesHomeViewModel(
+internal class PlacesHomeViewModel(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val userLocationManager: UserLocationManager,
     private val placesHomeSavedStateHandler: PlacesHomeSavedStateHandler,
@@ -209,6 +209,9 @@ class PlacesHomeViewModel(
             _sideEffects.send(SideEffect.PartiallyExpand)
             val center = uiState.cameraPositionState.position.target
             val radiusInMeters = uiState.cameraPositionState.visibleRadius()
+
+
+
             getPlacesUseCase(center, radiusInMeters).collectLatest { status ->
                 val placesState = when (status) {
                     GetPlacesStatus.Error -> PlacesState.Error

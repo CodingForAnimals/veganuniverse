@@ -11,6 +11,7 @@ android {
 
 dependencies {
     implementation(project(":core:common"))
+    implementation(project(":shared:entity"))
     implementation(project(":feature:create:domain"))
     implementation(libs.googleMapCompose)
     implementation(libs.imageCropper)

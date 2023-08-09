@@ -4,10 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.util.Log
-import com.google.android.gms.common.api.ApiException
+import androidx.annotation.StringRes
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks
 import com.google.android.libraries.places.api.model.DayOfWeek
+import com.google.android.libraries.places.api.model.Period
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.PlacesClient
@@ -18,7 +19,14 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
-import org.codingforanimals.veganuniverse.create.presentation.R
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_friday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_monday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_saturday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_sunday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_thursday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_tuesday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_wednesday
+import org.codingforanimals.veganuniverse.create.presentation.place.model.OpeningHours
 
 private const val TAG = "GetPlaceDataUseCase"
 
@@ -46,33 +54,20 @@ class GetPlaceDataUseCase(
             val streetName = first { it.types.contains(STREET_NAME) }.name
             val streetNumber = first { it.types.contains(STREET_NUMBER) }.name
             val locality = first { it.types.contains(LOCALITY) }.name
-            val province = first { it.types.contains("administrative_area_level_2") }.name
+            val primaryAdminArea = first { it.types.contains(ADMIN_AREA_1) }.name
+            val secondaryAdminArea = first { it.types.contains(ADMIN_AREA_2) }.name
             val country = first { it.types.contains(COUNTRY) }.name
             val latLng = place.latLng!!
             val name = place.name!!
-
-            //TODO this needs correction when the design for opening hours are done
-            val openingHours = mutableListOf<String>()
-            place.openingHours?.periods?.forEach { period ->
-                Log.e("pepe", "$period")
-                val day = period.open?.day?.getDayName(context) ?: return@forEach
-                val openingHour = period.open?.time?.hours ?: return@forEach
-                var openingMinutes = period.open?.time?.minutes?.toString() ?: return@forEach
-                if (openingMinutes == "0") openingMinutes = "00"
-                val closingHour = period.close?.time?.hours ?: return@forEach
-                var closingMinutes = period.close?.time?.minutes?.toString() ?: return@forEach
-                if (closingMinutes == "0") closingMinutes = "00"
-                openingHours.add("$day $openingHour:$openingMinutes - $closingHour:$closingMinutes")
-            }
 
             val establishmentData = GetPlaceDataStatus.EstablishmentData(
                 latLng = latLng,
                 name = name,
                 streetAddress = "$streetName $streetNumber, $locality",
-                province = province,
+                province = secondaryAdminArea,
                 locality = locality,
                 country = country,
-                openingHours = openingHours.joinToString("\n")
+                openingHours = place.openingHours?.periods?.toOpeningHours() ?: emptyList(),
             )
             emit(establishmentData)
         }
@@ -86,7 +81,6 @@ class GetPlaceDataUseCase(
 
     } catch (e: Throwable) {
         when (e) {
-            is ApiException,
             is ExecutionException,
             is InterruptedException,
             -> emit(GetPlaceDataStatus.EstablishmentPictureException)
@@ -127,6 +121,56 @@ class GetPlaceDataUseCase(
         }
     }
 
+    private fun List<Period>.toOpeningHours(): List<OpeningHours> {
+        val googlePeriods = sortedBy { it.open?.time?.hours }.groupBy { it.open?.day }
+        val result = googlePeriods.mapNotNullTo(mutableListOf()) { entry ->
+            try {
+                val day = entry.key!!
+                val mainPeriod = with(entry.value.first()) {
+                    OpeningHours.Period(
+                        openingHour = open!!.time.hours,
+                        openingMinute = open!!.time.minutes,
+                        closingHour = close!!.time.hours,
+                        closingMinute = close!!.time.minutes,
+                    )
+                }
+                val second = entry.value.getOrNull(1)
+                return@mapNotNullTo if (second == null) {
+                    OpeningHours(
+                        dayOfWeek = day,
+                        mainPeriod = mainPeriod,
+                    )
+                } else {
+                    val secondPeriod = OpeningHours.Period(
+                        openingHour = second.open!!.time.hours,
+                        openingMinute = second.open!!.time.minutes,
+                        closingHour = second.close!!.time.hours,
+                        closingMinute = second.close!!.time.minutes,
+                    )
+                    OpeningHours(
+                        dayOfWeek = day,
+                        mainPeriod = mainPeriod,
+                        isSplit = true,
+                        secondaryPeriod = secondPeriod,
+                    )
+                }
+            } catch (e: NullPointerException) {
+                return@mapNotNullTo null
+            }
+        }
+
+        DayOfWeek.values().forEach { day ->
+            if (googlePeriods[day] == null) {
+                val closedDay = OpeningHours(
+                    dayOfWeek = day,
+                    isClosed = true,
+                )
+                result.add(closedDay)
+            }
+        }
+        return result
+    }
+
     private val Place.isEstablishment: Boolean
         get() = types?.contains(Place.Type.ESTABLISHMENT) == true
 
@@ -156,17 +200,18 @@ class GetPlaceDataUseCase(
     }
 }
 
-private fun DayOfWeek.getDayName(context: Context): String {
+@StringRes
+private fun DayOfWeek.getDayName(): Int {
     val dayOfWeekStringRes = when (this) {
-        DayOfWeek.SUNDAY -> R.string.day_of_week_sunday
-        DayOfWeek.MONDAY -> R.string.day_of_week_monday
-        DayOfWeek.TUESDAY -> R.string.day_of_week_tuesday
-        DayOfWeek.WEDNESDAY -> R.string.day_of_week_wednesday
-        DayOfWeek.THURSDAY -> R.string.day_of_week_thursday
-        DayOfWeek.FRIDAY -> R.string.day_of_week_friday
-        DayOfWeek.SATURDAY -> R.string.day_of_week_saturday
+        DayOfWeek.SUNDAY -> day_of_week_sunday
+        DayOfWeek.MONDAY -> day_of_week_monday
+        DayOfWeek.TUESDAY -> day_of_week_tuesday
+        DayOfWeek.WEDNESDAY -> day_of_week_wednesday
+        DayOfWeek.THURSDAY -> day_of_week_thursday
+        DayOfWeek.FRIDAY -> day_of_week_friday
+        DayOfWeek.SATURDAY -> day_of_week_saturday
     }
-    return context.getString(dayOfWeekStringRes)
+    return dayOfWeekStringRes
 }
 
 sealed class GetPlaceDataStatus {
@@ -178,7 +223,7 @@ sealed class GetPlaceDataStatus {
         val province: String,
         val locality: String,
         val country: String,
-        val openingHours: String,
+        val openingHours: List<OpeningHours>,
     ) : GetPlaceDataStatus()
 
     data class EstablishmentPicture(

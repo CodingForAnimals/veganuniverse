@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.common.R.drawable
+import org.codingforanimals.veganuniverse.core.common.R.drawable.featured_topic_abc_vegan_test
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 
 @Composable
@@ -50,7 +50,7 @@ internal fun FeaturedTopicCard(
 private fun PreviewFeaturedTopicCard() {
     VeganUniverseTheme {
         FeaturedTopicCard(
-            imageId = drawable.featured_topic_abc_vegan_test,
+            imageId = featured_topic_abc_vegan_test,
             text = "Topic",
             onClick = {},
         )

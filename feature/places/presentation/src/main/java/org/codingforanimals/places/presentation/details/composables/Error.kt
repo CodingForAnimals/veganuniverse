@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.places.presentation.R
+import org.codingforanimals.veganuniverse.core.common.R.string.back
 import org.codingforanimals.veganuniverse.core.ui.components.VUImage
 import org.codingforanimals.veganuniverse.core.ui.icons.VUImages
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
@@ -59,7 +59,7 @@ internal fun ErrorDialog(
         text = { Text(message) },
         confirmButton = {
             TextButton(onClick = onConfirmButtonClick) {
-                Text(stringResource(R.string.error_dismiss_button_label))
+                Text(stringResource(back))
             }
         },
     )

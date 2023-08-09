@@ -25,26 +25,10 @@ import org.codingforanimals.veganuniverse.core.ui.shared.Post
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
-import org.koin.androidx.compose.koinViewModel
-import org.codingforanimals.veganuniverse.common.R as commonR
+import org.codingforanimals.veganuniverse.core.common.R as commonR
 
 @Composable
-fun CommunityScreen(
-    navigateToRegister: () -> Unit,
-    navigateToFeaturedTopic: (String) -> Unit,
-    navigateToPost: (String) -> Unit,
-    viewModel: CommunityScreenViewModel = koinViewModel(),
-) {
-    CommunityScreen(
-        navigateToRegister = navigateToRegister,
-        navigateToFeaturedTopic = navigateToFeaturedTopic,
-        navigateToPost = navigateToPost,
-    )
-
-}
-
-@Composable
-private fun CommunityScreen(
+internal fun CommunityScreen(
     navigateToRegister: () -> Unit,
     navigateToFeaturedTopic: (String) -> Unit,
     navigateToPost: (String) -> Unit,

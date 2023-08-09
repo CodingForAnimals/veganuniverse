@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@file:OptIn(ExperimentalLayoutApi::class)
 
 package org.codingforanimals.veganuniverse.create.presentation.place
 
@@ -19,15 +19,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,10 +38,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
+import org.codingforanimals.veganuniverse.core.ui.components.VUNormalTextField
 import org.codingforanimals.veganuniverse.core.ui.components.VUSelectableChip
 import org.codingforanimals.veganuniverse.core.ui.components.VUTextField
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
@@ -60,9 +55,8 @@ import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceV
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.UiState
 import org.codingforanimals.veganuniverse.create.presentation.place.composables.IconSelector
 import org.codingforanimals.veganuniverse.create.presentation.place.composables.ImagePicker
+import org.codingforanimals.veganuniverse.create.presentation.place.composables.OpeningHours
 import org.codingforanimals.veganuniverse.create.presentation.place.composables.SearchMap
-import org.codingforanimals.veganuniverse.create.presentation.place.composables.TryAgainAlertDialog
-import org.codingforanimals.veganuniverse.create.presentation.place.entity.CreatePlaceFormItem
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.CreatePlaceFormItem.EnterDescription
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.CreatePlaceFormItem.EnterName
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.CreatePlaceFormItem.EnterOpeningHours
@@ -80,16 +74,6 @@ internal fun CreatePlaceScreen(
     navigateToAlreadyExistingPlace: () -> Unit,
     viewModel: CreatePlaceViewModel = koinViewModel(),
 ) {
-    var isTryAgainDialogVisible by remember { mutableStateOf(false) }
-    if (isTryAgainDialogVisible) {
-        TryAgainAlertDialog(
-            dismissDialog = { isTryAgainDialogVisible = false },
-            tryAgain = {
-                isTryAgainDialogVisible = false
-                viewModel.onAction(Action.OnSubmitClick)
-            },
-        )
-    }
 
     val placesApiLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult(),
@@ -121,7 +105,6 @@ internal fun CreatePlaceScreen(
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,
         onCreateSuccess = onCreateSuccess,
-        showTryAgainDialog = { isTryAgainDialogVisible = true },
         imagePicker = imagePicker,
         addressPicker = placesApiLauncher,
         cameraPositionState = viewModel.uiState.cameraPositionState,
@@ -129,9 +112,8 @@ internal fun CreatePlaceScreen(
     )
 
     CreatePlaceScreen(
-        items = viewModel.createPlaceFormItems,
         uiState = viewModel.uiState,
-        onAction = { viewModel.onAction(it) },
+        onAction = viewModel::onAction,
     )
 
     VUCircularProgressIndicator(visible = viewModel.uiState.isLoading)
@@ -149,7 +131,6 @@ internal fun CreatePlaceScreen(
 
 @Composable
 private fun CreatePlaceScreen(
-    items: List<CreatePlaceFormItem>,
     uiState: UiState,
     onAction: (Action) -> Unit,
 ) {
@@ -158,28 +139,24 @@ private fun CreatePlaceScreen(
         verticalArrangement = Arrangement.spacedBy(Spacing_05)
     ) {
         items(
-            items = items,
+            items = uiState.content,
             itemContent = { item ->
                 when (item) {
                     Map -> SearchMap(uiState = uiState, onAction = onAction)
-                    EnterName -> VUTextField(
+                    EnterName -> VUNormalTextField(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = Spacing_06),
+                        label = "Nombre",
                         value = uiState.nameField.value,
                         onValueChange = { onAction(Action.OnFormChange(name = it)) },
                         isError = uiState.isValidating && !uiState.nameField.isValid,
-                        placeholder = stringResource(R.string.place_name_field_placeholder),
+//                        placeholder = stringResource(R.string.place_name_field_placeholder),
                     )
-                    EnterOpeningHours -> VUTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = Spacing_06),
-                        value = uiState.openingHoursField.value,
-                        onValueChange = { onAction(Action.OnFormChange(openingHours = it)) },
-                        isError = uiState.isValidating && !uiState.openingHoursField.isValid,
-                        placeholder = stringResource(R.string.place_opening_hours_field_placeholder),
-                        leadingIcon = VUIcons.Clock,
+                    EnterOpeningHours -> OpeningHours(
+                        openingHoursField = uiState.openingHoursField,
+                        openingHoursTimePickerState = uiState.openingHoursTimePickerState,
+                        onAction = onAction,
                     )
                     SelectImage -> ImagePicker(
                         onAction = onAction,
@@ -251,7 +228,6 @@ private fun CreatePlaceScreen(
 private fun HandleSideEffects(
     sideEffects: Flow<SideEffect>,
     onCreateSuccess: () -> Unit,
-    showTryAgainDialog: () -> Unit,
     imagePicker: ActivityResultLauncher<PickVisualMediaRequest>,
     addressPicker: ActivityResultLauncher<Intent>,
     cameraPositionState: CameraPositionState,
@@ -262,9 +238,6 @@ private fun HandleSideEffects(
             when (effect) {
                 SideEffect.NavigateToThankYouScreen -> {
                     onCreateSuccess()
-                }
-                SideEffect.ShowTryAgainDialog -> {
-                    showTryAgainDialog()
                 }
                 SideEffect.OpenImageSelector -> {
                     imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -303,8 +276,7 @@ private fun PreviewCreatePlaceScreen() {
                 SubmitButton,
             )
             CreatePlaceScreen(
-                items = items,
-                uiState = UiState(),
+                uiState = UiState(content = items),
                 onAction = {},
             )
         }

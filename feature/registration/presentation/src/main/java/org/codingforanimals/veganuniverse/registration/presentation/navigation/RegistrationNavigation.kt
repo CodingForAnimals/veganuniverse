@@ -69,7 +69,6 @@ fun NavGraphBuilder.registrationGraph(
         route = EmailSignIn.route,
         content = {
             EmailSignInScreen(
-                navigateUp = navController::navigateUp,
                 navigateToOriginDestination = {
                     Log.e("pepe", "start destination ${navController.graph.startDestinationRoute}")
                 }

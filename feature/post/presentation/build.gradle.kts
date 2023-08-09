@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "org.codingforanimals.post.presentation"
+    namespace = "org.codingforanimals.veganuniverse.post.presentation"
 }
 
 dependencies {

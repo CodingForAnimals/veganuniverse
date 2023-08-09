@@ -17,7 +17,7 @@ class MainViewModel(
     private val _uiState: MutableStateFlow<LaunchState> = MutableStateFlow(LaunchState.Loading)
     val uiState: StateFlow<LaunchState> = _uiState
 
-    fun onPermissionsChange(fineLocation: Boolean?, coarseLocation: Boolean?) {
+    fun onPermissionsChange(fineLocation: Boolean?) {
         checkUserState()
         if (fineLocation == true) {
             userLocationManager.fetchUserLocation()

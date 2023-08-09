@@ -26,7 +26,6 @@ fun NavGraphBuilder.featuredTopicGraph(
             navArgument(FeaturedTopicDestination.topicArgument) { type = NavType.StringType }
         )
     ) {
-        val arg = it.arguments?.getString(FeaturedTopicDestination.topicArgument)
         FeaturedTopicScreen(
             onBackClick = onBackClick
         )

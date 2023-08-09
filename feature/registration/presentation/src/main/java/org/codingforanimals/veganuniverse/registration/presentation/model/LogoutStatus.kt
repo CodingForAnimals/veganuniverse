@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.registration.presentation.model
 
 import androidx.annotation.StringRes
-import org.codingforanimals.registration.presentation.R
+import org.codingforanimals.veganuniverse.registration.presentation.R
 
 sealed class LogoutStatus {
     object Loading : LogoutStatus()

@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.places.presentation.R
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.Action
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.AlertDialog
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.DetailsState
@@ -44,6 +43,7 @@ import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTitle
 import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHero
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.places.presentation.R
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -154,7 +154,6 @@ private fun PlaceDetails(
         content = {
             items(
                 items = detailsState.content,
-                key = { it.hashCode() },
                 itemContent = { item ->
                     when (item) {
                         is PlaceDetailsScreenItem.Hero -> ItemDetailHero(

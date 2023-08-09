@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,18 +27,21 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberMarkerState
+import org.codingforanimals.places.presentation.details.model.OpeningHours
 import org.codingforanimals.places.presentation.details.model.PlaceMarker
 import org.codingforanimals.places.presentation.utils.mapStyleJson
+import org.codingforanimals.veganuniverse.core.common.R.string.closed
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
+import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 
 @Composable
 internal fun AddressAndOpeningHours(
     address: String,
-    openingHours: String,
+    openingHours: List<OpeningHours>,
 ) {
     Column(
         modifier = Modifier.padding(horizontal = Spacing_06),
@@ -53,7 +57,26 @@ internal fun AddressAndOpeningHours(
             horizontalArrangement = Arrangement.spacedBy(Spacing_06),
         ) {
             VUIcon(icon = VUIcons.Clock, contentDescription = "")
-            Text(text = openingHours)
+            Column(verticalArrangement = Arrangement.spacedBy(Spacing_03)) {
+                openingHours.forEach { openingHours ->
+                    key(openingHours.dayOfWeek) {
+                        Row {
+                            Text(
+                                modifier = Modifier.weight(1f),
+                                text = stringResource(openingHours.dayOfWeek.day),
+                            )
+                            openingHours.mainPeriod?.let { mainPeriod ->
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(text = mainPeriod.displayPeriod)
+                                    openingHours.secondaryPeriod?.let { secondaryPeriod ->
+                                        Text(text = secondaryPeriod.displayPeriod)
+                                    }
+                                }
+                            } ?: Text(modifier = Modifier.weight(1f), text = stringResource(closed))
+                        }
+                    }
+                }
+            }
         }
     }
 }

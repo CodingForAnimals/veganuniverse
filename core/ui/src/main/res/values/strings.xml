@@ -5,4 +5,12 @@
     <string name="tag_label_delivery">Delivery</string>
     <string name="tag_label_take_away">Take away</string>
     <string name="tag_label_dine_in">Consumo en el lugar</string>
+
+    <string name="day_of_week_sunday">Domingo</string>
+    <string name="day_of_week_monday">Lunes</string>
+    <string name="day_of_week_tuesday">Martes</string>
+    <string name="day_of_week_wednesday">Miércoles</string>
+    <string name="day_of_week_thursday">Jueves</string>
+    <string name="day_of_week_friday">Viernes</string>
+    <string name="day_of_week_saturday">Sábado</string>
 </resources>

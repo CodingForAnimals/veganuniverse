@@ -3,7 +3,7 @@ package org.codingforanimals.veganuniverse.create.presentation.place.error
 import androidx.annotation.StringRes
 import org.codingforanimals.veganuniverse.create.presentation.R
 
-sealed class CreatePlaceErrorDialog(@StringRes val title: Int, @StringRes val message: Int) {
+open class CreatePlaceErrorDialog(@StringRes val title: Int, @StringRes val message: Int) {
     object UnknownErrorDialog : CreatePlaceErrorDialog(
         title = R.string.error_title_unknown,
         message = R.string.error_message_unknown,

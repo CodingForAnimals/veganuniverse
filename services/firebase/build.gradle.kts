@@ -10,6 +10,7 @@ android {
 
 dependencies {
     implementation(project(":core:common"))
+    implementation(project(":shared:entity"))
     bomImplementation(
         Firebase.BOM,
         listOf(Firebase.FIRESTORE, Firebase.ANALYTICS, Firebase.GEO_FIRE, Firebase.AUTH)

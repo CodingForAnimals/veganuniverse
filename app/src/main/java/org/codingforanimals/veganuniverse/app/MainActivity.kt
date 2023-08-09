@@ -57,8 +57,7 @@ class MainActivity : ComponentActivity() {
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
             val fineLocation = permissions[ACCESS_FINE_LOCATION]
-            val coarseLocation = permissions[ACCESS_COARSE_LOCATION]
-            mainViewModel.onPermissionsChange(fineLocation, coarseLocation)
+            mainViewModel.onPermissionsChange(fineLocation)
         }
 
         locationPermissionRequest.launch(

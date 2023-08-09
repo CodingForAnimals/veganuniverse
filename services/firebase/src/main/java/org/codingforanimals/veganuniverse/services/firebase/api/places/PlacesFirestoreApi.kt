@@ -46,20 +46,6 @@ class PlacesFirestoreApi(
                 }
             }
         }
-//        Tasks.whenAllComplete(tasks)
-//        for (task in tasks) {
-//            task.result.documents.forEach { doc ->
-//                try {
-//                    val card = doc.toObject(PlaceFirebaseEntity::class.java) ?: return@forEach
-//                    result.add(card)
-//                } catch (e: Throwable) {
-//                    Log.e(
-//                        "PlacesFirestoreApi.kt",
-//                        "Unable to parse object. Msg: ${e.stackTraceToString()}"
-//                    )
-//                }
-//            }
-//        }
         return result
     }
 
@@ -159,7 +145,7 @@ class PlacesFirestoreApi(
     }
 
     companion object {
-        private const val COLLECTION_PLACES = "/content/places/cards"
+        private const val COLLECTION_PLACES = "/content/places/items"
         private const val COLLECTION_REVIEWS = "reviews"
         private const val FIELD_TIMESTAMP = "timestamp"
         private const val FIELD_GEO_HASH = "geoHash"

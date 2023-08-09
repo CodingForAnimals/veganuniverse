@@ -36,13 +36,13 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.registration.presentation.R
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_08
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_09
+import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.icons.RegisterIcons
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreenViewModel.Action
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewmodel.AuthProvider

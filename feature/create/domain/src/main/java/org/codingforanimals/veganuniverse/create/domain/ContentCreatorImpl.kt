@@ -6,7 +6,7 @@ import org.codingforanimals.veganuniverse.create.domain.model.ContentCreatorExce
 import org.codingforanimals.veganuniverse.create.domain.model.PlaceFormDomainEntity
 import org.codingforanimals.veganuniverse.create.domain.model.toFirebaseEntity
 
-private const val PLACES_COLLECTION = "/content/places/cards"
+private const val PLACES_COLLECTION = "/content/places/items"
 
 class ContentCreatorImpl : ContentCreator {
 

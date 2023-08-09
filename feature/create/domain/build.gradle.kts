@@ -5,11 +5,12 @@ plugins {
 }
 
 android {
-    namespace = "org.codingforanimals.veganuniverse.create.data"
+    namespace = "org.codingforanimals.veganuniverse.create.domain"
 }
 
 dependencies {
     implementation(project(":core:common"))
+    implementation(project(":shared:entity"))
     bomImplementation(
         Firebase.BOM,
         listOf(Firebase.FIRESTORE, Firebase.ANALYTICS)

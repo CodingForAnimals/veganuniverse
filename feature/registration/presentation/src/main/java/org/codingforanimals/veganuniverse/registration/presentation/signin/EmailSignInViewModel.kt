@@ -6,9 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.core.ui.viewmodel.areFieldsValid
 import org.codingforanimals.veganuniverse.registration.presentation.model.EmailSignInStatus
@@ -23,9 +20,6 @@ class EmailSignInViewModel(
 ) : ViewModel() {
 
     val content = getEmailSignInScreenContent()
-
-    private val _sideEffects: Channel<SideEffect> = Channel()
-    val sideEffects: Flow<SideEffect> = _sideEffects.receiveAsFlow()
 
     var uiState by mutableStateOf(UiState())
         private set
@@ -105,9 +99,5 @@ class EmailSignInViewModel(
 
         object OnSignInButtonClick : Action()
         object OnErrorDialogDismissRequest : Action()
-    }
-
-    sealed class SideEffect {
-
     }
 }

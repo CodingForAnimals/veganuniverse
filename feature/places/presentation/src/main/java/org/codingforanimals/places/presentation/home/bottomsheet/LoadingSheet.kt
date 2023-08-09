@@ -32,11 +32,6 @@ private fun Modifier.loadingPlaceholder() = composed {
 
 @Composable
 internal fun LoadingSheet() {
-    val placeholder = Modifier.placeholder(
-        visible = true,
-        color = MaterialTheme.colorScheme.surface,
-        highlight = PlaceholderHighlight.shimmer(MaterialTheme.colorScheme.surfaceVariant)
-    )
     Column {
         Row(
             modifier = Modifier.padding(horizontal = Spacing_04),

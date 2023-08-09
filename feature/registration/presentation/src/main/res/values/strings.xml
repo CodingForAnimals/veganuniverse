@@ -14,7 +14,6 @@
     <string name="register_error_user_already_exists_message">Ya hay un usuario con ese correo</string>
     <string name="register_error_invalid_credentials_title">Error en el formulario</string>
     <string name="register_error_invalid_credentials_message">Los campos en el formulario no son correctos. Por favor revisalos</string>
-    <string name="register_error_dismiss_button_label">Volver</string>
     <string name="register_error_invalid_user_title">Error al crear usuario</string>
     <string name="register_error_invalid_user_message">Este usuario es inválido o ha sido deshabilitado para participar de la comunidad de Universo Vegano. Podés intentar con otros datos</string>
     <string name="sign_in_connection_error_title">Error de conexión</string>

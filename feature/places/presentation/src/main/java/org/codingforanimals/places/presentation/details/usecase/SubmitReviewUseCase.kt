@@ -32,7 +32,7 @@ class SubmitReviewUseCase(
                 if (existingUserReview != null) {
                     return@flow emit(SubmitReviewStatus.Exception.ReviewAlreadyExists)
                 }
-                val uploadedReview = placesRepository.submitReview(placeId, form).toViewEntity()!!
+                val uploadedReview = placesRepository.submitReview(placeId, form).toViewEntity()
                 emit(SubmitReviewStatus.Success(uploadedReview))
             } catch (e: Throwable) {
                 Log.e(TAG, e.stackTraceToString())

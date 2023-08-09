@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.places.presentation.R
 import org.codingforanimals.places.presentation.details.model.DeleteUserReviewStatus
 import org.codingforanimals.places.presentation.details.model.PlaceDetailsScreenItem
 import org.codingforanimals.places.presentation.details.model.SubmitReviewStatus
@@ -28,6 +27,7 @@ import org.codingforanimals.places.presentation.model.ReviewViewEntity
 import org.codingforanimals.places.presentation.navigation.selected_place_id
 import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
+import org.codingforanimals.veganuniverse.places.presentation.R
 
 internal class PlaceDetailsViewModel(
     savedStateHandle: SavedStateHandle,

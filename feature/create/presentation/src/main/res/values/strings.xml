@@ -22,11 +22,9 @@
     <string name="place_already_exists_error_dialog_title">Este lugar ya existe</string>
     <string name="place_already_exists_error_dialog_message">La ubicación seleccionada ya ha sido utilizada para un lugar</string>
 
-    <string name="day_of_week_sunday">Domingo</string>
-    <string name="day_of_week_monday">Lunes</string>
-    <string name="day_of_week_tuesday">Martes</string>
-    <string name="day_of_week_wednesday">Miércoles</string>
-    <string name="day_of_week_thursday">Jueves</string>
-    <string name="day_of_week_friday">Viernes</string>
-    <string name="day_of_week_saturday">Sábado</string>
+    <string name="place_opening_hours_open_close_connector">a</string>
+    <string name="invalid_address_message">La dirección ingresada es inválida</string>
+    <string name="invalid_location_message">Ubicación en el mapa inválida</string>
+    <string name="empty_type_message">Tenés que seleccionar un tipo de ícono</string>
+    <string name="empty_name_message">El nombre del lugar no puede estar vacío</string>
 </resources>

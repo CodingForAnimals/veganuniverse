@@ -7,6 +7,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
@@ -44,6 +45,44 @@ fun VUTextField(
             { Text(text = placeholder) }
         },
         shape = ShapeDefaults.Medium,
+        colors = VUTextFieldDefaults.colors(),
+        leadingIcon = leadingIcon?.let {
+            {
+                VUIcon(
+                    icon = leadingIcon,
+                    contentDescription = ""
+                )
+            }
+        },
+        maxLines = maxLines,
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+    )
+}
+
+@Composable
+fun VUNormalTextField(
+    modifier: Modifier = Modifier,
+    label: String? = null,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String? = null,
+    isError: Boolean = false,
+    leadingIcon: Icon? = null,
+    maxLines: Int = Int.MAX_VALUE,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+) {
+    TextField(
+        modifier = modifier,
+        label = label?.let { { Text(label) } },
+        value = value,
+        onValueChange = onValueChange,
+        isError = isError,
+        placeholder = placeholder?.let { { Text(text = placeholder) } },
+//        shape = ShapeDefaults.Medium,
         colors = VUTextFieldDefaults.colors(),
         leadingIcon = leadingIcon?.let {
             {

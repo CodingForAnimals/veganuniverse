@@ -5,7 +5,6 @@
 
     <string name="error_unknown_failure_title">Oops, ocurrió un error</string>
     <string name="error_unknown_failure_message">Ocurrió un error inesperado. Podés volver a intentarlo</string>
-    <string name="error_dismiss_button_label">Volver</string>
 
     <string name="empty_reviews_message">No tenemos reseñas para este lugar, ¡Todavía! Si conoces este lugar, dejanos tu opinión</string>
     <string name="submit_review_error_guest_user_title">Necesitas ser usuario registrado</string>

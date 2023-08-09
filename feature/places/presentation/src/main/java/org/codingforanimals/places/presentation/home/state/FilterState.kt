@@ -5,7 +5,7 @@ import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 
-data class FilterState(
+internal data class FilterState(
     val activePlaceType: PlaceType? = null,
     val activePlaceTags: List<PlaceTag> = emptyList(),
     val sorter: PlaceSorter = PlaceSorter.RATING,

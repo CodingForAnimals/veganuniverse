@@ -11,7 +11,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
-import com.google.maps.android.compose.CameraPositionState
 import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.places.presentation.navigation.placesGraph
 import org.codingforanimals.post.presentation.navigation.navigateToPost
@@ -46,21 +45,8 @@ internal fun rememberVUNavController(): NavHostController {
 internal fun VUAppNavHost(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    cameraPositionState: CameraPositionState,
     startDestination: Destination = CommunityDestination,
 ) {
-    // estoy tratando de encontrar una solucion.
-    // el problema es que si este viewmodel es un singleton,
-    // pierde la referencia del composable que es su view lifecycle owner
-    // entonces todos los viewmodelscope.launch no funcionan
-    // pero si a este lo inicio desde aca, estoy violando varios principios
-    // parece una solucion rapida pero ya trae problemas en la interfaz
-    // una posible solucion a considerar es llevar parte del estado
-    // y guardarlo en unas clases que sean data class
-    // y que eso sea lo singleton
-    // y que el viewmodel en la creacion lea de ese estado
-    // y actue como corresponde.
-
     NavHost(
         navController = navController,
         startDestination = startDestination.route,

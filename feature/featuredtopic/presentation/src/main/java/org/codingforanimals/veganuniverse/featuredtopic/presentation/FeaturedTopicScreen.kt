@@ -13,8 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import org.codingforanimals.veganuniverse.common.R
 import org.codingforanimals.veganuniverse.common.test_post_list
+import org.codingforanimals.veganuniverse.core.common.R.drawable.featured_topic_abc_vegan_test
 import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.shared.Post
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
@@ -36,7 +36,7 @@ internal fun FeaturedTopicScreen(
             item {
                 Image(
                     modifier = Modifier.padding(vertical = Spacing_06),
-                    painter = painterResource(R.drawable.featured_topic_abc_vegan_test),
+                    painter = painterResource(featured_topic_abc_vegan_test),
                     contentDescription = "ABC Vegano imágen",
                 )
             }

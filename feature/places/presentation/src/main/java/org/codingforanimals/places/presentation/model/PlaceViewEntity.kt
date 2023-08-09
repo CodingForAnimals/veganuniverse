@@ -1,11 +1,12 @@
 package org.codingforanimals.places.presentation.model
 
 import com.google.maps.android.compose.MarkerState
+import org.codingforanimals.places.presentation.details.model.OpeningHours
 import org.codingforanimals.places.presentation.details.model.PlaceMarker
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 
-data class PlaceViewEntity(
+internal data class PlaceViewEntity(
     val id: String,
     val imageRef: String,
     val description: String,
@@ -19,5 +20,5 @@ data class PlaceViewEntity(
     val state: MarkerState,
     val marker: PlaceMarker,
     val timestamp: Long,
-    val openingHours: String,
+    val openingHours: List<OpeningHours>,
 )

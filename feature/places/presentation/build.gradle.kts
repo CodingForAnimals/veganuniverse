@@ -6,13 +6,14 @@ plugins {
 }
 
 android {
-    namespace = "org.codingforanimals.places.presentation"
+    namespace = "org.codingforanimals.veganuniverse.places.presentation"
 }
 
 dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:auth"))
     implementation(project(":core:location"))
+    implementation(project(":shared:entity"))
     implementation(project(":feature:places:domain"))
     implementation(libs.googleMapCompose)
 

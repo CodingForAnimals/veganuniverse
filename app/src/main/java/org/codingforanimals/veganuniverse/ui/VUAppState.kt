@@ -3,13 +3,9 @@ package org.codingforanimals.veganuniverse.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.rememberCameraPositionState
-import kotlinx.coroutines.CoroutineScope
 import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
@@ -25,14 +21,10 @@ import org.codingforanimals.veganuniverse.ui.topappbar.TopBarAction
 @Composable
 internal fun rememberVUAppState(
     navController: NavHostController = rememberVUNavController(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    cameraPositionState: CameraPositionState = rememberCameraPositionState(),
 ): VUAppState {
-    return remember(coroutineScope, navController, cameraPositionState) {
+    return remember(navController) {
         VUAppState(
             navController,
-            coroutineScope,
-            cameraPositionState,
         )
     }
 }
@@ -40,8 +32,6 @@ internal fun rememberVUAppState(
 @Stable
 class VUAppState(
     val navController: NavHostController,
-    val coroutineScope: CoroutineScope,
-    val cameraPositionState: CameraPositionState,
 ) {
 
     val topBarActions: List<TopBarAction> = listOf(

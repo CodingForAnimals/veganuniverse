@@ -60,7 +60,6 @@ internal fun VUApp(
                 VUAppNavHost(
                     navController = appState.navController,
                     snackbarHostState = snackbarHostState,
-                    cameraPositionState = appState.cameraPositionState,
                 )
             }
         }

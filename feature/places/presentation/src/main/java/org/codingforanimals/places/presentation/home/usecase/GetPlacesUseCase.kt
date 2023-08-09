@@ -11,7 +11,7 @@ import org.codingforanimals.veganuniverse.places.domain.model.PlaceLocationQuery
 
 private const val TAG = "GetPlacesUseCase"
 
-class GetPlacesUseCase(
+internal class GetPlacesUseCase(
     private val placesRepository: PlacesRepository,
 ) {
     suspend operator fun invoke(

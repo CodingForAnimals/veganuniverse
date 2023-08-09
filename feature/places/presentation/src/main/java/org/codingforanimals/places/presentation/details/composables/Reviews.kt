@@ -38,7 +38,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.places.presentation.R
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.Action
 import org.codingforanimals.places.presentation.details.PlaceDetailsViewModel.UserReviewState
@@ -57,6 +56,7 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.places.presentation.R
 
 @Composable
 internal fun Reviews(

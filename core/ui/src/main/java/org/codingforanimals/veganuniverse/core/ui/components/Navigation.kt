@@ -14,7 +14,6 @@ fun RowScope.BottomNavBarItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
-    label: @Composable (() -> Unit)? = null,
 ) {
     NavigationBarItem(
         modifier = modifier,

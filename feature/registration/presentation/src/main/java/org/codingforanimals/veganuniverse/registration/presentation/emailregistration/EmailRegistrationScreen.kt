@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.registration.presentation.R
+import org.codingforanimals.veganuniverse.core.common.R.string.back
 import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.core.ui.components.VUTextField
 import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
@@ -50,6 +50,7 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_07
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationViewModel.Action
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationViewModel.UiState
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.usecase.GetEmailRegistrationScreenContent
@@ -91,7 +92,7 @@ internal fun EmailRegistrationScreen(
             text = { Text(stringResource(errorDialog.message)) },
             confirmButton = {
                 TextButton(onClick = onDismissRequest) {
-                    Text(stringResource(R.string.register_error_dismiss_button_label))
+                    Text(stringResource(back))
                 }
             },
         )

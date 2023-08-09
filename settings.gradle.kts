@@ -56,3 +56,5 @@ include(":feature:settings:presentation")
 
 include(":services:firebase")
 include(":core:auth")
+
+include(":shared:entity")

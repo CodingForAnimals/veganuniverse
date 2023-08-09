@@ -10,7 +10,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 
-private val defaultIconSize = 24.dp
+private val defaultIconSize = 20.dp
 
 @Composable
 fun VUIcon(

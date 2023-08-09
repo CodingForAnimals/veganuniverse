@@ -3,7 +3,9 @@ package org.codingforanimals.places.presentation.model
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
+import org.codingforanimals.places.presentation.details.model.DayOfWeek
 import org.codingforanimals.places.presentation.details.model.Markers
+import org.codingforanimals.places.presentation.details.model.OpeningHours
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.places.domain.model.PlaceDomainEntity
@@ -25,7 +27,7 @@ internal fun PlaceDomainEntity.toViewEntity(): PlaceViewEntity? {
         state = MarkerState(LatLng(latitude, longitude)),
         marker = getMarker(type),
         timestamp = timestamp,
-        openingHours = "",
+        openingHours = openingHours.toViewEntity(),
     )
 }
 
@@ -56,12 +58,35 @@ private fun getType(type: String): PlaceType? {
     }
 }
 
-fun ReviewDomainEntity.toViewEntity(): ReviewViewEntity? {
+internal fun List<org.codingforanimals.veganuniverse.shared.entity.places.OpeningHours>.toViewEntity(): List<OpeningHours> =
+    mapNotNull { it.toViewEntity() }
+
+internal fun org.codingforanimals.veganuniverse.shared.entity.places.OpeningHours.toViewEntity(): OpeningHours? {
+    return try {
+        OpeningHours(
+            dayOfWeek = DayOfWeek.valueOf(dayOfWeek),
+            mainPeriod = mainPeriod?.toViewEntity(),
+            secondaryPeriod = secondaryPeriod?.toViewEntity(),
+        )
+    } catch (e: Throwable) {
+        null
+    }
+}
+
+private fun org.codingforanimals.veganuniverse.shared.entity.places.OpeningHours.Period.toViewEntity() =
+    OpeningHours.Period(
+        openingHour = openingHour,
+        openingMinute = openingMinute,
+        closingHour = closingHour,
+        closingMinute = closingMinute
+    )
+
+fun ReviewDomainEntity.toViewEntity(): ReviewViewEntity {
     return ReviewViewEntity(
         username = username,
         rating = rating,
         title = title,
         description = description,
-        timestamp = timestamp?.toString() ?: return null
+        timestamp = timestamp.toString()
     )
 }

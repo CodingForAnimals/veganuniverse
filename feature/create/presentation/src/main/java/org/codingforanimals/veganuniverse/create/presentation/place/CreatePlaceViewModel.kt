@@ -1,10 +1,13 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package org.codingforanimals.veganuniverse.create.presentation.place
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.activity.result.ActivityResult
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.model.DayOfWeek
 import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -28,15 +32,20 @@ import org.codingforanimals.veganuniverse.create.presentation.model.AddressField
 import org.codingforanimals.veganuniverse.create.presentation.model.LocationField
 import org.codingforanimals.veganuniverse.create.presentation.model.SelectedTagsField
 import org.codingforanimals.veganuniverse.create.presentation.model.TypeField
-import org.codingforanimals.veganuniverse.create.presentation.place.entity.toPlaceForm
+import org.codingforanimals.veganuniverse.create.presentation.place.entity.CreatePlaceFormItem
+import org.codingforanimals.veganuniverse.create.presentation.place.entity.toDomainEntity
 import org.codingforanimals.veganuniverse.create.presentation.place.error.CreatePlaceErrorDialog
+import org.codingforanimals.veganuniverse.create.presentation.place.model.GetFormStatus
+import org.codingforanimals.veganuniverse.create.presentation.place.model.OpeningHours
+import org.codingforanimals.veganuniverse.create.presentation.place.model.OpeningHoursField
+import org.codingforanimals.veganuniverse.create.presentation.place.model.PeriodEnd
+import org.codingforanimals.veganuniverse.create.presentation.place.model.PeriodType
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.CreatePlaceUseCase
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetAutoCompleteIntentUseCase
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetCreatePlaceScreenContent
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetPlaceDataStatus
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetPlaceDataUseCase
-
-private const val TAG = "CreatePlaceViewModel"
+import org.codingforanimals.veganuniverse.create.presentation.place.utils.createGeoHash
 
 internal class CreatePlaceViewModel(
     getCreatePlaceScreenContent: GetCreatePlaceScreenContent,
@@ -45,14 +54,11 @@ internal class CreatePlaceViewModel(
     private val createPlaceUseCase: CreatePlaceUseCase,
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(UiState())
+    var uiState by mutableStateOf(UiState(content = getCreatePlaceScreenContent()))
+        private set
 
     private val _sideEffects: Channel<SideEffect> = Channel()
     val sideEffects: Flow<SideEffect> = _sideEffects.receiveAsFlow()
-
-    var icon: Bitmap? = null
-
-    val createPlaceFormItems = getCreatePlaceScreenContent()
 
     fun onAction(action: Action) {
         when (action) {
@@ -62,6 +68,13 @@ internal class CreatePlaceViewModel(
             is Action.OnPlaceSelected -> getPlaceData(action.activityResult)
             is Action.OnFormChange -> onFormChange(action)
             Action.OnSubmitClick -> onSubmitClick()
+            Action.OnOpeningHoursEditButtonClick -> openOpeningHoursEditDialog()
+            Action.OnOpeningHoursDismissEditDialog -> dismissOpeningHoursEditDialog()
+            Action.OnTimePickerDismissed -> updateSelectedPeriod()
+            is Action.EditPeriodButtonClick -> openTimePickerOnSelectedPeriod(action)
+            is Action.OnDayOpenCloseSwitchClick -> updateDayOpenCloseStatus(action.day)
+            is Action.OnChangeSplitPeriodClick -> updateDaySplitStatus(action.day)
+            Action.OnHideExpandOpeningHoursClick -> updateHideExpandOpeningHoursState()
         }
     }
 
@@ -107,7 +120,7 @@ internal class CreatePlaceViewModel(
             is GetPlaceDataStatus.EstablishmentData -> with(placeDataStatus) {
                 uiState = uiState.copy(
                     nameField = StringField(name),
-                    openingHoursField = StringField(openingHours),
+                    openingHoursField = OpeningHoursField(openingHours = openingHours),
                     locationField = LocationField(latLng),
                     addressField = AddressField(
                         streetAddress = streetAddress,
@@ -156,7 +169,6 @@ internal class CreatePlaceViewModel(
                 uiState = uiState.copy(addressField = uiState.addressField.copy(streetAddress = it))
             }
             name?.let { uiState = uiState.copy(nameField = StringField(it)) }
-            openingHours?.let { uiState = uiState.copy(openingHoursField = StringField(it)) }
             type?.let { uiState = uiState.copy(typeField = TypeField(it)) }
             description?.let { uiState = uiState.copy(descriptionField = StringField(it)) }
             tag?.let {
@@ -167,14 +179,39 @@ internal class CreatePlaceViewModel(
     }
 
     private fun onSubmitClick() {
-        val form = uiState.toPlaceForm()
-        if (form == null) {
-            uiState = uiState.copy(
-                isValidating = true,
-                errorDialog = CreatePlaceErrorDialog.InvalidFormErrorDialog,
+        when (val result = getPlaceForm()) {
+            GetFormStatus.Error -> {
+                uiState = uiState.copy(
+                    isValidating = true,
+                    errorDialog = CreatePlaceErrorDialog.InvalidFormErrorDialog
+                )
+            }
+            is GetFormStatus.Success -> {
+                submitForm(result.form)
+            }
+        }
+    }
+
+    private fun getPlaceForm(): GetFormStatus {
+        return try {
+            val latLng = uiState.locationField.latLng!!
+            val addressComponents = uiState.addressField.toDomainEntity()!!
+            val form = PlaceFormDomainEntity(
+                name = uiState.nameField.value.ifEmpty { throw Exception() },
+                addressComponents = addressComponents,
+                description = uiState.descriptionField.value,
+                openingHours = uiState.openingHoursField.sortedOpeningHours.toDomainEntity(),
+                type = uiState.typeField.value?.name!!,
+                latitude = latLng.latitude,
+                longitude = latLng.longitude,
+                geoHash = latLng.createGeoHash(),
+                tags = uiState.selectedTagsField.tags.map { it.name },
             )
-        } else {
-            submitForm(form)
+            GetFormStatus.Success(
+                form = form
+            )
+        } catch (e: Throwable) {
+            GetFormStatus.Error
         }
     }
 
@@ -208,13 +245,125 @@ internal class CreatePlaceViewModel(
         }
     }
 
+    private fun openOpeningHoursEditDialog() {
+        uiState = uiState.copy(
+            openingHoursField = uiState.openingHoursField.copy(isEditing = true),
+        )
+    }
+
+    private fun dismissOpeningHoursEditDialog() {
+        uiState = uiState.copy(
+            openingHoursField = uiState.openingHoursField.copy(isEditing = false),
+        )
+    }
+
+    private fun updateSelectedPeriod() {
+        uiState.openingHoursTimePickerState?.let { state ->
+            val updatedHour = state.state.hour
+            val updatedMinute = state.state.minute
+            val day =
+                uiState.openingHoursField.sortedOpeningHours.first { it.dayOfWeek == state.dayOfWeek }
+            val updatedDay = when {
+                state.periodEnd == PeriodEnd.FROM && state.periodType == PeriodType.MAIN -> day.copy(
+                    mainPeriod = day.mainPeriod.copy(
+                        openingHour = updatedHour,
+                        openingMinute = updatedMinute,
+                    )
+                )
+                state.periodEnd == PeriodEnd.TO && state.periodType == PeriodType.MAIN -> day.copy(
+                    mainPeriod = day.mainPeriod.copy(
+                        closingHour = updatedHour,
+                        closingMinute = updatedMinute,
+                    )
+                )
+                state.periodEnd == PeriodEnd.FROM && state.periodType == PeriodType.SECONDARY -> day.copy(
+                    secondaryPeriod = day.secondaryPeriod.copy(
+                        openingHour = updatedHour,
+                        openingMinute = updatedMinute,
+                    )
+                )
+                state.periodEnd == PeriodEnd.TO && state.periodType == PeriodType.SECONDARY -> day.copy(
+                    secondaryPeriod = day.secondaryPeriod.copy(
+                        closingHour = updatedHour,
+                        closingMinute = updatedMinute,
+                    )
+                )
+                else -> OpeningHours(day.dayOfWeek)
+            }
+            val updatedOpeningHours = uiState.openingHoursField.sortedOpeningHours.toMutableList()
+            if (updatedOpeningHours.remove(day)) {
+                updatedOpeningHours.add(updatedDay)
+            }
+            uiState = uiState.copy(
+                openingHoursField = uiState.openingHoursField.copy(openingHours = updatedOpeningHours),
+                openingHoursTimePickerState = null,
+            )
+        }
+    }
+
+    private fun openTimePickerOnSelectedPeriod(action: Action.EditPeriodButtonClick) {
+        val day = uiState.openingHoursField.sortedOpeningHours.first { it.dayOfWeek == action.day }
+        val period = when (action.periodType) {
+            PeriodType.MAIN -> day.mainPeriod
+            PeriodType.SECONDARY -> day.secondaryPeriod
+        }
+        val (hours, minutes) = when (action.periodEnd) {
+            PeriodEnd.FROM -> Pair(period.openingHour, period.openingMinute)
+            PeriodEnd.TO -> Pair(period.closingHour, period.closingMinute)
+        }
+        val state = OpeningHoursTimePickerState(
+            dayOfWeek = action.day,
+            periodEnd = action.periodEnd,
+            periodType = action.periodType,
+            state = TimePickerState(hours, minutes, true)
+        )
+        uiState = uiState.copy(openingHoursTimePickerState = state)
+    }
+
+    private fun updateDayOpenCloseStatus(dayOfWeek: DayOfWeek) {
+        val day = uiState.openingHoursField.sortedOpeningHours.first { it.dayOfWeek == dayOfWeek }
+        val updatedDay = day.copy(isClosed = !day.isClosed)
+        val list = uiState.openingHoursField.sortedOpeningHours.toMutableList()
+        if (list.remove(day)) {
+            list.add(updatedDay)
+        }
+        val newOpeningHours = uiState.openingHoursField.copy(openingHours = list)
+        uiState = uiState.copy(openingHoursField = newOpeningHours)
+    }
+
+    private fun updateDaySplitStatus(dayOfWeek: DayOfWeek) {
+        val day = uiState.openingHoursField.sortedOpeningHours.first { it.dayOfWeek == dayOfWeek }
+        val newDay = day.copy(isSplit = !day.isSplit)
+        val list = uiState.openingHoursField.sortedOpeningHours.toMutableList()
+        if (list.remove(day)) {
+            list.add(newDay)
+        }
+        val newOpeningHours = uiState.openingHoursField.copy(openingHours = list)
+        uiState = uiState.copy(openingHoursField = newOpeningHours)
+    }
+
+    private fun updateHideExpandOpeningHoursState() {
+        val openingHours = uiState.openingHoursField
+        val updatedOpeningHours = openingHours.copy(isExpanded = !openingHours.isExpanded)
+        uiState = uiState.copy(openingHoursField = updatedOpeningHours)
+    }
+
+    data class OpeningHoursTimePickerState(
+        val dayOfWeek: DayOfWeek,
+        val periodEnd: PeriodEnd,
+        val periodType: PeriodType,
+        val state: TimePickerState,
+    )
+
     data class UiState(
+        val content: List<CreatePlaceFormItem> = emptyList(),
         val cameraPositionState: CameraPositionState = CameraPositionState(defaultCameraPosition),
         val errorDialog: CreatePlaceErrorDialog? = null,
         val locationField: LocationField = LocationField(),
         val addressField: AddressField = AddressField(),
         val nameField: StringField = StringField(),
-        val openingHoursField: StringField = StringField(),
+        val openingHoursField: OpeningHoursField = OpeningHoursField(),
+        val openingHoursTimePickerState: OpeningHoursTimePickerState? = null,
         val pictureField: PictureField = PictureField(),
         val typeField: TypeField = TypeField(),
         val descriptionField: StringField = StringField(),
@@ -243,16 +392,28 @@ internal class CreatePlaceViewModel(
         ) : Action()
 
         object OnSubmitClick : Action()
+        object OnOpeningHoursEditButtonClick : Action()
+        object OnOpeningHoursDismissEditDialog : Action()
         object OnImagePickerClick : Action()
         object OnSearchMapClick : Action()
         data class OnPlaceSelected(val activityResult: ActivityResult) : Action()
         object OnErrorDialogDismissRequest : Action()
+        object OnTimePickerDismissed : Action()
+        data class EditPeriodButtonClick(
+            val day: DayOfWeek,
+            val periodEnd: PeriodEnd,
+            val periodType: PeriodType,
+        ) : Action()
+
+        object OnHideExpandOpeningHoursClick : Action()
+
+        data class OnDayOpenCloseSwitchClick(val day: DayOfWeek) : Action()
+        data class OnChangeSplitPeriodClick(val day: DayOfWeek) : Action()
     }
 
     sealed class SideEffect {
         object NavigateToThankYouScreen : SideEffect()
         object NavigateToAlreadyExistingPlace : SideEffect()
-        object ShowTryAgainDialog : SideEffect()
         object OpenImageSelector : SideEffect()
         data class OpenAutoCompleteOverlay(val autocompleteIntent: Intent) : SideEffect()
         data class ZoomInLocation(private val latLng: LatLng) : SideEffect() {

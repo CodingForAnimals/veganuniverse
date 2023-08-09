@@ -16,25 +16,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.registration.presentation.R
+import org.codingforanimals.veganuniverse.core.common.R.string.back
 import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.core.ui.components.VUTextField
 import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_07
+import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.signin.EmailSignInViewModel.Action
-import org.codingforanimals.veganuniverse.registration.presentation.signin.EmailSignInViewModel.SideEffect
 import org.codingforanimals.veganuniverse.registration.presentation.signin.EmailSignInViewModel.UiState
 import org.codingforanimals.veganuniverse.registration.presentation.signin.viewmodel.EmailSignInScreenItem
 import org.koin.androidx.compose.koinViewModel
@@ -42,13 +38,9 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun EmailSignInScreen(
-    navigateUp: () -> Unit,
     navigateToOriginDestination: () -> Unit,
     viewModel: EmailSignInViewModel = koinViewModel(),
 ) {
-    HandleSideEffects(
-        sideEffects = viewModel.sideEffects,
-    )
 
     Column {
         VUTopAppBar(
@@ -73,7 +65,7 @@ internal fun EmailSignInScreen(
             text = { Text(stringResource(errorDialog.message)) },
             confirmButton = {
                 TextButton(onClick = onDismissRequest) {
-                    Text(stringResource(R.string.register_error_dismiss_button_label))
+                    Text(stringResource(back))
                 }
             },
         )
@@ -140,17 +132,4 @@ private fun EmailSignInScreen(
             )
         },
     )
-}
-
-@Composable
-private fun HandleSideEffects(
-    sideEffects: Flow<SideEffect>,
-) {
-    LaunchedEffect(Unit) {
-        sideEffects.onEach { sideEffect ->
-            when (sideEffect) {
-                else -> {}
-            }
-        }.collect()
-    }
 }

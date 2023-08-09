@@ -2,8 +2,11 @@ package org.codingforanimals.veganuniverse.core.ui.icons
 
 import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -48,6 +51,7 @@ object VUIcons {
     val Edit = DrawableResourceIcon(R.drawable.ic_pencil)
     val Pictures = DrawableResourceIcon(R.drawable.ic_pictures)
     val Check = DrawableResourceIcon(R.drawable.ic_check)
+    val Add = ImageVectorIcon(Icons.Default.Add)
 
     // Icons used in tags mainly
     val Restaurant = DrawableResourceIcon(R.drawable.ic_restaurant)
@@ -83,6 +87,8 @@ object VUIcons {
     val MarkerStore = DrawableResourceIcon(R.drawable.ic_marker_store)
     val MarkerStoreSelected = DrawableResourceIcon(R.drawable.ic_marker_store_selected)
     val ArrowUpward = ImageVectorIcon(Icons.Rounded.ArrowUpward)
+    val ArrowDropUp = ImageVectorIcon(Icons.Rounded.ArrowDropUp)
+    val ArrowDropDown = ImageVectorIcon(Icons.Rounded.ArrowDropDown)
 
     // Registration icons
     val Email = DrawableResourceIcon(R.drawable.ic_email)

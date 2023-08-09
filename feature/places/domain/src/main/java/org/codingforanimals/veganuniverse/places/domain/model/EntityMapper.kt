@@ -21,7 +21,7 @@ fun PlaceFirebaseEntity.toDomainEntity(): PlaceDomainEntity? {
         longitude = longitude,
         geoHash = geoHash,
         timestamp = timestampSeconds ?: return null,
-        openingHours = "Lu a Vie 9 a 23hs"
+        openingHours = openingHours,
     )
 }
 

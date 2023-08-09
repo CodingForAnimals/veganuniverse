@@ -10,6 +10,7 @@ android {
 
 dependencies {
     implementation(project(":core:common"))
+    implementation(project(":shared:entity"))
     implementation(project(":services:firebase"))
 
     testImplementation("junit:junit:4.13.2")
