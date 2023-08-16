@@ -21,6 +21,40 @@ object versions {
     const val googleMapServices = "18.1.0"
 }
 
+object Module {
+    object Core {
+        const val COMMON = ":core:common"
+        const val DATASTORE = ":core:datastore"
+        const val UI = ":core:ui"
+        const val LOCATION = ":core:location"
+        const val AUTH = ":core:auth"
+    }
+    object Entity {
+        const val PLACES = ":entity:places"
+    }
+    object Services {
+        object Firebase {
+            const val BASE = ":services:firebase"
+            const val AUTH = ":services:firebase:auth"
+            const val PLACES = ":services:firebase:places"
+        }
+    }
+    object Feature {
+        object Places {
+            const val DOMAIN = ":feature:places:domain"
+            const val PRESENTATION = ":feature:places:presentation"
+        }
+        object Create {
+            const val DOMAIN = ":feature:create:domain"
+            const val PRESENTATION = ":feature:create:presentation"
+        }
+    }
+}
+
+object Android {
+    const val DATASTORE = "androidx.datastore:datastore-preferences:${versions.datastore}"
+}
+
 object Firebase {
     const val BOM = "com.google.firebase:firebase-bom:32.1.1"
     const val FIRESTORE = "com.google.firebase:firebase-firestore-ktx"
@@ -32,6 +66,23 @@ object Firebase {
 
 object Google {
     const val AUTH = "com.google.android.gms:play-services-auth:20.5.0"
+    const val GSON = "com.google.code.gson:gson:2.10.1"
+    const val PLACES = "com.google.android.libraries.places:places:3.2.0"
+
+    const val MAPS_COMPOSE = "com.google.maps.android:maps-compose:2.8.0"
+    const val MAPS_UTILS = "com.google.maps.android:android-maps-utils:2.3.0"
+    const val PLAY_SERVICES_MAPS = "com.google.android.gms:play-services-maps:18.1.0"
+    const val PLAY_SERVICES_LOCATION = "com.google.android.gms:play-services-location:21.0.1"
+    val MAPS = listOf(
+        MAPS_COMPOSE,
+        MAPS_UTILS,
+        PLAY_SERVICES_MAPS,
+        PLAY_SERVICES_LOCATION,
+    )
+}
+
+object Other {
+    const val IMAGE_CROPPER = "com.vanniktech:android-image-cropper:4.5.0"
 }
 
 object libs {
@@ -64,14 +115,7 @@ object libs {
         "com.google.android.gms:play-services-location:21.0.1",
     )
 
-    const val googleServicesLocation = "com.google.android.gms:play-services-location:21.0.1"
-
-    const val imageCropper = "com.vanniktech:android-image-cropper:4.5.0"
-
     const val placeholder = "com.google.accompanist:accompanist-placeholder-material:0.29.1-alpha"
-
-    const val preferencesDatastore =
-        "androidx.datastore:datastore-preferences:${versions.datastore}"
 
     const val permissionsCompose =
         "com.google.accompanist:accompanist-permissions:${versions.accompanist}"

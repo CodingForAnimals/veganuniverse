@@ -72,12 +72,14 @@ import org.koin.androidx.compose.koinViewModel
 internal fun CreatePlaceScreen(
     onCreateSuccess: () -> Unit,
     navigateToAlreadyExistingPlace: () -> Unit,
+    navigateToAuthenticateScreen: () -> Unit,
     viewModel: CreatePlaceViewModel = koinViewModel(),
 ) {
 
-    val placesApiLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult(),
-            onResult = { viewModel.onAction(Action.OnPlaceSelected(it)) })
+    val placesApiLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { viewModel.onAction(Action.OnPlaceSelected(it)) },
+    )
 
     val cropImage = rememberLauncherForActivityResult(
         contract = CropImageContract(),
@@ -109,6 +111,7 @@ internal fun CreatePlaceScreen(
         addressPicker = placesApiLauncher,
         cameraPositionState = viewModel.uiState.cameraPositionState,
         navigateToAlreadyExistingPlace = navigateToAlreadyExistingPlace,
+        navigateToAuthenticateScreen = navigateToAuthenticateScreen,
     )
 
     CreatePlaceScreen(
@@ -232,6 +235,7 @@ private fun HandleSideEffects(
     addressPicker: ActivityResultLauncher<Intent>,
     cameraPositionState: CameraPositionState,
     navigateToAlreadyExistingPlace: () -> Unit,
+    navigateToAuthenticateScreen: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         sideEffects.onEach { effect ->
@@ -254,6 +258,9 @@ private fun HandleSideEffects(
                 }
                 SideEffect.NavigateToAlreadyExistingPlace -> {
                     navigateToAlreadyExistingPlace()
+                }
+                SideEffect.NavigateToAuthenticateScreen -> {
+                    navigateToAuthenticateScreen()
                 }
             }
         }.collect()

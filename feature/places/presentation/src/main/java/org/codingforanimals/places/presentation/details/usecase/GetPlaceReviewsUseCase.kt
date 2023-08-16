@@ -34,7 +34,7 @@ class GetPlaceReviewsUseCase(
                 userReview = userReview?.toViewEntity(),
                 paginatedReviews = paginationResponse.reviews
                     .filterNot { it.userId == userId }
-                    .mapNotNull { it.toViewEntity() },
+                    .map { it.toViewEntity() },
                 hasMoreReviews = paginationResponse.hasMoreItems,
             )
         } catch (e: Throwable) {
@@ -66,7 +66,7 @@ class GetPlaceReviewsUseCase(
             GetPlaceReviewsStatus.Success(
                 paginatedReviews = paginationResponse.reviews
                     .filterNot { it.userId == userId }
-                    .mapNotNull { it.toViewEntity() },
+                    .map { it.toViewEntity() },
                 hasMoreReviews = paginationResponse.hasMoreItems,
             )
         } catch (e: Throwable) {

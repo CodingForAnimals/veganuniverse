@@ -6,9 +6,8 @@ import kotlinx.coroutines.flow.flow
 import org.codingforanimals.places.presentation.details.model.SubmitReviewStatus
 import org.codingforanimals.places.presentation.model.toViewEntity
 import org.codingforanimals.veganuniverse.auth.UserRepository
-import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.places.domain.PlacesRepository
-import org.codingforanimals.veganuniverse.places.domain.model.ReviewFormDomainEntity
+import org.codingforanimals.veganuniverse.places.entity.PlaceReviewForm
 
 private const val TAG = "SubmitReviewUseCase"
 
@@ -26,7 +25,13 @@ class SubmitReviewUseCase(
             emit(SubmitReviewStatus.Loading)
             val user = userRepository.user.value
                 ?: return@flow emit(SubmitReviewStatus.Exception.GuestUserException)
-            val form = getReviewDomainEntity(rating, title, description, user)
+            val form = PlaceReviewForm(
+                userId = user.id,
+                username = user.name,
+                rating = rating,
+                title = title,
+                description = description?.ifBlank { null }
+            )
             try {
                 val existingUserReview = placesRepository.getReview(placeId, user.id)
                 if (existingUserReview != null) {
@@ -39,19 +44,4 @@ class SubmitReviewUseCase(
                 emit(SubmitReviewStatus.Exception.UnknownException)
             }
         }
-
-    private fun getReviewDomainEntity(
-        rating: Int,
-        title: String,
-        description: String?,
-        user: User,
-    ): ReviewFormDomainEntity {
-        return ReviewFormDomainEntity(
-            userId = user.id,
-            username = user.name,
-            rating = rating,
-            title = title,
-            description = description?.ifBlank { null },
-        )
-    }
 }

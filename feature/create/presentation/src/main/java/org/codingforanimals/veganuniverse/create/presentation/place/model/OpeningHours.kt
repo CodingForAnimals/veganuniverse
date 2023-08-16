@@ -8,14 +8,14 @@ import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_sunday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_thursday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_tuesday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_wednesday
-import org.codingforanimals.veganuniverse.core.ui.utils.formatTimeToString
+import org.codingforanimals.veganuniverse.places.entity.Period
 
 data class OpeningHours(
     val dayOfWeek: DayOfWeek,
     val isClosed: Boolean = false,
     val isSplit: Boolean = false,
-    val mainPeriod: Period = Period.defaultPeriod(),
-    val secondaryPeriod: Period = Period.defaultPeriod(),
+    val mainPeriod: Period = defaultPeriod(),
+    val secondaryPeriod: Period = defaultPeriod(),
 ) {
 
     val dayStringRes = when (dayOfWeek) {
@@ -28,22 +28,7 @@ data class OpeningHours(
         DayOfWeek.SATURDAY -> day_of_week_saturday
     }
 
-    data class Period(
-        val openingHour: Int,
-        val openingMinute: Int,
-        val closingHour: Int,
-        val closingMinute: Int,
-    ) {
-        companion object {
-            fun defaultPeriod() = Period(9, 0, 20, 0)
-        }
-
-        val fromDisplayPeriod: String =
-            "${openingHour.formatTimeToString()}:${openingMinute.formatTimeToString()}"
-
-        val toDisplayPeriod: String =
-            "${closingHour.formatTimeToString()}:${closingMinute.formatTimeToString()}"
-
-        val displayPeriod: String = "$fromDisplayPeriod-$toDisplayPeriod"
+    companion object {
+        fun defaultPeriod() = Period(9, 0, 20, 0)
     }
 }

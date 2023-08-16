@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.codingforanimals.places.presentation.entity.PlaceViewEntity
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel
 import org.codingforanimals.places.presentation.home.PlacesHomeViewModel.Action
 import org.codingforanimals.places.presentation.home.composables.FilterDialog
@@ -26,7 +27,6 @@ import org.codingforanimals.places.presentation.home.composables.PlaceCard
 import org.codingforanimals.places.presentation.home.composables.SortDialog
 import org.codingforanimals.places.presentation.home.state.FilterState
 import org.codingforanimals.places.presentation.home.state.PlacesState
-import org.codingforanimals.places.presentation.model.PlaceViewEntity
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChipDefaults
 import org.codingforanimals.veganuniverse.core.ui.components.VUImage
@@ -50,11 +50,7 @@ internal fun SuccessSheet(
         if (it && selectedPlace != null) {
             val selectedPlaceCardBorder = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
             PlaceCard(
-                name = selectedPlace.name,
-                type = selectedPlace.type,
-                rating = selectedPlace.rating,
-                address = selectedPlace.address,
-                city = selectedPlace.city,
+                placeViewEntity = selectedPlace,
                 onCardClick = { onAction(Action.OnPlaceClick(selectedPlace)) },
                 border = selectedPlaceCardBorder,
             )
@@ -130,11 +126,7 @@ private fun ContentSuccessSheet(
                 items = placesState.content,
                 itemContent = { place ->
                     PlaceCard(
-                        name = place.name,
-                        type = place.type,
-                        rating = place.rating,
-                        address = place.address,
-                        city = place.city,
+                        placeViewEntity = place,
                         onCardClick = { onAction(Action.OnPlaceClick(place)) },
                     )
                 }

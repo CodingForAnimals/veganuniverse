@@ -92,7 +92,10 @@ internal fun VUAppNavHost(
         )
         createGraph(
             navController = navController,
-            navigateToPlaceDetails = { navController.navigate(PlacesDestination.Details.route) }
+            navigateToPlaceDetails = { navController.navigate(PlacesDestination.Details.route) },
+            navigateToAuthenticateScreen = {
+                navController.navigate("${RegistrationDestination.Prompt.route}/${CreateDestination.route}")
+            }
         )
         recipesGraph(
             navController = navController,

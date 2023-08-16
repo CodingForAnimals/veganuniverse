@@ -10,12 +10,13 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":core:auth"))
-    implementation(project(":core:location"))
-    implementation(project(":shared:entity"))
-    implementation(project(":feature:places:domain"))
-    implementation(libs.googleMapCompose)
+    implementation(project(Module.Core.COMMON))
+    implementation(project(Module.Core.UI))
+    implementation(project(Module.Core.AUTH))
+    implementation(project(Module.Core.LOCATION))
+    implementation(project(Module.Entity.PLACES))
+    implementation(project(Module.Feature.Places.DOMAIN))
+    implementation(Google.MAPS)
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

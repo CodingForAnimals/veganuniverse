@@ -1,11 +1,7 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.usecase
 
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.util.Log
-import androidx.annotation.StringRes
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks
 import com.google.android.libraries.places.api.model.DayOfWeek
 import com.google.android.libraries.places.api.model.Period
@@ -19,20 +15,14 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
-import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_friday
-import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_monday
-import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_saturday
-import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_sunday
-import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_thursday
-import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_tuesday
-import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_wednesday
+import org.codingforanimals.veganuniverse.common.utils.emptyString
+import org.codingforanimals.veganuniverse.create.presentation.place.model.GetPlaceDataStatus
 import org.codingforanimals.veganuniverse.create.presentation.place.model.OpeningHours
 
 private const val TAG = "GetPlaceDataUseCase"
 
 class GetPlaceDataUseCase(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
-    private val context: Context,
     private val placesClient: PlacesClient,
 ) {
 
@@ -53,6 +43,11 @@ class GetPlaceDataUseCase(
         with(place.addressComponents!!.asList()) {
             val streetName = first { it.types.contains(STREET_NAME) }.name
             val streetNumber = first { it.types.contains(STREET_NUMBER) }.name
+            val streetAddress = if (streetName.isBlank() && streetNumber.isBlank()) {
+                emptyString
+            } else {
+                "$streetName, $streetNumber"
+            }
             val locality = first { it.types.contains(LOCALITY) }.name
             val primaryAdminArea = first { it.types.contains(ADMIN_AREA_1) }.name
             val secondaryAdminArea = first { it.types.contains(ADMIN_AREA_2) }.name
@@ -63,9 +58,10 @@ class GetPlaceDataUseCase(
             val establishmentData = GetPlaceDataStatus.EstablishmentData(
                 latLng = latLng,
                 name = name,
-                streetAddress = "$streetName $streetNumber, $locality",
-                province = secondaryAdminArea,
+                streetAddress = streetAddress,
                 locality = locality,
+                primaryAdminArea = primaryAdminArea,
+                secondaryAdminArea = secondaryAdminArea,
                 country = country,
                 openingHours = place.openingHours?.periods?.toOpeningHours() ?: emptyList(),
             )
@@ -127,7 +123,7 @@ class GetPlaceDataUseCase(
             try {
                 val day = entry.key!!
                 val mainPeriod = with(entry.value.first()) {
-                    OpeningHours.Period(
+                    org.codingforanimals.veganuniverse.places.entity.Period(
                         openingHour = open!!.time.hours,
                         openingMinute = open!!.time.minutes,
                         closingHour = close!!.time.hours,
@@ -141,12 +137,13 @@ class GetPlaceDataUseCase(
                         mainPeriod = mainPeriod,
                     )
                 } else {
-                    val secondPeriod = OpeningHours.Period(
-                        openingHour = second.open!!.time.hours,
-                        openingMinute = second.open!!.time.minutes,
-                        closingHour = second.close!!.time.hours,
-                        closingMinute = second.close!!.time.minutes,
-                    )
+                    val secondPeriod =
+                        org.codingforanimals.veganuniverse.places.entity.Period(
+                            openingHour = second.open!!.time.hours,
+                            openingMinute = second.open!!.time.minutes,
+                            closingHour = second.close!!.time.hours,
+                            closingMinute = second.close!!.time.minutes,
+                        )
                     OpeningHours(
                         dayOfWeek = day,
                         mainPeriod = mainPeriod,
@@ -198,45 +195,4 @@ class GetPlaceDataUseCase(
 
         private const val COUNTRY = "country"
     }
-}
-
-@StringRes
-private fun DayOfWeek.getDayName(): Int {
-    val dayOfWeekStringRes = when (this) {
-        DayOfWeek.SUNDAY -> day_of_week_sunday
-        DayOfWeek.MONDAY -> day_of_week_monday
-        DayOfWeek.TUESDAY -> day_of_week_tuesday
-        DayOfWeek.WEDNESDAY -> day_of_week_wednesday
-        DayOfWeek.THURSDAY -> day_of_week_thursday
-        DayOfWeek.FRIDAY -> day_of_week_friday
-        DayOfWeek.SATURDAY -> day_of_week_saturday
-    }
-    return dayOfWeekStringRes
-}
-
-sealed class GetPlaceDataStatus {
-    object Loading : GetPlaceDataStatus()
-    data class EstablishmentData(
-        val latLng: LatLng,
-        val name: String,
-        val streetAddress: String,
-        val province: String,
-        val locality: String,
-        val country: String,
-        val openingHours: List<OpeningHours>,
-    ) : GetPlaceDataStatus()
-
-    data class EstablishmentPicture(
-        val bitmap: Bitmap,
-    ) : GetPlaceDataStatus()
-
-    data class StreetAddressData(
-        val latLng: LatLng,
-        val address: String,
-    ) : GetPlaceDataStatus()
-
-    object MissingCriticalFieldException : GetPlaceDataStatus()
-    object EstablishmentPictureException : GetPlaceDataStatus()
-    object PlaceTypeException : GetPlaceDataStatus()
-    object UnknownException : GetPlaceDataStatus()
 }

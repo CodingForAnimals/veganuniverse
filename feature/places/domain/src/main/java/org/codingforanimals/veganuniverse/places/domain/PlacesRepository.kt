@@ -1,20 +1,20 @@
 package org.codingforanimals.veganuniverse.places.domain
 
-import org.codingforanimals.veganuniverse.places.domain.model.PlaceDomainEntity
-import org.codingforanimals.veganuniverse.places.domain.model.PlaceLocationQueryParams
-import org.codingforanimals.veganuniverse.places.domain.model.ReviewDomainEntity
-import org.codingforanimals.veganuniverse.places.domain.model.ReviewFormDomainEntity
-import org.codingforanimals.veganuniverse.places.domain.model.ReviewsPaginatedResponseDTO
+import org.codingforanimals.veganuniverse.places.entity.GeoLocationQueryParams
+import org.codingforanimals.veganuniverse.places.entity.Place
+import org.codingforanimals.veganuniverse.places.entity.PlaceReview
+import org.codingforanimals.veganuniverse.places.entity.PlaceReviewForm
+import org.codingforanimals.veganuniverse.places.entity.ReviewsPaginatedResponse
 
 interface PlacesRepository {
-    suspend fun getPlaces(params: PlaceLocationQueryParams): List<PlaceDomainEntity>
-    fun getPlace(id: String): PlaceDomainEntity
-    suspend fun getReview(placeId: String, userId: String): ReviewDomainEntity?
-    suspend fun getReviews(placeId: String): ReviewsPaginatedResponseDTO
+    suspend fun getPlaces(params: GeoLocationQueryParams): List<Place>
+    fun getPlace(id: String): Place
+    suspend fun getReview(placeId: String, userId: String): PlaceReview?
+    suspend fun getReviews(placeId: String): ReviewsPaginatedResponse
     suspend fun submitReview(
         placeId: String,
-        reviewForm: ReviewFormDomainEntity,
-    ): ReviewDomainEntity
+        placeReviewForm: PlaceReviewForm,
+    ): PlaceReview
 
-    suspend fun deleteReview(placeId: String, userId: String)
+    suspend fun deleteReview(placeId: String, reviewId: String)
 }

@@ -29,6 +29,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberMarkerState
 import org.codingforanimals.places.presentation.details.model.OpeningHours
 import org.codingforanimals.places.presentation.details.model.PlaceMarker
+import org.codingforanimals.places.presentation.utils.fullStreetAddress
 import org.codingforanimals.places.presentation.utils.mapStyleJson
 import org.codingforanimals.veganuniverse.core.common.R.string.closed
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
@@ -37,10 +38,11 @@ import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
+import org.codingforanimals.veganuniverse.places.entity.AddressComponents
 
 @Composable
 internal fun AddressAndOpeningHours(
-    address: String,
+    addressComponents: AddressComponents,
     openingHours: List<OpeningHours>,
 ) {
     Column(
@@ -51,7 +53,7 @@ internal fun AddressAndOpeningHours(
             horizontalArrangement = Arrangement.spacedBy(Spacing_04),
         ) {
             VUIcon(icon = VUIcons.Location, contentDescription = "")
-            Text(text = address)
+            Text(text = addressComponents.fullStreetAddress)
         }
         Row(
             horizontalArrangement = Arrangement.spacedBy(Spacing_06),

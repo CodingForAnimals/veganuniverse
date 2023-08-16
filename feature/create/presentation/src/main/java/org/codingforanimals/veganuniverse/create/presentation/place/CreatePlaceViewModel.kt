@@ -27,15 +27,15 @@ import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.core.ui.viewmodel.PictureField
 import org.codingforanimals.veganuniverse.core.ui.viewmodel.StringField
-import org.codingforanimals.veganuniverse.create.domain.model.PlaceFormDomainEntity
 import org.codingforanimals.veganuniverse.create.presentation.model.AddressField
 import org.codingforanimals.veganuniverse.create.presentation.model.LocationField
 import org.codingforanimals.veganuniverse.create.presentation.model.SelectedTagsField
 import org.codingforanimals.veganuniverse.create.presentation.model.TypeField
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.CreatePlaceFormItem
-import org.codingforanimals.veganuniverse.create.presentation.place.entity.toDomainEntity
+import org.codingforanimals.veganuniverse.create.presentation.place.entity.toAddressComponents
 import org.codingforanimals.veganuniverse.create.presentation.place.error.CreatePlaceErrorDialog
 import org.codingforanimals.veganuniverse.create.presentation.place.model.GetFormStatus
+import org.codingforanimals.veganuniverse.create.presentation.place.model.GetPlaceDataStatus
 import org.codingforanimals.veganuniverse.create.presentation.place.model.OpeningHours
 import org.codingforanimals.veganuniverse.create.presentation.place.model.OpeningHoursField
 import org.codingforanimals.veganuniverse.create.presentation.place.model.PeriodEnd
@@ -43,9 +43,8 @@ import org.codingforanimals.veganuniverse.create.presentation.place.model.Period
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.CreatePlaceUseCase
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetAutoCompleteIntentUseCase
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetCreatePlaceScreenContent
-import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetPlaceDataStatus
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetPlaceDataUseCase
-import org.codingforanimals.veganuniverse.create.presentation.place.utils.createGeoHash
+import org.codingforanimals.veganuniverse.places.entity.PlaceForm
 
 internal class CreatePlaceViewModel(
     getCreatePlaceScreenContent: GetCreatePlaceScreenContent,
@@ -125,7 +124,8 @@ internal class CreatePlaceViewModel(
                     addressField = AddressField(
                         streetAddress = streetAddress,
                         locality = locality,
-                        province = province,
+                        primaryAdminArea = primaryAdminArea,
+                        secondaryAdminArea = secondaryAdminArea,
                         country = country,
                     ),
                     isLoading = false
@@ -166,7 +166,8 @@ internal class CreatePlaceViewModel(
         with(onFormChange) {
             imageUri?.let { uiState = uiState.copy(pictureField = PictureField(it)) }
             address?.let {
-                uiState = uiState.copy(addressField = uiState.addressField.copy(streetAddress = it))
+                uiState =
+                    uiState.copy(addressField = uiState.addressField?.copy(streetAddress = it))
             }
             name?.let { uiState = uiState.copy(nameField = StringField(it)) }
             type?.let { uiState = uiState.copy(typeField = TypeField(it)) }
@@ -195,16 +196,15 @@ internal class CreatePlaceViewModel(
     private fun getPlaceForm(): GetFormStatus {
         return try {
             val latLng = uiState.locationField.latLng!!
-            val addressComponents = uiState.addressField.toDomainEntity()!!
-            val form = PlaceFormDomainEntity(
+            val addressComponents = uiState.addressField?.toAddressComponents()!!
+            val form = PlaceForm(
                 name = uiState.nameField.value.ifEmpty { throw Exception() },
                 addressComponents = addressComponents,
                 description = uiState.descriptionField.value,
-                openingHours = uiState.openingHoursField.sortedOpeningHours.toDomainEntity(),
+                openingHours = uiState.openingHoursField.sortedOpeningHours.toAddressComponents(),
                 type = uiState.typeField.value?.name!!,
                 latitude = latLng.latitude,
                 longitude = latLng.longitude,
-                geoHash = latLng.createGeoHash(),
                 tags = uiState.selectedTagsField.tags.map { it.name },
             )
             GetFormStatus.Success(
@@ -215,9 +215,9 @@ internal class CreatePlaceViewModel(
         }
     }
 
-    private fun submitForm(formDomainEntity: PlaceFormDomainEntity) {
+    private fun submitForm(form: PlaceForm) {
         viewModelScope.launch {
-            createPlaceUseCase(formDomainEntity).collectLatest { createPlaceStatus ->
+            createPlaceUseCase(form).collectLatest { createPlaceStatus ->
                 when (createPlaceStatus) {
                     CreatePlaceUseCase.Status.Loading -> {
                         uiState = uiState.copy(isLoading = true)
@@ -239,6 +239,11 @@ internal class CreatePlaceViewModel(
                             isLoading = false,
                             errorDialog = CreatePlaceErrorDialog.UnknownErrorDialog,
                         )
+                    }
+                    CreatePlaceUseCase.Status.UnauthorizedUser -> {
+                        viewModelScope.launch {
+                            _sideEffects.send(SideEffect.NavigateToAuthenticateScreen)
+                        }
                     }
                 }
             }
@@ -360,7 +365,7 @@ internal class CreatePlaceViewModel(
         val cameraPositionState: CameraPositionState = CameraPositionState(defaultCameraPosition),
         val errorDialog: CreatePlaceErrorDialog? = null,
         val locationField: LocationField = LocationField(),
-        val addressField: AddressField = AddressField(),
+        val addressField: AddressField? = null,
         val nameField: StringField = StringField(),
         val openingHoursField: OpeningHoursField = OpeningHoursField(),
         val openingHoursTimePickerState: OpeningHoursTimePickerState? = null,
@@ -412,6 +417,7 @@ internal class CreatePlaceViewModel(
     }
 
     sealed class SideEffect {
+        object NavigateToAuthenticateScreen : SideEffect()
         object NavigateToThankYouScreen : SideEffect()
         object NavigateToAlreadyExistingPlace : SideEffect()
         object OpenImageSelector : SideEffect()

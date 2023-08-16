@@ -15,13 +15,11 @@ dependencyResolutionManagement {
 rootProject.name = "veganuniverse"
 include(":app")
 
-// core
 include(":core:datastore")
 include(":core:common")
 include(":core:ui")
 include(":core:location")
 
-// features
 include(":feature:profile:presentation")
 
 include(":feature:community:presentation")
@@ -40,8 +38,11 @@ include(":feature:post:presentation")
 
 include(":feature:places:presentation")
 include(":feature:places:domain")
+include(":services:firebase:places")
+include(":entity:places")
 
 include(":feature:registration:presentation")
+
 include(":feature:onboarding:data")
 include(":feature:onboarding:model")
 
@@ -54,7 +55,7 @@ include(":feature:search:presentation")
 
 include(":feature:settings:presentation")
 
-include(":services:firebase")
 include(":core:auth")
+include(":services:firebase:auth")
 
-include(":shared:entity")
+include(":services:firebase")

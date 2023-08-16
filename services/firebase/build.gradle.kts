@@ -9,11 +9,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":shared:entity"))
+    implementation(project(Module.Core.COMMON))
     bomImplementation(
         Firebase.BOM,
-        listOf(Firebase.FIRESTORE, Firebase.ANALYTICS, Firebase.GEO_FIRE, Firebase.AUTH)
+        listOf(Firebase.FIRESTORE, Firebase.ANALYTICS)
     )
     implementation(Google.AUTH)
 

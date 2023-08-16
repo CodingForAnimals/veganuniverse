@@ -1,11 +1,10 @@
 package org.codingforanimals.places.presentation.details.usecase
 
 import org.codingforanimals.places.presentation.details.model.PlaceDetailsScreenItem
-import org.codingforanimals.places.presentation.model.PlaceViewEntity
+import org.codingforanimals.places.presentation.entity.PlaceViewEntity
 
 internal class GetPlaceDetailsScreenContent {
     operator fun invoke(placeViewEntity: PlaceViewEntity): List<PlaceDetailsScreenItem> {
-        val fullAddress = "Bme. Mitre 123, Monte Grande, Buenos Aires"
         return mutableListOf(
             PlaceDetailsScreenItem.Hero(
                 imageUrl = placeViewEntity.imageRef,
@@ -15,7 +14,7 @@ internal class GetPlaceDetailsScreenContent {
                 rating = placeViewEntity.rating
             ),
             PlaceDetailsScreenItem.AddressAndOpeningHours(
-                address = fullAddress,
+                addressComponents = placeViewEntity.addressComponents,
                 openingHours = placeViewEntity.openingHours
             ),
             PlaceDetailsScreenItem.Description(

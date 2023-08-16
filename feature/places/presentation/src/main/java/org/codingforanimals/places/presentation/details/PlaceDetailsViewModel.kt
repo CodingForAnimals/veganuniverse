@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.codingforanimals.places.presentation.details.entity.PlaceReviewViewEntity
 import org.codingforanimals.places.presentation.details.model.DeleteUserReviewStatus
 import org.codingforanimals.places.presentation.details.model.PlaceDetailsScreenItem
 import org.codingforanimals.places.presentation.details.model.SubmitReviewStatus
@@ -23,7 +24,6 @@ import org.codingforanimals.places.presentation.details.usecase.GetPlaceReviewsU
 import org.codingforanimals.places.presentation.details.usecase.SubmitReviewUseCase
 import org.codingforanimals.places.presentation.model.GetPlaceDetailsStatus
 import org.codingforanimals.places.presentation.model.GetPlaceReviewsStatus
-import org.codingforanimals.places.presentation.model.ReviewViewEntity
 import org.codingforanimals.places.presentation.navigation.selected_place_id
 import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
@@ -112,11 +112,11 @@ internal class PlaceDetailsViewModel(
             Action.OnAlertDialogDismissRequest -> uiState =
                 uiState.copy(alertDialog = null)
             Action.OnGetMoreReviewsButtonClick -> getMoreReviews()
-            Action.OnDeleteReviewIconClick -> uiState =
-                uiState.copy(alertDialog = AlertDialog.DeleteReview)
+            is Action.OnDeleteReviewIconClick -> uiState =
+                uiState.copy(alertDialog = AlertDialog.DeleteReview(action.reviewId))
             Action.OnReportReviewIconClick -> uiState =
                 uiState.copy(alertDialog = AlertDialog.ReportReview)
-            Action.OnConfirmDeleteReviewButtonClick -> deleteUserReview()
+            is Action.OnConfirmDeleteReviewButtonClick -> deleteUserReview(action.reviewId)
             Action.OnConfirmReportReviewButtonClick -> Unit
         }
     }
@@ -169,10 +169,10 @@ internal class PlaceDetailsViewModel(
         }
     }
 
-    private fun deleteUserReview() {
+    private fun deleteUserReview(reviewId: String) {
         deleteUserReviewJob?.cancel()
         deleteUserReviewJob = viewModelScope.launch {
-            deleteUserReviewUseCase(placeId).collectLatest { status ->
+            deleteUserReviewUseCase(placeId, reviewId).collectLatest { status ->
                 when (status) {
                     DeleteUserReviewStatus.Loading -> uiState =
                         uiState.copy(alertDialog = null, loading = true)
@@ -233,7 +233,7 @@ internal class PlaceDetailsViewModel(
                                     uiState = uiState.copy(
                                         userReviewState = UserReviewState(),
                                         reviewsState = reviewsState.copy(
-                                            userReview = status.reviewViewEntity,
+                                            userReview = status.placeReviewViewEntity,
                                         )
                                     )
                                 }
@@ -262,7 +262,7 @@ internal class PlaceDetailsViewModel(
         ) : AlertDialog()
 
         object DiscardReview : AlertDialog()
-        object DeleteReview : AlertDialog()
+        data class DeleteReview(val reviewId: String) : AlertDialog()
         object ReportReview : AlertDialog()
     }
 
@@ -287,8 +287,8 @@ internal class PlaceDetailsViewModel(
         object Loading : ReviewsState()
         data class Error(@StringRes val message: Int) : ReviewsState()
         data class Success(
-            val userReview: ReviewViewEntity? = null,
-            val otherReviews: List<ReviewViewEntity> = emptyList(),
+            val userReview: PlaceReviewViewEntity? = null,
+            val otherReviews: List<PlaceReviewViewEntity> = emptyList(),
             val loadingMore: Boolean = false,
             val hasMoreReviews: Boolean = true,
         ) : ReviewsState() {
@@ -308,8 +308,8 @@ internal class PlaceDetailsViewModel(
         object OnConfirmDiscardReviewButtonClick : Action()
         object OnGetMoreReviewsButtonClick : Action()
         object OnReportReviewIconClick : Action()
-        object OnDeleteReviewIconClick : Action()
-        object OnConfirmDeleteReviewButtonClick : Action()
+        data class OnDeleteReviewIconClick(val reviewId: String) : Action()
+        data class OnConfirmDeleteReviewButtonClick(val reviewId: String) : Action()
         object OnConfirmReportReviewButtonClick : Action()
         object SubmitReview : Action()
     }

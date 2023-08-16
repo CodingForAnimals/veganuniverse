@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flow
 import org.codingforanimals.places.presentation.model.GetPlacesStatus
 import org.codingforanimals.places.presentation.model.toViewEntity
 import org.codingforanimals.veganuniverse.places.domain.PlacesRepository
-import org.codingforanimals.veganuniverse.places.domain.model.PlaceLocationQueryParams
+import org.codingforanimals.veganuniverse.places.entity.GeoLocationQueryParams
 
 private const val TAG = "GetPlacesUseCase"
 
@@ -32,8 +32,8 @@ internal class GetPlacesUseCase(
     private fun getLocationQueryParams(
         center: LatLng,
         radiusInMeters: Double,
-    ): PlaceLocationQueryParams {
-        return PlaceLocationQueryParams(
+    ): GeoLocationQueryParams {
+        return GeoLocationQueryParams(
             latitude = center.latitude,
             longitude = center.longitude,
             radiusInMeters = radiusInMeters,

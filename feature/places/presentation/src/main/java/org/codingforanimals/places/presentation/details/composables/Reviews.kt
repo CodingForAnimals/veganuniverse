@@ -129,7 +129,7 @@ private fun ReviewList(
                             MaterialTheme.colorScheme.primary
                         ),
                         icon = VUIcons.Delete,
-                        onIconClick = { onAction(Action.OnDeleteReviewIconClick) }
+                        onIconClick = { onAction(Action.OnDeleteReviewIconClick(userReview.id)) }
                     )
                 }
                 reviewsState.otherReviews.forEachIndexed { index, review ->

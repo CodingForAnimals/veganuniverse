@@ -9,6 +9,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
+    implementation(project(Module.Core.COMMON))
     implementation(project(":feature:onboarding:data"))
 }

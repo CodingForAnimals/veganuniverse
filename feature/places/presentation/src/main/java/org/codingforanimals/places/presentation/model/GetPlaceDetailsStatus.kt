@@ -1,6 +1,7 @@
 package org.codingforanimals.places.presentation.model
 
 import androidx.annotation.StringRes
+import org.codingforanimals.places.presentation.entity.PlaceViewEntity
 import org.codingforanimals.veganuniverse.places.presentation.R
 
 internal sealed class GetPlaceDetailsStatus {

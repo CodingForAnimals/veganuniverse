@@ -17,12 +17,13 @@ data class LocationField(
 }
 
 data class AddressField(
-    val streetAddress: String? = null,
-    val locality: String = "",
-    val province: String = "",
-    val country: String = "",
+    val streetAddress: String,
+    val locality: String,
+    val primaryAdminArea: String,
+    val secondaryAdminArea: String,
+    val country: String,
 ) : ValidationField() {
-    override val isValid: Boolean = areNotBlank(streetAddress, locality, province, country)
+    override val isValid: Boolean = areNotBlank(streetAddress, locality, country)
 }
 
 data class TypeField(

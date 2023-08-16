@@ -2,7 +2,7 @@ package org.codingforanimals.veganuniverse.app.di
 
 import org.codingforanimals.places.presentation.di.placesFeatureModule
 import org.codingforanimals.veganuniverse.app.MainViewModel
-import org.codingforanimals.veganuniverse.auth.di.authModule
+import org.codingforanimals.veganuniverse.auth.di.authCoreModule
 import org.codingforanimals.veganuniverse.common.di.commonModule
 import org.codingforanimals.veganuniverse.core.location.di.locationModule
 import org.codingforanimals.veganuniverse.create.presentation.di.createFeatureModule
@@ -17,7 +17,7 @@ internal val appModule = module {
         commonModule,
         locationModule,
         onboardingModule,
-        authModule,
+        authCoreModule,
         placesFeatureModule,
         createFeatureModule,
         registrationModule,

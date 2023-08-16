@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="google_auth_id">381536040984-lsa3iuh30oim6q4rhu8ou0gj4mvockpg.apps.googleusercontent.com</string>
     <string name="filter">Filtrar</string>
     <string name="sort">Ordenar</string>
     <string name="closed">Cerrado</string>

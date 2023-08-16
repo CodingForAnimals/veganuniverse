@@ -9,8 +9,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(libs.googleServicesLocation)
+    implementation(project(Module.Core.COMMON))
+    implementation(Google.PLAY_SERVICES_LOCATION)
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

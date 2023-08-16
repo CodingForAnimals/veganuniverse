@@ -127,7 +127,7 @@ private fun Map(
 
 @Composable
 private fun Foreground(
-    addressField: AddressField,
+    addressField: AddressField?,
     isValidating: Boolean,
     onAction: (Action) -> Unit,
     colors: SearchMapColors,
@@ -136,12 +136,12 @@ private fun Foreground(
         modifier = Modifier
             .fillMaxSize()
             .clickable { onAction(Action.OnSearchMapClick) },
-        targetState = addressField.streetAddress == null,
-    ) { addressIsNull ->
-        if (addressIsNull) {
-            SearchPlaceForeground(onAction, colors)
-        } else {
+        targetState = addressField != null,
+    ) { addressSelected ->
+        if (addressSelected && addressField != null) {
             PlaceLocationForeground(addressField, isValidating, onAction)
+        } else {
+            SearchPlaceForeground(onAction, colors)
         }
     }
 }
@@ -183,7 +183,7 @@ private fun PlaceLocationForeground(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(Spacing_06),
-            value = addressField.streetAddress ?: "",
+            value = addressField.streetAddress,
             onValueChange = { onAction(Action.OnFormChange(address = it)) },
             isError = isValidating && !addressField.isValid,
             leadingIcon = VUIcons.Location,

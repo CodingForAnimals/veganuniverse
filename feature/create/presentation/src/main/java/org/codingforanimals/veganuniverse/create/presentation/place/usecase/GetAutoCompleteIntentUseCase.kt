@@ -12,6 +12,7 @@ class GetAutoCompleteIntentUseCase(
     operator fun invoke(): Intent {
         return Autocomplete
             .IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+//            .setTypesFilter(listOf(PlaceTypes.ESTABLISHMENT, PlaceTypes.STREET_ADDRESS))
             .build(context)
     }
 

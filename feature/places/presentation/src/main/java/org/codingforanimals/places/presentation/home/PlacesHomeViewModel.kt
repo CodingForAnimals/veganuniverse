@@ -23,13 +23,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.codingforanimals.places.presentation.entity.PlaceViewEntity
 import org.codingforanimals.places.presentation.home.state.FilterState
 import org.codingforanimals.places.presentation.home.state.PlacesHomeSavedStateHandler
 import org.codingforanimals.places.presentation.home.state.PlacesState
 import org.codingforanimals.places.presentation.home.state.UserLocationState
 import org.codingforanimals.places.presentation.home.usecase.GetPlacesUseCase
 import org.codingforanimals.places.presentation.model.GetPlacesStatus
-import org.codingforanimals.places.presentation.model.PlaceViewEntity
 import org.codingforanimals.places.presentation.utils.visibleRadius
 import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.core.location.UserLocationManager
@@ -209,8 +209,6 @@ internal class PlacesHomeViewModel(
             _sideEffects.send(SideEffect.PartiallyExpand)
             val center = uiState.cameraPositionState.position.target
             val radiusInMeters = uiState.cameraPositionState.visibleRadius()
-
-
 
             getPlacesUseCase(center, radiusInMeters).collectLatest { status ->
                 val placesState = when (status) {

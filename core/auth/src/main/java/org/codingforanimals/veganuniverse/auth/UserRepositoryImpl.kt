@@ -11,10 +11,10 @@ import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.auth.model.toDomainEntity
 import org.codingforanimals.veganuniverse.auth.model.toLoginResponse
 import org.codingforanimals.veganuniverse.auth.model.toRegistrationResponse
-import org.codingforanimals.veganuniverse.services.firebase.auth.Authenticator
-import org.codingforanimals.veganuniverse.services.firebase.auth.model.EmailLoginResponse
-import org.codingforanimals.veganuniverse.services.firebase.auth.model.EmailRegistrationResponse
-import org.codingforanimals.veganuniverse.services.firebase.auth.model.ProviderAuthenticationResponse
+import org.codingforanimals.veganuniverse.auth.services.firebase.Authenticator
+import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailLoginResponse
+import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailRegistrationResponse
+import org.codingforanimals.veganuniverse.auth.services.firebase.model.ProviderAuthenticationResponse
 
 private const val TAG = "UserRepositoryImpl"
 
@@ -35,7 +35,7 @@ internal class UserRepositoryImpl(
         when (response) {
             is EmailLoginResponse.Exception -> Unit
             is EmailLoginResponse.Success -> {
-                _user.emit(response.userDto.toDomainEntity())
+                _user.emit(response.userFirebaseEntity.toDomainEntity())
             }
         }
         return response.toLoginResponse()
@@ -49,7 +49,7 @@ internal class UserRepositoryImpl(
         when (response) {
             is EmailRegistrationResponse.Exception -> Unit
             is EmailRegistrationResponse.Success -> {
-                _user.emit(response.userDto.toDomainEntity())
+                _user.emit(response.userFirebaseEntity.toDomainEntity())
             }
         }
         return response.toRegistrationResponse()
@@ -60,7 +60,7 @@ internal class UserRepositoryImpl(
         when (response) {
             is ProviderAuthenticationResponse.Exception -> Unit
             is ProviderAuthenticationResponse.Success -> {
-                _user.emit(response.userDto.toDomainEntity())
+                _user.emit(response.userFirebaseEntity.toDomainEntity())
             }
         }
         return response.toRegistrationResponse()

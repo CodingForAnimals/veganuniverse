@@ -13,6 +13,7 @@ object ThankYouDestination : Destination(route = "thank_you_route")
 fun NavGraphBuilder.createGraph(
     navController: NavController,
     navigateToPlaceDetails: () -> Unit,
+    navigateToAuthenticateScreen: () -> Unit,
 ) {
     composable(
         route = CreateDestination.route
@@ -20,6 +21,7 @@ fun NavGraphBuilder.createGraph(
         CreateScreen(
             navigateToThankYouScreen = { navController.navigate(ThankYouDestination.route) },
             navigateToAlreadyExistingPlace = navigateToPlaceDetails,
+            navigateToAuthenticateScreen = navigateToAuthenticateScreen,
         )
     }
     composable(

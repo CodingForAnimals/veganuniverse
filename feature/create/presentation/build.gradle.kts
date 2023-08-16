@@ -10,16 +10,15 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":shared:entity"))
-    implementation(project(":feature:create:domain"))
-    implementation(libs.googleMapCompose)
-    implementation(libs.imageCropper)
+    implementation(Google.PLACES)
+    implementation(Other.IMAGE_CROPPER)
+    implementation(project(Module.Core.COMMON))
+    implementation(project(Module.Core.AUTH))
+    implementation(project(Module.Feature.Create.DOMAIN))
+    implementation(project(Module.Entity.PLACES))
+    implementation(Google.MAPS)
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    // testing geofire
-    implementation("com.firebase:geofire-android-common:3.2.0")
 
-    implementation("com.google.android.libraries.places:places:3.1.0")
 }

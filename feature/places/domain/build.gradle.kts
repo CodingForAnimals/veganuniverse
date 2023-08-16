@@ -9,9 +9,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":shared:entity"))
-    implementation(project(":services:firebase"))
+    implementation(project(Module.Core.COMMON))
+    implementation(project(Module.Entity.PLACES))
+    implementation(project(Module.Services.Firebase.PLACES))
+    implementation(project(Module.Services.Firebase.BASE))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

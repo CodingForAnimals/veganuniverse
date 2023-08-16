@@ -118,7 +118,7 @@ private fun HandleAlertDialog(
             text = { Text(text = stringResource(R.string.alert_dialog_delete_review_text)) },
             confirmButton = {
                 TextButton(
-                    onClick = { onAction(Action.OnConfirmDeleteReviewButtonClick) },
+                    onClick = { onAction(Action.OnConfirmDeleteReviewButtonClick(alertDialog.reviewId)) },
                     content = { Text(text = stringResource(R.string.alert_dialog_delete_review_confirm_button_label)) },
                 )
             },
@@ -165,7 +165,7 @@ private fun PlaceDetails(
                             subtitle = { RatingBar(item.rating) }
                         )
                         is PlaceDetailsScreenItem.AddressAndOpeningHours -> AddressAndOpeningHours(
-                            address = item.address,
+                            addressComponents = item.addressComponents,
                             openingHours = item.openingHours
                         )
                         is PlaceDetailsScreenItem.Description -> Text(

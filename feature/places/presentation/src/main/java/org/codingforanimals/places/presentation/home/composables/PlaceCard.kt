@@ -24,11 +24,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.codingforanimals.places.presentation.entity.PlaceViewEntity
+import org.codingforanimals.places.presentation.utils.fullStreetAddress
 import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.components.RatingBar
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.core.ui.theme.PrimaryLight
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
@@ -37,13 +38,9 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 @Composable
 internal fun PlaceCard(
     modifier: Modifier = Modifier,
-    name: String,
-    type: PlaceType?,
-    rating: Int,
-    address: String,
-    city: String,
+    placeViewEntity: PlaceViewEntity,
     border: BorderStroke? = null,
-    onCardClick: () -> Unit
+    onCardClick: () -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -70,16 +67,15 @@ internal fun PlaceCard(
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(Spacing_04)
                     ) {
-                        val icon = type?.icon ?: VUIcons.Store
-                        VUIcon(icon = icon, contentDescription = "")
+                        VUIcon(icon = placeViewEntity.type.icon, contentDescription = "")
                         Text(
-                            text = name,
+                            text = placeViewEntity.name,
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Medium,
                         )
                     }
                     RatingBar(
-                        rating = rating,
+                        rating = placeViewEntity.rating,
                         color = PrimaryLight,
                     )
                 }
@@ -88,14 +84,15 @@ internal fun PlaceCard(
                 ) {
                     VUIcon(icon = VUIcons.Location, contentDescription = "")
                     Text(
-                        text = address, fontWeight = FontWeight.Light,
+                        text = placeViewEntity.addressComponents.fullStreetAddress,
+                        fontWeight = FontWeight.Light,
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
-                Text(
-                    text = city,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+//                Text(
+//                    text = city,
+//                    style = MaterialTheme.typography.bodyMedium,
+//                )
             }
             Box(modifier = Modifier.weight(0.7f)) {
                 Image(

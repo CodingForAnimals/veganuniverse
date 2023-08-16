@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
+    implementation(project(Module.Core.COMMON))
     implementation(project(":feature:featuredtopic:model"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

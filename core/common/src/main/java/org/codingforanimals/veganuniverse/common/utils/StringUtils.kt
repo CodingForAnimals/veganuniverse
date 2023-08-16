@@ -8,3 +8,5 @@ fun areNotBlank(vararg strings: String?): Boolean {
     }
     return true
 }
+
+val emptyString = ""

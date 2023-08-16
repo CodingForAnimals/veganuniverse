@@ -1,12 +1,12 @@
 package org.codingforanimals.places.presentation.details.model
 
 import androidx.annotation.StringRes
-import org.codingforanimals.places.presentation.model.ReviewViewEntity
+import org.codingforanimals.places.presentation.details.entity.PlaceReviewViewEntity
 import org.codingforanimals.veganuniverse.places.presentation.R
 
 sealed class SubmitReviewStatus {
     object Loading : SubmitReviewStatus()
-    data class Success(val reviewViewEntity: ReviewViewEntity) : SubmitReviewStatus()
+    data class Success(val placeReviewViewEntity: PlaceReviewViewEntity) : SubmitReviewStatus()
     sealed class Exception(
         @StringRes val title: Int,
         @StringRes val message: Int,

@@ -6,7 +6,7 @@ configure<BaseExtension> {
         kotlinCompilerExtensionVersion = versions.composeCompiler
     }
     dependencies {
-        add("implementation", project(":core:ui"))
+        add("implementation", project(Module.Core.UI))
         val bom = platform("androidx.compose:compose-bom:${versions.composeBom}")
         add("implementation", bom)
         implementation(libs.material3)

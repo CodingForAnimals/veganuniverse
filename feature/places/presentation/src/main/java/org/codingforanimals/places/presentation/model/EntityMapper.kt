@@ -3,32 +3,40 @@ package org.codingforanimals.places.presentation.model
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
-import org.codingforanimals.places.presentation.details.model.DayOfWeek
+import org.codingforanimals.places.presentation.details.entity.PlaceReviewViewEntity
 import org.codingforanimals.places.presentation.details.model.Markers
 import org.codingforanimals.places.presentation.details.model.OpeningHours
+import org.codingforanimals.places.presentation.entity.PlaceViewEntity
+import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
-import org.codingforanimals.veganuniverse.places.domain.model.PlaceDomainEntity
-import org.codingforanimals.veganuniverse.places.domain.model.ReviewDomainEntity
+import org.codingforanimals.veganuniverse.places.entity.Place
+import org.codingforanimals.veganuniverse.places.entity.PlaceReview
 
-internal fun PlaceDomainEntity.toViewEntity(): PlaceViewEntity? {
-    val type = getType(type) ?: return null
-    return PlaceViewEntity(
-        id = id,
-        imageRef = imageRef,
-        description = description,
-        type = type,
-        tags = getTags(),
-        name = name,
-        rating = rating,
-        reviewCount = reviewCount,
-        address = address,
-        city = city,
-        state = MarkerState(LatLng(latitude, longitude)),
-        marker = getMarker(type),
-        timestamp = timestamp,
-        openingHours = openingHours.toViewEntity(),
-    )
+private const val TAG = "EntityMapper"
+
+internal fun Place.toViewEntity(): PlaceViewEntity? {
+    return try {
+        val type = PlaceType.valueOf(type)
+        PlaceViewEntity(
+            id = id,
+            name = name,
+            addressComponents = addressComponents,
+            imageRef = imageRef,
+            description = description,
+            type = type,
+            tags = tags.map { PlaceTag.valueOf(it) },
+            rating = rating,
+            reviewCount = reviewCount,
+            state = MarkerState(LatLng(latitude, longitude)),
+            marker = getMarker(type),
+            timestamp = timestamp,
+            openingHours = openingHours.toViewEntity(),
+        )
+    } catch (e: Throwable) {
+        Log.e(TAG, e.stackTraceToString())
+        null
+    }
 }
 
 private fun getMarker(type: PlaceType) = when (type) {
@@ -38,55 +46,28 @@ private fun getMarker(type: PlaceType) = when (type) {
     PlaceType.BAR -> Markers.storeMarker
 }
 
-internal fun PlaceDomainEntity.getTags(): List<PlaceTag> {
-    return tags.mapNotNull {
-        try {
-            PlaceTag.valueOf(it)
-        } catch (e: Throwable) {
-            Log.e("PlaceEntityMapper.kt", "Can't parse tag ${e.stackTraceToString()}")
-            null
-        }
-    }
-}
-
-private fun getType(type: String): PlaceType? {
-    return try {
-        PlaceType.valueOf(type)
-    } catch (e: Exception) {
-        Log.e("PlaceEntityMapper.kt", "Error mapping PlaceType")
-        null
-    }
-}
-
-internal fun List<org.codingforanimals.veganuniverse.shared.entity.places.OpeningHours>.toViewEntity(): List<OpeningHours> =
+internal fun List<org.codingforanimals.veganuniverse.places.entity.OpeningHours>.toViewEntity(): List<OpeningHours> =
     mapNotNull { it.toViewEntity() }
 
-internal fun org.codingforanimals.veganuniverse.shared.entity.places.OpeningHours.toViewEntity(): OpeningHours? {
+internal fun org.codingforanimals.veganuniverse.places.entity.OpeningHours.toViewEntity(): OpeningHours? {
     return try {
         OpeningHours(
             dayOfWeek = DayOfWeek.valueOf(dayOfWeek),
-            mainPeriod = mainPeriod?.toViewEntity(),
-            secondaryPeriod = secondaryPeriod?.toViewEntity(),
+            mainPeriod = mainPeriod,
+            secondaryPeriod = secondaryPeriod,
         )
     } catch (e: Throwable) {
         null
     }
 }
 
-private fun org.codingforanimals.veganuniverse.shared.entity.places.OpeningHours.Period.toViewEntity() =
-    OpeningHours.Period(
-        openingHour = openingHour,
-        openingMinute = openingMinute,
-        closingHour = closingHour,
-        closingMinute = closingMinute
-    )
-
-fun ReviewDomainEntity.toViewEntity(): ReviewViewEntity {
-    return ReviewViewEntity(
+fun PlaceReview.toViewEntity(): PlaceReviewViewEntity {
+    return PlaceReviewViewEntity(
+        id = id,
         username = username,
         rating = rating,
         title = title,
         description = description,
-        timestamp = timestamp.toString()
+        timestamp = timestampSeconds.toString()
     )
 }

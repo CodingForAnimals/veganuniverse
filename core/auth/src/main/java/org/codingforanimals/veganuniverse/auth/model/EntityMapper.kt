@@ -1,11 +1,11 @@
 package org.codingforanimals.veganuniverse.auth.model
 
-import org.codingforanimals.veganuniverse.services.firebase.auth.model.EmailLoginResponse
-import org.codingforanimals.veganuniverse.services.firebase.auth.model.EmailRegistrationResponse
-import org.codingforanimals.veganuniverse.services.firebase.auth.model.ProviderAuthenticationResponse
-import org.codingforanimals.veganuniverse.services.firebase.auth.model.UserDTO
+import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailLoginResponse
+import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailRegistrationResponse
+import org.codingforanimals.veganuniverse.auth.services.firebase.model.ProviderAuthenticationResponse
+import org.codingforanimals.veganuniverse.auth.services.firebase.model.UserFirebaseEntity
 
-internal fun UserDTO.toDomainEntity(): User {
+internal fun UserFirebaseEntity.toDomainEntity(): User {
     return User(
         id = id,
         name = name,
@@ -20,7 +20,9 @@ internal fun EmailLoginResponse.toLoginResponse(): LoginResponse {
         EmailLoginResponse.Exception.InvalidUser -> LoginResponse.Exception.InvalidUser
         EmailLoginResponse.Exception.UnknownException -> LoginResponse.Exception.UnknownException
         EmailLoginResponse.Exception.UserNotFound -> LoginResponse.Exception.UserNotFound
-        is EmailLoginResponse.Success -> LoginResponse.Success(userDto.toDomainEntity())
+        is EmailLoginResponse.Success -> LoginResponse.Success(
+            userFirebaseEntity.toDomainEntity()
+        )
     }
 }
 
@@ -31,7 +33,9 @@ internal fun EmailRegistrationResponse.toRegistrationResponse(): RegistrationRes
         EmailRegistrationResponse.Exception.InvalidUser -> RegistrationResponse.Exception.InvalidUser
         EmailRegistrationResponse.Exception.UnknownFailure -> RegistrationResponse.Exception.UnknownFailure
         EmailRegistrationResponse.Exception.UserAlreadyExists -> RegistrationResponse.Exception.UserAlreadyExists
-        is EmailRegistrationResponse.Success -> RegistrationResponse.Success(userDto.toDomainEntity())
+        is EmailRegistrationResponse.Success -> RegistrationResponse.Success(
+            userFirebaseEntity.toDomainEntity()
+        )
     }
 }
 
@@ -42,6 +46,8 @@ internal fun ProviderAuthenticationResponse.toRegistrationResponse(): Registrati
         ProviderAuthenticationResponse.Exception.InvalidUser -> RegistrationResponse.Exception.InvalidUser
         ProviderAuthenticationResponse.Exception.UnknownFailure -> RegistrationResponse.Exception.UnknownFailure
         ProviderAuthenticationResponse.Exception.UserAlreadyExists -> RegistrationResponse.Exception.UserAlreadyExists
-        is ProviderAuthenticationResponse.Success -> RegistrationResponse.Success(userDto.toDomainEntity())
+        is ProviderAuthenticationResponse.Success -> RegistrationResponse.Success(
+            userFirebaseEntity.toDomainEntity()
+        )
     }
 }

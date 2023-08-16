@@ -1,55 +1,53 @@
 package org.codingforanimals.veganuniverse.places.domain
 
-import org.codingforanimals.veganuniverse.places.domain.model.PlaceDomainEntity
-import org.codingforanimals.veganuniverse.places.domain.model.PlaceLocationQueryParams
-import org.codingforanimals.veganuniverse.places.domain.model.ReviewDomainEntity
-import org.codingforanimals.veganuniverse.places.domain.model.ReviewFormDomainEntity
-import org.codingforanimals.veganuniverse.places.domain.model.ReviewsPaginatedResponseDTO
-import org.codingforanimals.veganuniverse.places.domain.model.toDomainEntity
-import org.codingforanimals.veganuniverse.places.domain.model.toDto
-import org.codingforanimals.veganuniverse.places.domain.model.toFirebaseQueryParams
-import org.codingforanimals.veganuniverse.services.firebase.api.places.PlacesApi
+import org.codingforanimals.veganuniverse.places.entity.GeoLocationQueryParams
+import org.codingforanimals.veganuniverse.places.entity.Place
+import org.codingforanimals.veganuniverse.places.entity.PlaceReview
+import org.codingforanimals.veganuniverse.places.entity.PlaceReviewForm
+import org.codingforanimals.veganuniverse.places.entity.ReviewsPaginatedResponse
+import org.codingforanimals.veganuniverse.places.services.firebase.api.PlaceReviewsApi
+import org.codingforanimals.veganuniverse.places.services.firebase.api.PlacesApi
 
 class PlacesRepositoryImpl(
     private val placesApi: PlacesApi,
+    private val placeReviewsApi: PlaceReviewsApi,
     private val currentPlacesWrapper: CurrentPlacesWrapper,
 ) : PlacesRepository {
 
-    override suspend fun getPlaces(params: PlaceLocationQueryParams): List<PlaceDomainEntity> {
-        val places =
-            placesApi.fetchPlaces(params.toFirebaseQueryParams()).mapNotNull { it.toDomainEntity() }
+    override suspend fun getPlaces(params: GeoLocationQueryParams): List<Place> {
+        val places = placesApi.fetchPlaces(params)
         currentPlacesWrapper.currentPlaces = places
         return places
     }
 
-    override fun getPlace(id: String): PlaceDomainEntity {
+    override fun getPlace(id: String): Place {
         return currentPlacesWrapper.currentPlaces.first { it.id == id }
     }
 
-    override suspend fun getReview(placeId: String, userId: String): ReviewDomainEntity? {
-        return placesApi.fetchReview(placeId, userId)?.toDomainEntity()
+    override suspend fun getReview(placeId: String, userId: String): PlaceReview? {
+        return placeReviewsApi.fetchReview(placeId, userId)
     }
 
-    override suspend fun getReviews(placeId: String): ReviewsPaginatedResponseDTO {
-        val response = placesApi.fetchReviews(placeId)
-        return ReviewsPaginatedResponseDTO(
-            reviews = response.reviews.mapNotNull { it.toDomainEntity() },
+    override suspend fun getReviews(placeId: String): ReviewsPaginatedResponse {
+        val response = placeReviewsApi.fetchReviews(placeId)
+        return ReviewsPaginatedResponse(
+            reviews = response.reviews,
             hasMoreItems = response.hasMoreItems,
         )
     }
 
     override suspend fun submitReview(
         placeId: String,
-        reviewForm: ReviewFormDomainEntity,
-    ): ReviewDomainEntity {
-        return placesApi.submitReview(placeId, reviewForm.toDto()).toDomainEntity()
+        placeReviewForm: PlaceReviewForm,
+    ): PlaceReview {
+        return placeReviewsApi.submitReview(placeId, placeReviewForm)
     }
 
-    override suspend fun deleteReview(placeId: String, userId: String) {
-        placesApi.deleteReview(placeId, userId)
+    override suspend fun deleteReview(placeId: String, reviewId: String) {
+        placeReviewsApi.deleteReview(placeId, reviewId)
     }
 }
 
 class CurrentPlacesWrapper {
-    var currentPlaces: List<PlaceDomainEntity> = emptyList()
+    var currentPlaces: List<Place> = emptyList()
 }

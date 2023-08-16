@@ -1,6 +1,7 @@
 package org.codingforanimals.places.presentation.model
 
 import androidx.annotation.StringRes
+import org.codingforanimals.places.presentation.details.entity.PlaceReviewViewEntity
 import org.codingforanimals.veganuniverse.places.presentation.R
 
 sealed class GetPlaceReviewsStatus {
@@ -10,8 +11,8 @@ sealed class GetPlaceReviewsStatus {
     ) : GetPlaceReviewsStatus()
 
     data class Success(
-        val userReview: ReviewViewEntity? = null,
-        val paginatedReviews: List<ReviewViewEntity>,
+        val userReview: PlaceReviewViewEntity? = null,
+        val paginatedReviews: List<PlaceReviewViewEntity>,
         val hasMoreReviews: Boolean,
     ) : GetPlaceReviewsStatus()
 }
@@ -23,6 +24,6 @@ sealed class GetUserReviewStatus {
     ) : GetUserReviewStatus()
 
     data class Success(
-        val userReview: ReviewViewEntity?,
+        val userReview: PlaceReviewViewEntity?,
     ) : GetUserReviewStatus()
 }
