@@ -1,13 +1,9 @@
 package org.codingforanimals.veganuniverse.places.presentation.utils
 
 import android.location.Location
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.SphericalUtil
 import com.google.maps.android.compose.CameraPositionState
 import kotlin.math.pow
 import kotlin.math.sqrt
-
-private const val TAG = "PlacesMapUtils"
 
 // Not ideal. This should sit in the resources folder.
 internal const val mapStyleJson = "[\n" +
@@ -47,10 +43,6 @@ internal const val mapStyleJson = "[\n" +
     "  }\n" +
     "]"
 
-
-internal fun LatLng.distanceTo(latLng: LatLng): Double =
-    SphericalUtil.computeDistanceBetween(this, latLng)
-
 internal fun CameraPositionState.visibleRadiusInKm(): Double {
     this.projection?.visibleRegion?.let { visibleRegion ->
         val distanceWidth = FloatArray(1)
@@ -76,7 +68,7 @@ internal fun CameraPositionState.visibleRadiusInKm(): Double {
         )
         return (sqrt(
             distanceWidth[0].toDouble().pow(2.0) + distanceHeight[0].toDouble().pow(2.0)
-        ) / 2) / 100
+        ) / 2) / 1000
     }
     return 0.0
 }
