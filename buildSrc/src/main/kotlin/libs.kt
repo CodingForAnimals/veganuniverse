@@ -1,12 +1,12 @@
 @file:Suppress("ClassName")
 
 object versions {
-    const val core = "1.8.0"
+    const val core = "1.9.0"
     const val lifecycle = "2.5.1"
     const val coroutines = "1.6.4"
     const val composeBom = "2023.04.01"
     const val compose = "1.3.1"
-    const val composeCompiler = "1.4.0"
+    const val composeCompiler = "1.5.1"
     const val accompanist = "0.25.1"
     const val retrofit = "2.9.0"
     const val moshi = "1.14.0"
@@ -16,7 +16,7 @@ object versions {
     const val datastore = "1.0.0"
     const val koinAndroid = "3.3.2"
     const val koinAndroidCompose = "3.4.1"
-    const val splashScreen = "1.0.0"
+    const val splashScreen = "1.0.1"
     const val googleMapCompose = "2.8.0"
     const val googleMapServices = "18.1.0"
 }
@@ -30,6 +30,7 @@ object Module {
         const val AUTH = ":core:auth"
     }
     object Entity {
+        const val BASE = ":entity"
         const val PLACES = ":entity:places"
     }
     object Services {
@@ -58,6 +59,7 @@ object Android {
 object Firebase {
     const val BOM = "com.google.firebase:firebase-bom:32.1.1"
     const val FIRESTORE = "com.google.firebase:firebase-firestore-ktx"
+    const val REALTIME_DATABASE = "com.google.firebase:firebase-database-ktx"
     const val ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
     const val FUNCTIONS = "com.google.firebase:firebase-functions-ktx"
     const val AUTH = "com.google.firebase:firebase-auth-ktx"
@@ -130,13 +132,6 @@ object libs {
     const val koinAndroidCompose =
         "io.insert-koin:koin-androidx-compose:${versions.koinAndroidCompose}"
 
-    val retrofit = listOf(
-        "com.squareup.retrofit2:retrofit:${versions.retrofit}",
-        "com.squareup.retrofit2:converter-moshi:${versions.retrofit}",
-        "com.squareup.okhttp3:logging-interceptor:4.10.0",
-        "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
-        "com.squareup.moshi:moshi-adapters:${versions.moshi}",
-    )
     val room = listOf(
         "androidx.room:room-ktx:${versions.room}",
         "androidx.room:room-runtime:${versions.room}",

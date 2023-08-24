@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("com.google.gms.google-services")
+    id("org.jetbrains.kotlin.android")
     `android-config`
     `compose-config`
 }
@@ -31,7 +32,7 @@ android {
     buildTypes {
         named("release") {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -44,6 +45,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:31.2.3"))
     implementation("com.google.firebase:firebase-analytics-ktx")
 
+    /**
+     * TODO remvove depencendy once okhttp3 is automatically updated to 5.0.0 in external dependencies
+     */
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
     implementation(project(":feature:onboarding:presentation"))
     implementation(project(":feature:profile:presentation"))
     implementation(project(":feature:community:presentation"))
@@ -59,6 +64,7 @@ dependencies {
     implementation(project(Module.Core.COMMON))
     implementation(project(Module.Core.LOCATION))
     implementation(project(Module.Core.AUTH))
+    implementation(project(Module.Services.Firebase.BASE))
     implementation("com.google.maps.android:maps-compose:${versions.googleMapCompose}")
     implementation("com.google.android.gms:play-services-maps:${versions.googleMapServices}")
 

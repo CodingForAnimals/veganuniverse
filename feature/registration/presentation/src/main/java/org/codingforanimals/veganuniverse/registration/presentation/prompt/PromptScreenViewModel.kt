@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.registration.presentation.prompt
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,6 +65,8 @@ class PromptScreenViewModel(
 
     private fun attemptProviderAuthentication(result: ActivityResult) {
         val intent = result.data
+        val a = intent?.extras?.keySet()?.map { it to (intent.extras?.get(it)).toString() }
+        Log.e("pepe", "error intent $a")
         if (result.resultCode == Activity.RESULT_OK && intent != null) {
             authenticateWithGmail(intent)
         }

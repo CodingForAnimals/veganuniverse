@@ -1,37 +1,35 @@
 package org.codingforanimals.veganuniverse.places.domain
 
 import org.codingforanimals.veganuniverse.places.entity.GeoLocationQueryParams
+import org.codingforanimals.veganuniverse.places.entity.PaginatedResponse
 import org.codingforanimals.veganuniverse.places.entity.Place
+import org.codingforanimals.veganuniverse.places.entity.PlaceCard
 import org.codingforanimals.veganuniverse.places.entity.PlaceReview
 import org.codingforanimals.veganuniverse.places.entity.PlaceReviewForm
-import org.codingforanimals.veganuniverse.places.entity.ReviewsPaginatedResponse
-import org.codingforanimals.veganuniverse.places.services.firebase.api.PlaceReviewsApi
-import org.codingforanimals.veganuniverse.places.services.firebase.api.PlacesApi
+import org.codingforanimals.veganuniverse.services.firebase.api.PlaceReviewsApi
+import org.codingforanimals.veganuniverse.services.firebase.api.PlacesApi
 
 class PlacesRepositoryImpl(
     private val placesApi: PlacesApi,
     private val placeReviewsApi: PlaceReviewsApi,
-    private val currentPlacesWrapper: CurrentPlacesWrapper,
 ) : PlacesRepository {
 
-    override suspend fun getPlaces(params: GeoLocationQueryParams): List<Place> {
-        val places = placesApi.fetchPlaces(params)
-        currentPlacesWrapper.currentPlaces = places
-        return places
+    override suspend fun getPlaces(params: GeoLocationQueryParams): List<PlaceCard> {
+        return placesApi.fetchPlaces(params)
     }
 
-    override fun getPlace(id: String): Place {
-        return currentPlacesWrapper.currentPlaces.first { it.id == id }
+    override suspend fun getPlace(id: String): Place? {
+        return placesApi.fetchPlace(id)
     }
 
     override suspend fun getReview(placeId: String, userId: String): PlaceReview? {
         return placeReviewsApi.fetchReview(placeId, userId)
     }
 
-    override suspend fun getReviews(placeId: String): ReviewsPaginatedResponse {
+    override suspend fun getReviews(placeId: String): PaginatedResponse<PlaceReview> {
         val response = placeReviewsApi.fetchReviews(placeId)
-        return ReviewsPaginatedResponse(
-            reviews = response.reviews,
+        return PaginatedResponse(
+            content = response.content,
             hasMoreItems = response.hasMoreItems,
         )
     }
@@ -43,11 +41,13 @@ class PlacesRepositoryImpl(
         return placeReviewsApi.submitReview(placeId, placeReviewForm)
     }
 
-    override suspend fun deleteReview(placeId: String, reviewId: String) {
-        placeReviewsApi.deleteReview(placeId, reviewId)
+    override suspend fun deleteReview(placeId: String, placeReview: PlaceReview) {
+        placeReviewsApi.deleteReview(placeId, placeReview)
     }
-}
 
-class CurrentPlacesWrapper {
-    var currentPlaces: List<Place> = emptyList()
+    /*
+    override fun flowOnPlaceRating(placeId: String): Flow<Double> {
+        return placesApi.flowOnPlaceRating(placeId)
+    }
+     */
 }

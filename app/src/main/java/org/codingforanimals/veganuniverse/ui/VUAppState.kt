@@ -6,12 +6,12 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import org.codingforanimals.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.navigation.rememberVUNavController
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.NotificationsDestination
+import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeDestination
 import org.codingforanimals.veganuniverse.search.presentation.navigation.SearchDestination

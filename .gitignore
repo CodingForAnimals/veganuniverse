@@ -21,3 +21,6 @@ gradlew.bat
 
 **/release
 **/build
+
+functions/
+**/*/res/values/secrets.xml

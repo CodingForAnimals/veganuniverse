@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
     `android-config`
 }
 
@@ -10,6 +11,7 @@ android {
 
 dependencies {
     implementation(project(Module.Core.COMMON))
+    implementation(project(Module.Entity.BASE))
     implementation(project(Module.Entity.PLACES))
     implementation(project(Module.Services.Firebase.PLACES))
     testImplementation("junit:junit:4.13.2")

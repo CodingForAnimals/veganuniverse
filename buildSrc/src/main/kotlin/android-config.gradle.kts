@@ -2,11 +2,12 @@ import com.android.build.gradle.BaseExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 configure<BaseExtension> {
-    compileSdkVersion(33)
+    compileSdkVersion(34)
+//    buildToolsVersion("30.0.3")
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

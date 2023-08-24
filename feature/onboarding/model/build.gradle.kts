@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
     `android-config`
 }
 
@@ -11,4 +12,5 @@ android {
 dependencies {
     implementation(project(Module.Core.COMMON))
     implementation(project(":feature:onboarding:data"))
+
 }

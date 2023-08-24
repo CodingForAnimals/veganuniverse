@@ -35,8 +35,6 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-//        Firebase.firestore.useEmulator("10.0.2.2", 8080)
-
 //        window.statusBarColor = Color.Transparent.toArgb()
 //        val wic = WindowCompat.getInsetsController(window, window.decorView)
 //        wic.isAppearanceLightStatusBars = true

@@ -23,8 +23,6 @@ include(":core:location")
 include(":feature:profile:presentation")
 
 include(":feature:community:presentation")
-include(":feature:community:model")
-include(":feature:community:data")
 
 include(":feature:featuredtopic:presentation")
 include(":feature:featuredtopic:data")

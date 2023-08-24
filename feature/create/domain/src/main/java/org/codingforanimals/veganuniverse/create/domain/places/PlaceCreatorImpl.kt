@@ -3,7 +3,7 @@ package org.codingforanimals.veganuniverse.create.domain.places
 import android.util.Log
 import org.codingforanimals.veganuniverse.create.domain.places.model.CreatePlaceResult
 import org.codingforanimals.veganuniverse.places.entity.PlaceForm
-import org.codingforanimals.veganuniverse.places.services.firebase.api.PlacesApi
+import org.codingforanimals.veganuniverse.services.firebase.api.PlacesApi
 
 private const val TAG = "PlaceCreatorImpl"
 

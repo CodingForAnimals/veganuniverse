@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "381536040984",
+    "firebase_url": "https://veganuniverse-a924e-default-rtdb.firebaseio.com",
+    "project_id": "veganuniverse-a924e",
+    "storage_bucket": "veganuniverse-a924e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381536040984:android:6c136b8e1019b228c02b6d",
+        "android_client_info": {
+          "package_name": "org.codingforanimals.veganuniverse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381536040984-bogeevr16u1ofql0em272s2j986g65ji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.codingforanimals.veganuniverse",
+            "certificate_hash": "9dcb2bb3dddac0647018a591dac5b8e5386b3330"
+          }
+        },
+        {
+          "client_id": "381536040984-udta5qa338rjee2eq2ckfl1e3n7tdodo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.codingforanimals.veganuniverse",
+            "certificate_hash": "6374c894d53864367467e4b5299b7c2cff6dc056"
+          }
+        },
+        {
+          "client_id": "381536040984-lsa3iuh30oim6q4rhu8ou0gj4mvockpg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATDgK_LBizEIapwfzy90-_BI4tVAyKenE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381536040984-lsa3iuh30oim6q4rhu8ou0gj4mvockpg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

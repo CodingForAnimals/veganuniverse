@@ -4,7 +4,7 @@ import org.codingforanimals.veganuniverse.create.domain.di.createFeatureDomainMo
 import org.codingforanimals.veganuniverse.create.presentation.place.di.createPlaceModule
 import org.koin.dsl.module
 
-val createFeatureModule = module {
+val createFeaturePresentationModule = module {
     includes(
         createFeatureDomainModule,
         createPlaceModule,

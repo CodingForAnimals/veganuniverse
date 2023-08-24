@@ -11,8 +11,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
-import org.codingforanimals.places.presentation.navigation.PlacesDestination
-import org.codingforanimals.places.presentation.navigation.placesGraph
 import org.codingforanimals.post.presentation.navigation.navigateToPost
 import org.codingforanimals.post.presentation.navigation.postGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
@@ -23,6 +21,8 @@ import org.codingforanimals.veganuniverse.create.presentation.navigation.createG
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.featuredTopicGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigateToFeaturedTopic
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
+import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
+import org.codingforanimals.veganuniverse.places.presentation.navigation.placesGraph
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.profileGraph
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeDestination

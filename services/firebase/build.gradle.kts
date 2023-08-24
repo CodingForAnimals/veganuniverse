@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
     `android-config`
 }
 
@@ -10,9 +11,10 @@ android {
 
 dependencies {
     implementation(project(Module.Core.COMMON))
+
     bomImplementation(
         Firebase.BOM,
-        listOf(Firebase.FIRESTORE, Firebase.ANALYTICS)
+        listOf(Firebase.FIRESTORE, Firebase.ANALYTICS, Firebase.REALTIME_DATABASE, Firebase.AUTH)
     )
     implementation(Google.AUTH)
 
