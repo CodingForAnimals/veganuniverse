@@ -9,3 +9,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
     }
 }
+
+plugins {
+    id("com.google.firebase.crashlytics") version "2.9.9" apply false
+}

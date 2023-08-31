@@ -4,8 +4,8 @@ import com.google.android.gms.maps.model.LatLng
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
 
 internal sealed class PlacesState {
-    object Error : PlacesState()
-    object Loading : PlacesState()
+    data object Error : PlacesState()
+    data object Loading : PlacesState()
     data class Success(
         val searchCenter: LatLng = LatLng(0.0, 0.0),
         val searchRadiusInKm: Double = 0.0,

@@ -30,7 +30,6 @@ val placesFirebaseServiceModule = module {
     factory<PlaceReviewsApi> {
         PlaceReviewsFirebaseApi(
             firestore = get(),
-            database = get(),
             placeReviewToDomainEntityMapper = get(named(PlaceReviewToDomainEntityMapper::class.java.simpleName)),
             placeReviewFormToFirebaseEntityMapper = get(named(PlaceReviewFormToFirebaseEntityMapper::class.java.simpleName)),
         )

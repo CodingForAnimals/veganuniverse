@@ -3,7 +3,7 @@ package org.codingforanimals.veganuniverse.create.presentation.place.model
 import org.codingforanimals.veganuniverse.places.entity.PlaceForm
 
 sealed class GetFormStatus {
-    object Error : GetFormStatus()
+    data object Error : GetFormStatus()
 
     data class Success(
         val form: PlaceForm,

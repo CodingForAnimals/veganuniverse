@@ -34,7 +34,7 @@ class MainViewModel(
     }
 
     sealed class LaunchState {
-        object Loading : LaunchState()
+        data object Loading : LaunchState()
         data class Completed(
             val showOnboarding: Boolean,
         ) : LaunchState()

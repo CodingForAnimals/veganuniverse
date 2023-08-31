@@ -35,5 +35,5 @@ internal sealed class PlaceDetailsScreenItem {
         }
     }
 
-    object Reviews : PlaceDetailsScreenItem()
+    data object Reviews : PlaceDetailsScreenItem()
 }

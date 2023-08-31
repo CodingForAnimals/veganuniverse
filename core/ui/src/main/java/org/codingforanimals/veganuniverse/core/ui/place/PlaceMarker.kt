@@ -37,27 +37,27 @@ sealed class PlaceMarker(
         }
     }
 
-    object RestaurantMarker : PlaceMarker(
+    data object RestaurantMarker : PlaceMarker(
         defaultIcon = VUIcons.MarkerRestaurant,
         selectedIcon = VUIcons.MarkerRestaurantSelected,
     )
 
-    object StoreMarker : PlaceMarker(
+    data object StoreMarker : PlaceMarker(
         defaultIcon = VUIcons.MarkerStore,
         selectedIcon = VUIcons.MarkerStoreSelected,
     )
 
-    object CafeMarker : PlaceMarker(
+    data object CafeMarker : PlaceMarker(
         defaultIcon = VUIcons.MarkerCafe,
         selectedIcon = VUIcons.MarkerCafeSelected,
     )
 
-    object BarMarker : PlaceMarker(
+    data object BarMarker : PlaceMarker(
         defaultIcon = VUIcons.Beer,
         selectedIcon = VUIcons.Beer,
     )
 
-    object DefaultMarker : PlaceMarker(
+    data object DefaultMarker : PlaceMarker(
         defaultIcon = VUIcons.LocationFilled,
         selectedIcon = VUIcons.LocationFilled,
     )

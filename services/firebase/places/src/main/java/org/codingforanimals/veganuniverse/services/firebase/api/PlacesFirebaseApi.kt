@@ -56,7 +56,7 @@ internal class PlacesFirebaseApi(
                         channel.close()
                     },
                     onGeoQueryError = {
-                        Log.e(TAG, it?.stackTraceToString() ?: "")
+                        Log.e(TAG, it?.stackTraceToString() ?: "Error geoquerying for places")
                         channel.close()
                     },
                 )
@@ -110,7 +110,14 @@ internal class PlacesFirebaseApi(
             /* key = */ geoHash,
             /* location = */ GeoLocation(form.latitude, form.longitude)
         )
-        /* completionListener = */ { _, _ -> geoFireCompletionSource.setResult(null); }
+        /* completionListener = */ { key, error ->
+            if (error != null) {
+                Log.e(TAG, "Error message uploading place geofire ${error.message}")
+                Log.e(TAG, "Error details uploading place geofire ${error.details}")
+            }
+            geoFireCompletionSource.setResult(null)
+        }
+//        /* completionListener = */ { _, _ -> geoFireCompletionSource.setResult(null); }
 
         val databaseRef = database
             .getReference("${DatabasePath.Content.Places.CARDS}/${geoHash}")

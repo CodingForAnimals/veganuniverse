@@ -117,11 +117,11 @@ class EmailRegistrationViewModel(
             val confirmPassword: String? = null,
         ) : Action()
 
-        object OnCreateAccountButtonClick : Action()
-        object OnErrorDialogDismissRequest : Action()
+        data object OnCreateAccountButtonClick : Action()
+        data object OnErrorDialogDismissRequest : Action()
     }
 
     sealed class SideEffect {
-        object NavigateToValidateEmailScreen : SideEffect()
+        data object NavigateToValidateEmailScreen : SideEffect()
     }
 }

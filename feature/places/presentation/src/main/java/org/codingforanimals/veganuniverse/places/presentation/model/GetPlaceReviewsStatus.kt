@@ -5,7 +5,7 @@ import org.codingforanimals.veganuniverse.places.presentation.R
 import org.codingforanimals.veganuniverse.places.presentation.details.entity.PlaceReview
 
 sealed class GetPlaceReviewsStatus {
-    object Loading : GetPlaceReviewsStatus()
+    data object Loading : GetPlaceReviewsStatus()
     data class Exception(
         @StringRes val error: Int = R.string.error_unknown_failure_message,
     ) : GetPlaceReviewsStatus()
@@ -18,7 +18,7 @@ sealed class GetPlaceReviewsStatus {
 }
 
 sealed class GetUserReviewStatus {
-    object Loading : GetUserReviewStatus()
+    data object Loading : GetUserReviewStatus()
     data class Exception(
         @StringRes val message: Int = R.string.place_details_get_user_review_error_message,
     ) : GetUserReviewStatus()

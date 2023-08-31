@@ -109,6 +109,7 @@ internal class CreatePlaceViewModel(
             GetPlaceDataStatus.Loading -> {
                 uiState = uiState.copy(isLoading = true)
             }
+
             is GetPlaceDataStatus.StreetAddressData -> with(placeDataStatus) {
                 uiState = uiState.copy(
                     locationField = LocationField(latLng),
@@ -116,6 +117,7 @@ internal class CreatePlaceViewModel(
                 )
                 _sideEffects.send(SideEffect.ZoomInLocation(latLng))
             }
+
             is GetPlaceDataStatus.EstablishmentData -> with(placeDataStatus) {
                 uiState = uiState.copy(
                     nameField = StringField(name),
@@ -132,27 +134,32 @@ internal class CreatePlaceViewModel(
                 )
                 _sideEffects.send(SideEffect.ZoomInLocation(latLng))
             }
+
             is GetPlaceDataStatus.EstablishmentPicture -> {
                 uiState = uiState.copy(
                     pictureField = PictureField(placeDataStatus.bitmap),
                     isLoading = false
                 )
             }
+
             GetPlaceDataStatus.EstablishmentPictureException -> {
                 uiState = uiState.copy(pictureField = PictureField(), isLoading = false)
             }
+
             GetPlaceDataStatus.PlaceTypeException -> {
                 uiState = uiState.copy(
                     errorDialog = CreatePlaceErrorDialog.PlaceTypeErrorDialog,
                     isLoading = false
                 )
             }
+
             GetPlaceDataStatus.MissingCriticalFieldException -> {
                 uiState = uiState.copy(
                     errorDialog = CreatePlaceErrorDialog.MissingCriticalFieldErrorDialog,
                     isLoading = false
                 )
             }
+
             GetPlaceDataStatus.UnknownException -> {
                 uiState = uiState.copy(
                     errorDialog = CreatePlaceErrorDialog.UnknownErrorDialog,
@@ -187,6 +194,7 @@ internal class CreatePlaceViewModel(
                     errorDialog = CreatePlaceErrorDialog.InvalidFormErrorDialog
                 )
             }
+
             is GetFormStatus.Success -> {
                 submitForm(result.form)
             }
@@ -222,10 +230,12 @@ internal class CreatePlaceViewModel(
                     CreatePlaceUseCase.Status.Loading -> {
                         uiState = uiState.copy(isLoading = true)
                     }
+
                     CreatePlaceUseCase.Status.Success -> {
                         uiState = uiState.copy(isLoading = false)
                         _sideEffects.send(SideEffect.NavigateToThankYouScreen)
                     }
+
                     CreatePlaceUseCase.Status.PlaceAlreadyExists -> {
                         uiState = uiState.copy(
                             isLoading = false,
@@ -234,12 +244,14 @@ internal class CreatePlaceViewModel(
                             },
                         )
                     }
+
                     CreatePlaceUseCase.Status.UnknownError -> {
                         uiState = uiState.copy(
                             isLoading = false,
                             errorDialog = CreatePlaceErrorDialog.UnknownErrorDialog,
                         )
                     }
+
                     CreatePlaceUseCase.Status.UnauthorizedUser -> {
                         viewModelScope.launch {
                             _sideEffects.send(SideEffect.NavigateToAuthenticateScreen)
@@ -275,24 +287,28 @@ internal class CreatePlaceViewModel(
                         openingMinute = updatedMinute,
                     )
                 )
+
                 state.periodEnd == PeriodEnd.TO && state.periodType == PeriodType.MAIN -> day.copy(
                     mainPeriod = day.mainPeriod.copy(
                         closingHour = updatedHour,
                         closingMinute = updatedMinute,
                     )
                 )
+
                 state.periodEnd == PeriodEnd.FROM && state.periodType == PeriodType.SECONDARY -> day.copy(
                     secondaryPeriod = day.secondaryPeriod.copy(
                         openingHour = updatedHour,
                         openingMinute = updatedMinute,
                     )
                 )
+
                 state.periodEnd == PeriodEnd.TO && state.periodType == PeriodType.SECONDARY -> day.copy(
                     secondaryPeriod = day.secondaryPeriod.copy(
                         closingHour = updatedHour,
                         closingMinute = updatedMinute,
                     )
                 )
+
                 else -> OpeningHours(day.dayOfWeek)
             }
             val updatedOpeningHours = uiState.openingHoursField.sortedOpeningHours.toMutableList()
@@ -396,31 +412,31 @@ internal class CreatePlaceViewModel(
             val tag: PlaceTag? = null,
         ) : Action()
 
-        object OnSubmitClick : Action()
-        object OnOpeningHoursEditButtonClick : Action()
-        object OnOpeningHoursDismissEditDialog : Action()
-        object OnImagePickerClick : Action()
-        object OnSearchMapClick : Action()
+        data object OnSubmitClick : Action()
+        data object OnOpeningHoursEditButtonClick : Action()
+        data object OnOpeningHoursDismissEditDialog : Action()
+        data object OnImagePickerClick : Action()
+        data object OnSearchMapClick : Action()
         data class OnPlaceSelected(val activityResult: ActivityResult) : Action()
-        object OnErrorDialogDismissRequest : Action()
-        object OnTimePickerDismissed : Action()
+        data object OnErrorDialogDismissRequest : Action()
+        data object OnTimePickerDismissed : Action()
         data class EditPeriodButtonClick(
             val day: DayOfWeek,
             val periodEnd: PeriodEnd,
             val periodType: PeriodType,
         ) : Action()
 
-        object OnHideExpandOpeningHoursClick : Action()
+        data object OnHideExpandOpeningHoursClick : Action()
 
         data class OnDayOpenCloseSwitchClick(val day: DayOfWeek) : Action()
         data class OnChangeSplitPeriodClick(val day: DayOfWeek) : Action()
     }
 
     sealed class SideEffect {
-        object NavigateToAuthenticateScreen : SideEffect()
-        object NavigateToThankYouScreen : SideEffect()
-        object NavigateToAlreadyExistingPlace : SideEffect()
-        object OpenImageSelector : SideEffect()
+        data object NavigateToAuthenticateScreen : SideEffect()
+        data object NavigateToThankYouScreen : SideEffect()
+        data object NavigateToAlreadyExistingPlace : SideEffect()
+        data object OpenImageSelector : SideEffect()
         data class OpenAutoCompleteOverlay(val autocompleteIntent: Intent) : SideEffect()
         data class ZoomInLocation(private val latLng: LatLng) : SideEffect() {
             val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ANIMATION_ZOOM)

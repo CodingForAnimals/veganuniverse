@@ -1,23 +1,12 @@
 package org.codingforanimals.veganuniverse.services.firebase.api
 
-import android.util.Log
 import com.google.firebase.Timestamp
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.MutableData
-import com.google.firebase.database.Transaction
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
-import org.codingforanimals.veganuniverse.common.utils.AverageCalculator
 import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
 import org.codingforanimals.veganuniverse.places.entity.PaginatedResponse
 import org.codingforanimals.veganuniverse.places.entity.PlaceReviewForm
-import org.codingforanimals.veganuniverse.services.firebase.DatabaseFields
-import org.codingforanimals.veganuniverse.services.firebase.DatabasePath
 import org.codingforanimals.veganuniverse.services.firebase.FirestoreCollection
 import org.codingforanimals.veganuniverse.services.firebase.FirestoreFields
 import org.codingforanimals.veganuniverse.services.firebase.entity.PlaceReview
@@ -28,7 +17,6 @@ private const val TAG = "PlaceReviewsFirebaseApi"
 
 internal class PlaceReviewsFirebaseApi(
     private val firestore: FirebaseFirestore,
-    private val database: FirebaseDatabase,
     private val placeReviewToDomainEntityMapper: OneWayEntityMapper<PlaceReview, PlaceReviewDomainEntity>,
     private val placeReviewFormToFirebaseEntityMapper: OneWayEntityMapper<PlaceReviewForm, PlaceReview>,
 ) : PlaceReviewsApi {
@@ -92,8 +80,6 @@ internal class PlaceReviewsFirebaseApi(
             .collection(FirestoreCollection.Content.Places.reviews(placeId))
             .add(placeReview).await()
 
-//        manipulatePlaceRating(placeId, placeReviewForm.rating, AverageCalculator.Addition)
-
         return with(placeReviewForm) {
             PlaceReviewDomainEntity(
                 id = docRef.id,
@@ -107,48 +93,9 @@ internal class PlaceReviewsFirebaseApi(
         }
     }
 
-    private fun manipulatePlaceRating(
-        placeId: String,
-        rating: Int,
-        averageCalculator: AverageCalculator,
-    ) {
-        firestore
-            .collection(FirestoreCollection.Content.Places.reviews(placeId))
-            .count()
-            .get(AggregateSource.SERVER).addOnSuccessListener { aggregateQuery ->
-                database
-                    .getReference(DatabasePath.Content.Places.card(placeId))
-                    .child(DatabaseFields.Content.Places.Cards.RATING)
-                    .runTransaction(
-                        object : Transaction.Handler {
-                            override fun doTransaction(currentData: MutableData): Transaction.Result {
-                                val currentRatingAverage = currentData.getValue<Double>()
-                                if (currentRatingAverage != null) {
-                                    currentData.value = averageCalculator.calculate(
-                                        value = rating,
-                                        average = currentRatingAverage,
-                                        count = aggregateQuery.count
-                                    )
-                                }
-                                return Transaction.success(currentData)
-                            }
-
-                            override fun onComplete(
-                                error: DatabaseError?,
-                                committed: Boolean,
-                                currentData: DataSnapshot?,
-                            ) {
-                                Log.e(TAG, "onComplete: $error")
-                            }
-                        },
-                    )
-            }
-    }
-
     override suspend fun deleteReview(placeId: String, placeReview: PlaceReviewDomainEntity) {
         firestore
             .collection(FirestoreCollection.Content.Places.reviews(placeId))
             .document(placeReview.id).delete().await()
-        manipulatePlaceRating(placeId, placeReview.rating, AverageCalculator.Subtraction)
     }
 }

@@ -60,11 +60,11 @@ class ProfileScreenViewModel(
     )
 
     sealed class Action {
-        object OnCreateUserButtonClick : Action()
-        object LogOut : Action()
+        data object OnCreateUserButtonClick : Action()
+        data object LogOut : Action()
     }
 
     sealed class SideEffect {
-        object NavigateToRegister : SideEffect()
+        data object NavigateToRegister : SideEffect()
     }
 }

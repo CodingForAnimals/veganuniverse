@@ -31,6 +31,7 @@ import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.core.ui.lifecycle.LifecycleObserver
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel.Action
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel.SideEffect
@@ -114,6 +115,7 @@ private fun PlacesHomeScreen(
                     isFocused = uiState.isFocused,
                     onAction = onAction,
                 )
+
                 PlacesState.Error -> ErrorSheet()
                 PlacesState.Loading -> LoadingSheet()
             }
@@ -154,9 +156,12 @@ private fun HandleSideEffects(
                         effect.animationErrorCallback?.invoke()
                     }
                 }
-                is SideEffect.ShowSnackbar -> with(effect.snackbar) {
+
+                is SideEffect.ShowSnackbar -> launch {
                     val res = snackbarHostState.showSnackbar(
-                        message = text, duration = SnackbarDuration.Long, actionLabel = actionLabel
+                        message = effect.snackbar.text,
+                        duration = SnackbarDuration.Long,
+                        actionLabel = effect.snackbar.actionLabel
                     )
                     when (res) {
                         SnackbarResult.Dismissed -> Unit
@@ -169,6 +174,7 @@ private fun HandleSideEffects(
 
                     }
                 }
+
                 SideEffect.PartiallyExpand -> {
                     try {
                         scaffoldState.bottomSheetState.partialExpand()
@@ -176,6 +182,7 @@ private fun HandleSideEffects(
                         Log.d("PlacesHomeScreen.kt", e.stackTraceToString())
                     }
                 }
+
                 is SideEffect.LocationServiceEnableRequest -> {
                     enableLocationActivityLauncher.launch(effect.intent)
                 }

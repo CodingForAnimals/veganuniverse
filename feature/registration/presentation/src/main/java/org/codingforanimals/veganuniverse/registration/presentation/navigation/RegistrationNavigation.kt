@@ -16,9 +16,9 @@ import org.codingforanimals.veganuniverse.registration.presentation.prompt.Promp
 import org.codingforanimals.veganuniverse.registration.presentation.signin.EmailSignInScreen
 
 sealed class RegistrationDestination(route: String) : Destination(route) {
-    object Prompt : RegistrationDestination("registration_prompt")
-    object EmailRegistration : RegistrationDestination("registration_email_sign_up")
-    object EmailSignIn : RegistrationDestination("registration_email_sign_in")
+    data object Prompt : RegistrationDestination("registration_prompt")
+    data object EmailRegistration : RegistrationDestination("registration_email_sign_up")
+    data object EmailSignIn : RegistrationDestination("registration_email_sign_in")
 }
 
 private const val origin_destination = "origin_destination_argument"

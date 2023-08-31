@@ -65,36 +65,46 @@ internal class PlacesHomeViewModel(
             Action.OnBackClick -> {
                 handleBackClick()
             }
+
             Action.OnExpandSheetButtonClick -> {
                 viewModelScope.launch {
                     _sideEffects.send(SideEffect.PartiallyExpand)
                 }
             }
+
             is Action.OnSettingsScreenDismissed -> {
                 userLocationManager.fetchUserLocation()
             }
+
             Action.OnRefreshPlacesButtonClick -> {
                 refreshPlaces()
             }
+
             Action.OnFilterChipClick -> {
                 openFilterDialog(FilterDialog.Filter)
             }
+
             Action.OnSortChipClick -> {
                 openFilterDialog(FilterDialog.Sort)
             }
+
             Action.OnFilterDialogDismissRequest -> {
                 val filterState = uiState.filterState.copy(visibleDialog = null)
                 uiState = uiState.copy(filterState = filterState)
             }
+
             is Action.OnFilterRequest -> {
                 onFilterRequest(action.newPlaceType, action.newActiveTags)
             }
+
             is Action.OnSortRequest -> {
                 onSortRequest(action.newSorter)
             }
+
             Action.OnMapClick -> {
                 uiState = uiState.copy(isFocused = false)
             }
+
             is Action.OnPlaceClick -> {
                 onPlaceClick(action.place)
             }
@@ -138,18 +148,22 @@ internal class PlacesHomeViewModel(
                     LocationResponse.LocationLoading -> {
                         uiState = uiState.copy(userLocationState = UserLocationState.Loading)
                     }
+
                     is LocationResponse.LocationServiceDisabled -> {
                         uiState = uiState.copy(userLocationState = UserLocationState.Unavailable)
                         requestUserEnableLocationService()
                     }
+
                     LocationResponse.LocationNotRequested -> {
                         uiState = uiState.copy(userLocationState = UserLocationState.Unavailable)
                         userLocationManager.fetchUserLocation()
                     }
+
                     LocationResponse.UnknownError -> {
                         uiState = uiState.copy(userLocationState = UserLocationState.Unavailable)
                         _sideEffects.send(SideEffect.ShowSnackbar(Snackbar.LocationError))
                     }
+
                     LocationResponse.PermissionsNotGranted -> {
                         if (!uiState.snackbarPreviouslyShown) {
                             _sideEffects.send(SideEffect.ShowSnackbar(Snackbar.LocationDenied))
@@ -159,6 +173,7 @@ internal class PlacesHomeViewModel(
                             snackbarPreviouslyShown = true
                         )
                     }
+
                     is LocationResponse.LocationGranted -> {
                         while (!uiState.mapLoaded) {
                             delay(500)
@@ -315,32 +330,32 @@ internal class PlacesHomeViewModel(
     }
 
     sealed class FilterDialog {
-        object Filter : FilterDialog()
-        object Sort : FilterDialog()
+        data object Filter : FilterDialog()
+        data object Sort : FilterDialog()
     }
 
     sealed class Action {
-        object OnBackClick : Action()
-        object OnExpandSheetButtonClick : Action()
-        object OnSettingsScreenDismissed : Action()
-        object OnRefreshPlacesButtonClick : Action()
-        object OnFilterChipClick : Action()
-        object OnSortChipClick : Action()
-        object OnFilterDialogDismissRequest : Action()
+        data object OnBackClick : Action()
+        data object OnExpandSheetButtonClick : Action()
+        data object OnSettingsScreenDismissed : Action()
+        data object OnRefreshPlacesButtonClick : Action()
+        data object OnFilterChipClick : Action()
+        data object OnSortChipClick : Action()
+        data object OnFilterDialogDismissRequest : Action()
         data class OnFilterRequest(
             val newPlaceType: PlaceType?, val newActiveTags: List<PlaceTag>,
         ) : Action()
 
         data class OnSortRequest(val newSorter: PlaceSorter) : Action()
-        object OnMapClick : Action()
+        data object OnMapClick : Action()
         data class OnPlaceClick(val place: org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard) :
             Action()
     }
 
     sealed class SideEffect {
         data class NavigateToPlaceDetails(val id: String) : SideEffect()
-        object NavigateUp : SideEffect()
-        object PartiallyExpand : SideEffect()
+        data object NavigateUp : SideEffect()
+        data object PartiallyExpand : SideEffect()
         data class LocationServiceEnableRequest(val intent: IntentSenderRequest) : SideEffect()
         data class ShowSnackbar(val snackbar: Snackbar) : SideEffect()
         data class ZoomInLocation(
@@ -364,16 +379,16 @@ internal class PlacesHomeViewModel(
     }
 
     sealed class Snackbar(val text: String, val actionLabel: String? = null) {
-        object LocationDenied : Snackbar(
+        data object LocationDenied : Snackbar(
             text = "No tenemos permiso para mostrarte los lugares cercanos a tu ubicación. Podés cambiar esto accediendo a Configuración",
             actionLabel = "Ir a configuración",
         )
 
-        object LocationError : Snackbar(
+        data object LocationError : Snackbar(
             text = "Ha ocurrido un error al intentar obtener tu ubicación",
         )
 
-        object LocationDisabled : Snackbar(
+        data object LocationDisabled : Snackbar(
             text = "No pudimos acceder a tu ubicación",
         )
     }

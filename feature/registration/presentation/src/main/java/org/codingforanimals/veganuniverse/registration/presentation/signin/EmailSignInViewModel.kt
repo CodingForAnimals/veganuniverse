@@ -97,7 +97,7 @@ class EmailSignInViewModel(
             val password: String? = null,
         ) : Action()
 
-        object OnSignInButtonClick : Action()
-        object OnErrorDialogDismissRequest : Action()
+        data object OnSignInButtonClick : Action()
+        data object OnErrorDialogDismissRequest : Action()
     }
 }

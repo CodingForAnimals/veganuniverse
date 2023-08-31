@@ -6,8 +6,8 @@ import org.codingforanimals.veganuniverse.create.presentation.R
 sealed class InvalidFormException(
     @StringRes val errorMessage: Int,
 ) : Exception() {
-    object EmptyName : InvalidFormException(R.string.empty_name_message)
-    object InvalidAddress : InvalidFormException(R.string.invalid_address_message)
-    object InvalidLocation : InvalidFormException(R.string.invalid_location_message)
-    object EmptyType : InvalidFormException(R.string.empty_type_message)
+    data object EmptyName : InvalidFormException(R.string.empty_name_message)
+    data object InvalidAddress : InvalidFormException(R.string.invalid_address_message)
+    data object InvalidLocation : InvalidFormException(R.string.invalid_location_message)
+    data object EmptyType : InvalidFormException(R.string.empty_type_message)
 }

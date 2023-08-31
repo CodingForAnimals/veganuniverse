@@ -90,6 +90,6 @@ fun PermissionDialog(
 }
 
 sealed class PermissionAction {
-    object Granted : PermissionAction()
-    object Denied : PermissionAction()
+    data object Granted : PermissionAction()
+    data object Denied : PermissionAction()
 }

@@ -1,12 +1,12 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.entity
 
 sealed class CreatePlaceFormItem {
-    object Map : CreatePlaceFormItem()
-    object EnterName : CreatePlaceFormItem()
-    object EnterOpeningHours : CreatePlaceFormItem()
-    object SelectImage : CreatePlaceFormItem()
-    object SelectIcon : CreatePlaceFormItem()
-    object EnterDescription : CreatePlaceFormItem()
-    object SelectTags : CreatePlaceFormItem()
-    object SubmitButton : CreatePlaceFormItem()
+    data object Map : CreatePlaceFormItem()
+    data object EnterName : CreatePlaceFormItem()
+    data object EnterOpeningHours : CreatePlaceFormItem()
+    data object SelectImage : CreatePlaceFormItem()
+    data object SelectIcon : CreatePlaceFormItem()
+    data object EnterDescription : CreatePlaceFormItem()
+    data object SelectTags : CreatePlaceFormItem()
+    data object SubmitButton : CreatePlaceFormItem()
 }

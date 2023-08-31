@@ -30,10 +30,10 @@ class CreatePlaceUseCase(
     }
 
     sealed class Status {
-        object Loading : Status()
-        object PlaceAlreadyExists : Status()
-        object UnknownError : Status()
-        object Success : Status()
-        object UnauthorizedUser : Status()
+        data object Loading : Status()
+        data object PlaceAlreadyExists : Status()
+        data object UnknownError : Status()
+        data object Success : Status()
+        data object UnauthorizedUser : Status()
     }
 }

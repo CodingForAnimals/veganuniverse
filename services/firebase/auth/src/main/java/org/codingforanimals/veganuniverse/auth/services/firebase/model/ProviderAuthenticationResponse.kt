@@ -5,10 +5,10 @@ sealed class ProviderAuthenticationResponse {
         ProviderAuthenticationResponse()
 
     sealed class Exception : ProviderAuthenticationResponse() {
-        object UserAlreadyExists : Exception()
-        object InvalidCredentials : Exception()
-        object ConnectionError : Exception()
-        object InvalidUser : Exception()
-        object UnknownFailure : Exception()
+        data object UserAlreadyExists : Exception()
+        data object InvalidCredentials : Exception()
+        data object ConnectionError : Exception()
+        data object InvalidUser : Exception()
+        data object UnknownFailure : Exception()
     }
 }

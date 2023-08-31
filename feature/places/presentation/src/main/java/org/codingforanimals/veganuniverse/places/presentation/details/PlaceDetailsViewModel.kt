@@ -310,14 +310,14 @@ internal class PlaceDetailsViewModel(
             @StringRes val message: Int = R.string.error_unknown_failure_message,
         ) : AlertDialog()
 
-        object DiscardReview : AlertDialog()
+        data object DiscardReview : AlertDialog()
         data class DeleteReview(val review: PlaceReview) : AlertDialog()
-        object ReportReview : AlertDialog()
+        data object ReportReview : AlertDialog()
     }
 
     sealed class DetailsState {
-        object Loading : DetailsState()
-        object Error : DetailsState()
+        data object Loading : DetailsState()
+        data object Error : DetailsState()
         data class Success(val content: List<PlaceDetailsScreenItem>) : DetailsState()
     }
 
@@ -333,7 +333,7 @@ internal class PlaceDetailsViewModel(
     }
 
     sealed class ReviewsState {
-        object Loading : ReviewsState()
+        data object Loading : ReviewsState()
         data class Error(@StringRes val message: Int) : ReviewsState()
         data class Success(
             val userReview: PlaceReview? = null,
@@ -350,17 +350,17 @@ internal class PlaceDetailsViewModel(
         data class OnUserReviewRatingUpdate(val rating: Int) : Action()
         data class OnUserReviewTitleUpdate(val title: String) : Action()
         data class OnUserReviewDescriptionUpdate(val description: String) : Action()
-        object OnReportPlaceClick : Action()
-        object OnEditPlaceClick : Action()
-        object OnAlertDialogDismissRequest : Action()
-        object OnDiscardReviewIconClick : Action()
-        object OnConfirmDiscardReviewButtonClick : Action()
-        object OnGetMoreReviewsButtonClick : Action()
-        object OnReportReviewIconClick : Action()
+        data object OnReportPlaceClick : Action()
+        data object OnEditPlaceClick : Action()
+        data object OnAlertDialogDismissRequest : Action()
+        data object OnDiscardReviewIconClick : Action()
+        data object OnConfirmDiscardReviewButtonClick : Action()
+        data object OnGetMoreReviewsButtonClick : Action()
+        data object OnReportReviewIconClick : Action()
         data class OnDeleteReviewIconClick(val review: PlaceReview) : Action()
         data class OnConfirmDeleteReviewButtonClick(val review: PlaceReview) : Action()
-        object OnConfirmReportReviewButtonClick : Action()
-        object SubmitReview : Action()
+        data object OnConfirmReportReviewButtonClick : Action()
+        data object SubmitReview : Action()
     }
 
     sealed class SideEffect {

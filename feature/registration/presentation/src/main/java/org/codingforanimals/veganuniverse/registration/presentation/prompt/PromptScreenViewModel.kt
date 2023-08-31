@@ -106,17 +106,17 @@ class PromptScreenViewModel(
     )
 
     sealed class Action {
-        object OnRegisterButtonClick : Action()
-        object OnSignInButtonClick : Action()
+        data object OnRegisterButtonClick : Action()
+        data object OnSignInButtonClick : Action()
         data class OnProviderAuthButtonClick(val provider: AuthProvider) : Action()
 
         data class OnProviderAuthActivityFinished(val result: ActivityResult) : Action()
     }
 
     sealed class SideEffect {
-        object NavigateToEmailRegistration : SideEffect()
-        object NavigateToEmailSignIn : SideEffect()
-        object NavigateToOriginDestination : SideEffect()
+        data object NavigateToEmailRegistration : SideEffect()
+        data object NavigateToEmailSignIn : SideEffect()
+        data object NavigateToOriginDestination : SideEffect()
         data class LaunchProviderActivity(val intent: Intent) : SideEffect()
     }
 }

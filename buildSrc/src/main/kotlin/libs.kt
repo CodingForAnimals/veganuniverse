@@ -61,6 +61,7 @@ object Firebase {
     const val FIRESTORE = "com.google.firebase:firebase-firestore-ktx"
     const val REALTIME_DATABASE = "com.google.firebase:firebase-database-ktx"
     const val ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
+    const val CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx"
     const val FUNCTIONS = "com.google.firebase:firebase-functions-ktx"
     const val AUTH = "com.google.firebase:firebase-auth-ktx"
     const val GEO_FIRE = "com.firebase:geofire-android-common:3.2.0"

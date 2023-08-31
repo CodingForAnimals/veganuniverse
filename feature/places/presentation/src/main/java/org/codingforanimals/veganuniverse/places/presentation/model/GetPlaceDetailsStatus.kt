@@ -5,7 +5,7 @@ import org.codingforanimals.veganuniverse.places.presentation.R
 import org.codingforanimals.veganuniverse.places.presentation.entity.Place
 
 internal sealed class GetPlaceDetailsStatus {
-    object Loading : GetPlaceDetailsStatus()
+    data object Loading : GetPlaceDetailsStatus()
     data class Success(val place: Place) :
         GetPlaceDetailsStatus()
 
@@ -13,7 +13,7 @@ internal sealed class GetPlaceDetailsStatus {
         @StringRes val title: Int,
         @StringRes val message: Int,
     ) : GetPlaceDetailsStatus() {
-        object UnknownException : Exception(
+        data object UnknownException : Exception(
             title = R.string.error_unknown_failure_title,
             message = R.string.error_unknown_failure_message,
         )

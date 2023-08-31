@@ -11,8 +11,8 @@ import org.codingforanimals.veganuniverse.places.presentation.details.PlaceDetai
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeScreen
 
 sealed class PlacesDestination(route: String) : Destination(route) {
-    object Home : PlacesDestination("places_home")
-    object Details : PlacesDestination("places_details")
+    data object Home : PlacesDestination("places_home")
+    data object Details : PlacesDestination("places_details")
 }
 
 internal const val selected_place_id = "selected_place_id_argument"

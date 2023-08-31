@@ -31,7 +31,12 @@ configure<BaseExtension> {
         }
     }
 
+    plugins {
+        id("com.google.firebase.crashlytics")
+    }
+
     dependencies {
         implementation(libs.koinAndroid)
+        bomImplementation(Firebase.BOM, listOf(Firebase.CRASHLYTICS, Firebase.ANALYTICS))
     }
 }

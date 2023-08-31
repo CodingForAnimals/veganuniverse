@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import com.google.android.gms.maps.model.LatLng
 
 sealed class GetPlaceDataStatus {
-    object Loading : GetPlaceDataStatus()
+    data object Loading : GetPlaceDataStatus()
     data class EstablishmentData(
         val latLng: LatLng,
         val name: String,
@@ -25,8 +25,8 @@ sealed class GetPlaceDataStatus {
         val address: String,
     ) : GetPlaceDataStatus()
 
-    object MissingCriticalFieldException : GetPlaceDataStatus()
-    object EstablishmentPictureException : GetPlaceDataStatus()
-    object PlaceTypeException : GetPlaceDataStatus()
-    object UnknownException : GetPlaceDataStatus()
+    data object MissingCriticalFieldException : GetPlaceDataStatus()
+    data object EstablishmentPictureException : GetPlaceDataStatus()
+    data object PlaceTypeException : GetPlaceDataStatus()
+    data object UnknownException : GetPlaceDataStatus()
 }

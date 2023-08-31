@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.places.presentation.home.state
 
 sealed class UserLocationState {
-    object Loading : UserLocationState()
-    object Success : UserLocationState()
-    object Unavailable : UserLocationState()
+    data object Loading : UserLocationState()
+    data object Success : UserLocationState()
+    data object Unavailable : UserLocationState()
 }

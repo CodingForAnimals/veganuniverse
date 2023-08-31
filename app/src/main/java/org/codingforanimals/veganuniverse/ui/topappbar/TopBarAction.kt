@@ -8,17 +8,17 @@ sealed class TopBarAction(
     val icon: Icon,
     val contentDescription: String,
 ) {
-    object SearchTopBarAction : TopBarAction(
+    data object SearchTopBarAction : TopBarAction(
         icon = VUIcons.Search,
         contentDescription = "Buscar"
     )
 
-    object NotificationTopBarAction : TopBarAction(
+    data object NotificationTopBarAction : TopBarAction(
         icon = VUIcons.Notifications,
         contentDescription = "Notificaciones",
     )
 
-    object SettingsTopBarAction : TopBarAction(
+    data object SettingsTopBarAction : TopBarAction(
         icon = VUIcons.Settings,
         contentDescription = "Configuración",
     )

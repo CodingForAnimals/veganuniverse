@@ -23,10 +23,10 @@ class OnboardingViewModel : ViewModel() {
     }
 
     sealed class Action {
-        object OnUserDismissOnboardingScreen : Action()
+        data object OnUserDismissOnboardingScreen : Action()
     }
 
     sealed class SideEffect {
-        object DismissOnboardingScreen : SideEffect()
+        data object DismissOnboardingScreen : SideEffect()
     }
 }
