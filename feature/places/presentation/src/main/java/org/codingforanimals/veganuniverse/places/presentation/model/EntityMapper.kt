@@ -10,6 +10,8 @@ import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.places.presentation.details.entity.PlaceReview
 import org.codingforanimals.veganuniverse.places.presentation.details.model.Markers
 import org.codingforanimals.veganuniverse.places.presentation.details.model.OpeningHours
+import org.codingforanimals.veganuniverse.places.presentation.entity.Place
+import org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard
 import org.codingforanimals.veganuniverse.places.entity.OpeningHours as OpeningHoursDomainEntity
 import org.codingforanimals.veganuniverse.places.entity.Place as PlaceDomainEntity
 import org.codingforanimals.veganuniverse.places.entity.PlaceCard as PlaceCardDomainEntity
@@ -17,10 +19,10 @@ import org.codingforanimals.veganuniverse.places.entity.PlaceReview as PlaceRevi
 
 private const val TAG = "EntityMapper"
 
-internal fun PlaceCardDomainEntity.toViewEntity(): org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard? {
+internal fun PlaceCardDomainEntity.toViewEntity(): PlaceCard? {
     return try {
         val type = PlaceType.valueOf(type)
-        org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard(
+        PlaceCard(
             geoHash = geoHash,
             name = name,
             rating = rating.roundToInt(),
@@ -50,10 +52,10 @@ private fun PlaceCardDomainEntity.getTags(): List<PlaceTag> {
     }
 }
 
-internal fun PlaceDomainEntity.toViewEntity(): org.codingforanimals.veganuniverse.places.presentation.entity.Place? {
+internal fun PlaceDomainEntity.toViewEntity(): Place? {
     return try {
         val type = PlaceType.valueOf(type)
-        org.codingforanimals.veganuniverse.places.presentation.entity.Place(
+        Place(
             geoHash = geoHash,
             name = name,
             addressComponents = addressComponents,

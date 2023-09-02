@@ -24,3 +24,6 @@ gradlew.bat
 
 functions/
 **/*/res/values/secrets.xml
+/database-debug.log
+/launch-emulators.cmd
+/storage.rules

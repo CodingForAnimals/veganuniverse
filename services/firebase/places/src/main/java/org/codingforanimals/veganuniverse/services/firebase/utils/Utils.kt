@@ -7,6 +7,7 @@ import com.firebase.geofire.GeoQueryEventListener
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import org.codingforanimals.veganuniverse.places.entity.GeoLocationQueryParams
+import org.codingforanimals.veganuniverse.places.entity.PlaceImageType
 
 internal fun createGeoHash(latitude: Double, longitude: Double): String {
     return GeoFireUtils.getGeoHashForLocation(GeoLocation(latitude, longitude))
@@ -41,3 +42,11 @@ internal fun DatabaseReference.geoQuery(
 
 internal val GeoLocationQueryParams.geoLocation: GeoLocation
     get() = GeoLocation(latitude, longitude)
+
+internal val PlaceImageType.extension: String
+    get() {
+        return when (this) {
+            PlaceImageType.Picture -> "_1000x1000.jpeg"
+            PlaceImageType.Thumbnail -> "_400x400.jpeg"
+        }
+    }

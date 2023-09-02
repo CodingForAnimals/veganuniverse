@@ -1,11 +1,16 @@
 package org.codingforanimals.veganuniverse.services.firebase.api
 
+import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageMetadata
+import java.io.ByteArrayOutputStream
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -16,6 +21,7 @@ import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
 import org.codingforanimals.veganuniverse.places.entity.GeoLocationQueryParams
 import org.codingforanimals.veganuniverse.places.entity.PlaceForm
 import org.codingforanimals.veganuniverse.services.firebase.DatabasePath
+import org.codingforanimals.veganuniverse.services.firebase.FirebaseImageResizer
 import org.codingforanimals.veganuniverse.services.firebase.FirestoreCollection
 import org.codingforanimals.veganuniverse.services.firebase.entity.Place
 import org.codingforanimals.veganuniverse.services.firebase.entity.PlaceCard
@@ -32,6 +38,7 @@ private const val TAG = "PlacesFirebaseApi"
 internal class PlacesFirebaseApi(
     private val firestore: FirebaseFirestore,
     private val database: FirebaseDatabase,
+    private val storage: FirebaseStorage,
     private val placeFormToPlaceMapper: OneWayEntityMapper<PlaceForm, Place>,
     private val placeFormToPlaceCardMapper: OneWayEntityMapper<PlaceForm, PlaceCard>,
     private val placeToDomainEntityMapper: OneWayEntityMapper<Place, PlaceDomainEntity>,
@@ -103,6 +110,34 @@ internal class PlacesFirebaseApi(
 
     override suspend fun uploadPlace(form: PlaceForm) {
         val geoHash = createGeoHash(form.latitude, form.longitude)
+        val pictureRef = storage.getReference(
+            FirebaseImageResizer.getPlacePictureToResizeStorageReference(geoHash)
+        )
+
+        val storageMetadata =
+            StorageMetadata.Builder().setContentType(CONTENT_TYPE_IMAGE_JPEG).build()
+        val uploadImageDeferred = when (val model = form.image) {
+            is Bitmap -> {
+                val bytes = ByteArrayOutputStream()
+                model.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+                pictureRef.putBytes(
+                    bytes.toByteArray(),
+                    storageMetadata,
+                ).asDeferred()
+            }
+
+            is Uri -> {
+                pictureRef.putFile(
+                    model,
+                    storageMetadata
+                ).asDeferred()
+            }
+
+            else -> {
+                throw RuntimeException("Unsupported image format")
+            }
+        }
+
         val place = placeFormToPlaceMapper.map(form)
         val placeCard = placeFormToPlaceCardMapper.map(form)
         val geoFireCompletionSource = TaskCompletionSource<Void>()
@@ -117,15 +152,11 @@ internal class PlacesFirebaseApi(
             }
             geoFireCompletionSource.setResult(null)
         }
-//        /* completionListener = */ { _, _ -> geoFireCompletionSource.setResult(null); }
 
         val databaseRef = database
             .getReference("${DatabasePath.Content.Places.CARDS}/${geoHash}")
         val databaseDeferred = databaseRef
             .setValue(placeCard).asDeferred()
-//        val timestampDeferred = databaseRef
-//            .child(DatabaseFields.Content.Places.Cards.TIMESTAMP)
-//            .setValue(ServerValue.TIMESTAMP).asDeferred()
         val firestoreDeferred = firestore
             .collection(FirestoreCollection.Content.Places.ITEMS)
             .document(geoHash)
@@ -134,36 +165,12 @@ internal class PlacesFirebaseApi(
         awaitAll(
             databaseDeferred,
             firestoreDeferred,
-//            timestampDeferred,
+            uploadImageDeferred,
             geoFireCompletionSource.task.asDeferred(),
         )
     }
 
-    /*
-    override fun flowOnPlaceRating(placeId: String): Flow<Double> {
-        val placeRatingDatabaseReference = database
-            .getReference(DatabasePath.Content.Places.card(placeId))
-            .child(DatabaseFields.Content.Places.Cards.RATING)
-
-        return callbackFlow {
-            val listener = object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val rating = snapshot.getValue<Double>()
-                    if (rating != null) {
-                        trySend(rating)
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-            }
-
-            placeRatingDatabaseReference.addValueEventListener(listener)
-            awaitClose {
-                placeRatingDatabaseReference.removeEventListener(listener)
-            }
-        }
+    private companion object {
+        const val CONTENT_TYPE_IMAGE_JPEG = "image/jpeg"
     }
-     */
 }

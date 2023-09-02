@@ -162,6 +162,7 @@ private fun PlaceDetails(
                         is PlaceDetailsScreenItem.Hero -> ItemDetailHero(
                             icon = VUIcons.Store,
                             onImageClick = {},
+                            url = item.url
                         )
 
                         is PlaceDetailsScreenItem.Header -> FeatureItemTitle(

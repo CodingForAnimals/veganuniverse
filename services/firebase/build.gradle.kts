@@ -14,7 +14,13 @@ dependencies {
 
     bomImplementation(
         Firebase.BOM,
-        listOf(Firebase.FIRESTORE, Firebase.ANALYTICS, Firebase.REALTIME_DATABASE, Firebase.AUTH)
+        listOf(
+            Firebase.FIRESTORE,
+            Firebase.ANALYTICS,
+            Firebase.REALTIME_DATABASE,
+            Firebase.AUTH,
+            Firebase.STORAGE,
+        )
     )
     implementation(Google.AUTH)
 

@@ -15,6 +15,7 @@ data class PictureField(
         is Bitmap,
         is Uri,
         -> true
+
         else -> false
     }
 }

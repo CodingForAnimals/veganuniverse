@@ -44,19 +44,19 @@ internal fun SuccessSheet(
 ) {
     Crossfade(
         modifier = Modifier.animateContentSize(),
-        targetState = isFocused,
+        targetState = isFocused, label = "",
     ) {
         if (it && selectedPlace != null) {
             val selectedPlaceCardBorder = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
             PlaceCard(
-                placeViewEntity = selectedPlace,
+                placeCard = selectedPlace,
                 onCardClick = { onAction(Action.OnPlaceClick(selectedPlace)) },
                 border = selectedPlaceCardBorder,
             )
         } else {
             Column {
                 SortAndFilter(filterState, onAction)
-                Crossfade(targetState = placesState.content.isEmpty()) { empty ->
+                Crossfade(targetState = placesState.content.isEmpty(), label = "") { empty ->
                     if (empty) {
                         EmptySuccessSheet()
                     } else {
@@ -79,6 +79,7 @@ internal fun SuccessSheet(
                 onFilterRequest = { type, tags -> onAction(Action.OnFilterRequest(type, tags)) },
             )
         }
+
         PlacesHomeViewModel.FilterDialog.Sort -> {
             SortDialog(
                 activeSorter = filterState.sorter,
@@ -125,7 +126,7 @@ private fun ContentSuccessSheet(
                 items = placesState.content,
                 itemContent = { place ->
                     PlaceCard(
-                        placeViewEntity = place,
+                        placeCard = place,
                         onCardClick = { onAction(Action.OnPlaceClick(place)) },
                     )
                 }

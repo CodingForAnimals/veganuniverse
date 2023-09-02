@@ -20,7 +20,6 @@ internal class PlaceFormToPlaceMapper(
                 rating = 0,
                 type = type,
                 tags = tags,
-                imageRef = "imageRef",
                 latitude = latitude,
                 longitude = longitude,
                 openingHours = openingHours.map { openingHoursMapper.mapLower(it) },

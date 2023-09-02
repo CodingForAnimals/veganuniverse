@@ -44,10 +44,4 @@ class PlacesRepositoryImpl(
     override suspend fun deleteReview(placeId: String, placeReview: PlaceReview) {
         placeReviewsApi.deleteReview(placeId, placeReview)
     }
-
-    /*
-    override fun flowOnPlaceRating(placeId: String): Flow<Double> {
-        return placesApi.flowOnPlaceRating(placeId)
-    }
-     */
 }

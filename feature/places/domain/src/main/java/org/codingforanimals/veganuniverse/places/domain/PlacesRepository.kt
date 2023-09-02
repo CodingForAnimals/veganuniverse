@@ -18,8 +18,4 @@ interface PlacesRepository {
     ): PlaceReview
 
     suspend fun deleteReview(placeId: String, placeReview: PlaceReview)
-
-    /*
-    fun flowOnPlaceRating(placeId: String): Flow<Double>
-     */
 }

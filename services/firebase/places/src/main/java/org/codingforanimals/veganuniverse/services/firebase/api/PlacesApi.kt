@@ -10,8 +10,4 @@ interface PlacesApi {
     suspend fun uploadPlace(form: PlaceForm)
     suspend fun fetchPlace(latitude: Double, longitude: Double): Place?
     suspend fun fetchPlace(geoHash: String): Place?
-
-    /*
-    fun flowOnPlaceRating(placeId: String): Flow<Double>
-     */
 }

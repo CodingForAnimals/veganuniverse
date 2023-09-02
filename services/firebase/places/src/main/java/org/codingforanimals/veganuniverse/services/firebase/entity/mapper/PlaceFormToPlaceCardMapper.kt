@@ -14,7 +14,6 @@ internal class PlaceFormToPlaceCardMapper : OneWayEntityMapper<PlaceForm, PlaceC
                 streetAddress = addressComponents.streetAddress,
                 administrativeArea = addressComponents.administrativeArea,
                 type = type,
-                imageRef = "image-ref",
                 tags = tags,
             )
         }

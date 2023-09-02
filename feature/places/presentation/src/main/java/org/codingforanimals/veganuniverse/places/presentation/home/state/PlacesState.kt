@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.places.presentation.home.state
 
 import com.google.android.gms.maps.model.LatLng
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
+import org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard
 
 internal sealed class PlacesState {
     data object Error : PlacesState()
@@ -10,10 +11,10 @@ internal sealed class PlacesState {
         val searchCenter: LatLng = LatLng(0.0, 0.0),
         val searchRadiusInKm: Double = 0.0,
         val zoom: Float = 0f,
-        private val rawContent: List<org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard> = emptyList(),
+        private val rawContent: List<PlaceCard> = emptyList(),
         private val filterState: FilterState = FilterState(),
     ) : PlacesState() {
-        val content: List<org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard> =
+        val content: List<PlaceCard> =
             rawContent
                 .filter { it.isMatchingType && it.containsAllTags }
                 .sortedWith(getSorter)
@@ -21,7 +22,7 @@ internal sealed class PlacesState {
         private val getSorter
             get() =
                 when (filterState.sorter) {
-                    PlaceSorter.NAME -> Comparator<org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard> { t, t2 ->
+                    PlaceSorter.NAME -> Comparator<PlaceCard> { t, t2 ->
                         compareValues(
                             t.name,
                             t2.name
@@ -34,12 +35,14 @@ internal sealed class PlacesState {
                             t.rating,
                         )
                     }
+
                     PlaceSorter.REVIEWS -> Comparator { t, t2 ->
                         compareValues(
                             t.name,
                             t2.name
                         )
                     }
+
                     PlaceSorter.DATE -> Comparator { t, t2 ->
                         compareValues(
                             t2.timestamp,
@@ -48,12 +51,12 @@ internal sealed class PlacesState {
                     }
                 }
 
-        private val org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard.isMatchingType: Boolean
+        private val PlaceCard.isMatchingType: Boolean
             get() = if (filterState.activePlaceType == null) true else {
                 type == filterState.activePlaceType
             }
 
-        private val org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard.containsAllTags: Boolean
+        private val PlaceCard.containsAllTags: Boolean
             get() = tags.containsAll(filterState.activePlaceTags)
     }
 }

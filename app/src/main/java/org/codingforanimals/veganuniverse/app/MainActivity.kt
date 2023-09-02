@@ -26,7 +26,6 @@ import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingScre
 import org.codingforanimals.veganuniverse.ui.VUApp
 import org.koin.android.ext.android.inject
 
-
 class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by inject()

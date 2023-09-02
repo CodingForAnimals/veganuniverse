@@ -10,7 +10,6 @@ internal data class Place(
     val rating: Int = 0,
     val type: String = "",
     val tags: List<String> = emptyList(),
-    val imageRef: String = "",
     val latitude: Double = -1.0,
     val longitude: Double = -1.0,
     val openingHours: List<OpeningHours> = emptyList(),

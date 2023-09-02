@@ -1,7 +1,6 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.error
 
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -27,9 +26,9 @@ internal fun ErrorDialog(
     val confirmButton: (@Composable () -> Unit) =
         if (errorData is CreatePlaceErrorDialog.PlaceAlreadyExists) {
             {
-                Button(onClick = navigateToAlreadyExistingPlace) {
-                    Text(text = "Ver lugar")
-                }
+//                Button(onClick = navigateToAlreadyExistingPlace) {
+//                    Text(text = "Ver lugar")
+//                }
             }
         } else {
             {

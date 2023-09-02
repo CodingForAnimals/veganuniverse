@@ -23,10 +23,6 @@ internal data class PlaceCard(
     @set:PropertyName(TYPE)
     var type: String = "",
 
-    @get:PropertyName(IMAGE_REF)
-    @set:PropertyName(IMAGE_REF)
-    var imageRef: String = "",
-
     @get:PropertyName(TAGS)
     @set:PropertyName(TAGS)
     var tags: List<String> = emptyList(),
@@ -41,7 +37,6 @@ internal data class PlaceCard(
         const val STREET_ADDRESS = "s_a"
         const val ADMINISTRATIVE_AREA = "a_a"
         const val TYPE = "ty"
-        const val IMAGE_REF = "i"
         const val TAGS = "ta"
         const val TIMESTAMP = "t"
     }

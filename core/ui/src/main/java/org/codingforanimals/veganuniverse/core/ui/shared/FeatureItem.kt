@@ -2,8 +2,8 @@
 
 package org.codingforanimals.veganuniverse.core.ui.shared
 
-import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
@@ -97,11 +98,12 @@ data class ItemDetailHeroColors(
 @Composable
 fun ItemDetailHero(
     imageUri: Uri? = null,
-    bitmap: Bitmap? = null,
+    url: String? = null,
     icon: Icon,
     onImageClick: () -> Unit,
     colors: ItemDetailHeroColors = ItemDetailHeroColors.primaryColors(),
 ) {
+
     val uri = rememberAsyncImagePainter(imageUri)
     Box {
         val heroImageModifier = Modifier
@@ -109,35 +111,53 @@ fun ItemDetailHero(
             .aspectRatio(2f)
             .padding(bottom = 20.dp)
             .clickable(onClick = onImageClick)
-        if (imageUri != null) {
-            Image(
-                modifier = heroImageModifier,
-                painter = uri, contentDescription = "",
-                contentScale = ContentScale.Crop,
-            )
-        } else if (bitmap != null) {
-            AsyncImage(
-                modifier = heroImageModifier,
-                contentScale = ContentScale.Crop,
-                model = bitmap,
-                contentDescription = "",
-            )
-        } else {
-            Column(
-                modifier = heroImageModifier.background(colors.imageBackground),
-                verticalArrangement = Arrangement.spacedBy(Spacing_03, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                VUIcon(
-                    modifier = Modifier.size(24.dp),
-                    icon = VUIcons.Pictures,
+        when {
+            imageUri != null -> {
+                Image(
+                    modifier = heroImageModifier,
+                    painter = uri, contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                )
+            }
+
+            url != null -> {
+                AsyncImage(
+                    modifier = heroImageModifier,
+                    contentScale = ContentScale.Crop,
+                    model = url,
                     contentDescription = "",
-                    tint = colors.galleryIconTint,
+                    onState = {
+                        val print = when (val state = it) {
+                            AsyncImagePainter.State.Empty -> "empty"
+                            is AsyncImagePainter.State.Error -> "error"
+                            is AsyncImagePainter.State.Loading -> "loading"
+                            is AsyncImagePainter.State.Success -> "source ${state.result.dataSource}"
+                        }
+                        Log.e("pepe", print)
+                    }
                 )
-                Text(
-                    text = "Subir foto",
-                    color = colors.galleryTextColor,
-                )
+            }
+
+            else -> {
+                Column(
+                    modifier = heroImageModifier.background(colors.imageBackground),
+                    verticalArrangement = Arrangement.spacedBy(
+                        Spacing_03,
+                        Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    VUIcon(
+                        modifier = Modifier.size(24.dp),
+                        icon = VUIcons.Pictures,
+                        contentDescription = "",
+                        tint = colors.galleryIconTint,
+                    )
+                    Text(
+                        text = "Subir foto",
+                        color = colors.galleryTextColor,
+                    )
+                }
             }
         }
         Box(
@@ -234,7 +254,7 @@ fun UserInfo() {
 
 @Composable
 fun FeatureItemTags(
-    tags: List<String>
+    tags: List<String>,
 ) {
     FlowRow(
         modifier = Modifier

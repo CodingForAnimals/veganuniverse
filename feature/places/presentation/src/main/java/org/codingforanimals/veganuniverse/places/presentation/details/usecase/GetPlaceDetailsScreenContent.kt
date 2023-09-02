@@ -7,7 +7,7 @@ internal class GetPlaceDetailsScreenContent {
     operator fun invoke(place: Place): List<PlaceDetailsScreenItem> {
         return mutableListOf(
             PlaceDetailsScreenItem.Hero(
-                imageUrl = place.imageRef,
+                url = place.imageRef,
             ),
             PlaceDetailsScreenItem.Header(
                 title = place.name,

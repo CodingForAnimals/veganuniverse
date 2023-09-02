@@ -156,21 +156,25 @@ private fun CreatePlaceScreen(
                         isError = uiState.isValidating && !uiState.nameField.isValid,
 //                        placeholder = stringResource(R.string.place_name_field_placeholder),
                     )
+
                     EnterOpeningHours -> OpeningHours(
                         openingHoursField = uiState.openingHoursField,
                         openingHoursTimePickerState = uiState.openingHoursTimePickerState,
                         onAction = onAction,
                     )
+
                     SelectImage -> ImagePicker(
                         onAction = onAction,
                         pictureField = uiState.pictureField,
                         isValidating = uiState.isValidating,
                     )
+
                     SelectIcon -> IconSelector(
                         typeField = uiState.typeField,
                         isValidating = uiState.isValidating,
                         onAction = onAction,
                     )
+
                     EnterDescription -> {
                         Text(
                             modifier = Modifier.padding(horizontal = Spacing_06),
@@ -189,6 +193,7 @@ private fun CreatePlaceScreen(
                             placeholder = stringResource(R.string.place_description_field_placeholder)
                         )
                     }
+
                     SelectTags -> {
                         Text(
                             modifier = Modifier.padding(horizontal = Spacing_06),
@@ -213,6 +218,7 @@ private fun CreatePlaceScreen(
                             }
                         }
                     }
+
                     SubmitButton -> Button(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -243,12 +249,15 @@ private fun HandleSideEffects(
                 SideEffect.NavigateToThankYouScreen -> {
                     onCreateSuccess()
                 }
+
                 SideEffect.OpenImageSelector -> {
                     imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }
+
                 is SideEffect.OpenAutoCompleteOverlay -> {
                     addressPicker.launch(effect.autocompleteIntent)
                 }
+
                 is SideEffect.ZoomInLocation -> {
                     try {
                         cameraPositionState.animate(effect.cameraUpdate, effect.duration)
@@ -256,9 +265,11 @@ private fun HandleSideEffects(
                         Log.d("PlacesHomeScreen.kt", e.stackTraceToString())
                     }
                 }
+
                 SideEffect.NavigateToAlreadyExistingPlace -> {
                     navigateToAlreadyExistingPlace()
                 }
+
                 SideEffect.NavigateToAuthenticateScreen -> {
                     navigateToAuthenticateScreen()
                 }

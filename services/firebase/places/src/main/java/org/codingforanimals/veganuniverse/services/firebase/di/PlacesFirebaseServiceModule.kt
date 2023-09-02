@@ -20,6 +20,7 @@ val placesFirebaseServiceModule = module {
         PlacesFirebaseApi(
             firestore = get(),
             database = get(),
+            storage = get(),
             placeFormToPlaceCardMapper = get(named(PlaceFormToPlaceCardMapper::class.java.simpleName)),
             placeFormToPlaceMapper = get(named(PlaceFormToPlaceMapper::class.java.simpleName)),
             placeToDomainEntityMapper = get(named(PlaceToDomainEntityMapper::class.java.simpleName)),

@@ -1,7 +1,10 @@
 package org.codingforanimals.veganuniverse.places.entity
 
+import android.os.Parcelable
+
 data class PlaceForm(
     val name: String,
+    val image: Parcelable,
     val addressComponents: AddressComponents,
     val openingHours: List<OpeningHours>,
     val description: String,

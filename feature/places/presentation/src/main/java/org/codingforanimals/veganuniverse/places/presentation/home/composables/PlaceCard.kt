@@ -1,7 +1,6 @@
 package org.codingforanimals.veganuniverse.places.presentation.home.composables
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,14 +16,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.core.ui.R
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.shimmer
 import org.codingforanimals.veganuniverse.core.ui.components.RatingBar
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
@@ -32,11 +38,12 @@ import org.codingforanimals.veganuniverse.core.ui.theme.PrimaryLight
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
+import org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard
 
 @Composable
 internal fun PlaceCard(
     modifier: Modifier = Modifier,
-    placeViewEntity: org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard,
+    placeCard: PlaceCard,
     border: BorderStroke? = null,
     onCardClick: () -> Unit,
 ) {
@@ -65,15 +72,15 @@ internal fun PlaceCard(
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(Spacing_04)
                     ) {
-                        VUIcon(icon = placeViewEntity.type.icon, contentDescription = "")
+                        VUIcon(icon = placeCard.type.icon, contentDescription = "")
                         Text(
-                            text = placeViewEntity.name,
+                            text = placeCard.name,
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Medium,
                         )
                     }
                     RatingBar(
-                        rating = placeViewEntity.rating,
+                        rating = placeCard.rating,
                         color = PrimaryLight,
                     )
                 }
@@ -82,24 +89,32 @@ internal fun PlaceCard(
                 ) {
                     VUIcon(icon = VUIcons.Location, contentDescription = "")
                     Text(
-                        text = placeViewEntity.fullStreetAddress,
+                        text = placeCard.fullStreetAddress,
                         fontWeight = FontWeight.Light,
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
-//                Text(
-//                    text = city,
-//                    style = MaterialTheme.typography.bodyMedium,
-//                )
             }
             Box(modifier = Modifier.weight(0.7f)) {
-                Image(
+                var loading by rememberSaveable { mutableStateOf(true) }
+                AsyncImage(
                     modifier = Modifier
                         .clip(ShapeDefaults.Medium)
+                        .placeholder(
+                            visible = loading,
+                            color = MaterialTheme.colorScheme.surface,
+                            highlight = PlaceholderHighlight.shimmer(MaterialTheme.colorScheme.surfaceVariant)
+                        )
                         .fillMaxSize(),
-                    painter = painterResource(R.drawable.vegan_restaurant),
+                    model = placeCard.imageRef,
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
+                    onState = { state ->
+                        loading = when (state) {
+                            is AsyncImagePainter.State.Success -> false
+                            else -> true
+                        }
+                    }
                 )
             }
         }

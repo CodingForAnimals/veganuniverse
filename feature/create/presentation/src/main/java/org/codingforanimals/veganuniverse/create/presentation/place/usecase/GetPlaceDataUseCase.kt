@@ -1,7 +1,6 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.usecase
 
 import android.content.Intent
-import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.libraries.places.api.model.DayOfWeek
 import com.google.android.libraries.places.api.model.Period
@@ -18,6 +17,8 @@ import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherP
 import org.codingforanimals.veganuniverse.common.utils.emptyString
 import org.codingforanimals.veganuniverse.create.presentation.place.model.GetPlaceDataStatus
 import org.codingforanimals.veganuniverse.create.presentation.place.model.OpeningHours
+import org.codingforanimals.veganuniverse.places.entity.AddressComponents
+import com.google.android.libraries.places.api.model.AddressComponents as GoogleAddressComponents
 
 private const val TAG = "GetPlaceDataUseCase"
 
@@ -32,68 +33,49 @@ class GetPlaceDataUseCase(
         emit(GetPlaceDataStatus.Loading)
         val place = withContext(ioDispatcher) { Autocomplete.getPlaceFromIntent(intent) }
         when {
-            place.isEstablishment -> getEstablishmentData(place)
-            place.isStreetAddress -> getStreetAddressData(place)
+            place.isEstablishment -> emitEstablishmentData(place)
+            place.isStreetAddress -> emitStreetAddressData(place)
             else -> emit(GetPlaceDataStatus.PlaceTypeException)
         }
     }
 
-    private suspend fun FlowCollector<GetPlaceDataStatus>.getEstablishmentData(place: Place) = try {
-        place.addressComponents!!.asList().map { it.name }
-        with(place.addressComponents!!.asList()) {
-            val streetName = first { it.types.contains(STREET_NAME) }.name
-            val streetNumber = first { it.types.contains(STREET_NUMBER) }.name
-            val streetAddress = if (streetName.isBlank() && streetNumber.isBlank()) {
-                emptyString
-            } else {
-                "$streetName, $streetNumber"
-            }
-            val locality = first { it.types.contains(LOCALITY) }.name
-            val primaryAdminArea = first { it.types.contains(ADMIN_AREA_1) }.name
-            val secondaryAdminArea = first { it.types.contains(ADMIN_AREA_2) }.name
-            val country = first { it.types.contains(COUNTRY) }.name
-            val latLng = place.latLng!!
-            val name = place.name!!
-
+    private suspend fun FlowCollector<GetPlaceDataStatus>.emitEstablishmentData(place: Place) {
+        try {
             val establishmentData = GetPlaceDataStatus.EstablishmentData(
-                latLng = latLng,
-                name = name,
-                streetAddress = streetAddress,
-                locality = locality,
-                primaryAdminArea = primaryAdminArea,
-                secondaryAdminArea = secondaryAdminArea,
-                country = country,
+                latLng = place.latLng!!,
+                name = place.name!!,
+                addressComponents = place.addressComponents!!.getAddressComponents(),
                 openingHours = place.openingHours?.periods?.toOpeningHours() ?: emptyList(),
             )
             emit(establishmentData)
-        }
 
-        place.photoMetadatas?.firstOrNull()?.let { photoMetadata ->
-            val photoRequest = FetchPhotoRequest.builder(photoMetadata).build()
-            val task = placesClient.fetchPhoto(photoRequest)
-            val bitmap = withContext(ioDispatcher) { Tasks.await(task) }.bitmap
+            val bitmap = place.photoMetadatas?.firstOrNull()?.let { photoMetadata ->
+                val photoRequest = FetchPhotoRequest.builder(photoMetadata).build()
+                val task = placesClient.fetchPhoto(photoRequest)
+                withContext(ioDispatcher) { Tasks.await(task) }.bitmap
+            }
             emit(GetPlaceDataStatus.EstablishmentPicture(bitmap))
-        }
 
-    } catch (e: Throwable) {
-        when (e) {
-            is ExecutionException,
-            is InterruptedException,
-            -> emit(GetPlaceDataStatus.EstablishmentPictureException)
-            is NoSuchElementException,
-            is NullPointerException,
-            -> emit(GetPlaceDataStatus.MissingCriticalFieldException)
-            else -> emit(GetPlaceDataStatus.UnknownException)
+        } catch (e: Throwable) {
+            when (e) {
+                is ExecutionException,
+                is InterruptedException,
+                -> emit(GetPlaceDataStatus.EstablishmentPictureException)
+
+                is NoSuchElementException,
+                is NullPointerException,
+                -> emit(GetPlaceDataStatus.MissingCriticalFieldException)
+
+                else -> emit(GetPlaceDataStatus.UnknownException)
+            }
         }
     }
 
-    private suspend fun FlowCollector<GetPlaceDataStatus>.getStreetAddressData(place: Place) {
+    private suspend fun FlowCollector<GetPlaceDataStatus>.emitStreetAddressData(place: Place) {
         try {
-            val address = getAddress(place)!!
-            val latLng = place.latLng!!
             val streetAddressData = GetPlaceDataStatus.StreetAddressData(
-                latLng = latLng,
-                address = address
+                latLng = place.latLng!!,
+                addressComponents = place.addressComponents!!.getAddressComponents(),
             )
             emit(streetAddressData)
         } catch (e: Throwable) {
@@ -104,16 +86,22 @@ class GetPlaceDataUseCase(
         }
     }
 
-    private fun getAddress(place: Place): String? {
-        return try {
-            val components = place.addressComponents!!.asList()
-            val street = components.first { it.types.contains(STREET_NAME) }.name
-            val number = components.first { it.types.contains(STREET_NUMBER) }.name
-            val locality = components.first { it.types.contains(LOCALITY) }.name
-            return "$street $number, $locality"
-        } catch (e: Throwable) {
-            Log.e(TAG, "Error getting address components. Msg: ${e.stackTraceToString()}")
-            null
+    private fun GoogleAddressComponents.getAddressComponents(): AddressComponents {
+        with(asList()) {
+            val streetName = first { it.types.contains(STREET_NAME) }.name
+            val streetNumber = first { it.types.contains(STREET_NUMBER) }.name
+            val streetAddress = if (streetName.isBlank() && streetNumber.isBlank()) {
+                emptyString
+            } else {
+                "$streetName $streetNumber"
+            }
+            val locality = first { it.types.contains(LOCALITY) }.name
+            val primaryAdminArea = first { it.types.contains(ADMIN_AREA_1) }.name
+            val secondaryAdminArea = first { it.types.contains(ADMIN_AREA_2) }.name
+            val country = first { it.types.contains(COUNTRY) }.name
+            return AddressComponents(
+                streetAddress, locality, primaryAdminArea, secondaryAdminArea, country
+            )
         }
     }
 
@@ -174,7 +162,7 @@ class GetPlaceDataUseCase(
     private val Place.isStreetAddress: Boolean
         get() = types?.contains(Place.Type.STREET_ADDRESS) == true
 
-    companion object AddressComponents {
+    companion object {
         private const val STREET_NAME = "route"
         private const val STREET_NUMBER = "street_number"
 

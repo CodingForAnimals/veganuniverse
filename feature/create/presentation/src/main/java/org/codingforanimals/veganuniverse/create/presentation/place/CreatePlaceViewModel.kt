@@ -113,6 +113,13 @@ internal class CreatePlaceViewModel(
             is GetPlaceDataStatus.StreetAddressData -> with(placeDataStatus) {
                 uiState = uiState.copy(
                     locationField = LocationField(latLng),
+                    addressField = AddressField(
+                        streetAddress = addressComponents.streetAddress,
+                        locality = addressComponents.locality,
+                        primaryAdminArea = addressComponents.primaryAdminArea,
+                        secondaryAdminArea = addressComponents.secondaryAdminArea,
+                        country = addressComponents.country,
+                    ),
                     isLoading = false
                 )
                 _sideEffects.send(SideEffect.ZoomInLocation(latLng))
@@ -124,11 +131,11 @@ internal class CreatePlaceViewModel(
                     openingHoursField = OpeningHoursField(openingHours = openingHours),
                     locationField = LocationField(latLng),
                     addressField = AddressField(
-                        streetAddress = streetAddress,
-                        locality = locality,
-                        primaryAdminArea = primaryAdminArea,
-                        secondaryAdminArea = secondaryAdminArea,
-                        country = country,
+                        streetAddress = addressComponents.streetAddress,
+                        locality = addressComponents.locality,
+                        primaryAdminArea = addressComponents.primaryAdminArea,
+                        secondaryAdminArea = addressComponents.secondaryAdminArea,
+                        country = addressComponents.country,
                     ),
                     isLoading = false
                 )
@@ -214,6 +221,7 @@ internal class CreatePlaceViewModel(
                 latitude = latLng.latitude,
                 longitude = latLng.longitude,
                 tags = uiState.selectedTagsField.tags.map { it.name },
+                image = uiState.pictureField.model!!
             )
             GetFormStatus.Success(
                 form = form

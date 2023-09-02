@@ -26,7 +26,7 @@ internal val mapperModule = module {
     ) { AddressComponentsMapper() }
     factory<OneWayEntityMapper<GetPlaceResult, PlaceCardDomainEntity>>(
         named(GetPlaceResultToPlaceCardMapper::class.java.simpleName)
-    ) { GetPlaceResultToPlaceCardMapper() }
+    ) { GetPlaceResultToPlaceCardMapper(get()) }
     factory<EntityMapper<OpeningHours, OpeningHoursDomainEntity>>(named(OpeningHoursMapper::class.java.simpleName)) {
         OpeningHoursMapper(get(named(PeriodMapper::class.java.simpleName)))
     }
@@ -50,8 +50,9 @@ internal val mapperModule = module {
     }
     factory<OneWayEntityMapper<Place, PlaceDomainEntity>>(named(PlaceToDomainEntityMapper::class.java.simpleName)) {
         PlaceToDomainEntityMapper(
-            get(named(AddressComponentsMapper::class.java.simpleName)),
-            get(named(OpeningHoursMapper::class.java.simpleName))
+            context = get(),
+            addressComponentsMapper = get(named(AddressComponentsMapper::class.java.simpleName)),
+            openingHoursMapper = get(named(OpeningHoursMapper::class.java.simpleName)),
         )
     }
 }

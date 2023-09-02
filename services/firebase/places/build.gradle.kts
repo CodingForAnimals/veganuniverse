@@ -23,6 +23,7 @@ dependencies {
             Firebase.ANALYTICS,
             Firebase.GEO_FIRE,
             Firebase.REALTIME_DATABASE,
+            Firebase.STORAGE,
         )
     )
     implementation("com.firebase:geofire-android:3.2.0")

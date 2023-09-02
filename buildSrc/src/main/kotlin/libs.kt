@@ -60,6 +60,7 @@ object Firebase {
     const val BOM = "com.google.firebase:firebase-bom:32.1.1"
     const val FIRESTORE = "com.google.firebase:firebase-firestore-ktx"
     const val REALTIME_DATABASE = "com.google.firebase:firebase-database-ktx"
+    const val STORAGE = "com.google.firebase:firebase-storage-ktx"
     const val ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
     const val CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx"
     const val FUNCTIONS = "com.google.firebase:firebase-functions-ktx"
