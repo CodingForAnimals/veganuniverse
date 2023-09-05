@@ -59,6 +59,11 @@ internal fun PlacesHomeScreen(
         onResult = { activityResult -> viewModel.onEnableLocationResult(activityResult.resultCode) }
     )
 
+    val selectLocationOverlayLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { viewModel.onAction(Action.OnLocationFromOverlaySelected(it)) },
+    )
+
     val appSettingsActivityLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult(),
             onResult = { viewModel.onAction(Action.OnSettingsScreenDismissed) })
@@ -83,6 +88,7 @@ internal fun PlacesHomeScreen(
         enableLocationActivityLauncher = enableLocationActivityLauncher,
         scaffoldState = scaffoldState,
         navigateToPlaceDetails = navigateToPlaceDetails,
+        selectLocationOverlayLauncher = selectLocationOverlayLauncher,
         navigateUp = navigateUp,
     )
 
@@ -139,6 +145,7 @@ private fun HandleSideEffects(
     appSettingsActivityLauncher: ActivityResultLauncher<Intent>,
     enableLocationActivityLauncher: ActivityResultLauncher<IntentSenderRequest>,
     navigateToPlaceDetails: (String) -> Unit,
+    selectLocationOverlayLauncher: ActivityResultLauncher<Intent>,
     navigateUp: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -185,6 +192,10 @@ private fun HandleSideEffects(
 
                 is SideEffect.LocationServiceEnableRequest -> {
                     enableLocationActivityLauncher.launch(effect.intent)
+                }
+
+                is SideEffect.OpenLocationOnlyAutocompleteOverlay -> {
+                    selectLocationOverlayLauncher.launch(effect.intent)
                 }
             }
         }.collect()

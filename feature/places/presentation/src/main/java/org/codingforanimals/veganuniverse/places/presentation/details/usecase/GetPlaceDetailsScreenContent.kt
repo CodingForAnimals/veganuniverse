@@ -5,7 +5,7 @@ import org.codingforanimals.veganuniverse.places.presentation.entity.Place
 
 internal class GetPlaceDetailsScreenContent {
     operator fun invoke(place: Place): List<PlaceDetailsScreenItem> {
-        val content = mutableListOf(
+        return listOfNotNull(
             PlaceDetailsScreenItem.Hero(
                 url = place.imageRef,
             ),
@@ -17,6 +17,11 @@ internal class GetPlaceDetailsScreenContent {
                 addressComponents = place.addressComponents,
                 openingHours = place.openingHours
             ),
+            takeIf { place.description.isNotBlank() }?.let {
+                PlaceDetailsScreenItem.Description(
+                    description = place.description,
+                )
+            },
             PlaceDetailsScreenItem.Tags(
                 tags = place.tags,
             ),
@@ -26,13 +31,5 @@ internal class GetPlaceDetailsScreenContent {
             ),
             PlaceDetailsScreenItem.Reviews,
         )
-        if (place.description.isNotBlank()) {
-            content.add(
-                PlaceDetailsScreenItem.Description(
-                    description = place.description,
-                ),
-            )
-        }
-        return content
     }
 }

@@ -97,7 +97,7 @@ internal fun OpeningHours(
                             )
                             Crossfade(
                                 modifier = Modifier.weight(1f),
-                                targetState = openingHour.isClosed
+                                targetState = openingHour.isClosed, label = ""
                             ) { isClosed ->
                                 if (isClosed) {
                                     Text(

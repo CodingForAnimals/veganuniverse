@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.codingforanimals.veganuniverse.places.domain.PlacesRepository
 import org.codingforanimals.veganuniverse.places.entity.GeoLocationQueryParams
-import org.codingforanimals.veganuniverse.places.presentation.model.GetPlacesStatus
+import org.codingforanimals.veganuniverse.places.presentation.home.usecase.model.GetPlacesStatus
 import org.codingforanimals.veganuniverse.places.presentation.model.toViewEntity
 
 private const val TAG = "GetPlacesUseCase"

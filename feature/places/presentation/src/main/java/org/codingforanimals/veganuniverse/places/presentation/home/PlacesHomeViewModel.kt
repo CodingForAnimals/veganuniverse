@@ -3,6 +3,8 @@
 package org.codingforanimals.veganuniverse.places.presentation.home
 
 import android.app.Activity
+import android.content.Intent
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
@@ -33,8 +35,11 @@ import org.codingforanimals.veganuniverse.places.presentation.home.state.FilterS
 import org.codingforanimals.veganuniverse.places.presentation.home.state.PlacesHomeSavedStateHandler
 import org.codingforanimals.veganuniverse.places.presentation.home.state.PlacesState
 import org.codingforanimals.veganuniverse.places.presentation.home.state.UserLocationState
+import org.codingforanimals.veganuniverse.places.presentation.home.usecase.GetAutocompleteIntent
+import org.codingforanimals.veganuniverse.places.presentation.home.usecase.GetLocationDataUseCase
 import org.codingforanimals.veganuniverse.places.presentation.home.usecase.GetPlacesUseCase
-import org.codingforanimals.veganuniverse.places.presentation.model.GetPlacesStatus
+import org.codingforanimals.veganuniverse.places.presentation.home.usecase.model.GetLocationDataStatus
+import org.codingforanimals.veganuniverse.places.presentation.home.usecase.model.GetPlacesStatus
 import org.codingforanimals.veganuniverse.places.presentation.utils.visibleRadiusInKm
 
 internal class PlacesHomeViewModel(
@@ -42,6 +47,8 @@ internal class PlacesHomeViewModel(
     private val userLocationManager: UserLocationManager,
     private val placesHomeSavedStateHandler: PlacesHomeSavedStateHandler,
     private val getPlacesUseCase: GetPlacesUseCase,
+    private val getAutocompleteIntent: GetAutocompleteIntent,
+    private val getLocationDataUseCase: GetLocationDataUseCase,
 ) : ViewModel() {
 
     private val mainDispatcher = coroutineDispatcherProvider.main()
@@ -110,7 +117,31 @@ internal class PlacesHomeViewModel(
             }
 
             Action.OnOpenSearchCityGoogleMapsOverlay -> {
+                openLocationOnlyAutocompleteOverlay()
+            }
 
+            is Action.OnLocationFromOverlaySelected -> {
+                zoomInAndRefreshPlaces(action.activityResult)
+            }
+        }
+    }
+
+    private fun zoomInAndRefreshPlaces(activityResult: ActivityResult) {
+        val intent = activityResult.data
+        if (activityResult.resultCode == Activity.RESULT_OK && intent != null) {
+            viewModelScope.launch {
+                when (val getLocationDataResult = getLocationDataUseCase(intent)) {
+                    GetLocationDataStatus.Error -> Unit
+                    is GetLocationDataStatus.Location -> {
+                        _sideEffects.send(
+                            SideEffect.ZoomInLocation(
+                                latLng = getLocationDataResult.latLng,
+                                zoomIn = true,
+                                animationSuccessCallback = ::refreshPlaces,
+                            )
+                        )
+                    }
+                }
             }
         }
     }
@@ -291,6 +322,12 @@ internal class PlacesHomeViewModel(
         }
     }
 
+    private fun openLocationOnlyAutocompleteOverlay() {
+        viewModelScope.launch {
+            _sideEffects.send(SideEffect.OpenLocationOnlyAutocompleteOverlay(getAutocompleteIntent()))
+        }
+    }
+
     data class UiState(
         val userLocationState: UserLocationState = UserLocationState.Loading,
         val cameraPositionState: CameraPositionState = CameraPositionState(defaultCameraPosition),
@@ -351,6 +388,8 @@ internal class PlacesHomeViewModel(
             val newPlaceType: PlaceType?, val newActiveTags: List<PlaceTag>,
         ) : Action()
 
+        data class OnLocationFromOverlaySelected(val activityResult: ActivityResult) : Action()
+
         data class OnSortRequest(val newSorter: PlaceSorter) : Action()
         data object OnMapClick : Action()
         data class OnPlaceClick(val place: org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard) :
@@ -359,6 +398,7 @@ internal class PlacesHomeViewModel(
 
     sealed class SideEffect {
         data class NavigateToPlaceDetails(val id: String) : SideEffect()
+        data class OpenLocationOnlyAutocompleteOverlay(val intent: Intent) : SideEffect()
         data object NavigateUp : SideEffect()
         data object PartiallyExpand : SideEffect()
         data class LocationServiceEnableRequest(val intent: IntentSenderRequest) : SideEffect()

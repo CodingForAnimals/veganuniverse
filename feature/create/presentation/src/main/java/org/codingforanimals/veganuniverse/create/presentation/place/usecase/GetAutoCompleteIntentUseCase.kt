@@ -7,6 +7,7 @@ import com.google.maps.android.SphericalUtil
 import kotlin.math.sqrt
 import org.codingforanimals.veganuniverse.core.location.UserLocationManager
 import org.codingforanimals.veganuniverse.core.location.model.LocationResponse
+import org.codingforanimals.veganuniverse.services.google.places.api.AutocompleteIntentParams
 import org.codingforanimals.veganuniverse.services.google.places.api.PlacesClient
 
 
@@ -34,7 +35,9 @@ class GetAutoCompleteIntentUseCase(
 
             else -> null
         }
-        return placesClient.getPlaceAutocompleteIntent(locationBiasBounds)
+        return placesClient.getPlaceAutocompleteIntent(
+            AutocompleteIntentParams(locationBiasBounds = locationBiasBounds)
+        )
     }
 
     private companion object {

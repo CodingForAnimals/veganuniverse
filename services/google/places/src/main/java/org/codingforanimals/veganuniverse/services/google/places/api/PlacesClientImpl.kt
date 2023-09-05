@@ -2,7 +2,6 @@ package org.codingforanimals.veganuniverse.services.google.places.api
 
 import android.content.Context
 import android.content.Intent
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.tasks.Tasks
 import com.google.android.libraries.places.api.model.DayOfWeek
 import com.google.android.libraries.places.api.model.Place
@@ -63,11 +62,12 @@ class PlacesClientImpl(
         }
     }
 
-    override fun getPlaceAutocompleteIntent(locationBias: LatLngBounds?): Intent {
+    override fun getPlaceAutocompleteIntent(params: AutocompleteIntentParams): Intent {
         return Autocomplete
-            .IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
-            .setCountries(listOf(ARGENTINA))
-            .setLocationBias(locationBias?.let { RectangularBounds.newInstance(it) })
+            .IntentBuilder(AutocompleteActivityMode.OVERLAY, params.placeFields)
+            .setCountries(params.countries)
+            .setLocationBias(params.locationBiasBounds?.let { RectangularBounds.newInstance(it) })
+            .setTypesFilter(listOfNotNull(params.placeTypeFilter?.filter))
             .build(context)
     }
 
@@ -144,36 +144,26 @@ class PlacesClientImpl(
         return result
     }
 
-    private companion object {
-        const val ARGENTINA = "AR"
-        const val emptyString = ""
-        const val STREET_NAME = "route"
-        const val STREET_NUMBER = "street_number"
+    companion object {
+        private const val emptyString = ""
+        private const val STREET_NAME = "route"
+        private const val STREET_NUMBER = "street_number"
 
         /**
          * Locality in Argentina, i.e. Monte Grande
          */
-        const val LOCALITY = "locality"
+        private const val LOCALITY = "locality"
 
         /**
          * Municipality in Argentina, i.e. Esteban Echeverría
          */
-        const val ADMIN_AREA_2 = "administrative_area_level_2"
+        private const val ADMIN_AREA_2 = "administrative_area_level_2"
 
         /**
          * Province in Argentina, i.e. Mendoza
          */
-        const val ADMIN_AREA_1 = "administrative_area_level_1"
+        private const val ADMIN_AREA_1 = "administrative_area_level_1"
 
-        const val COUNTRY = "country"
-
-        val fields = listOf(
-            Place.Field.NAME,
-            Place.Field.TYPES,
-            Place.Field.LAT_LNG,
-            Place.Field.OPENING_HOURS,
-            Place.Field.PHOTO_METADATAS,
-            Place.Field.ADDRESS_COMPONENTS,
-        )
+        private const val COUNTRY = "country"
     }
 }
