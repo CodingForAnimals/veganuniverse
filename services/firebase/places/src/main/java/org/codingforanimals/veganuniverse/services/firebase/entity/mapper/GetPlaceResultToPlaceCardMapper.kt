@@ -11,7 +11,7 @@ import org.codingforanimals.veganuniverse.services.firebase.utils.extension
 import org.codingforanimals.veganuniverse.places.entity.PlaceCard as PlaceCardDomainEntity
 
 internal class GetPlaceResultToPlaceCardMapper(
-    private val context: Context,
+    context: Context,
 ) :
     OneWayEntityMapper<GetPlaceResult, PlaceCardDomainEntity> {
 

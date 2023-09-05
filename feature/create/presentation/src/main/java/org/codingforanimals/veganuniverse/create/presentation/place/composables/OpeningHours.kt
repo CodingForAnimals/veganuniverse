@@ -199,7 +199,7 @@ private fun EditOpeningHoursDialog(
                                     }
                                     Crossfade(
                                         modifier = Modifier.animateContentSize(),
-                                        targetState = period.isClosed,
+                                        targetState = period.isClosed, label = "",
                                     ) { isClosed ->
                                         if (isClosed) {
                                             Text(

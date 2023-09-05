@@ -11,9 +11,6 @@ sealed class GetPlaceDataStatus {
         val name: String,
         val addressComponents: AddressComponents,
         val openingHours: List<OpeningHours>,
-    ) : GetPlaceDataStatus()
-
-    data class EstablishmentPicture(
         val bitmap: Bitmap?,
     ) : GetPlaceDataStatus()
 
@@ -22,8 +19,6 @@ sealed class GetPlaceDataStatus {
         val addressComponents: AddressComponents,
     ) : GetPlaceDataStatus()
 
-    data object MissingCriticalFieldException : GetPlaceDataStatus()
-    data object EstablishmentPictureException : GetPlaceDataStatus()
     data object PlaceTypeException : GetPlaceDataStatus()
     data object UnknownException : GetPlaceDataStatus()
 }

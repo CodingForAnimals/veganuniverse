@@ -16,13 +16,13 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.model.DayOfWeek
 import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.core.ui.viewmodel.PictureField
@@ -32,7 +32,7 @@ import org.codingforanimals.veganuniverse.create.presentation.model.LocationFiel
 import org.codingforanimals.veganuniverse.create.presentation.model.SelectedTagsField
 import org.codingforanimals.veganuniverse.create.presentation.model.TypeField
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.CreatePlaceFormItem
-import org.codingforanimals.veganuniverse.create.presentation.place.entity.toAddressComponents
+import org.codingforanimals.veganuniverse.create.presentation.place.entity.toDomainEntity
 import org.codingforanimals.veganuniverse.create.presentation.place.error.CreatePlaceErrorDialog
 import org.codingforanimals.veganuniverse.create.presentation.place.model.GetFormStatus
 import org.codingforanimals.veganuniverse.create.presentation.place.model.GetPlaceDataStatus
@@ -137,32 +137,15 @@ internal class CreatePlaceViewModel(
                         secondaryAdminArea = addressComponents.secondaryAdminArea,
                         country = addressComponents.country,
                     ),
+                    pictureField = PictureField(placeDataStatus.bitmap),
                     isLoading = false
                 )
                 _sideEffects.send(SideEffect.ZoomInLocation(latLng))
             }
 
-            is GetPlaceDataStatus.EstablishmentPicture -> {
-                uiState = uiState.copy(
-                    pictureField = PictureField(placeDataStatus.bitmap),
-                    isLoading = false
-                )
-            }
-
-            GetPlaceDataStatus.EstablishmentPictureException -> {
-                uiState = uiState.copy(pictureField = PictureField(), isLoading = false)
-            }
-
             GetPlaceDataStatus.PlaceTypeException -> {
                 uiState = uiState.copy(
                     errorDialog = CreatePlaceErrorDialog.PlaceTypeErrorDialog,
-                    isLoading = false
-                )
-            }
-
-            GetPlaceDataStatus.MissingCriticalFieldException -> {
-                uiState = uiState.copy(
-                    errorDialog = CreatePlaceErrorDialog.MissingCriticalFieldErrorDialog,
                     isLoading = false
                 )
             }
@@ -211,12 +194,12 @@ internal class CreatePlaceViewModel(
     private fun getPlaceForm(): GetFormStatus {
         return try {
             val latLng = uiState.locationField.latLng!!
-            val addressComponents = uiState.addressField?.toAddressComponents()!!
+            val addressComponents = uiState.addressField?.toDomainEntity()!!
             val form = PlaceForm(
                 name = uiState.nameField.value.ifEmpty { throw Exception() },
                 addressComponents = addressComponents,
                 description = uiState.descriptionField.value,
-                openingHours = uiState.openingHoursField.sortedOpeningHours.toAddressComponents(),
+                openingHours = uiState.openingHoursField.sortedOpeningHours.toDomainEntity(),
                 type = uiState.typeField.value?.name!!,
                 latitude = latLng.latitude,
                 longitude = latLng.longitude,

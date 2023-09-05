@@ -11,12 +11,13 @@ android {
 }
 
 dependencies {
-    implementation(Google.PLACES)
     implementation(Other.IMAGE_CROPPER)
     implementation(project(Module.Core.COMMON))
+    implementation(project(Module.Core.LOCATION))
     implementation(project(Module.Core.AUTH))
     implementation(project(Module.Feature.Create.DOMAIN))
     implementation(project(Module.Entity.PLACES))
+    implementation(project(Module.Services.Google.PLACES))
     implementation(Google.MAPS)
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

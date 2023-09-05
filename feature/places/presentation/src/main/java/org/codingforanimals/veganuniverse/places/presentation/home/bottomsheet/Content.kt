@@ -3,6 +3,7 @@ package org.codingforanimals.veganuniverse.places.presentation.home.bottomsheet
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,6 +13,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -145,16 +148,29 @@ internal fun PlacesHomeScreenContent(
                 .align(Alignment.TopCenter)
                 .padding(top = Spacing_02),
             content = {
-                Button(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = Spacing_02),
-                    onClick = { onAction(Action.OnRefreshPlacesButtonClick) },
-                    content = { Text(text = "Buscar en esta zona") },
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Button(
+                        onClick = { onAction(Action.OnRefreshPlacesButtonClick) },
+                        content = { Text(text = "Buscar en esta zona") },
+                    )
+                    FilledIconButton(
+                        onClick = { onAction(Action.OnOpenSearchCityGoogleMapsOverlay) },
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            contentColor = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        VUIcon(
+                            icon = VUIcons.Search,
+                            contentDescription = "",
+                        )
+                    }
+                }
             }
         )
-//
+
         Button(
             modifier = Modifier
                 .align(Alignment.BottomCenter)

@@ -223,10 +223,6 @@ fun FeatureItemTitle(
             )
             subtitle()
         }
-        Row {
-            VUIcon(icon = VUIcons.Share, contentDescription = "", onIconClick = {})
-            VUIcon(icon = VUIcons.Bookmark, contentDescription = "", onIconClick = {})
-        }
     }
 }
 

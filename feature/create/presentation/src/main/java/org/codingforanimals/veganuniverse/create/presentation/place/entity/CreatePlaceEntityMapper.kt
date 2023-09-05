@@ -1,10 +1,12 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.entity
 
+import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
 import org.codingforanimals.veganuniverse.create.presentation.model.AddressField
 import org.codingforanimals.veganuniverse.create.presentation.place.model.OpeningHours
 import org.codingforanimals.veganuniverse.places.entity.AddressComponents
+import org.codingforanimals.veganuniverse.places.entity.OpeningHours as DomainOpeningHours
 
-internal fun AddressField.toAddressComponents(): AddressComponents {
+internal fun AddressField.toDomainEntity(): AddressComponents {
     return AddressComponents(
         streetAddress = streetAddress,
         locality = locality,
@@ -14,7 +16,7 @@ internal fun AddressField.toAddressComponents(): AddressComponents {
     )
 }
 
-internal fun List<OpeningHours>.toAddressComponents(): List<org.codingforanimals.veganuniverse.places.entity.OpeningHours> {
+internal fun List<OpeningHours>.toDomainEntity(): List<org.codingforanimals.veganuniverse.places.entity.OpeningHours> {
     return map {
         if (it.isClosed) {
             org.codingforanimals.veganuniverse.places.entity.OpeningHours(
@@ -35,4 +37,14 @@ internal fun List<OpeningHours>.toAddressComponents(): List<org.codingforanimals
             )
         }
     }
+}
+
+internal fun DomainOpeningHours.toViewEntity(): OpeningHours {
+    return OpeningHours(
+        dayOfWeek = DayOfWeek.valueOf(dayOfWeek),
+        isClosed = mainPeriod == null,
+        isSplit = secondaryPeriod != null,
+        mainPeriod = mainPeriod ?: OpeningHours.defaultPeriod(),
+        secondaryPeriod = secondaryPeriod ?: OpeningHours.defaultPeriod(),
+    )
 }

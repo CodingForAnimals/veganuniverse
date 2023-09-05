@@ -108,6 +108,10 @@ internal class PlacesHomeViewModel(
             is Action.OnPlaceClick -> {
                 onPlaceClick(action.place)
             }
+
+            Action.OnOpenSearchCityGoogleMapsOverlay -> {
+
+            }
         }
     }
 
@@ -336,6 +340,7 @@ internal class PlacesHomeViewModel(
 
     sealed class Action {
         data object OnBackClick : Action()
+        data object OnOpenSearchCityGoogleMapsOverlay : Action()
         data object OnExpandSheetButtonClick : Action()
         data object OnSettingsScreenDismissed : Action()
         data object OnRefreshPlacesButtonClick : Action()

@@ -39,6 +39,9 @@ object Module {
             const val AUTH = ":services:firebase:auth"
             const val PLACES = ":services:firebase:places"
         }
+        object Google {
+            const val PLACES = ":services:google:places"
+        }
     }
     object Feature {
         object Places {
@@ -102,7 +105,7 @@ object libs {
         "androidx.compose.material:material-icons-extended",
         "androidx.compose.ui:ui-tooling-preview",
         "androidx.activity:activity-compose:1.6.1",
-        "androidx.navigation:navigation-compose:2.5.1",
+        "androidx.navigation:navigation-compose:2.5.2",
         "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha04",
         "io.coil-kt:coil-compose:2.2.0"
     )

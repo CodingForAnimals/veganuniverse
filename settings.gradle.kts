@@ -57,3 +57,4 @@ include(":core:auth")
 include(":services:firebase:auth")
 
 include(":services:firebase")
+include(":services:google:places")

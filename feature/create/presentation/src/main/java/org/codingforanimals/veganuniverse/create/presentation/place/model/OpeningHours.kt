@@ -1,6 +1,5 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.model
 
-import com.google.android.libraries.places.api.model.DayOfWeek
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_friday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_monday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_saturday
@@ -8,6 +7,7 @@ import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_sunday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_thursday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_tuesday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_wednesday
+import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
 import org.codingforanimals.veganuniverse.places.entity.Period
 
 data class OpeningHours(

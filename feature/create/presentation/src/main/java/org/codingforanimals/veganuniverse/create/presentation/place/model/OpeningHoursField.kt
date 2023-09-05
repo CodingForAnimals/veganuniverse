@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.model
 
-import com.google.android.libraries.places.api.model.DayOfWeek
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
+import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
 
 data class OpeningHoursField(
     private val openingHours: List<OpeningHours> = defaultOpeningHours,
