@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import org.codingforanimals.veganuniverse.auth.model.LoginResponse
 import org.codingforanimals.veganuniverse.auth.model.LogoutResponse
 import org.codingforanimals.veganuniverse.auth.model.RegistrationResponse
+import org.codingforanimals.veganuniverse.auth.model.SendVerificationEmailResult
 import org.codingforanimals.veganuniverse.auth.model.User
 
 interface UserRepository {
@@ -19,4 +20,6 @@ interface UserRepository {
     suspend fun authenticateWithGmail(intent: Intent): RegistrationResponse
 
     suspend fun logout(): LogoutResponse
+    suspend fun sendUserVerificationEmail(): SendVerificationEmailResult
+    suspend fun refreshUser(): User?
 }

@@ -6,6 +6,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -15,6 +16,7 @@ import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailLoginResponse
 import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailRegistrationResponse
 import org.codingforanimals.veganuniverse.auth.services.firebase.model.ProviderAuthenticationResponse
+import org.codingforanimals.veganuniverse.auth.services.firebase.model.UserFirebaseEntity
 import org.codingforanimals.veganuniverse.auth.services.firebase.model.toFirebaseEntity
 
 private const val TAG = "FirebaseAuthenticator"
@@ -26,6 +28,10 @@ class FirebaseAuthenticator(
 
     private val googleSignInClient = googleSignInWrapper.client
     override val googleSignInIntent = googleSignInClient.signInIntent
+
+    private val FirebaseAuth.userIsProvidedByGoogle
+        get() = currentUser?.providerData?.map { it.providerId }
+            ?.contains(GoogleAuthProvider.PROVIDER_ID) == true
 
     override suspend fun emailLogin(email: String, password: String): EmailLoginResponse {
         return try {
@@ -42,12 +48,22 @@ class FirebaseAuthenticator(
         }
     }
 
+    override suspend fun reauthenticateUser(): UserFirebaseEntity? {
+        return try {
+            firebaseAuth.currentUser?.reload()?.await()
+            firebaseAuth.currentUser?.toFirebaseEntity()
+        } catch (e: Throwable) {
+            null
+        }
+    }
+
     override suspend fun emailRegistration(
         email: String,
         password: String,
     ): EmailRegistrationResponse {
         return try {
             val res = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            res.user?.sendEmailVerification()?.await()
             EmailRegistrationResponse.Success(res.user!!.toFirebaseEntity())
         } catch (e: FirebaseException) {
             Log.e(TAG, e.stackTraceToString())
@@ -88,8 +104,21 @@ class FirebaseAuthenticator(
         firebaseAuth.signOut()
     }
 
-    private val FirebaseAuth.userIsProvidedByGoogle
-        get() = currentUser?.providerData?.map { it.providerId }
-            ?.contains(GoogleAuthProvider.PROVIDER_ID) == true
+    override suspend fun sendUserVerificationEmail(): SendVerificationEmailResult {
+        return try {
+            firebaseAuth.currentUser?.sendEmailVerification()?.await()
+            SendVerificationEmailResult.Success
+        } catch (e: Throwable) {
+            when (e) {
+                is FirebaseTooManyRequestsException -> SendVerificationEmailResult.TooManyRequests
+                else -> SendVerificationEmailResult.UnknownError
+            }
+        }
+    }
+}
 
+sealed class SendVerificationEmailResult {
+    data object TooManyRequests : SendVerificationEmailResult()
+    data object UnknownError : SendVerificationEmailResult()
+    data object Success : SendVerificationEmailResult()
 }

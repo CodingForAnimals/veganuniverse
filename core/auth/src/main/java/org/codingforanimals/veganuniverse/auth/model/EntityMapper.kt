@@ -4,12 +4,14 @@ import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailLogi
 import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailRegistrationResponse
 import org.codingforanimals.veganuniverse.auth.services.firebase.model.ProviderAuthenticationResponse
 import org.codingforanimals.veganuniverse.auth.services.firebase.model.UserFirebaseEntity
+import org.codingforanimals.veganuniverse.auth.services.firebase.SendVerificationEmailResult as FirebaseSendVerificationEmailResult
 
 internal fun UserFirebaseEntity.toDomainEntity(): User {
     return User(
         id = id,
         name = name,
         email = email,
+        isEmailVerified = isEmailVerified,
     )
 }
 
@@ -49,5 +51,13 @@ internal fun ProviderAuthenticationResponse.toRegistrationResponse(): Registrati
         is ProviderAuthenticationResponse.Success -> RegistrationResponse.Success(
             userFirebaseEntity.toDomainEntity()
         )
+    }
+}
+
+internal fun FirebaseSendVerificationEmailResult.toDomainResult(): SendVerificationEmailResult {
+    return when (this) {
+        FirebaseSendVerificationEmailResult.Success -> SendVerificationEmailResult.Success
+        FirebaseSendVerificationEmailResult.TooManyRequests -> SendVerificationEmailResult.TooManyRequests
+        FirebaseSendVerificationEmailResult.UnknownError -> SendVerificationEmailResult.UnknownError
     }
 }

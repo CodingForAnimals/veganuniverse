@@ -7,8 +7,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.codingforanimals.veganuniverse.auth.model.LoginResponse
 import org.codingforanimals.veganuniverse.auth.model.LogoutResponse
 import org.codingforanimals.veganuniverse.auth.model.RegistrationResponse
+import org.codingforanimals.veganuniverse.auth.model.SendVerificationEmailResult
 import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.auth.model.toDomainEntity
+import org.codingforanimals.veganuniverse.auth.model.toDomainResult
 import org.codingforanimals.veganuniverse.auth.model.toLoginResponse
 import org.codingforanimals.veganuniverse.auth.model.toRegistrationResponse
 import org.codingforanimals.veganuniverse.auth.services.firebase.Authenticator
@@ -35,6 +37,7 @@ internal class UserRepositoryImpl(
         when (response) {
             is EmailLoginResponse.Exception -> Unit
             is EmailLoginResponse.Success -> {
+                Log.e("pepe", "verified? ${response.userFirebaseEntity.isEmailVerified}")
                 _user.emit(response.userFirebaseEntity.toDomainEntity())
             }
         }
@@ -60,6 +63,7 @@ internal class UserRepositoryImpl(
         when (response) {
             is ProviderAuthenticationResponse.Exception -> Unit
             is ProviderAuthenticationResponse.Success -> {
+                Log.e("pepe", "verified? ${response.userFirebaseEntity.isEmailVerified}")
                 _user.emit(response.userFirebaseEntity.toDomainEntity())
             }
         }
@@ -75,5 +79,13 @@ internal class UserRepositoryImpl(
             Log.e(TAG, e.stackTraceToString())
             LogoutResponse.Exception
         }
+    }
+
+    override suspend fun sendUserVerificationEmail(): SendVerificationEmailResult {
+        return authenticator.sendUserVerificationEmail().toDomainResult()
+    }
+
+    override suspend fun refreshUser(): User? {
+        return authenticator.reauthenticateUser()?.toDomainEntity()
     }
 }

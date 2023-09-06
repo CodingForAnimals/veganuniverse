@@ -7,5 +7,6 @@ internal fun FirebaseUser.toFirebaseEntity(): UserFirebaseEntity {
         id = uid,
         name = displayName ?: email ?: "",
         email = email ?: "",
+        isEmailVerified = isEmailVerified,
     )
 }

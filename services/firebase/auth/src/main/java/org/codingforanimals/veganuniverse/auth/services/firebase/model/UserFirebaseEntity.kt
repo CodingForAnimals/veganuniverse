@@ -4,4 +4,5 @@ data class UserFirebaseEntity(
     val id: String,
     val name: String,
     val email: String,
+    val isEmailVerified: Boolean,
 )

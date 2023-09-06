@@ -27,4 +27,8 @@
     <string name="invalid_location_message">Ubicación en el mapa inválida</string>
     <string name="empty_type_message">Tenés que seleccionar un tipo de ícono</string>
     <string name="empty_name_message">El nombre del lugar no puede estar vacío</string>
+
+    <string name="success">¡Éxito!</string>
+    <string name="verification_email_sent">Te hemos enviado un email para que valides tu usuario. Por favor verifica tu email.</string>
+    <string name="verification_email_too_many_requests">Te enviamos demasiados emails para verificar. Por favor revisa bien tu correo electrónico (inclusive la carpeta spam)</string>
 </resources>

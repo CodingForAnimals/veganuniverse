@@ -37,6 +37,7 @@ import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.veganuniverse.auth.VerifyEmailPromptScreen
 import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.core.ui.components.VUNormalTextField
 import org.codingforanimals.veganuniverse.core.ui.components.VUSelectableChip
@@ -118,6 +119,13 @@ internal fun CreatePlaceScreen(
         uiState = viewModel.uiState,
         onAction = viewModel::onAction,
     )
+
+    if (viewModel.uiState.showVerifyEmailPrompt) {
+        VerifyEmailPromptScreen(
+            onSendRequest = { viewModel.onAction(Action.OnVerifyEmailPromptSendRequest) },
+            onDismissRequest = { viewModel.onAction(Action.OnVerifyEmailPromptDismissRequest) },
+        )
+    }
 
     VUCircularProgressIndicator(visible = viewModel.uiState.isLoading)
 
@@ -272,6 +280,10 @@ private fun HandleSideEffects(
 
                 SideEffect.NavigateToAuthenticateScreen -> {
                     navigateToAuthenticateScreen()
+                }
+
+                SideEffect.ShowVerifyEmailPrompt -> {
+
                 }
             }
         }.collect()
