@@ -47,12 +47,14 @@ internal class PlacesFirebaseApi(
 
     override suspend fun fetchPlaces(params: GeoLocationQueryParams): List<PlaceCardDomainEntity> {
         val cbf = callbackFlow {
+            // limit loading cards to 100 tops
             val getPlacesDeferredList = mutableListOf<GetPlaceDeferred>()
             database
                 .getReference(DatabasePath.Content.Places.GEO_FIRE)
                 .geoQuery(
                     params = params,
                     onKeyFound = { key, geoLocation ->
+                        if (getPlacesDeferredList.size >= 100) return@geoQuery
                         val deferred = database
                             .getReference("${DatabasePath.Content.Places.CARDS}/$key")
                             .get().asDeferred()

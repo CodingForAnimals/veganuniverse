@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.registration.presentation.signin.viewmodel
+package org.codingforanimals.veganuniverse.registration.presentation.emailsignin.viewmodel
 
 sealed class EmailSignInScreenItem {
     data object Title : EmailSignInScreenItem()

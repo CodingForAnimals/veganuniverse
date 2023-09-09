@@ -1,6 +1,6 @@
-package org.codingforanimals.veganuniverse.registration.presentation.signin.usecase
+package org.codingforanimals.veganuniverse.registration.presentation.emailsignin.usecase
 
-import org.codingforanimals.veganuniverse.registration.presentation.signin.viewmodel.EmailSignInScreenItem
+import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.viewmodel.EmailSignInScreenItem
 
 class GetEmailSignInScreenContent {
     operator fun invoke() = listOf(

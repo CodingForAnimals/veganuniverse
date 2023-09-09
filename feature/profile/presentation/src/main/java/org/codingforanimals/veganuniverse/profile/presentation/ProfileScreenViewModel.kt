@@ -9,8 +9,15 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.auth.UserRepository
+
+data class User(
+    val id: String,
+    val name: String,
+    val email: String,
+)
 
 class ProfileScreenViewModel(
     private val userRepository: UserRepository,
@@ -22,6 +29,17 @@ class ProfileScreenViewModel(
     var uiState by mutableStateOf(UiState())
         private set
 
+    val user = userRepository.user.transform { userModel ->
+        val user = userModel?.let {
+            User(
+                id = userModel.id,
+                name = userModel.name,
+                email = userModel.email,
+            )
+        }
+        emit(user)
+    }
+
     init {
         viewModelScope.launch {
             userRepository.user.collectLatest { user ->
@@ -32,6 +50,8 @@ class ProfileScreenViewModel(
                         name = user.name,
                         email = user.email,
                     )
+                } else {
+                    uiState = uiState.copy(loggedIn = false)
                 }
             }
         }

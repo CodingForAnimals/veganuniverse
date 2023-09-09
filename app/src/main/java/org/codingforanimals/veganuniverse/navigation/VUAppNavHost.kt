@@ -58,7 +58,7 @@ internal fun VUAppNavHost(
         )
         registrationGraph(
             navController = navController,
-            navigateToCommunity = navController::navigateToCommunityPoppingBackstack,
+            defaultOriginNavigationRoute = CommunityDestination.route
         )
         notificationsGraph(
             onBackClick = navController::navigateUp,
@@ -86,21 +86,24 @@ internal fun VUAppNavHost(
             navController = navController,
             snackbarHostState = snackbarHostState,
             navigateToAuthenticateScreen = {
-                navController
-                    .navigate("${RegistrationDestination.Prompt.route}/${PlacesDestination.Details.route}")
+                navController.navigateToRegistrationPromptWithOriginDestination(PlacesDestination.Details)
             }
         )
         createGraph(
             navController = navController,
             navigateToPlaceDetails = { navController.navigate(PlacesDestination.Details.route) },
             navigateToAuthenticateScreen = {
-                navController.navigate("${RegistrationDestination.Prompt.route}/${CreateDestination.route}")
+                navController.navigateToRegistrationPromptWithOriginDestination(CreateDestination.Home)
             }
         )
         recipesGraph(
             navController = navController,
         )
     }
+}
+
+private fun NavController.navigateToRegistrationPromptWithOriginDestination(originDestination: Destination) {
+    navigate("${RegistrationDestination.Prompt.route}/${originDestination.route}")
 }
 
 private fun NavController.navigateToCommunityPoppingBackstack() {
@@ -113,7 +116,7 @@ class VUNavHostController(context: Context) : NavHostController(context) {
     override fun popBackStack(): Boolean {
         return when (currentDestination?.route) {
             PlacesDestination.Home.route,
-            CreateDestination.route,
+            CreateDestination.Home.route,
             RecipesHomeDestination.route,
             ProfileDestination.route,
             -> {
@@ -122,6 +125,7 @@ class VUNavHostController(context: Context) : NavHostController(context) {
                 }
                 true
             }
+
             else -> super.popBackStack()
         }
     }

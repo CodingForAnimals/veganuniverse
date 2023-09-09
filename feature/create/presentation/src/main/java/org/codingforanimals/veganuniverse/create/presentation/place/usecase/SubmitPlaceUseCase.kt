@@ -7,6 +7,7 @@ import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherP
 import org.codingforanimals.veganuniverse.create.domain.places.PlaceCreator
 import org.codingforanimals.veganuniverse.create.domain.places.model.CreatePlaceResult
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel
+import org.codingforanimals.veganuniverse.create.presentation.place.entity.toAddressComponents
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.toDomainEntity
 import org.codingforanimals.veganuniverse.places.entity.PlaceForm
 
@@ -43,9 +44,9 @@ internal class SubmitPlaceUseCase(
 private fun CreatePlaceViewModel.UiState.toPlaceForm(): PlaceForm? {
     return try {
         val latLng = locationField.latLng!!
-        val addressComponents = addressField?.toDomainEntity()!!
+        val addressComponents = addressField?.toAddressComponents()!!
         PlaceForm(
-            name = nameField.value.ifEmpty { throw Exception() },
+            name = nameField.value.ifEmpty { throw IllegalArgumentException() },
             addressComponents = addressComponents,
             description = descriptionField.value,
             openingHours = openingHoursField.sortedOpeningHours.toDomainEntity(),

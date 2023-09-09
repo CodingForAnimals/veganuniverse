@@ -7,8 +7,10 @@ import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.create.presentation.CreateScreen
 import org.codingforanimals.veganuniverse.create.presentation.thankyou.ThankYouScreen
 
-object CreateDestination : Destination(route = "create_route")
-object ThankYouDestination : Destination(route = "thank_you_route")
+sealed class CreateDestination(route: String) : Destination(route) {
+    data object Home : CreateDestination(route = "create_route")
+    data object ThankYouDestination : CreateDestination(route = "thank_you_route")
+}
 
 fun NavGraphBuilder.createGraph(
     navController: NavController,
@@ -16,19 +18,19 @@ fun NavGraphBuilder.createGraph(
     navigateToAuthenticateScreen: () -> Unit,
 ) {
     composable(
-        route = CreateDestination.route
+        route = CreateDestination.Home.route
     ) {
         CreateScreen(
-            navigateToThankYouScreen = { navController.navigate(ThankYouDestination.route) },
+            navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYouDestination.route) },
             navigateToAlreadyExistingPlace = navigateToPlaceDetails,
             navigateToAuthenticateScreen = navigateToAuthenticateScreen,
         )
     }
     composable(
-        route = ThankYouDestination.route,
+        route = CreateDestination.ThankYouDestination.route,
     ) {
         ThankYouScreen(
-            navigateToCreateScreen = { navController.navigate(CreateDestination.route) },
+            navigateToCreateScreen = { navController.navigate(CreateDestination.Home.route) },
         )
     }
 }

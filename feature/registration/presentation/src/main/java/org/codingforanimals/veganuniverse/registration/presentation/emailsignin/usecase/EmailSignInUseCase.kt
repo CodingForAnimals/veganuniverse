@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.registration.presentation.signin.usecase
+package org.codingforanimals.veganuniverse.registration.presentation.emailsignin.usecase
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

@@ -10,6 +10,5 @@ class GetEmailRegistrationScreenContent {
         EmailRegistrationScreenItem.PasswordInputField,
         EmailRegistrationScreenItem.ConfirmPasswordInputField,
         EmailRegistrationScreenItem.EmailRegistrationButton,
-        EmailRegistrationScreenItem.EmailRegistrationWithProviders,
     )
 }

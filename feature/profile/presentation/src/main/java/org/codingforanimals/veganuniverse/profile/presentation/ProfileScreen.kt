@@ -21,13 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.Action
-import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.UiState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -40,25 +40,27 @@ internal fun ProfileScreen(
         navigateToRegister = navigateToRegister,
     )
 
+    val user = viewModel.user.collectAsStateWithLifecycle(initialValue = null)
+
     ProfileScreen(
-        uiState = viewModel.uiState,
+        user = user.value,
         onAction = viewModel::onAction,
     )
 }
 
 @Composable
 private fun ProfileScreen(
-    uiState: UiState,
+    user: User?,
     onAction: (Action) -> Unit,
 ) {
-    if (uiState.loggedIn) {
+    if (user != null) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Text(text = "Logged in, ${uiState.uid}, ${uiState.name}, ${uiState.email}")
+            Text(text = "Logged in, ${user.id}, ${user.name}, ${user.email}")
             Button(onClick = { onAction(Action.LogOut) }) {
                 Text(text = "Log out")
             }

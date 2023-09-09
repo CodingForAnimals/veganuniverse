@@ -2,7 +2,6 @@ package org.codingforanimals.veganuniverse.registration.presentation.prompt
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +37,7 @@ class PromptScreenViewModel(
             is Action.OnProviderAuthButtonClick -> launchProviderAuthActivity(action.provider)
             is Action.OnProviderAuthActivityFinished -> attemptProviderAuthentication(action.result)
             Action.OnSignInButtonClick -> navigateToEmailSignIn()
+            Action.OnDismissErrorDialogRequest -> dismissErrorDialog()
         }
     }
 
@@ -65,8 +65,6 @@ class PromptScreenViewModel(
 
     private fun attemptProviderAuthentication(result: ActivityResult) {
         val intent = result.data
-        val a = intent?.extras?.keySet()?.map { it to (intent.extras?.get(it)).toString() }
-        Log.e("pepe", "error intent $a")
         if (result.resultCode == Activity.RESULT_OK && intent != null) {
             authenticateWithGmail(intent)
         }
@@ -79,12 +77,14 @@ class PromptScreenViewModel(
                     RegistrationStatus.Loading -> {
                         uiState = uiState.copy(loading = true)
                     }
+
                     RegistrationStatus.Success -> {
                         uiState = uiState.copy(loading = false)
                         viewModelScope.launch {
                             _sideEffects.send(SideEffect.NavigateToOriginDestination)
                         }
                     }
+
                     is RegistrationStatus.Exception -> {
                         uiState = uiState.copy(
                             loading = false,
@@ -99,15 +99,20 @@ class PromptScreenViewModel(
         }
     }
 
+    private fun dismissErrorDialog() {
+        uiState = uiState.copy(errorDialog = null)
+    }
+
     data class UiState(
         val loading: Boolean = false,
         val errorDialog: EmailRegistrationViewModel.ErrorDialog? = null,
-        val text: String = "null",
     )
 
     sealed class Action {
         data object OnRegisterButtonClick : Action()
         data object OnSignInButtonClick : Action()
+        data object OnDismissErrorDialogRequest : Action()
+
         data class OnProviderAuthButtonClick(val provider: AuthProvider) : Action()
 
         data class OnProviderAuthActivityFinished(val result: ActivityResult) : Action()

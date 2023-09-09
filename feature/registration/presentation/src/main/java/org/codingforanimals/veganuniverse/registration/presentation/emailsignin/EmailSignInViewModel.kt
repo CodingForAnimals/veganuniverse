@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.registration.presentation.signin
+package org.codingforanimals.veganuniverse.registration.presentation.emailsignin
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
@@ -6,11 +6,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.core.ui.viewmodel.areFieldsValid
+import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.usecase.EmailSignInUseCase
+import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.usecase.GetEmailSignInScreenContent
 import org.codingforanimals.veganuniverse.registration.presentation.model.EmailSignInStatus
-import org.codingforanimals.veganuniverse.registration.presentation.signin.usecase.EmailSignInUseCase
-import org.codingforanimals.veganuniverse.registration.presentation.signin.usecase.GetEmailSignInScreenContent
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.EmailField
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.PasswordField
 
@@ -20,6 +23,9 @@ class EmailSignInViewModel(
 ) : ViewModel() {
 
     val content = getEmailSignInScreenContent()
+
+    private val _sideEffects: Channel<SideEffect> = Channel()
+    val sideEffects: Flow<SideEffect> = _sideEffects.receiveAsFlow()
 
     var uiState by mutableStateOf(UiState())
         private set
@@ -55,9 +61,12 @@ class EmailSignInViewModel(
                     EmailSignInStatus.Loading -> {
                         uiState = uiState.copy(loading = true)
                     }
+
                     EmailSignInStatus.Success -> {
                         uiState = uiState.copy(loading = false)
+                        _sideEffects.send(SideEffect.NavigateToOriginDestination)
                     }
+
                     is EmailSignInStatus.Exception -> {
                         uiState = uiState.copy(
                             loading = false,
@@ -99,5 +108,9 @@ class EmailSignInViewModel(
 
         data object OnSignInButtonClick : Action()
         data object OnErrorDialogDismissRequest : Action()
+    }
+
+    sealed class SideEffect {
+        data object NavigateToOriginDestination : SideEffect()
     }
 }

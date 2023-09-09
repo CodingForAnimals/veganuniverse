@@ -47,7 +47,7 @@ class VUAppState(
         @Composable get() = when (currentDestination?.route) {
             CommunityDestination.route -> TopLevelDestination.COMMUNITY
             PlacesDestination.Home.route -> TopLevelDestination.PLACES
-            CreateDestination.route -> TopLevelDestination.CREATE
+            CreateDestination.Home.route -> TopLevelDestination.CREATE
             RecipesHomeDestination.route -> TopLevelDestination.RECIPES
             ProfileDestination.route -> TopLevelDestination.PROFILE
             else -> null
@@ -59,7 +59,7 @@ class VUAppState(
         when (destination) {
             TopLevelDestination.COMMUNITY -> navigateToCommunity()
             TopLevelDestination.PLACES -> navController.navigate(PlacesDestination.Home.route)
-            TopLevelDestination.CREATE -> navController.navigate(CreateDestination.route)
+            TopLevelDestination.CREATE -> navController.navigate(CreateDestination.Home.route)
             TopLevelDestination.RECIPES -> navController.navigate(RecipesHomeDestination.route)
             TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination.route)
         }

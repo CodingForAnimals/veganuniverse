@@ -62,7 +62,7 @@ internal fun PlacesHomeScreenContent(
                     LatLng(-55.0, -74.0),
                     LatLng(-22.0, -53.0),
                 ),
-                minZoomPreference = 5f
+                minZoomPreference = 12f,
             ),
             onMapLoaded = onMapLoaded,
             uiSettings = MapUiSettings(

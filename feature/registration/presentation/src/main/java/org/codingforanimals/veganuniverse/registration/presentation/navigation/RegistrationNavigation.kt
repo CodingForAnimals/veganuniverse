@@ -1,6 +1,5 @@
 package org.codingforanimals.veganuniverse.registration.presentation.navigation
 
-import android.util.Log
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -9,11 +8,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationScreen
+import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.EmailSignInScreen
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailRegistration
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailSignIn
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.Prompt
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreen
-import org.codingforanimals.veganuniverse.registration.presentation.signin.EmailSignInScreen
 
 sealed class RegistrationDestination(route: String) : Destination(route) {
     data object Prompt : RegistrationDestination("registration_prompt")
@@ -21,56 +20,73 @@ sealed class RegistrationDestination(route: String) : Destination(route) {
     data object EmailSignIn : RegistrationDestination("registration_email_sign_in")
 }
 
-private const val origin_destination = "origin_destination_argument"
-const val origin_sub_destination = "origin_sub_destination_argument"
-val NavBackStackEntry.registrationOriginDestination
-    get() = arguments?.getString(origin_destination)
+private const val ORIGIN_DESTINATION = "origin_destination_argument"
+private val NavBackStackEntry.originDestination: String?
+    get() = arguments?.getString(ORIGIN_DESTINATION)
+
+private fun NavController.navigateToOriginDestination(
+    backStackEntry: NavBackStackEntry,
+    defaultOriginNavigationRoute: String,
+) {
+    val origin = backStackEntry.originDestination?.let { origin ->
+        backQueue
+            .map { queueEntry -> queueEntry.destination.route }
+            .firstOrNull { route -> route?.contains(origin) == true }
+    }
+    popBackStack(route = origin ?: defaultOriginNavigationRoute, inclusive = false)
+}
 
 fun NavGraphBuilder.registrationGraph(
     navController: NavController,
-    navigateToCommunity: () -> Unit,
+    defaultOriginNavigationRoute: String,
 ) {
     composable(
-        route = "${Prompt.route}/{$origin_destination}",
+        route = "${Prompt.route}/{$ORIGIN_DESTINATION}",
         arguments = listOf(
-            navArgument(origin_destination) {
+            navArgument(ORIGIN_DESTINATION) {
                 type = NavType.StringType
             },
         ),
         content = { backStackEntry ->
+            val origin = backStackEntry.originDestination ?: defaultOriginNavigationRoute
             PromptScreen(
                 navigateUp = navController::navigateUp,
-                navigateToEmailRegistration = { navController.navigate(EmailRegistration.route) },
-                navigateToEmailSignIn = { navController.navigate(EmailSignIn.route) },
+                navigateToEmailRegistration = { navController.navigate("${EmailRegistration.route}/$origin") },
+                navigateToEmailSignIn = { navController.navigate("${EmailSignIn.route}/$origin") },
                 navigateToOriginDestination = {
-                    backStackEntry.registrationOriginDestination?.let { origin ->
-                        val dest = navController.backQueue.map { it.destination.route }
-                            .first { it?.contains(origin) == true }
-                        dest?.let {
-                            navController.popBackStack(route = it, inclusive = false)
-                        } ?: navigateToCommunity()
-                    }
+                    navController.navigateToOriginDestination(
+                        backStackEntry,
+                        defaultOriginNavigationRoute
+                    )
                 }
             )
         },
     )
 
     composable(
-        route = EmailRegistration.route,
-        content = {
+        route = "${EmailRegistration.route}/{$ORIGIN_DESTINATION}",
+        content = { backStackEntry ->
             EmailRegistrationScreen(
                 navigateUp = navController::navigateUp,
-                navigateToEmailValidationScreen = { },
+                navigateToEmailValidationScreen = {
+                    navController.navigateToOriginDestination(
+                        backStackEntry,
+                        defaultOriginNavigationRoute
+                    )
+                },
             )
         },
     )
 
     composable(
-        route = EmailSignIn.route,
-        content = {
+        route = "${EmailSignIn.route}/{$ORIGIN_DESTINATION}",
+        content = { backStackEntry ->
             EmailSignInScreen(
                 navigateToOriginDestination = {
-                    Log.e("pepe", "start destination ${navController.graph.startDestinationRoute}")
+                    navController.navigateToOriginDestination(
+                        backStackEntry,
+                        defaultOriginNavigationRoute
+                    )
                 }
             )
         },

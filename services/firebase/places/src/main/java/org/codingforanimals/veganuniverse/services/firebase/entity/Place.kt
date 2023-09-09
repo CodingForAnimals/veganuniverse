@@ -15,5 +15,6 @@ internal data class Place(
     val openingHours: List<OpeningHours> = emptyList(),
     val description: String = "",
     val addressComponents: AddressComponents = AddressComponents(),
+    val createdByUserId: String = "",
     @ServerTimestamp val timestamp: Timestamp? = null,
 )

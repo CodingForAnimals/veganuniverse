@@ -6,9 +6,9 @@ import org.codingforanimals.veganuniverse.create.presentation.place.model.Openin
 import org.codingforanimals.veganuniverse.places.entity.AddressComponents
 import org.codingforanimals.veganuniverse.places.entity.OpeningHours as DomainOpeningHours
 
-internal fun AddressField.toDomainEntity(): AddressComponents {
+internal fun AddressField.toAddressComponents(): AddressComponents {
     return AddressComponents(
-        streetAddress = streetAddress,
+        streetAddress = streetAddress.ifBlank { throw IllegalArgumentException() },
         locality = locality,
         primaryAdminArea = primaryAdminArea,
         secondaryAdminArea = secondaryAdminArea,

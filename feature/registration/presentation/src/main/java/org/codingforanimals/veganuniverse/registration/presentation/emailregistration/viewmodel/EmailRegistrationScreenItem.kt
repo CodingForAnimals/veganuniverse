@@ -7,5 +7,4 @@ sealed class EmailRegistrationScreenItem {
     data object PasswordInputField : EmailRegistrationScreenItem()
     data object ConfirmPasswordInputField : EmailRegistrationScreenItem()
     data object EmailRegistrationButton : EmailRegistrationScreenItem()
-    data object EmailRegistrationWithProviders : EmailRegistrationScreenItem()
 }

@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.services.google.places.api
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.android.libraries.places.api.model.DayOfWeek
 import com.google.android.libraries.places.api.model.Place
@@ -15,6 +16,8 @@ import org.codingforanimals.veganuniverse.services.google.places.model.PlaceAuto
 import com.google.android.libraries.places.api.model.AddressComponents as GoogleAddressComponents
 import com.google.android.libraries.places.api.model.Period as GooglePlacesPeriod
 import com.google.android.libraries.places.api.net.PlacesClient as GooglePlacesClient
+
+private const val TAG = "PlacesClientImpl"
 
 class PlacesClientImpl(
     private val context: Context,
@@ -36,7 +39,8 @@ class PlacesClientImpl(
                         name = place.name!!,
                         latitude = place.latLng!!.latitude,
                         longitude = place.latLng!!.longitude,
-                        openingHours = place.openingHours?.periods!!.toOpeningHours(),
+                        openingHours = place.openingHours?.periods?.toOpeningHours()
+                            ?: defaultWeek(),
                         addressComponents = place.addressComponents!!.getAddressComponents(),
                         bitmap = bitmap,
                     )
@@ -58,8 +62,22 @@ class PlacesClientImpl(
                 }
             }
         } catch (e: Throwable) {
+            Log.e(TAG, e.stackTraceToString())
             PlaceAutocompleteResult.Error
         }
+    }
+
+    private fun defaultWeek(): List<OpeningHours> {
+        val defaultPeriod = Period(9, 0, 18, 0)
+        return listOf(
+            OpeningHours(dayOfWeek = DayOfWeek.SUNDAY.name),
+            OpeningHours(dayOfWeek = DayOfWeek.MONDAY.name, mainPeriod = defaultPeriod),
+            OpeningHours(dayOfWeek = DayOfWeek.TUESDAY.name, mainPeriod = defaultPeriod),
+            OpeningHours(dayOfWeek = DayOfWeek.WEDNESDAY.name, mainPeriod = defaultPeriod),
+            OpeningHours(dayOfWeek = DayOfWeek.THURSDAY.name, mainPeriod = defaultPeriod),
+            OpeningHours(dayOfWeek = DayOfWeek.FRIDAY.name, mainPeriod = defaultPeriod),
+            OpeningHours(dayOfWeek = DayOfWeek.SATURDAY.name),
+        )
     }
 
     override fun getPlaceAutocompleteIntent(params: AutocompleteIntentParams): Intent {
@@ -73,17 +91,18 @@ class PlacesClientImpl(
 
     private fun GoogleAddressComponents.getAddressComponents(): org.codingforanimals.veganuniverse.places.entity.AddressComponents {
         with(asList()) {
-            val streetName = first { it.types.contains(STREET_NAME) }.name
-            val streetNumber = first { it.types.contains(STREET_NUMBER) }.name
+            // fix to firstOrNull or something like that
+            val streetName = firstOrNull { it.types.contains(STREET_NAME) }?.name ?: ""
+            val streetNumber = firstOrNull { it.types.contains(STREET_NUMBER) }?.name ?: ""
             val streetAddress = if (streetName.isBlank() && streetNumber.isBlank()) {
                 emptyString
             } else {
                 "$streetName $streetNumber"
             }
-            val locality = first { it.types.contains(LOCALITY) }.name
-            val primaryAdminArea = first { it.types.contains(ADMIN_AREA_1) }.name
-            val secondaryAdminArea = first { it.types.contains(ADMIN_AREA_2) }.name
-            val country = first { it.types.contains(COUNTRY) }.name
+            val locality = firstOrNull { it.types.contains(LOCALITY) }?.name ?: ""
+            val primaryAdminArea = firstOrNull { it.types.contains(ADMIN_AREA_1) }?.name ?: ""
+            val secondaryAdminArea = firstOrNull { it.types.contains(ADMIN_AREA_2) }?.name ?: ""
+            val country = firstOrNull { it.types.contains(COUNTRY) }?.name ?: ""
             return org.codingforanimals.veganuniverse.places.entity.AddressComponents(
                 streetAddress, locality, primaryAdminArea, secondaryAdminArea, country
             )

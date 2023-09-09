@@ -162,6 +162,7 @@ private fun CreatePlaceScreen(
                         value = uiState.nameField.value,
                         onValueChange = { onAction(Action.OnFormChange(name = it)) },
                         isError = uiState.isValidating && !uiState.nameField.isValid,
+                        maxLines = 1,
 //                        placeholder = stringResource(R.string.place_name_field_placeholder),
                     )
 
