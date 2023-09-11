@@ -13,6 +13,8 @@ android {
 dependencies {
     implementation(project(Module.Core.COMMON))
     implementation(project(Module.Core.AUTH))
+    implementation(project(Module.Feature.Profile.DOMAIN))
+    implementation(project(Module.Entity.PLACES))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

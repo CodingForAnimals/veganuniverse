@@ -30,7 +30,7 @@ internal class SubmitPlaceUseCase(
             }
         }
 
-        val form = uiState.toPlaceForm() ?: return@flow emit(SubmitPlaceStatus.FormError)
+        val form = uiState.toPlaceForm(user.id) ?: return@flow emit(SubmitPlaceStatus.FormError)
 
         emit(SubmitPlaceStatus.Loading)
         when (withContext(ioDispatcher) { placeCreator.submitPlace(form) }) {
@@ -41,12 +41,13 @@ internal class SubmitPlaceUseCase(
     }
 }
 
-private fun CreatePlaceViewModel.UiState.toPlaceForm(): PlaceForm? {
+private fun CreatePlaceViewModel.UiState.toPlaceForm(userId: String): PlaceForm? {
     return try {
         val latLng = locationField.latLng!!
         val addressComponents = addressField?.toAddressComponents()!!
         PlaceForm(
             name = nameField.value.ifEmpty { throw IllegalArgumentException() },
+            userId = userId,
             addressComponents = addressComponents,
             description = descriptionField.value,
             openingHours = openingHoursField.sortedOpeningHours.toDomainEntity(),

@@ -6,9 +6,14 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,7 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -122,7 +127,6 @@ private fun PromptScreen(
                         fontWeight = FontWeight.SemiBold,
                     )
 
-                    RegistrationScreenItem.Providers -> Providers(onAction)
                     RegistrationScreenItem.RegisterButton -> OutlinedButton(
                         onClick = { onAction(Action.OnRegisterButtonClick) },
                         colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
@@ -135,6 +139,9 @@ private fun PromptScreen(
                     ) {
                         Text(text = stringResource(R.string.sign_in_button_label))
                     }
+
+                    RegistrationScreenItem.ProvidersDivider -> ProvidersDivider()
+                    RegistrationScreenItem.Providers -> GoogleProviderButton(onAction)
                 }
             },
         )
@@ -142,39 +149,49 @@ private fun PromptScreen(
 }
 
 @Composable
-private fun Providers(
+fun ProvidersDivider() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = Spacing_08, bottom = Spacing_04),
+        horizontalArrangement = Arrangement.spacedBy(Spacing_06),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Spacer(
+            Modifier
+                .height(1.dp)
+                .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                .weight(1f)
+        )
+        Text(text = "ó bien")
+        Spacer(
+            Modifier
+                .height(1.dp)
+                .background(MaterialTheme.colorScheme.onSurfaceVariant)
+                .weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun GoogleProviderButton(
     onAction: (Action) -> Unit,
 ) {
     Button(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(Spacing_04),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Red,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         ),
         shape = RoundedCornerShape(6.dp),
         onClick = { onAction(Action.OnProviderAuthButtonClick(AuthProvider.Gmail)) },
         content = {
-            Text(text = "Inicia sesión con Google")
+            Image(
+                painter = painterResource(R.drawable.google_logo),
+                contentDescription = "",
+            )
+            Text(modifier = Modifier.padding(start = Spacing_06), text = "Continuar con Google")
         },
     )
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(Spacing_04),
-//        horizontalArrangement = Arrangement.SpaceBetween,
-//    ) {
-//        val modifier = Modifier
-//            .size(60.dp)
-//            .clip(CircleShape)
-//        Image(
-//            modifier = modifier
-//                .clickable { onAction(Action.OnProviderAuthButtonClick(AuthProvider.Gmail)) },
-//            imageVector = ImageVector.vectorResource(RegisterIcons.Google.id),
-//            contentDescription = "",
-//        )
-//    }
 }
 
 @Composable

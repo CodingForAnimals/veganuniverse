@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel
+import org.codingforanimals.veganuniverse.places.presentation.home.entity.PlaceCardViewEntity
 
 /**
  * TODO
@@ -67,7 +68,7 @@ internal class PlacesHomeSavedStateHandler {
         val zoom: Float,
         val bearing: Float,
         val placesState: PlacesState,
-        val selectedPlace: org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard?,
+        val selectedPlace: PlaceCardViewEntity?,
         val isFocused: Boolean,
         val filterState: FilterState,
         val snackbarPreviouslyShown: Boolean,

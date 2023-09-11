@@ -61,7 +61,7 @@ internal fun SearchScreen(
             onBackClick = onBackClick,
         )
 
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState(0, 0f) { 4 }
         ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -85,7 +85,7 @@ internal fun SearchScreen(
             }
         }
 
-        HorizontalPager(state = pagerState, pageCount = 10) {
+        HorizontalPager(state = pagerState) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,

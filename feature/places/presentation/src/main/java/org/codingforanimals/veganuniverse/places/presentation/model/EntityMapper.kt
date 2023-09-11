@@ -5,13 +5,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import kotlin.math.roundToInt
 import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
+import org.codingforanimals.veganuniverse.core.ui.place.PlaceMarker
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.places.presentation.details.entity.PlaceReview
-import org.codingforanimals.veganuniverse.places.presentation.details.model.Markers
 import org.codingforanimals.veganuniverse.places.presentation.details.model.OpeningHours
 import org.codingforanimals.veganuniverse.places.presentation.entity.Place
-import org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard
+import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
 import org.codingforanimals.veganuniverse.places.entity.OpeningHours as OpeningHoursDomainEntity
 import org.codingforanimals.veganuniverse.places.entity.Place as PlaceDomainEntity
 import org.codingforanimals.veganuniverse.places.entity.PlaceCard as PlaceCardDomainEntity
@@ -33,7 +33,8 @@ internal fun PlaceCardDomainEntity.toViewEntity(): PlaceCard? {
             tags = getTags(),
             timestamp = timestamp,
             marker = getMarker(type),
-            state = MarkerState(LatLng(latitude, longitude))
+            latitude = latitude,
+            longitude = longitude,
         )
     } catch (e: Throwable) {
         Log.e(TAG, e.stackTraceToString())
@@ -76,10 +77,10 @@ internal fun PlaceDomainEntity.toViewEntity(): Place? {
 }
 
 private fun getMarker(type: PlaceType) = when (type) {
-    PlaceType.RESTAURANT -> Markers.restaurantMarker
-    PlaceType.CAFE -> Markers.cafeMarker
-    PlaceType.STORE -> Markers.storeMarker
-    PlaceType.BAR -> Markers.storeMarker
+    PlaceType.RESTAURANT -> PlaceMarker.RestaurantMarker
+    PlaceType.CAFE -> PlaceMarker.CafeMarker
+    PlaceType.STORE -> PlaceMarker.StoreMarker
+    PlaceType.BAR -> PlaceMarker.StoreMarker
 }
 
 internal fun List<OpeningHoursDomainEntity>.toViewEntity(): List<OpeningHours> =

@@ -27,9 +27,8 @@ internal fun CreateScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     Box(modifier = Modifier.fillMaxSize()) {
-        val state = rememberPagerState()
+        val state = rememberPagerState(0, 0f) { products.size }
         HorizontalPager(
-            pageCount = products.size,
             state = state,
             userScrollEnabled = false,
         ) {
@@ -40,6 +39,7 @@ internal fun CreateScreen(
                     navigateToAlreadyExistingPlace = navigateToAlreadyExistingPlace,
                     navigateToAuthenticateScreen = navigateToAuthenticateScreen,
                 )
+
                 is ProductScreenId -> CreateProductScreen()
                 is RecipeScreenId -> CreateRecipeScreen()
                 is OtherScreenId -> {

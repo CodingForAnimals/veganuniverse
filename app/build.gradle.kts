@@ -50,7 +50,7 @@ dependencies {
      */
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
     implementation(project(":feature:onboarding:presentation"))
-    implementation(project(":feature:profile:presentation"))
+    implementation(project(Module.Feature.Profile.PRESENTATION))
     implementation(project(":feature:community:presentation"))
     implementation(project(":feature:featuredtopic:presentation"))
     implementation(project(":feature:recipes:presentation"))

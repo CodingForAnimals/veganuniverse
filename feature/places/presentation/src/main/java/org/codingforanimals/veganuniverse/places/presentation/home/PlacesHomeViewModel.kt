@@ -31,6 +31,7 @@ import org.codingforanimals.veganuniverse.core.location.model.LocationResponse
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
+import org.codingforanimals.veganuniverse.places.presentation.home.entity.PlaceCardViewEntity
 import org.codingforanimals.veganuniverse.places.presentation.home.state.FilterState
 import org.codingforanimals.veganuniverse.places.presentation.home.state.PlacesHomeSavedStateHandler
 import org.codingforanimals.veganuniverse.places.presentation.home.state.PlacesState
@@ -305,20 +306,20 @@ internal class PlacesHomeViewModel(
         uiState = uiState.copy(filterState = filterState)
     }
 
-    private fun onPlaceClick(place: org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard) {
+    private fun onPlaceClick(place: PlaceCardViewEntity) {
         if (uiState.isPlaceSelected(place)) {
             viewModelScope.launch {
-                _sideEffects.send(SideEffect.NavigateToPlaceDetails(place.geoHash))
+                _sideEffects.send(SideEffect.NavigateToPlaceDetails(place.card.geoHash))
             }
         } else {
             focusOnPlace(place)
         }
     }
 
-    private fun focusOnPlace(place: org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard) {
+    private fun focusOnPlace(place: PlaceCardViewEntity) {
         uiState = uiState.copy(selectedPlace = place, isFocused = true)
         viewModelScope.launch {
-            _sideEffects.send(SideEffect.ZoomInLocation(place.state.position))
+            _sideEffects.send(SideEffect.ZoomInLocation(place.markerState.position))
         }
     }
 
@@ -332,7 +333,7 @@ internal class PlacesHomeViewModel(
         val userLocationState: UserLocationState = UserLocationState.Loading,
         val cameraPositionState: CameraPositionState = CameraPositionState(defaultCameraPosition),
         val placesState: PlacesState = PlacesState.Success(),
-        val selectedPlace: org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard? = null,
+        val selectedPlace: PlaceCardViewEntity? = null,
         val isFocused: Boolean = false,
         val filterState: FilterState = FilterState(),
         val snackbarPreviouslyShown: Boolean = false,
@@ -357,9 +358,9 @@ internal class PlacesHomeViewModel(
                 PlacesState.Error -> true
             }
 
-        fun isPlaceSelected(entity: org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard): Boolean {
+        fun isPlaceSelected(entity: PlaceCardViewEntity): Boolean {
             if (!isFocused) return false
-            return entity.geoHash == selectedPlace?.geoHash
+            return entity.card.geoHash == selectedPlace?.card?.geoHash
         }
 
         companion object {
@@ -392,7 +393,7 @@ internal class PlacesHomeViewModel(
 
         data class OnSortRequest(val newSorter: PlaceSorter) : Action()
         data object OnMapClick : Action()
-        data class OnPlaceClick(val place: org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard) :
+        data class OnPlaceClick(val place: PlaceCardViewEntity) :
             Action()
     }
 

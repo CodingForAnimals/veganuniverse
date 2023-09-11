@@ -23,8 +23,10 @@ import org.codingforanimals.veganuniverse.places.entity.PlaceForm
 import org.codingforanimals.veganuniverse.services.firebase.DatabasePath
 import org.codingforanimals.veganuniverse.services.firebase.FirebaseImageResizer
 import org.codingforanimals.veganuniverse.services.firebase.FirestoreCollection
+import org.codingforanimals.veganuniverse.services.firebase.FirestoreFields
 import org.codingforanimals.veganuniverse.services.firebase.entity.Place
 import org.codingforanimals.veganuniverse.services.firebase.entity.PlaceCard
+import org.codingforanimals.veganuniverse.services.firebase.model.FetchPlacesQueryParams
 import org.codingforanimals.veganuniverse.services.firebase.model.GetPlaceDeferred
 import org.codingforanimals.veganuniverse.services.firebase.model.GetPlaceResult
 import org.codingforanimals.veganuniverse.services.firebase.utils.createGeoHash
@@ -45,9 +47,8 @@ internal class PlacesFirebaseApi(
     private val getPlaceResultToPlaceCardMapper: OneWayEntityMapper<GetPlaceResult, PlaceCardDomainEntity>,
 ) : PlacesApi {
 
-    override suspend fun fetchPlaces(params: GeoLocationQueryParams): List<PlaceCardDomainEntity> {
+    override suspend fun fetchPlacesCards(params: GeoLocationQueryParams): List<PlaceCardDomainEntity> {
         val cbf = callbackFlow {
-            // limit loading cards to 100 tops
             val getPlacesDeferredList = mutableListOf<GetPlaceDeferred>()
             database
                 .getReference(DatabasePath.Content.Places.GEO_FIRE)
@@ -56,7 +57,7 @@ internal class PlacesFirebaseApi(
                     onKeyFound = { key, geoLocation ->
                         if (getPlacesDeferredList.size >= 100) return@geoQuery
                         val deferred = database
-                            .getReference("${DatabasePath.Content.Places.CARDS}/$key")
+                            .getReference(DatabasePath.Content.Places.card(key))
                             .get().asDeferred()
                         getPlacesDeferredList.add(GetPlaceDeferred(geoLocation, deferred))
                     },
@@ -98,6 +99,23 @@ internal class PlacesFirebaseApi(
 
     override suspend fun fetchPlace(geoHash: String): PlaceDomainEntity? {
         return fetchPlaceByGeoHashId(geoHash)
+    }
+
+    override suspend fun fetchPlaces(params: FetchPlacesQueryParams): List<PlaceDomainEntity> {
+        val collectionRef = firestore.collection(FirestoreCollection.Content.Places.ITEMS)
+        return if (params.userId != null) {
+            val parameterizedQuery = collectionRef
+                .whereEqualTo(FirestoreFields.USER_ID, params.userId)
+                .orderBy(FirestoreFields.Places.TIMESTAMP)
+                .limit(3)
+            parameterizedQuery.get().await().documents.mapNotNull {
+                it.toObject(Place::class.java)?.let { placeFirebaseEntity ->
+                    placeToDomainEntityMapper.map(placeFirebaseEntity)
+                }
+            }
+        } else {
+            emptyList()
+        }
     }
 
     private suspend fun fetchPlaceByGeoHashId(geoHash: String): PlaceDomainEntity? {
@@ -149,14 +167,13 @@ internal class PlacesFirebaseApi(
         )
         /* completionListener = */ { key, error ->
             if (error != null) {
-                Log.e(TAG, "Error message uploading place geofire ${error.message}")
-                Log.e(TAG, "Error details uploading place geofire ${error.details}")
+                Log.e(TAG, "Error message: ${error.message}. Details: ${error.details}")
             }
             geoFireCompletionSource.setResult(null)
         }
 
         val databaseRef = database
-            .getReference("${DatabasePath.Content.Places.CARDS}/${geoHash}")
+            .getReference(DatabasePath.Content.Places.card(geoHash))
         val databaseDeferred = databaseRef
             .setValue(placeCard).asDeferred()
         val firestoreDeferred = firestore

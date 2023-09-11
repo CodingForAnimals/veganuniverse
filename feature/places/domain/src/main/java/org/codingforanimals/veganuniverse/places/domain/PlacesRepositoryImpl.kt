@@ -15,7 +15,7 @@ class PlacesRepositoryImpl(
 ) : PlacesRepository {
 
     override suspend fun getPlaces(params: GeoLocationQueryParams): List<PlaceCard> {
-        return placesApi.fetchPlaces(params)
+        return placesApi.fetchPlacesCards(params)
     }
 
     override suspend fun getPlace(id: String): Place? {

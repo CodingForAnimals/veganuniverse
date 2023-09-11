@@ -32,6 +32,7 @@ configure<BaseExtension> {
     }
 
     plugins {
+        id("kotlin-android")
         id("com.google.firebase.crashlytics")
     }
 

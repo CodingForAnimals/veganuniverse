@@ -4,6 +4,7 @@ import android.os.Parcelable
 
 data class PlaceForm(
     val name: String,
+    val userId: String,
     val image: Parcelable,
     val addressComponents: AddressComponents,
     val openingHours: List<OpeningHours>,

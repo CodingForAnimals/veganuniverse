@@ -8,6 +8,7 @@ class GetPromptScreenContentUseCase {
         RegistrationScreenItem.Text,
         RegistrationScreenItem.RegisterButton,
         RegistrationScreenItem.SignInButton,
+        RegistrationScreenItem.ProvidersDivider,
         RegistrationScreenItem.Providers,
     )
 }

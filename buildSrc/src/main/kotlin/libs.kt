@@ -4,7 +4,7 @@ object versions {
     const val core = "1.9.0"
     const val lifecycle = "2.5.1"
     const val coroutines = "1.6.4"
-    const val composeBom = "2023.04.01"
+    const val composeBom = "2023.09.00"
     const val compose = "1.3.1"
     const val composeCompiler = "1.5.1"
     const val accompanist = "0.25.1"
@@ -12,7 +12,6 @@ object versions {
     const val moshi = "1.14.0"
     const val room = "2.4.3"
     const val mockk = "1.12.5"
-    const val material3 = "1.1.0-rc01"
     const val datastore = "1.0.0"
     const val koinAndroid = "3.3.2"
     const val koinAndroidCompose = "3.4.1"
@@ -47,6 +46,10 @@ object Module {
         object Places {
             const val DOMAIN = ":feature:places:domain"
             const val PRESENTATION = ":feature:places:presentation"
+        }
+        object Profile {
+            const val DOMAIN = ":feature:profile:domain"
+            const val PRESENTATION = ":feature:profile:presentation"
         }
         object Create {
             const val DOMAIN = ":feature:create:domain"
@@ -86,6 +89,8 @@ object Google {
         PLAY_SERVICES_MAPS,
         PLAY_SERVICES_LOCATION,
     )
+
+    const val PLACEHOLDER = "com.google.accompanist:accompanist-placeholder-material:0.29.1-alpha"
 }
 
 object Other {
@@ -93,7 +98,6 @@ object Other {
 }
 
 object libs {
-    val material3 = "androidx.compose.material3:material3:${versions.material3}"
 
     val android = listOf(
         "androidx.core:core-ktx:${versions.core}",

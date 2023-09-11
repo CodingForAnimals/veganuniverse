@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.places.presentation.home.composables
+package org.codingforanimals.veganuniverse.places.ui.compose
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -38,10 +38,11 @@ import org.codingforanimals.veganuniverse.core.ui.theme.PrimaryLight
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
-import org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard
+import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
+
 
 @Composable
-internal fun PlaceCard(
+fun PlaceCard(
     modifier: Modifier = Modifier,
     placeCard: PlaceCard,
     border: BorderStroke? = null,
@@ -51,7 +52,6 @@ internal fun PlaceCard(
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
-            .padding(all = Spacing_04)
             .clickable(onClick = onCardClick),
         border = border,
     ) {

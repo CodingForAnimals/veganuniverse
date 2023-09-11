@@ -76,7 +76,7 @@ private fun OnboardingScreen(
     Box {
         TextBackground()
 
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState(0, 0f) { onboardingInfo.size }
         ScrollableContent(onboardingInfo, pagerState)
         NavigationButtons(
             info = onboardingInfo,
@@ -117,7 +117,7 @@ private fun ScrollableContent(
     info: List<OnboardingInfo>,
     pagerState: PagerState,
 ) {
-    HorizontalPager(pageCount = info.size, state = pagerState) { page ->
+    HorizontalPager(state = pagerState) { page ->
         Column(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier

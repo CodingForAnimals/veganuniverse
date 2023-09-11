@@ -15,6 +15,7 @@ interface UserRepository {
     suspend fun createUserWithEmailAndPassword(
         email: String,
         password: String,
+        name: String,
     ): RegistrationResponse
 
     suspend fun authenticateWithGmail(intent: Intent): RegistrationResponse

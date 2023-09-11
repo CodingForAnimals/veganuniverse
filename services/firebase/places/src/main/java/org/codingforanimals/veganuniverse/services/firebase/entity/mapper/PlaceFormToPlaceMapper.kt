@@ -17,6 +17,7 @@ internal class PlaceFormToPlaceMapper(
         return with(obj) {
             Place(
                 name = name,
+                userId = userId,
                 rating = 0,
                 type = type,
                 tags = tags,

@@ -16,10 +16,14 @@ class EmailAndPasswordRegistrationUseCase(
 
     private val ioDispatcher = coroutineDispatcherProvider.io()
 
-    suspend operator fun invoke(email: String, password: String): Flow<RegistrationStatus> = flow {
+    suspend operator fun invoke(
+        email: String,
+        password: String,
+        name: String,
+    ): Flow<RegistrationStatus> = flow {
         emit(RegistrationStatus.Loading)
         val response = withContext(ioDispatcher) {
-            userRepository.createUserWithEmailAndPassword(email, password)
+            userRepository.createUserWithEmailAndPassword(email, password, name)
         }
         val status = when (response) {
             is RegistrationResponse.Exception -> response.toUserAuthException()

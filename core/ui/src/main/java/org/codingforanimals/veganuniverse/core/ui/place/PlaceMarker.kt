@@ -61,4 +61,13 @@ sealed class PlaceMarker(
         defaultIcon = VUIcons.LocationFilled,
         selectedIcon = VUIcons.LocationFilled,
     )
+
+    companion object {
+        fun getMarker(type: PlaceType) = when (type) {
+            PlaceType.RESTAURANT -> RestaurantMarker
+            PlaceType.CAFE -> CafeMarker
+            PlaceType.STORE -> StoreMarker
+            PlaceType.BAR -> StoreMarker
+        }
+    }
 }

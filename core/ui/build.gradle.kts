@@ -1,7 +1,6 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("org.jetbrains.kotlin.android")
     `android-config`
 }
 
@@ -20,11 +19,12 @@ android {
 dependencies {
     val bom = platform("androidx.compose:compose-bom:${versions.composeBom}")
     add("implementation", bom)
-    implementation(libs.material3)
     implementation(libs.compose)
     debugImplementation(libs.composeDebug)
 
     implementation(libs.permissionsCompose)
+
+    implementation(Google.PLACEHOLDER)
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

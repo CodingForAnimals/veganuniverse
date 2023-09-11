@@ -37,7 +37,6 @@ internal class UserRepositoryImpl(
         when (response) {
             is EmailLoginResponse.Exception -> Unit
             is EmailLoginResponse.Success -> {
-                Log.e("pepe", "verified? ${response.userFirebaseEntity.isEmailVerified}")
                 _user.emit(response.userFirebaseEntity.toDomainEntity())
             }
         }
@@ -47,8 +46,9 @@ internal class UserRepositoryImpl(
     override suspend fun createUserWithEmailAndPassword(
         email: String,
         password: String,
+        name: String,
     ): RegistrationResponse {
-        val response = authenticator.emailRegistration(email, password)
+        val response = authenticator.emailRegistration(email, password, name)
         when (response) {
             is EmailRegistrationResponse.Exception -> Unit
             is EmailRegistrationResponse.Success -> {
@@ -63,7 +63,6 @@ internal class UserRepositoryImpl(
         when (response) {
             is ProviderAuthenticationResponse.Exception -> Unit
             is ProviderAuthenticationResponse.Success -> {
-                Log.e("pepe", "verified? ${response.userFirebaseEntity.isEmailVerified}")
                 _user.emit(response.userFirebaseEntity.toDomainEntity())
             }
         }

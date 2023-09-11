@@ -12,6 +12,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.UserProfileChangeRequest
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailLoginResponse
 import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailRegistrationResponse
@@ -60,10 +63,21 @@ class FirebaseAuthenticator(
     override suspend fun emailRegistration(
         email: String,
         password: String,
+        name: String,
     ): EmailRegistrationResponse {
         return try {
             val res = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-            res.user?.sendEmailVerification()?.await()
+            val user = res.user!!
+            val updateName = user.updateProfile(
+                UserProfileChangeRequest
+                    .Builder()
+                    .setDisplayName(name)
+                    .build()
+            ).asDeferred()
+            val sendEmailVerification = user.sendEmailVerification().asDeferred()
+
+            awaitAll(updateName, sendEmailVerification)
+
             EmailRegistrationResponse.Success(res.user!!.toFirebaseEntity())
         } catch (e: FirebaseException) {
             Log.e(TAG, e.stackTraceToString())

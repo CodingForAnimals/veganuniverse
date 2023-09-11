@@ -64,15 +64,18 @@ class EmailRegistrationViewModel(
             emailAndPasswordRegistration(
                 email = uiState.emailField.value,
                 password = uiState.passwordField.value,
+                name = uiState.usernameField.value,
             ).collectLatest { status ->
                 when (status) {
                     RegistrationStatus.Loading -> {
                         uiState = uiState.copy(isLoading = true)
                     }
+
                     RegistrationStatus.Success -> {
                         uiState = uiState.copy(isLoading = false)
                         _sideEffects.send(SideEffect.NavigateToValidateEmailScreen)
                     }
+
                     is RegistrationStatus.Exception -> {
                         uiState = uiState.copy(
                             isLoading = false,
@@ -101,7 +104,12 @@ class EmailRegistrationViewModel(
         val confirmPasswordField: PasswordField = PasswordField(),
     ) {
         val areFieldsValid =
-            areFieldsValid(emailField, usernameField, passwordField, confirmPasswordField)
+            areFieldsValid(
+                emailField,
+                usernameField,
+                passwordField,
+                confirmPasswordField
+            ) && passwordField.value == confirmPasswordField.value
     }
 
     data class ErrorDialog(

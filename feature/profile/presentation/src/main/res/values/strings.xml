@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="logout_error_title">Error al cerrar sesión</string>
+    <string name="logout_error_message">Ha ocurrido un error desconocido al querer cerrar sesion! Lo sentimos. Puedes volver a intentar!</string>
+    <string name="contributions_error_message">Ha ocurrido un error al querer encontrar tus aportes en la comunidad. ¡Lo sentimos!</string>
+    <string name="contributions_empty_message">¡No has realizado ningún aporte en la comunidad todavía! Aquí aparecerán tus lugares, recetas, productos, y otros aportes (cuando los hagas, obvio)</string>
+    <string name="contributions_places_title">Tus lugares</string>
+</resources>

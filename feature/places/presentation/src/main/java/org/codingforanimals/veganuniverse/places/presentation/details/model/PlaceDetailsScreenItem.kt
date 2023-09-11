@@ -3,6 +3,7 @@ package org.codingforanimals.veganuniverse.places.presentation.details.model
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
+import org.codingforanimals.veganuniverse.core.ui.place.PlaceMarker
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.places.entity.AddressComponents
 

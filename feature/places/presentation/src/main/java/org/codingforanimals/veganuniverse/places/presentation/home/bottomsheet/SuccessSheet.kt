@@ -29,16 +29,17 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel.Action
 import org.codingforanimals.veganuniverse.places.presentation.home.composables.FilterDialog
-import org.codingforanimals.veganuniverse.places.presentation.home.composables.PlaceCard
 import org.codingforanimals.veganuniverse.places.presentation.home.composables.SortDialog
+import org.codingforanimals.veganuniverse.places.presentation.home.entity.PlaceCardViewEntity
 import org.codingforanimals.veganuniverse.places.presentation.home.state.FilterState
 import org.codingforanimals.veganuniverse.places.presentation.home.state.PlacesState
+import org.codingforanimals.veganuniverse.places.ui.compose.PlaceCard
 
 @Composable
 internal fun SuccessSheet(
     placesState: PlacesState.Success,
     filterState: FilterState,
-    selectedPlace: org.codingforanimals.veganuniverse.places.presentation.entity.PlaceCard?,
+    selectedPlace: PlaceCardViewEntity?,
     isFocused: Boolean,
     onAction: (Action) -> Unit,
 ) {
@@ -49,7 +50,8 @@ internal fun SuccessSheet(
         if (it && selectedPlace != null) {
             val selectedPlaceCardBorder = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
             PlaceCard(
-                placeCard = selectedPlace,
+                modifier = Modifier.padding(all = Spacing_04),
+                placeCard = selectedPlace.card,
                 onCardClick = { onAction(Action.OnPlaceClick(selectedPlace)) },
                 border = selectedPlaceCardBorder,
             )
@@ -126,7 +128,8 @@ private fun ContentSuccessSheet(
                 items = placesState.content,
                 itemContent = { place ->
                     PlaceCard(
-                        placeCard = place,
+                        modifier = Modifier.padding(all = Spacing_04),
+                        placeCard = place.card,
                         onCardClick = { onAction(Action.OnPlaceClick(place)) },
                     )
                 }

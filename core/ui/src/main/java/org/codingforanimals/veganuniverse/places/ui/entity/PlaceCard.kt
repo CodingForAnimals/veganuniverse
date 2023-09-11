@@ -1,9 +1,8 @@
-package org.codingforanimals.veganuniverse.places.presentation.entity
+package org.codingforanimals.veganuniverse.places.ui.entity
 
-import com.google.maps.android.compose.MarkerState
+import org.codingforanimals.veganuniverse.core.ui.place.PlaceMarker
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
-import org.codingforanimals.veganuniverse.places.presentation.details.model.PlaceMarker
 
 data class PlaceCard(
     val geoHash: String,
@@ -15,7 +14,8 @@ data class PlaceCard(
     val imageRef: String,
     val tags: List<PlaceTag>,
     val timestamp: Long,
-    val state: MarkerState,
+    val latitude: Double,
+    val longitude: Double,
     val marker: PlaceMarker,
 ) {
     val fullStreetAddress: String = "$streetAddress, $administrativeArea"

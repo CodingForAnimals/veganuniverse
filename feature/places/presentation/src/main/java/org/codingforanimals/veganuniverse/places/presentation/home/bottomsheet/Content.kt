@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.places.presentation.home.bottomsheet
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -62,7 +64,7 @@ internal fun PlacesHomeScreenContent(
                     LatLng(-55.0, -74.0),
                     LatLng(-22.0, -53.0),
                 ),
-                minZoomPreference = 12f,
+                minZoomPreference = 5f,
             ),
             onMapLoaded = onMapLoaded,
             uiSettings = MapUiSettings(
@@ -85,11 +87,12 @@ internal fun PlacesHomeScreenContent(
                     PlacesState.Error, PlacesState.Loading -> Unit
                     is PlacesState.Success -> {
                         for (entity in placesState.content) {
-                            key(entity.geoHash) {
+                            key(entity.card.geoHash) {
                                 val selected = isPlaceSelected(entity)
                                 MarkerInfoWindow(
-                                    state = entity.state,
-                                    icon = entity.marker.getDisplayMarker(isSelected = selected),
+                                    state = entity.markerState,
+                                    icon = entity.card.marker.getDisplayMarker(isSelected = selected)
+                                        ?.let { BitmapDescriptorFactory.fromBitmap(it) },
                                     onClick = {
                                         it.showInfoWindow()
                                         onAction(Action.OnPlaceClick(entity))
@@ -111,7 +114,7 @@ internal fun PlacesHomeScreenContent(
                                                     horizontal = Spacing_04,
                                                     vertical = Spacing_02
                                                 ),
-                                                text = entity.name,
+                                                text = entity.card.name,
                                                 fontWeight = FontWeight.SemiBold,
                                             )
                                         }
@@ -119,9 +122,9 @@ internal fun PlacesHomeScreenContent(
                                 )
                                 LaunchedEffect(selected) {
                                     if (selected) {
-                                        entity.state.showInfoWindow()
+                                        entity.markerState.showInfoWindow()
                                     } else {
-                                        entity.state.hideInfoWindow()
+                                        entity.markerState.hideInfoWindow()
                                     }
                                 }
                             }
@@ -143,13 +146,14 @@ internal fun PlacesHomeScreenContent(
         }
 
         AnimatedVisibility(
-            visible = isRefreshButtonVisible,
+            visible = true,
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = Spacing_02),
             content = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Spacing_02),
                 ) {
                     Button(
                         onClick = { onAction(Action.OnRefreshPlacesButtonClick) },

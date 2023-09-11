@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
@@ -30,6 +31,7 @@ import com.google.maps.android.compose.rememberMarkerState
 import org.codingforanimals.veganuniverse.core.common.R.string.closed
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
+import org.codingforanimals.veganuniverse.core.ui.place.PlaceMarker
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
@@ -37,7 +39,6 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.places.entity.AddressComponents
 import org.codingforanimals.veganuniverse.places.entity.utils.fullStreetAddress
 import org.codingforanimals.veganuniverse.places.presentation.details.model.OpeningHours
-import org.codingforanimals.veganuniverse.places.presentation.details.model.PlaceMarker
 import org.codingforanimals.veganuniverse.places.presentation.utils.mapStyleJson
 
 @Composable
@@ -147,6 +148,7 @@ internal fun StaticMap(
         Marker(
             state = rememberMarkerState(position = cameraPositionState.position.target),
             icon = marker.getDisplayMarker(isSelected = true)
+                ?.let { BitmapDescriptorFactory.fromBitmap(it) }
         )
     }
 }

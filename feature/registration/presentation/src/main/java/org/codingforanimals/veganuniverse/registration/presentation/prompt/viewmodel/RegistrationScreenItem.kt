@@ -5,5 +5,6 @@ sealed class RegistrationScreenItem {
     data object Text : RegistrationScreenItem()
     data object RegisterButton : RegistrationScreenItem()
     data object SignInButton : RegistrationScreenItem()
+    data object ProvidersDivider : RegistrationScreenItem()
     data object Providers : RegistrationScreenItem()
 }
