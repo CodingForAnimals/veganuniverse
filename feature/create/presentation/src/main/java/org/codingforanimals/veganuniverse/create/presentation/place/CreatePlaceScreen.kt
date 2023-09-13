@@ -29,9 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.canhub.cropper.CropImageContract
-import com.canhub.cropper.CropImageContractOptions
-import com.canhub.cropper.CropImageOptions
 import com.google.maps.android.compose.CameraPositionState
 import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
@@ -67,6 +64,7 @@ import org.codingforanimals.veganuniverse.create.presentation.place.entity.Creat
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.CreatePlaceFormItem.SelectTags
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.CreatePlaceFormItem.SubmitButton
 import org.codingforanimals.veganuniverse.create.presentation.place.error.ErrorDialog
+import org.codingforanimals.veganuniverse.utils.rememberImageCropperLauncherForActivityResult
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -82,28 +80,11 @@ internal fun CreatePlaceScreen(
         onResult = { viewModel.onAction(Action.OnPlaceSelected(it)) },
     )
 
-    val cropImage = rememberLauncherForActivityResult(
-        contract = CropImageContract(),
-        onResult = { result ->
-            if (result.isSuccessful) {
-                viewModel.onAction(Action.OnFormChange(imageUri = result.uriContent))
-            } else {
-                Log.e(
-                    "CreatePlaceScreen.kt",
-                    "Error cropping image: ${result.error?.stackTraceToString()}"
-                )
-            }
-        },
-    )
-
-    val imagePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            uri?.let {
-                cropImage.launch(CropImageContractOptions(uri, CropImageOptions()))
-            }
-        },
-    )
+    val imagePicker = rememberImageCropperLauncherForActivityResult(onCropSuccess = {
+        viewModel.onAction(
+            Action.OnFormChange(imageUri = it)
+        )
+    })
 
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,

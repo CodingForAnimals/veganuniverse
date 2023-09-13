@@ -13,10 +13,10 @@ import org.codingforanimals.veganuniverse.auth.model.toDomainEntity
 import org.codingforanimals.veganuniverse.auth.model.toDomainResult
 import org.codingforanimals.veganuniverse.auth.model.toLoginResponse
 import org.codingforanimals.veganuniverse.auth.model.toRegistrationResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.Authenticator
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailLoginResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailRegistrationResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.ProviderAuthenticationResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.Authenticator
+import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailLoginResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailRegistrationResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.ProviderAuthenticationResponse
 
 private const val TAG = "UserRepositoryImpl"
 

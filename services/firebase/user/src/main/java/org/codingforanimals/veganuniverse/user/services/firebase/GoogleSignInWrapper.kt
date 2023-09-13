@@ -1,8 +1,9 @@
-package org.codingforanimals.veganuniverse.auth.services.firebase
+package org.codingforanimals.veganuniverse.user.services.firebase
 
 import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import org.codingforanimals.veganuniverse.auth.services.firebase.R
 
 class GoogleSignInWrapper(
     context: Context,

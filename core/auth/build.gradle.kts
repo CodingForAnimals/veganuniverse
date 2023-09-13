@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Services.Firebase.AUTH))
+    implementation(project(Module.Services.Firebase.USER))
     implementation(project(Module.Core.COMMON))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

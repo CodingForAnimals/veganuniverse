@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.auth.services.firebase.model
+package org.codingforanimals.veganuniverse.user.services.firebase.model
 
 sealed class EmailLoginResponse {
     data class Success(val userFirebaseEntity: UserFirebaseEntity) : EmailLoginResponse()

@@ -11,7 +11,6 @@ android {
 }
 
 dependencies {
-    implementation(Other.IMAGE_CROPPER)
     implementation(project(Module.Core.COMMON))
     implementation(project(Module.Core.LOCATION))
     implementation(project(Module.Core.AUTH))

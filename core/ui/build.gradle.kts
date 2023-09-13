@@ -25,6 +25,7 @@ dependencies {
     implementation(libs.permissionsCompose)
 
     implementation(Google.PLACEHOLDER)
+    implementation(Other.IMAGE_CROPPER)
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

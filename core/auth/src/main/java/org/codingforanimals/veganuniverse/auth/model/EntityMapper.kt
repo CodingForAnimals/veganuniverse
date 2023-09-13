@@ -1,10 +1,10 @@
 package org.codingforanimals.veganuniverse.auth.model
 
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailLoginResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailRegistrationResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.ProviderAuthenticationResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.UserFirebaseEntity
-import org.codingforanimals.veganuniverse.auth.services.firebase.SendVerificationEmailResult as FirebaseSendVerificationEmailResult
+import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailLoginResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailRegistrationResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.ProviderAuthenticationResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.UserFirebaseEntity
+import org.codingforanimals.veganuniverse.user.services.firebase.SendVerificationEmailResult as FirebaseSendVerificationEmailResult
 
 internal fun UserFirebaseEntity.toDomainEntity(): User {
     return User(
@@ -12,6 +12,7 @@ internal fun UserFirebaseEntity.toDomainEntity(): User {
         name = name,
         email = email,
         isEmailVerified = isEmailVerified,
+        profilePictureUrl = profilePictureUrl,
     )
 }
 

@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.auth.services.firebase
+package org.codingforanimals.veganuniverse.user.services.firebase
 
 import android.content.Intent
 import android.util.Log
@@ -11,22 +11,24 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailLoginResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailRegistrationResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.ProviderAuthenticationResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.UserFirebaseEntity
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.toFirebaseEntity
+import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
+import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailLoginResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailRegistrationResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.ProviderAuthenticationResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.UserFirebaseEntity
 
 private const val TAG = "FirebaseAuthenticator"
 
 class FirebaseAuthenticator(
     googleSignInWrapper: GoogleSignInWrapper,
     private val firebaseAuth: FirebaseAuth,
+    private val firebaseUserEntityMapper: OneWayEntityMapper<FirebaseUser, UserFirebaseEntity>,
 ) : Authenticator {
 
     private val googleSignInClient = googleSignInWrapper.client
@@ -39,7 +41,7 @@ class FirebaseAuthenticator(
     override suspend fun emailLogin(email: String, password: String): EmailLoginResponse {
         return try {
             val res = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-            EmailLoginResponse.Success(res.user!!.toFirebaseEntity())
+            EmailLoginResponse.Success(firebaseUserEntityMapper.map(res.user!!))
         } catch (e: Throwable) {
             Log.e(TAG, e.stackTraceToString())
             when (e) {
@@ -54,7 +56,7 @@ class FirebaseAuthenticator(
     override suspend fun reauthenticateUser(): UserFirebaseEntity? {
         return try {
             firebaseAuth.currentUser?.reload()?.await()
-            firebaseAuth.currentUser?.toFirebaseEntity()
+            firebaseAuth.currentUser?.let { firebaseUserEntityMapper.map(it) }
         } catch (e: Throwable) {
             null
         }
@@ -78,7 +80,7 @@ class FirebaseAuthenticator(
 
             awaitAll(updateName, sendEmailVerification)
 
-            EmailRegistrationResponse.Success(res.user!!.toFirebaseEntity())
+            EmailRegistrationResponse.Success(firebaseUserEntityMapper.map(res.user!!))
         } catch (e: FirebaseException) {
             Log.e(TAG, e.stackTraceToString())
             when (e) {
@@ -98,7 +100,7 @@ class FirebaseAuthenticator(
                 .getResult(ApiException::class.java)
             val credentials = GoogleAuthProvider.getCredential(account.idToken, null)
             val result = firebaseAuth.signInWithCredential(credentials).await()
-            ProviderAuthenticationResponse.Success(result.user!!.toFirebaseEntity())
+            ProviderAuthenticationResponse.Success(firebaseUserEntityMapper.map(result.user!!))
         } catch (e: FirebaseException) {
             Log.e(TAG, e.stackTraceToString())
             when (e) {

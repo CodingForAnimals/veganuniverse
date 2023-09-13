@@ -5,4 +5,8 @@
     <string name="contributions_error_message">Ha ocurrido un error al querer encontrar tus aportes en la comunidad. ¡Lo sentimos!</string>
     <string name="contributions_empty_message">¡No has realizado ningún aporte en la comunidad todavía! Aquí aparecerán tus lugares, recetas, productos, y otros aportes (cuando los hagas, obvio)</string>
     <string name="contributions_places_title">Tus lugares</string>
+    <string name="confirm_new_profile_picture_title">Actualizar foto de perfil?</string>
+    <string name="confirm_new_profile_picture_message">Has seleccionado una nueva foto de perfil. Quieres reemplazarla por la actual? No podremos ayudarte a recuperar la anterior si lo haces.</string>
+    <string name="upload_image_error_dialog_title">Error al subir imagen</string>
+    <string name="upload_image_error_dialog_message">Ocurrió un error al intentar subir la imagen que elegiste, lo sentimos! Podés volver a intentar y si el error persiste podés intentar con otra imagen</string>
 </resources>

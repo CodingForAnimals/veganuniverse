@@ -1,10 +1,10 @@
-package org.codingforanimals.veganuniverse.auth.services.firebase
+package org.codingforanimals.veganuniverse.user.services.firebase
 
 import android.content.Intent
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailLoginResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.EmailRegistrationResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.ProviderAuthenticationResponse
-import org.codingforanimals.veganuniverse.auth.services.firebase.model.UserFirebaseEntity
+import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailLoginResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailRegistrationResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.ProviderAuthenticationResponse
+import org.codingforanimals.veganuniverse.user.services.firebase.model.UserFirebaseEntity
 
 interface Authenticator {
     suspend fun emailLogin(email: String, password: String): EmailLoginResponse

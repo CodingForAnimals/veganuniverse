@@ -35,7 +35,7 @@ object Module {
     object Services {
         object Firebase {
             const val BASE = ":services:firebase"
-            const val AUTH = ":services:firebase:auth"
+            const val USER = ":services:firebase:user"
             const val PLACES = ":services:firebase:places"
         }
         object Google {

@@ -54,7 +54,7 @@ include(":feature:search:presentation")
 include(":feature:settings:presentation")
 
 include(":core:auth")
-include(":services:firebase:auth")
+include(":services:firebase:user")
 
 include(":services:firebase")
 include(":services:google:places")

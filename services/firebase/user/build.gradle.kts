@@ -11,10 +11,11 @@ android {
 
 dependencies {
     implementation(project(Module.Services.Firebase.BASE))
+    implementation(project(Module.Entity.BASE))
 
     bomImplementation(
         Firebase.BOM,
-        listOf(Firebase.AUTH)
+        listOf(Firebase.AUTH, Firebase.STORAGE)
     )
     implementation(Google.AUTH)
     testImplementation("junit:junit:4.13.2")
