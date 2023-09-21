@@ -31,12 +31,14 @@ object Module {
     object Entity {
         const val BASE = ":entity"
         const val PLACES = ":entity:places"
+        const val RECIPES = ":entity:recipes"
     }
     object Services {
         object Firebase {
             const val BASE = ":services:firebase"
             const val USER = ":services:firebase:user"
             const val PLACES = ":services:firebase:places"
+            const val RECIPES = ":services:firebase:recipes"
         }
         object Google {
             const val PLACES = ":services:google:places"
@@ -54,6 +56,10 @@ object Module {
         object Create {
             const val DOMAIN = ":feature:create:domain"
             const val PRESENTATION = ":feature:create:presentation"
+        }
+        object Recipes {
+            const val DOMAIN = ":feature:recipes:domain"
+            const val PRESENTATION = ":feature:recipes:presentation"
         }
     }
 }

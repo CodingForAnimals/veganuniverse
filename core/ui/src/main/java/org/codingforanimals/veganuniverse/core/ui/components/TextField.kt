@@ -71,6 +71,7 @@ fun VUNormalTextField(
     isError: Boolean = false,
     leadingIcon: Icon? = null,
     maxLines: Int = Int.MAX_VALUE,
+    maxChars: Int = Int.MAX_VALUE,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -79,10 +80,13 @@ fun VUNormalTextField(
         modifier = modifier,
         label = label?.let { { Text(label) } },
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = {
+            if (value.length <= maxChars) {
+                onValueChange(it)
+            }
+        },
         isError = isError,
         placeholder = placeholder?.let { { Text(text = placeholder) } },
-//        shape = ShapeDefaults.Medium,
         colors = VUTextFieldDefaults.colors(),
         leadingIcon = leadingIcon?.let {
             {

@@ -19,4 +19,40 @@ internal class FirebaseAccountUpdatesManager(
             .putFile(uri, storageImageMetadata)
             .await()
     }
+
+    /**
+     * update user name recursively on comments
+     */
+//    init {
+//
+//        /**
+//         * update user name
+//         */
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val userCommentsDeferred = database
+//                .getReference("content/recipes/userComments/elpepeargento")
+//                .get().asDeferred()
+//
+//            awaitAll(userCommentsDeferred)
+//
+//            val userComments = mutableMapOf<String, String>()
+//            userCommentsDeferred.await()
+//                .children
+//                .forEach { snap ->
+//                    val (commentId, recipeID) = Pair(snap.key, snap.value)
+//                    if (commentId != null && recipeID != null) {
+//                        userComments[commentId] = recipeID.toString()
+//                    }
+//                }
+//
+//            val usernameUpdates = mutableMapOf<String, String>()
+//            userComments.forEach { (commentId, recipeId) ->
+//                usernameUpdates["content/recipes/comments/$recipeId/$commentId/u_n"] =
+//                    "nuevo nombre pa!!!"
+//            }
+//            database.reference.updateChildren(
+//                usernameUpdates.toMap()
+//            ).await()
+//        }
+//    }
 }

@@ -53,7 +53,7 @@ dependencies {
     implementation(project(Module.Feature.Profile.PRESENTATION))
     implementation(project(":feature:community:presentation"))
     implementation(project(":feature:featuredtopic:presentation"))
-    implementation(project(":feature:recipes:presentation"))
+    implementation(project(Module.Feature.Recipes.PRESENTATION))
     implementation(project(":feature:post:presentation"))
     implementation(project(Module.Feature.Places.PRESENTATION))
     implementation(project(":feature:registration:presentation"))

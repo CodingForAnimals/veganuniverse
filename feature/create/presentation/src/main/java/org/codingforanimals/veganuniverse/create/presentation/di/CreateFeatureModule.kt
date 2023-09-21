@@ -1,12 +1,14 @@
 package org.codingforanimals.veganuniverse.create.presentation.di
 
-import org.codingforanimals.veganuniverse.create.domain.di.createFeatureDomainModule
-import org.codingforanimals.veganuniverse.create.presentation.place.di.createPlaceModule
+import org.codingforanimals.veganuniverse.create.domain.di.createContentDomainModule
+import org.codingforanimals.veganuniverse.create.presentation.place.di.createPlacePresentationModule
+import org.codingforanimals.veganuniverse.create.presentation.recipe.di.createRecipePresentationModule
 import org.koin.dsl.module
 
-val createFeaturePresentationModule = module {
+val createContentPresentationModule = module {
     includes(
-        createFeatureDomainModule,
-        createPlaceModule,
+        createContentDomainModule,
+        createPlacePresentationModule,
+        createRecipePresentationModule,
     )
 }

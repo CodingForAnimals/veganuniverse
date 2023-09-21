@@ -6,5 +6,9 @@ object FirestoreCollection {
             const val ITEMS = "content/places/items"
             fun reviews(placeId: String) = "content/places/items/$placeId/reviews"
         }
+
+        object Recipes {
+            const val ITEMS = "content/recipes/items"
+        }
     }
 }

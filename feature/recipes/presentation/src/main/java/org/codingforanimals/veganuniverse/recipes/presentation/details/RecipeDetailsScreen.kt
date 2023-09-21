@@ -45,11 +45,13 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.presentation.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun RecipeDetailsScreen(
     onBackClick: () -> Unit,
     openDialog: () -> Unit,
+    viewModel: RecipeDetailsViewModel = koinViewModel(),
 ) {
     Column(
         modifier = Modifier

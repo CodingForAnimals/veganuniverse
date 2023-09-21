@@ -3,17 +3,10 @@ package org.codingforanimals.veganuniverse.create.presentation.place.composables
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -24,8 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,38 +33,29 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.create.presentation.R
+import org.codingforanimals.veganuniverse.create.presentation.composables.CreateContentHero
+import org.codingforanimals.veganuniverse.create.presentation.composables.HeroAnchorDefaults
 import org.codingforanimals.veganuniverse.create.presentation.model.AddressField
 import org.codingforanimals.veganuniverse.create.presentation.model.LocationField
 import org.codingforanimals.veganuniverse.create.presentation.model.TypeField
-import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.Action
+import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.UiState
 
 @Composable
 internal fun SearchMap(
-    uiState: CreatePlaceViewModel.UiState,
+    uiState: UiState,
     onAction: (Action) -> Unit,
 ) = with(uiState) {
-
-    val colors = if (locationField.isValid) {
-        SearchMapDefaults.successColors()
-    } else {
-        if (isValidating) {
-            SearchMapDefaults.errorColors()
-        } else {
-            SearchMapDefaults.defaultColors()
-        }
+    val heroAnchorColors = when {
+        locationField.isValid -> HeroAnchorDefaults.primaryColors()
+        isValidating -> HeroAnchorDefaults.errorColors()
+        else -> HeroAnchorDefaults.secondaryColors()
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(2f)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 20.dp)
-        ) {
+    CreateContentHero(
+        heroAnchorIcon = VUIcons.LocationFilled,
+        heroAnchorColors = heroAnchorColors,
+        content = {
             Map(
                 cameraPositionState = cameraPositionState,
                 location = locationField,
@@ -81,19 +63,11 @@ internal fun SearchMap(
                 onAction = onAction,
             )
             Foreground(
-                addressField = addressField,
-                isValidating = uiState.isValidating,
+                uiState = uiState,
                 onAction = onAction,
-                colors = colors,
             )
         }
-        BottomDivider(
-            modifier = Modifier
-                .height(40.dp)
-                .align(Alignment.BottomCenter),
-            colors = colors,
-        )
-    }
+    )
 }
 
 @Composable
@@ -103,13 +77,15 @@ private fun Map(
     typeField: TypeField,
     onAction: (Action) -> Unit,
 ) {
-    val blur = animateDpAsState(targetValue = if (!location.isValid) 5.dp else 0.dp)
+    val blur = animateDpAsState(
+        targetValue = if (!location.isValid) 5.dp else 0.dp,
+        label = "create_place_map_blur",
+    )
     GoogleMap(
         modifier = Modifier
             .fillMaxSize()
             .blur(blur.value)
             .clickable { onAction(Action.OnSearchMapClick) },
-        onMapLoaded = { },
         cameraPositionState = cameraPositionState,
         uiSettings = mapUiSettings,
         content = {
@@ -120,37 +96,40 @@ private fun Map(
                 state = markerState,
                 icon = icon,
             )
-
         }
     )
 }
 
 @Composable
 private fun Foreground(
-    addressField: AddressField?,
-    isValidating: Boolean,
+    uiState: UiState,
     onAction: (Action) -> Unit,
-    colors: SearchMapColors,
-) {
+) = with(uiState) {
     Crossfade(
         modifier = Modifier
             .fillMaxSize()
             .clickable { onAction(Action.OnSearchMapClick) },
         targetState = addressField != null,
+        label = "create_place_foreground_animation",
     ) { addressSelected ->
         if (addressSelected && addressField != null) {
             PlaceLocationForeground(addressField, isValidating, onAction)
         } else {
-            SearchPlaceForeground(onAction, colors)
+            SearchPlaceForeground(uiState, onAction)
         }
     }
 }
 
 @Composable
 private fun SearchPlaceForeground(
+    uiState: UiState,
     onAction: (Action) -> Unit,
-    colors: SearchMapColors,
 ) {
+    val buttonBorderColor = when {
+        uiState.isValidating && !uiState.locationField.isValid -> MaterialTheme.colorScheme.error
+        else -> MaterialTheme.colorScheme.primary
+    }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -158,13 +137,13 @@ private fun SearchPlaceForeground(
         OutlinedButton(
             onClick = { onAction(Action.OnSearchMapClick) },
             colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-            border = BorderStroke(1.dp, colors.buttonContentColor),
+            border = BorderStroke(1.dp, buttonBorderColor),
         ) {
-            VUIcon(icon = VUIcons.Search, contentDescription = "", tint = colors.buttonContentColor)
+            VUIcon(icon = VUIcons.Search, contentDescription = "", tint = buttonBorderColor)
             Text(
                 modifier = Modifier.padding(start = Spacing_03),
                 text = stringResource(R.string.place_search_map_prompt_button_label),
-                color = colors.buttonContentColor,
+                color = buttonBorderColor,
             )
         }
     }
@@ -192,52 +171,6 @@ private fun PlaceLocationForeground(
     }
 }
 
-@Composable
-private fun BottomDivider(
-    modifier: Modifier = Modifier,
-    colors: SearchMapColors,
-) {
-    Box(
-        modifier = modifier,
-    ) {
-        Spacer(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .height(4.dp)
-                .fillMaxWidth()
-                .background(colors.dividerColor)
-        )
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = Spacing_06),
-        ) {
-            Box {
-                Canvas(
-                    modifier = Modifier.size(30.dp),
-                    onDraw = {
-                        drawCircle(
-                            radius = 20.dp.toPx(),
-                            color = colors.dividerColor,
-                        )
-                        drawCircle(
-                            radius = 20.dp.toPx(),
-                            color = colors.iconBorderColor,
-                            style = Stroke(3.dp.toPx())
-                        )
-                    },
-                )
-                VUIcon(
-                    modifier = Modifier.align(Alignment.Center),
-                    icon = VUIcons.LocationFilled,
-                    contentDescription = "",
-                    tint = colors.iconTintColor,
-                )
-            }
-        }
-    }
-}
-
 private val mapUiSettings = MapUiSettings(
     compassEnabled = false,
     indoorLevelPickerEnabled = false,
@@ -251,49 +184,12 @@ private val mapUiSettings = MapUiSettings(
     zoomGesturesEnabled = false
 )
 
-private data class SearchMapColors(
-    val buttonContentColor: Color,
-    val dividerColor: Color,
-    val iconContainerColor: Color,
-    val iconTintColor: Color,
-    val iconBorderColor: Color,
-)
-
-private object SearchMapDefaults {
-    @Composable
-    fun defaultColors() = SearchMapColors(
-        buttonContentColor = MaterialTheme.colorScheme.primary,
-        dividerColor = MaterialTheme.colorScheme.outline,
-        iconContainerColor = MaterialTheme.colorScheme.outline,
-        iconTintColor = MaterialTheme.colorScheme.surfaceVariant,
-        iconBorderColor = MaterialTheme.colorScheme.outline,
-    )
-
-    @Composable
-    fun errorColors() = SearchMapColors(
-        buttonContentColor = MaterialTheme.colorScheme.error,
-        dividerColor = MaterialTheme.colorScheme.error,
-        iconContainerColor = MaterialTheme.colorScheme.error,
-        iconTintColor = MaterialTheme.colorScheme.surfaceVariant,
-        iconBorderColor = MaterialTheme.colorScheme.error,
-    )
-
-    @Composable
-    fun successColors() = SearchMapColors(
-        buttonContentColor = MaterialTheme.colorScheme.primary,
-        dividerColor = MaterialTheme.colorScheme.primary,
-        iconContainerColor = MaterialTheme.colorScheme.primary,
-        iconTintColor = MaterialTheme.colorScheme.surfaceVariant,
-        iconBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-    )
-}
-
 @Preview
 @Composable
 private fun PreviewSearchMap() {
     VeganUniverseTheme {
         VeganUniverseBackground {
-            SearchMap(uiState = CreatePlaceViewModel.UiState(), onAction = {})
+            SearchMap(uiState = UiState(), onAction = {})
         }
     }
 }

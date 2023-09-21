@@ -11,7 +11,7 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
-internal val createPlaceModule = module {
+internal val createPlacePresentationModule = module {
     includes(googlePlacesModule)
     factoryOf(::GetAutoCompleteIntentUseCase)
     factoryOf(::SendVerificationEmailUseCase)

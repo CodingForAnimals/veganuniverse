@@ -8,9 +8,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,11 +22,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,11 +52,11 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.create.presentation.R
+import org.codingforanimals.veganuniverse.create.presentation.composables.ImagePicker
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.Action
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.SideEffect
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.UiState
 import org.codingforanimals.veganuniverse.create.presentation.place.composables.IconSelector
-import org.codingforanimals.veganuniverse.create.presentation.place.composables.ImagePicker
 import org.codingforanimals.veganuniverse.create.presentation.place.composables.OpeningHours
 import org.codingforanimals.veganuniverse.create.presentation.place.composables.SearchMap
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.CreatePlaceFormItem.EnterDescription
@@ -144,7 +148,6 @@ private fun CreatePlaceScreen(
                         onValueChange = { onAction(Action.OnFormChange(name = it)) },
                         isError = uiState.isValidating && !uiState.nameField.isValid,
                         maxLines = 1,
-//                        placeholder = stringResource(R.string.place_name_field_placeholder),
                     )
 
                     EnterOpeningHours -> OpeningHours(
@@ -153,11 +156,24 @@ private fun CreatePlaceScreen(
                         onAction = onAction,
                     )
 
-                    SelectImage -> ImagePicker(
-                        onAction = onAction,
-                        pictureField = uiState.pictureField,
-                        isValidating = uiState.isValidating,
-                    )
+                    SelectImage -> {
+                        val isError = uiState.isValidating && !uiState.pictureField.isValid
+                        val borderColor = when {
+                            isError -> MaterialTheme.colorScheme.error
+                            else -> MaterialTheme.colorScheme.outline
+                        }
+                        ImagePicker(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(2f)
+                                .padding(horizontal = Spacing_06)
+                                .border(1.dp, borderColor, ShapeDefaults.Medium)
+                                .clip(ShapeDefaults.Medium),
+                            imageModel = uiState.pictureField.model,
+                            isError = isError,
+                            onClick = { onAction(Action.OnImagePickerClick) },
+                        )
+                    }
 
                     SelectIcon -> IconSelector(
                         typeField = uiState.typeField,
