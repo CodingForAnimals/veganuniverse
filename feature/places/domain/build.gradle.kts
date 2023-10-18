@@ -12,6 +12,7 @@ android {
 dependencies {
     implementation(project(Module.Core.COMMON))
     implementation(project(Module.Entity.PLACES))
+    implementation(project(Module.Entity.BASE))
     implementation(project(Module.Services.Firebase.PLACES))
     implementation(project(Module.Services.Firebase.BASE))
 

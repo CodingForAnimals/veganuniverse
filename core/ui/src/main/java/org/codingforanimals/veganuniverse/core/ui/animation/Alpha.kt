@@ -15,6 +15,9 @@ fun Modifier.animateAlphaOnStart(): Modifier = composed {
     LaunchedEffect(Unit) {
         animate = true
     }
-    val alpha = animateFloatAsState(targetValue = if (!animate) 0f else 1f)
+    val alpha = animateFloatAsState(
+        targetValue = if (!animate) 0f else 1f,
+        label = "on_start_alpha_animation",
+    )
     return@composed alpha(alpha.value)
 }

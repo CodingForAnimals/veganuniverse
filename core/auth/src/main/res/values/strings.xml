@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="verification_email_sent">Te hemos enviado un email para que valides tu usuario. Por favor verifica tu email.</string>
+    <string name="verification_email_too_many_requests">Te enviamos demasiados emails para verificar. Por favor revisa bien tu correo electrónico (inclusive la carpeta spam)</string>
+
+</resources>

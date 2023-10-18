@@ -1,6 +1,6 @@
 package org.codingforanimals.veganuniverse.services.firebase.api
 
-import org.codingforanimals.veganuniverse.places.entity.PaginatedResponse
+import org.codingforanimals.veganuniverse.entity.PaginatedResponse
 import org.codingforanimals.veganuniverse.places.entity.PlaceReview
 import org.codingforanimals.veganuniverse.places.entity.PlaceReviewForm
 

@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.places.domain
 
+import org.codingforanimals.veganuniverse.entity.PaginatedResponse
 import org.codingforanimals.veganuniverse.places.entity.GeoLocationQueryParams
-import org.codingforanimals.veganuniverse.places.entity.PaginatedResponse
 import org.codingforanimals.veganuniverse.places.entity.Place
 import org.codingforanimals.veganuniverse.places.entity.PlaceCard
 import org.codingforanimals.veganuniverse.places.entity.PlaceReview

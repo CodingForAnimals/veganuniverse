@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
-import org.codingforanimals.veganuniverse.places.entity.PaginatedResponse
+import org.codingforanimals.veganuniverse.entity.PaginatedResponse
 import org.codingforanimals.veganuniverse.places.entity.PlaceReviewForm
 import org.codingforanimals.veganuniverse.services.firebase.FirestoreCollection
 import org.codingforanimals.veganuniverse.services.firebase.FirestoreFields

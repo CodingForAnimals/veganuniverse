@@ -15,6 +15,7 @@ dependencies {
     implementation(project(Module.Core.AUTH))
     implementation(project(Module.Core.LOCATION))
     implementation(project(Module.Services.Google.PLACES))
+    implementation(project(Module.Entity.BASE))
     implementation(project(Module.Entity.PLACES))
     implementation(project(Module.Feature.Places.DOMAIN))
     implementation(Google.MAPS)

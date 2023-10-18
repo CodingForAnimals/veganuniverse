@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
 import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChipDefaults
@@ -68,7 +69,7 @@ fun GenericPost(
             content()
         }
 //        Row(modifier = Modifier.padding(horizontal = Spacing_02)) {
-            actions()
+        actions()
 //        }
     }
 }
@@ -113,6 +114,7 @@ fun Post(
     subtitle: String,
     description: String? = null,
     image: Boolean = false,
+    imageUrl: String? = null,
     onClick: () -> Unit = {},
     details: @Composable (() -> Unit)? = null,
 ) {
@@ -127,8 +129,8 @@ fun Post(
         Description(
             description = description,
         )
-        if (image) {
-            ContentImage()
+        if (image || imageUrl != null) {
+            ContentImage(imageUrl)
         }
         Actions()
     }
@@ -213,18 +215,19 @@ private fun Description(
 }
 
 @Composable
-private fun ContentImage() {
-    Image(
+private fun ContentImage(
+    imageUrl: String?,
+) {
+    AsyncImage(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1.6f)
             .padding(Spacing_04)
             .clip(ShapeDefaults.Small),
+        model = imageUrl,
+        contentDescription = "",
         contentScale = ContentScale.Crop,
-        painter = painterResource(R.drawable.vegan_restaurant),
-        contentDescription = "Imágen del post"
     )
-
 }
 
 @Composable

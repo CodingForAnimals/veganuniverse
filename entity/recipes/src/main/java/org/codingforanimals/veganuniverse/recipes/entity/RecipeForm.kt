@@ -1,24 +1,16 @@
 package org.codingforanimals.veganuniverse.recipes.entity
 
+import android.os.Parcelable
+
 data class RecipeForm(
     val userId: String,
+    val username: String,
+    val image: Parcelable,
     val title: String,
-    val category: String,
     val description: String,
-    val likes: Int,
     val tags: List<String>,
     val ingredients: List<String>,
-    val steps: List<Step>,
-    val prepTime: PrepTime,
-)
-
-data class Step(
-    val description: String,
-    val order: Int,
-)
-
-data class PrepTime(
-    val hours: Int,
-    val minutes: Int,
-    val isQuickRecipe: Boolean,
+    val steps: List<String>,
+    val prepTime: String,
+    val servings: String,
 )

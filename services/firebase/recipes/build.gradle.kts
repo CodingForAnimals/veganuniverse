@@ -9,12 +9,14 @@ android {
 
 dependencies {
     implementation(project(Module.Entity.RECIPES))
+    implementation(project(Module.Entity.BASE))
     implementation(project(Module.Services.Firebase.BASE))
     bomImplementation(
         Firebase.BOM,
         listOf(
             Firebase.REALTIME_DATABASE,
             Firebase.FIRESTORE,
+            Firebase.STORAGE,
         )
     )
     testImplementation("junit:junit:4.13.2")

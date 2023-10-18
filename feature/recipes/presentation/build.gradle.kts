@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "org.codingforanimals.veganuniverse.presentation"
+    namespace = "org.codingforanimals.veganuniverse.recipes.presentation"
 
 }
 
@@ -15,6 +15,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation(project(Module.Entity.RECIPES))
     implementation(project(Module.Feature.Recipes.DOMAIN))
+    implementation(project(Module.Core.COMMON))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

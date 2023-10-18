@@ -10,6 +10,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.aspectRatio
@@ -39,9 +40,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.auth.VerifyEmailPromptScreen
+import org.codingforanimals.veganuniverse.core.ui.components.SelectableChip
 import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.core.ui.components.VUNormalTextField
-import org.codingforanimals.veganuniverse.core.ui.components.VUSelectableChip
 import org.codingforanimals.veganuniverse.core.ui.components.VUTextField
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
@@ -73,9 +74,9 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun CreatePlaceScreen(
-    onCreateSuccess: () -> Unit,
+    navigateToThankYouScreen: () -> Unit,
     navigateToAlreadyExistingPlace: () -> Unit,
-    navigateToAuthenticateScreen: () -> Unit,
+    navigateToAuthenticationScreen: () -> Unit,
     viewModel: CreatePlaceViewModel = koinViewModel(),
 ) {
 
@@ -92,36 +93,37 @@ internal fun CreatePlaceScreen(
 
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,
-        onCreateSuccess = onCreateSuccess,
+        navigateToThankYouScreen = navigateToThankYouScreen,
         imagePicker = imagePicker,
         addressPicker = placesApiLauncher,
         cameraPositionState = viewModel.uiState.cameraPositionState,
         navigateToAlreadyExistingPlace = navigateToAlreadyExistingPlace,
-        navigateToAuthenticateScreen = navigateToAuthenticateScreen,
+        navigateToAuthenticationScreen = navigateToAuthenticationScreen,
     )
 
-    CreatePlaceScreen(
-        uiState = viewModel.uiState,
-        onAction = viewModel::onAction,
-    )
+    Box {
 
-    if (viewModel.uiState.showVerifyEmailPrompt) {
-        VerifyEmailPromptScreen(
-            onSendRequest = { viewModel.onAction(Action.OnVerifyEmailPromptSendRequest) },
-            onDismissRequest = { viewModel.onAction(Action.OnVerifyEmailPromptDismissRequest) },
+        CreatePlaceScreen(
+            uiState = viewModel.uiState,
+            onAction = viewModel::onAction,
         )
-    }
 
-    VUCircularProgressIndicator(visible = viewModel.uiState.isLoading)
+        if (viewModel.uiState.showVerifyEmailPrompt) {
+            VerifyEmailPromptScreen(
+                onSendRequest = { viewModel.onAction(Action.OnVerifyEmailPromptSendRequest) },
+                onDismissRequest = { viewModel.onAction(Action.OnVerifyEmailPromptDismissRequest) },
+            )
+        }
 
+        viewModel.uiState.errorDialog?.let { errorData ->
+            ErrorDialog(
+                errorData = errorData,
+                navigateToAlreadyExistingPlace = navigateToAlreadyExistingPlace,
+                onDismissRequest = { viewModel.onAction(Action.OnErrorDialogDismissRequest) },
+            )
+        }
 
-    // TODO this will most likely need reworking to fit new designs in the future
-    viewModel.uiState.errorDialog?.let { errorData ->
-        ErrorDialog(
-            errorData = errorData,
-            navigateToAlreadyExistingPlace = navigateToAlreadyExistingPlace,
-            onDismissRequest = { viewModel.onAction(Action.OnErrorDialogDismissRequest) },
-        )
+        VUCircularProgressIndicator(visible = viewModel.uiState.isLoading)
     }
 }
 
@@ -215,7 +217,7 @@ private fun CreatePlaceScreen(
                         ) {
                             for (tag in PlaceTag.values()) {
                                 val selected = uiState.selectedTagsField.contains(tag)
-                                VUSelectableChip(
+                                SelectableChip(
                                     label = stringResource(tag.label),
                                     icon = tag.icon,
                                     selected = selected,
@@ -242,18 +244,18 @@ private fun CreatePlaceScreen(
 @Composable
 private fun HandleSideEffects(
     sideEffects: Flow<SideEffect>,
-    onCreateSuccess: () -> Unit,
+    navigateToThankYouScreen: () -> Unit,
     imagePicker: ActivityResultLauncher<PickVisualMediaRequest>,
     addressPicker: ActivityResultLauncher<Intent>,
     cameraPositionState: CameraPositionState,
     navigateToAlreadyExistingPlace: () -> Unit,
-    navigateToAuthenticateScreen: () -> Unit,
+    navigateToAuthenticationScreen: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         sideEffects.onEach { effect ->
             when (effect) {
                 SideEffect.NavigateToThankYouScreen -> {
-                    onCreateSuccess()
+                    navigateToThankYouScreen()
                 }
 
                 SideEffect.OpenImageSelector -> {
@@ -277,7 +279,7 @@ private fun HandleSideEffects(
                 }
 
                 SideEffect.NavigateToAuthenticateScreen -> {
-                    navigateToAuthenticateScreen()
+                    navigateToAuthenticationScreen()
                 }
 
                 SideEffect.ShowVerifyEmailPrompt -> {

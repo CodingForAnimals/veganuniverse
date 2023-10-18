@@ -51,6 +51,8 @@ import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewm
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewmodel.RegistrationScreenItem
 import org.koin.androidx.compose.koinViewModel
 
+private const val TAG = "PromptScreen"
+
 @Composable
 internal fun PromptScreen(
     navigateUp: () -> Unit,
@@ -221,7 +223,7 @@ private fun HandleSideEffects(
                     try {
                         providerSignInActivityLauncher.launch(sideEffect.intent)
                     } catch (e: Throwable) {
-                        Log.e("pepe", e.stackTraceToString())
+                        Log.e(TAG, e.stackTraceToString())
                     }
                 }
             }

@@ -94,6 +94,7 @@ internal fun OpeningHoursDomainEntity.toViewEntity(): OpeningHours? {
             secondaryPeriod = secondaryPeriod,
         )
     } catch (e: Throwable) {
+        Log.e(TAG, e.stackTraceToString())
         null
     }
 }

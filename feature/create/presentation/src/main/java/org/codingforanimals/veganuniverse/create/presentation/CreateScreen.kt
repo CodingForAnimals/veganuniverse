@@ -23,7 +23,7 @@ import org.codingforanimals.veganuniverse.create.presentation.recipe.CreateRecip
 internal fun CreateScreen(
     navigateToThankYouScreen: () -> Unit,
     navigateToAlreadyExistingPlace: () -> Unit,
-    navigateToAuthenticateScreen: () -> Unit,
+    navigateToAuthenticationScreen: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     Box(modifier = Modifier.fillMaxSize()) {
@@ -35,13 +35,17 @@ internal fun CreateScreen(
             when (products[it]) {
                 is PostScreenId -> CreatePostScreen()
                 is PlaceScreenId -> CreatePlaceScreen(
-                    onCreateSuccess = navigateToThankYouScreen,
+                    navigateToThankYouScreen = navigateToThankYouScreen,
                     navigateToAlreadyExistingPlace = navigateToAlreadyExistingPlace,
-                    navigateToAuthenticateScreen = navigateToAuthenticateScreen,
+                    navigateToAuthenticationScreen = navigateToAuthenticationScreen,
                 )
 
                 is ProductScreenId -> CreateProductScreen()
-                is RecipeScreenId -> CreateRecipeScreen()
+                is RecipeScreenId -> CreateRecipeScreen(
+                    navigateToThankYouScreen = navigateToThankYouScreen,
+                    navigateToAuthenticationScreen = navigateToAuthenticationScreen,
+                )
+
                 is OtherScreenId -> {
                     Text(
                         text = "Otra pantalla",

@@ -4,7 +4,6 @@ import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceV
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetAutoCompleteIntentUseCase
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetCreatePlaceScreenContent
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetPlaceDataUseCase
-import org.codingforanimals.veganuniverse.create.presentation.place.usecase.SendVerificationEmailUseCase
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.SubmitPlaceUseCase
 import org.codingforanimals.veganuniverse.services.google.places.googlePlacesModule
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -14,7 +13,6 @@ import org.koin.dsl.module
 internal val createPlacePresentationModule = module {
     includes(googlePlacesModule)
     factoryOf(::GetAutoCompleteIntentUseCase)
-    factoryOf(::SendVerificationEmailUseCase)
     factoryOf(::GetCreatePlaceScreenContent)
     factoryOf(::GetPlaceDataUseCase)
     factoryOf(::SubmitPlaceUseCase)

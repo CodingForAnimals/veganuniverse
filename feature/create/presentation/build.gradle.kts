@@ -16,6 +16,7 @@ dependencies {
     implementation(project(Module.Core.AUTH))
     implementation(project(Module.Feature.Create.DOMAIN))
     implementation(project(Module.Entity.PLACES))
+    implementation(project(Module.Entity.RECIPES))
     implementation(project(Module.Services.Google.PLACES))
     implementation(Google.MAPS)
     testImplementation("junit:junit:4.13.2")

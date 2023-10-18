@@ -101,6 +101,7 @@ object Google {
 
 object Other {
     const val IMAGE_CROPPER = "com.vanniktech:android-image-cropper:4.5.0"
+    const val SHIMMER = "com.valentinilk.shimmer:compose-shimmer:1.0.5"
 }
 
 object libs {

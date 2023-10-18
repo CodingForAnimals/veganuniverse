@@ -24,8 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
+import org.codingforanimals.veganuniverse.core.ui.components.SelectableChip
 import org.codingforanimals.veganuniverse.core.ui.components.VURadioButton
-import org.codingforanimals.veganuniverse.core.ui.components.VUSelectableChip
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
@@ -75,7 +75,7 @@ internal fun FilterDialog(
                     }
                     PlaceType.values().forEach {
                         val isSelected = selectedPlaceType == it
-                        VUSelectableChip(
+                        SelectableChip(
                             label = it.label,
                             icon = it.icon,
                             shape = CircleShape,
@@ -94,7 +94,7 @@ internal fun FilterDialog(
                 ) {
                     PlaceTag.values().forEach {
                         val selected = selectedPlaceTags.contains(it)
-                        VUSelectableChip(
+                        SelectableChip(
                             label = stringResource(it.label),
                             icon = it.icon,
                             selected = selected,

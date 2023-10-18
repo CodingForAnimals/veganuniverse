@@ -58,6 +58,7 @@ class FirebaseAuthenticator(
             firebaseAuth.currentUser?.reload()?.await()
             firebaseAuth.currentUser?.let { firebaseUserEntityMapper.map(it) }
         } catch (e: Throwable) {
+            Log.e(TAG, e.stackTraceToString())
             null
         }
     }
@@ -125,6 +126,7 @@ class FirebaseAuthenticator(
             firebaseAuth.currentUser?.sendEmailVerification()?.await()
             SendVerificationEmailResult.Success
         } catch (e: Throwable) {
+            Log.e(TAG, e.stackTraceToString())
             when (e) {
                 is FirebaseTooManyRequestsException -> SendVerificationEmailResult.TooManyRequests
                 else -> SendVerificationEmailResult.UnknownError

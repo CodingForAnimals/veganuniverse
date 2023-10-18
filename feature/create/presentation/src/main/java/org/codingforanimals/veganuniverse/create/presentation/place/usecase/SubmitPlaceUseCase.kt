@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.usecase
 
+import android.util.Log
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.auth.UserRepository
@@ -10,6 +11,8 @@ import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceV
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.toAddressComponents
 import org.codingforanimals.veganuniverse.create.presentation.place.entity.toDomainEntity
 import org.codingforanimals.veganuniverse.places.entity.PlaceForm
+
+private const val TAG = "SubmitPlaceUseCase"
 
 internal class SubmitPlaceUseCase(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
@@ -23,6 +26,7 @@ internal class SubmitPlaceUseCase(
         val user = userRepository.user.value ?: return@flow emit(SubmitPlaceStatus.UnauthorizedUser)
 
         if (!user.isEmailVerified) {
+            emit(SubmitPlaceStatus.Loading)
             val updatedUser =
                 userRepository.refreshUser() ?: return@flow emit(SubmitPlaceStatus.UnauthorizedUser)
             if (!updatedUser.isEmailVerified) {
@@ -58,6 +62,7 @@ private fun CreatePlaceViewModel.UiState.toPlaceForm(userId: String): PlaceForm?
             image = pictureField.model!!
         )
     } catch (e: Throwable) {
+        Log.e(TAG, e.stackTraceToString())
         null
     }
 }

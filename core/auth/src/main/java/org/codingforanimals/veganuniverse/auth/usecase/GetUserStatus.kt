@@ -5,4 +5,5 @@ import org.codingforanimals.veganuniverse.auth.model.User
 
 interface GetUserStatus {
     operator fun invoke(): StateFlow<User?>
+    suspend fun refreshUser(): User?
 }

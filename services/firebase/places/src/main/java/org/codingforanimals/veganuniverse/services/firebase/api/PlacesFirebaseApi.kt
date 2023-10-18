@@ -9,7 +9,6 @@ import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageMetadata
 import java.io.ByteArrayOutputStream
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
@@ -29,6 +28,7 @@ import org.codingforanimals.veganuniverse.services.firebase.entity.PlaceCard
 import org.codingforanimals.veganuniverse.services.firebase.model.FetchPlacesQueryParams
 import org.codingforanimals.veganuniverse.services.firebase.model.GetPlaceDeferred
 import org.codingforanimals.veganuniverse.services.firebase.model.GetPlaceResult
+import org.codingforanimals.veganuniverse.services.firebase.storageImageMetadata
 import org.codingforanimals.veganuniverse.services.firebase.utils.createGeoHash
 import org.codingforanimals.veganuniverse.services.firebase.utils.geoQuery
 import org.codingforanimals.veganuniverse.places.entity.Place as PlaceDomainEntity
@@ -131,25 +131,23 @@ internal class PlacesFirebaseApi(
     override suspend fun uploadPlace(form: PlaceForm) {
         val geoHash = createGeoHash(form.latitude, form.longitude)
         val pictureRef = storage.getReference(
-            FirebaseImageResizer.getPlacePictureToResizeStorageReference(geoHash)
+            FirebaseImageResizer.getPlacePictureToResizePath(geoHash)
         )
 
-        val storageMetadata =
-            StorageMetadata.Builder().setContentType(CONTENT_TYPE_IMAGE_JPEG).build()
         val uploadImageDeferred = when (val model = form.image) {
             is Bitmap -> {
                 val bytes = ByteArrayOutputStream()
                 model.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
                 pictureRef.putBytes(
                     bytes.toByteArray(),
-                    storageMetadata,
+                    storageImageMetadata,
                 ).asDeferred()
             }
 
             is Uri -> {
                 pictureRef.putFile(
                     model,
-                    storageMetadata
+                    storageImageMetadata,
                 ).asDeferred()
             }
 
@@ -187,9 +185,5 @@ internal class PlacesFirebaseApi(
             uploadImageDeferred,
             geoFireCompletionSource.task.asDeferred(),
         )
-    }
-
-    private companion object {
-        const val CONTENT_TYPE_IMAGE_JPEG = "image/jpeg"
     }
 }

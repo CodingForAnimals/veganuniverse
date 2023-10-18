@@ -11,8 +11,8 @@
 
 
     <string name="image_picker_label">Subir foto</string>
-    <string name="error_title_unknown">Oops, algo salió mal…</string>
-    <string name="error_message_unknown">Lo sentimos, ocurrió un error inesperado</string>
+    <string name="generic_error_title">Oops, algo salió mal…</string>
+    <string name="unknown_error_message">Lo sentimos, ocurrió un error inesperado</string>
     <string name="submit_button_label">Publicar</string>
     <string name="ok">OK</string>
     <string name="place_description_field_placeholder">Qué se comercializa?\nQué se puede encontrar?</string>
@@ -29,6 +29,16 @@
     <string name="empty_name_message">El nombre del lugar no puede estar vacío</string>
 
     <string name="success">¡Éxito!</string>
-    <string name="verification_email_sent">Te hemos enviado un email para que valides tu usuario. Por favor verifica tu email.</string>
-    <string name="verification_email_too_many_requests">Te enviamos demasiados emails para verificar. Por favor revisa bien tu correo electrónico (inclusive la carpeta spam)</string>
+
+    <string name="create_recipe_title">¡Comparte tu receta favorita!</string>
+    <string name="create_recipe_servings_placeholder">Ej. 4 porciones o 500g</string>
+    <string name="create_recipe_description_placeholder">Descripción de la receta.\nQué la hace especial?\nCon qué se acompaña?</string>
+    <string name="create_recipe_add_ingredient">Agregar ingrediente</string>
+    <string name="create_recipe_delete_ingredient">Eliminar ingrediente</string>
+    <string name="create_recipe_add_next_step">Agregar paso siguiente</string>
+    <string name="create_recipe_add_step">Agregar paso</string>
+    <string name="create_recipe_remove_step">Eliminar este paso</string>
+
+    <string name="create_recipe_ingredient_placeholder">Ej. 250g de lentejas hervidas</string>
+    <string name="create_recipe_steps_placeholder">Ej. Hervir las lentejas</string>
 </resources>

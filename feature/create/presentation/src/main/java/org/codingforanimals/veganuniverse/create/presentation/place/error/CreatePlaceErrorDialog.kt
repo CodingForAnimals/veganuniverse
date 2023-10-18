@@ -5,8 +5,8 @@ import org.codingforanimals.veganuniverse.create.presentation.R
 
 open class CreatePlaceErrorDialog(@StringRes val title: Int, @StringRes val message: Int) {
     object UnknownErrorDialog : CreatePlaceErrorDialog(
-        title = R.string.error_title_unknown,
-        message = R.string.error_message_unknown,
+        title = R.string.generic_error_title,
+        message = R.string.unknown_error_message,
     )
 
     object PlaceTypeErrorDialog :

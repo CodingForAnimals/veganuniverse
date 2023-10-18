@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.create.presentation.place.usecase
+package org.codingforanimals.veganuniverse.auth.usecase
 
 import org.codingforanimals.veganuniverse.auth.UserRepository
 import org.codingforanimals.veganuniverse.auth.model.SendVerificationEmailResult

@@ -8,4 +8,5 @@ internal class GetUserStatusImpl(
     private val userRepository: UserRepository,
 ) : GetUserStatus {
     override operator fun invoke(): StateFlow<User?> = userRepository.user
+    override suspend fun refreshUser(): User? = userRepository.refreshUser()
 }

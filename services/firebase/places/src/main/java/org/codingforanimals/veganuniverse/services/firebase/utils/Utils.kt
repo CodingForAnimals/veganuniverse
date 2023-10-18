@@ -46,7 +46,7 @@ internal val GeoLocationQueryParams.geoLocation: GeoLocation
 internal val PlaceImageType.extension: String
     get() {
         return when (this) {
-            PlaceImageType.Picture -> "_1000x1000.jpeg"
-            PlaceImageType.Thumbnail -> "_400x400.jpeg"
+            PlaceImageType.Picture -> "_1000x1000"
+            PlaceImageType.Thumbnail -> "_400x400"
         }
     }

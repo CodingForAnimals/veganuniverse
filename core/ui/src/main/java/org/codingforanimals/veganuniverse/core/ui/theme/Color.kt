@@ -14,6 +14,7 @@ val SurfaceVariant = Color(0xFFF4F4F5)
 val OnSurfaceVariant = Color(0xFF4D4D55)
 val Secondary = Color(0xFFE0D2F9)
 val Outline = Color(0xFFBABFC4)
+val ShimmerBackground = Color(0xFF8F8F8F)
 
 internal val LightColorScheme = lightColorScheme(
     primary = Primary,

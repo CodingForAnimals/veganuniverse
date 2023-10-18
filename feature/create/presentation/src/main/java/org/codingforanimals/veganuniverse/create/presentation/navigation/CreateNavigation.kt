@@ -23,7 +23,7 @@ fun NavGraphBuilder.createGraph(
         CreateScreen(
             navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYouDestination.route) },
             navigateToAlreadyExistingPlace = navigateToPlaceDetails,
-            navigateToAuthenticateScreen = navigateToAuthenticateScreen,
+            navigateToAuthenticationScreen = navigateToAuthenticateScreen,
         )
     }
     composable(

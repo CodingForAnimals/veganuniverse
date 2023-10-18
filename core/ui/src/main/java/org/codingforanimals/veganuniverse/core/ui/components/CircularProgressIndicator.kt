@@ -14,10 +14,10 @@ fun VUCircularProgressIndicator(
     modifier: Modifier = Modifier,
     visible: Boolean = true,
 ) {
-    AnimatedVisibility(modifier = modifier, visible = visible) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .clickable {}) {
+    AnimatedVisibility(modifier = modifier
+        .fillMaxSize()
+        .clickable {}, visible = visible) {
+        Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)
             )

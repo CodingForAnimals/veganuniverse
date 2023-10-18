@@ -148,6 +148,7 @@ class PlacesClientImpl(
                     )
                 }
             } catch (e: NullPointerException) {
+                Log.e(TAG, e.stackTraceToString())
                 return@mapNotNullTo null
             }
         }

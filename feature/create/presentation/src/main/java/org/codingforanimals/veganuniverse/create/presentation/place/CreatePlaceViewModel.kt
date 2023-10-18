@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.auth.model.SendVerificationEmailResult
+import org.codingforanimals.veganuniverse.auth.usecase.SendVerificationEmailUseCase
 import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
 import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
@@ -43,9 +44,10 @@ import org.codingforanimals.veganuniverse.create.presentation.place.model.Period
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetAutoCompleteIntentUseCase
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetCreatePlaceScreenContent
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetPlaceDataUseCase
-import org.codingforanimals.veganuniverse.create.presentation.place.usecase.SendVerificationEmailUseCase
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.SubmitPlaceStatus
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.SubmitPlaceUseCase
+import org.codingforanimals.veganuniverse.user.R.string.verification_email_sent
+import org.codingforanimals.veganuniverse.user.R.string.verification_email_too_many_requests
 
 internal class CreatePlaceViewModel(
     getCreatePlaceScreenContent: GetCreatePlaceScreenContent,
@@ -210,18 +212,19 @@ internal class CreatePlaceViewModel(
                     }
 
                     SubmitPlaceStatus.UnauthorizedUser -> {
-                        viewModelScope.launch {
-                            _sideEffects.send(SideEffect.NavigateToAuthenticateScreen)
-                        }
+                        uiState = uiState.copy(isLoading = false)
+                        _sideEffects.send(SideEffect.NavigateToAuthenticateScreen)
                     }
 
                     SubmitPlaceStatus.UnverifiedEmail -> {
                         uiState = uiState.copy(
+                            isLoading = false,
                             showVerifyEmailPrompt = true
                         )
                     }
 
                     SubmitPlaceStatus.FormError -> uiState = uiState.copy(
+                        isLoading = false,
                         isValidating = true,
                         errorDialog = CreatePlaceErrorDialog.InvalidFormErrorDialog
                     )
@@ -348,15 +351,15 @@ internal class CreatePlaceViewModel(
                     showVerifyEmailPrompt = false,
                     errorDialog = CreatePlaceErrorDialog(
                         title = R.string.success,
-                        message = R.string.verification_email_sent
+                        message = verification_email_sent
                     )
                 )
 
                 SendVerificationEmailResult.TooManyRequests -> uiState = uiState.copy(
                     showVerifyEmailPrompt = false,
                     errorDialog = CreatePlaceErrorDialog(
-                        title = R.string.error_title_unknown,
-                        message = R.string.verification_email_too_many_requests,
+                        title = R.string.generic_error_title,
+                        message = verification_email_too_many_requests,
                     )
                 )
 

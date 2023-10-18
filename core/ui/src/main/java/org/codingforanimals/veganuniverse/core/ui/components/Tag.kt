@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package org.codingforanimals.veganuniverse.core.ui.components
 
 import androidx.compose.animation.Crossfade
@@ -8,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
@@ -24,7 +21,7 @@ import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 
 @Composable
-fun VUSelectableChip(
+fun SelectableChip(
     modifier: Modifier = Modifier,
     label: String,
     icon: Icon,
@@ -33,10 +30,18 @@ fun VUSelectableChip(
     shape: Shape = AssistChipDefaults.shape,
     onClick: () -> Unit,
 ) {
-    val color =
-        if (selected) VUSelectableChipDefaults.selectedColors() else VUSelectableChipDefaults.idleColors()
-    val containerColor = animateColorAsState(color.containerColor)
-    val borderColor = animateColorAsState(color.borderColor)
+    val color = when {
+        selected -> VUSelectableChipDefaults.selectedColors()
+        else -> VUSelectableChipDefaults.idleColors()
+    }
+    val containerColor = animateColorAsState(
+        targetValue = color.containerColor,
+        label = "${label}_container_color_animation",
+    )
+    val borderColor = animateColorAsState(
+        targetValue = color.borderColor,
+        label = "${label}_border_color_animation",
+    )
 
     AssistChip(
         modifier = modifier,
@@ -44,7 +49,7 @@ fun VUSelectableChip(
         onClick = onClick,
         label = { Text(label) },
         leadingIcon = {
-            Crossfade(targetState = selected) {
+            Crossfade(targetState = selected, label = "${label}_crossfade_animation") {
                 if (it) {
                     VUIcon(
                         icon = selectedIcon,
@@ -96,7 +101,7 @@ fun VUTag(
     modifier: Modifier = Modifier,
     label: String,
     onClick: (() -> Unit)? = null,
-    colors: VUTagColors = VUTagDefaults.tagColors()
+    colors: VUTagColors = VUTagDefaults.tagColors(),
 ) {
     SuggestionChip(
         modifier = modifier,
