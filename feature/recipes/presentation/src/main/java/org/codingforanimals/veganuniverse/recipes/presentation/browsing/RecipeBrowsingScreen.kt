@@ -3,7 +3,7 @@
     ExperimentalLayoutApi::class
 )
 
-package org.codingforanimals.veganuniverse.recipes.presentation.category
+package org.codingforanimals.veganuniverse.recipes.presentation.browsing
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -73,10 +73,10 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
-import org.codingforanimals.veganuniverse.recipes.presentation.category.RecipeBrowsingViewModel.Action
-import org.codingforanimals.veganuniverse.recipes.presentation.category.RecipeBrowsingViewModel.SideEffect
-import org.codingforanimals.veganuniverse.recipes.presentation.category.RecipeBrowsingViewModel.UiState
-import org.codingforanimals.veganuniverse.recipes.presentation.category.components.RecipeCard
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.Action
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.SideEffect
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.UiState
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.components.RecipeCard
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
 import org.codingforanimals.veganuniverse.utils.TimeAgo

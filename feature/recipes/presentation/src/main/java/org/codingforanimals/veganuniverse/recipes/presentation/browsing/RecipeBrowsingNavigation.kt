@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.presentation.category
+package org.codingforanimals.veganuniverse.recipes.presentation.browsing
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType

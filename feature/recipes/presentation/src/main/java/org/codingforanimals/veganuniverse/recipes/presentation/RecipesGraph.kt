@@ -3,8 +3,8 @@ package org.codingforanimals.veganuniverse.recipes.presentation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.dialog
-import org.codingforanimals.veganuniverse.recipes.presentation.category.RecipeBrowsingDestination
-import org.codingforanimals.veganuniverse.recipes.presentation.category.recipesCategoryGraph
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingDestination
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.recipesCategoryGraph
 import org.codingforanimals.veganuniverse.recipes.presentation.home.recipesHomeGraph
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.recipeGraph

@@ -46,8 +46,8 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
+import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.cardShapeAndShadow
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.cardWidth
-import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.carouselItemShapeAndShadow
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.carouselcard.RecipeCarouselAsyncCardsViewModel.Action
 import org.codingforanimals.veganuniverse.utils.toDp
 import org.koin.androidx.compose.koinViewModel
@@ -124,7 +124,7 @@ private fun RecipeCarouselAsyncCards(
                                 modifier = modifier
                                     .width(cardWidth().toDp())
                                     .aspectRatio(0.7f)
-                                    .carouselItemShapeAndShadow()
+                                    .cardShapeAndShadow()
                                     .clickable { onAction(Action.OnRecipeClick(recipe.id)) },
                             ) {
                                 AsyncImage(

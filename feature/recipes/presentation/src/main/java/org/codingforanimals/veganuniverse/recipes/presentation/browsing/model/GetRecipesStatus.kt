@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.presentation.category.model
+package org.codingforanimals.veganuniverse.recipes.presentation.browsing.model
 
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 

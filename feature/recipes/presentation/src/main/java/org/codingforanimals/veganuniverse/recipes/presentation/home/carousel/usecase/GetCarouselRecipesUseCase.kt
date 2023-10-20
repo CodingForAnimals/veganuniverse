@@ -43,6 +43,6 @@ internal class GetCarouselRecipesUseCase(
     }
 
     companion object {
-        const val CAROUSEL_QUERY_LIMIT = 2L
+        const val CAROUSEL_QUERY_LIMIT = 4L
     }
 }

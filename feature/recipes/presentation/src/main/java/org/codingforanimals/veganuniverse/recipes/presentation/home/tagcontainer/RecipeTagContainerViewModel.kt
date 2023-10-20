@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.usecase.GetContainerRecipesUseCase
+import org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
 
 internal class RecipeTagContainerViewModel(
@@ -38,7 +39,12 @@ internal class RecipeTagContainerViewModel(
 
             Action.OnShowMoreClick -> {
                 viewModelScope.launch {
-                    sideEffectsChannel.send(SideEffect.NavigateToRecipeBrowsing(tag = recipeTag.name))
+                    sideEffectsChannel.send(
+                        SideEffect.NavigateToRecipeBrowsing(
+                            tag = recipeTag.name,
+                            sorter = RecipeSorter.LIKES.name,
+                        )
+                    )
                 }
             }
         }
@@ -51,6 +57,6 @@ internal class RecipeTagContainerViewModel(
 
     sealed class SideEffect {
         data class NavigateToRecipe(val id: String) : SideEffect()
-        data class NavigateToRecipeBrowsing(val tag: String) : SideEffect()
+        data class NavigateToRecipeBrowsing(val tag: String, val sorter: String) : SideEffect()
     }
 }

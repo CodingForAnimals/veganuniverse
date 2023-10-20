@@ -1,5 +1,5 @@
 package org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer
 
-internal enum class RecipeTagLayoutType {
-    FULL_COLUMN_LEFT, FULL_COLUMN_RIGHT
+internal enum class ContainerLayoutType {
+    VERTICAL_LEFT, VERTICAL_RIGHT
 }

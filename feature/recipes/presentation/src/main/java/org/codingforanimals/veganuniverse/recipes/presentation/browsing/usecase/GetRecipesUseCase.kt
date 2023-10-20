@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.presentation.category.usecase
+package org.codingforanimals.veganuniverse.recipes.presentation.browsing.usecase
 
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
@@ -8,7 +8,7 @@ import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherP
 import org.codingforanimals.veganuniverse.recipes.domain.RecipesRepository
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeQueryParams
-import org.codingforanimals.veganuniverse.recipes.presentation.category.model.GetRecipesStatus
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.model.GetRecipesStatus
 import org.codingforanimals.veganuniverse.recipes.presentation.entity.toDomainSorter
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag

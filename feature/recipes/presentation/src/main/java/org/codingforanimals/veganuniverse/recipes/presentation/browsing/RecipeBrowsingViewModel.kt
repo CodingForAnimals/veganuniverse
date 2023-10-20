@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.presentation.category
+package org.codingforanimals.veganuniverse.recipes.presentation.browsing
 
 import android.util.Log
 import androidx.annotation.StringRes
@@ -17,8 +17,8 @@ import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.core.ui.model.Dialog
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.presentation.R
-import org.codingforanimals.veganuniverse.recipes.presentation.category.model.GetRecipesStatus
-import org.codingforanimals.veganuniverse.recipes.presentation.category.usecase.GetRecipesUseCase
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.model.GetRecipesStatus
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.usecase.GetRecipesUseCase
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
 

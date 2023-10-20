@@ -98,4 +98,10 @@ object VUIcons {
 sealed class Icon {
     data class ImageVectorIcon(val imageVector: ImageVector) : Icon()
     data class DrawableResourceIcon(@DrawableRes val id: Int) : Icon()
+
+    val model: Any
+        get() = when (this) {
+            is DrawableResourceIcon -> id
+            is ImageVectorIcon -> imageVector
+        }
 }
