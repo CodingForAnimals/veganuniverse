@@ -1,13 +1,13 @@
 package org.codingforanimals.veganuniverse.recipes.domain
 
-import org.codingforanimals.veganuniverse.recipes.api.RecipesApi
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeQueryParams
+import org.codingforanimals.veganuniverse.recipes.services.RecipesService
 
 internal const val LRU_DEFAULT_SIZE = 4 * 1024 * 1024
 
 internal class RecipesRepositoryImpl(
-    private val recipesApi: RecipesApi,
+    private val recipesService: RecipesService,
     private val recipeListCache: RecipeListCache,
     private val recipeCache: RecipeCache,
 ) : RecipesRepository {
@@ -15,7 +15,7 @@ internal class RecipesRepositoryImpl(
         params: RecipeQueryParams,
         cacheKey: String?,
     ): List<Recipe> {
-        val recipes = recipesApi.fetchRecipes(params)
+        val recipes = recipesService.fetchRecipes(params)
         if (cacheKey != null) {
             recipeListCache.appendRecipes(cacheKey, recipes)
         }
@@ -27,7 +27,7 @@ internal class RecipesRepositoryImpl(
     }
 
     override suspend fun fetchRecipe(id: String): Recipe? {
-        val recipe = recipesApi.fetchRecipe(id)
+        val recipe = recipesService.fetchRecipe(id)
         if (recipe != null) {
             recipeCache.putRecipe(recipe)
         }

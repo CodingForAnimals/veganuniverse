@@ -1,12 +1,12 @@
 package org.codingforanimals.veganuniverse.create.domain.recipes
 
-import org.codingforanimals.veganuniverse.recipes.api.RecipesApi
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeForm
+import org.codingforanimals.veganuniverse.recipes.services.RecipesService
 
 internal class RecipeCreatorImpl(
-    private val recipesApi: RecipesApi,
+    private val recipesService: RecipesService,
 ) : RecipeCreator {
     override suspend fun createRecipe(recipeForm: RecipeForm) {
-        recipesApi.submitRecipe(recipeForm)
+        recipesService.submitRecipe(recipeForm)
     }
 }

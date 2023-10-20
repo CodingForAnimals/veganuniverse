@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Badge
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -156,20 +158,15 @@ internal fun RecipeScreen(
                     contentDescription = "",
                     onIconClick = { showMenu = !showMenu },
                 )
-//                DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-//                    DropdownMenuItem(
-//                        text = { Text(text = "Reportar receta") },
-//                        onClick = openDialog,
-//                        leadingIcon = {
-//                            VUIcon(icon = VUIcons.Report, contentDescription = "")
-//                        })
-//                    DropdownMenuItem(
-//                        text = { Text(text = "Sugerir edición") },
-//                        onClick = {},
-//                        leadingIcon = {
-//                            VUIcon(icon = VUIcons.Edit, contentDescription = "")
-//                        })
-//                }
+                DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                    DropdownMenuItem(
+                        text = { Text(text = "Reportar receta") },
+                        onClick = {},
+                        leadingIcon = {
+                            VUIcon(icon = VUIcons.Report, contentDescription = "")
+                        },
+                    )
+                }
             }
         )
         LazyColumn(

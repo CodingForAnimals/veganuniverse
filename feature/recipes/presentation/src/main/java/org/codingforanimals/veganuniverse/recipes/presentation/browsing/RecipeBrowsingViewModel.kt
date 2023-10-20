@@ -132,8 +132,8 @@ internal class RecipeBrowsingViewModel(
 
     data class UiState(
         val recipes: List<Recipe> = emptyList(),
-        val filterTag: RecipeTag? = null,
-        val sorter: RecipeSorter = RecipeSorter.DATE,
+        val filterTag: RecipeTag? = defaultTag,
+        val sorter: RecipeSorter = defaultSorter,
         val dialog: Dialog? = null,
         val loadingMore: Boolean = false,
         val canLoadMore: Boolean = true,
@@ -156,20 +156,26 @@ internal class RecipeBrowsingViewModel(
         }
 
         companion object {
+            val defaultSorter = RecipeSorter.LIKES
+            val defaultTag = null
             fun init(rawTag: String?, rawSorter: String?): UiState {
-                val tag = try {
-                    RecipeTag.valueOf(rawTag!!)
-                } catch (e: Throwable) {
-                    Log.e(TAG, e.stackTraceToString())
-                    null
+                val tag = rawTag?.let {
+                    try {
+                        RecipeTag.valueOf(it)
+                    } catch (e: Throwable) {
+                        Log.e(TAG, e.stackTraceToString())
+                        defaultTag
+                    }
                 }
 
-                val sorter = try {
-                    RecipeSorter.valueOf(rawSorter!!)
-                } catch (e: Throwable) {
-                    Log.e(TAG, e.stackTraceToString())
-                    RecipeSorter.DATE
-                }
+                val sorter = rawSorter?.let {
+                    try {
+                        RecipeSorter.valueOf(rawSorter)
+                    } catch (e: Throwable) {
+                        Log.e(TAG, e.stackTraceToString())
+                        defaultSorter
+                    }
+                } ?: defaultSorter
 
                 return UiState(
                     filterTag = tag,

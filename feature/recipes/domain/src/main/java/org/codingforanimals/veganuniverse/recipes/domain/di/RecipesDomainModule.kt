@@ -1,12 +1,12 @@
 package org.codingforanimals.veganuniverse.recipes.domain.di
 
-import org.codingforanimals.veganuniverse.recipes.api.di.recipesFirebaseServiceModule
 import org.codingforanimals.veganuniverse.recipes.domain.RecipeCache
 import org.codingforanimals.veganuniverse.recipes.domain.RecipeListCache
 import org.codingforanimals.veganuniverse.recipes.domain.RecipeListLruCache
 import org.codingforanimals.veganuniverse.recipes.domain.RecipeLruCache
 import org.codingforanimals.veganuniverse.recipes.domain.RecipesRepository
 import org.codingforanimals.veganuniverse.recipes.domain.RecipesRepositoryImpl
+import org.codingforanimals.veganuniverse.recipes.services.di.recipesFirebaseServiceModule
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind

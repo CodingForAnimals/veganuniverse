@@ -3,12 +3,12 @@ package org.codingforanimals.veganuniverse.create.domain.places
 import android.util.Log
 import org.codingforanimals.veganuniverse.create.domain.places.model.CreatePlaceResult
 import org.codingforanimals.veganuniverse.places.entity.PlaceForm
-import org.codingforanimals.veganuniverse.services.firebase.api.PlacesApi
+import org.codingforanimals.veganuniverse.places.services.PlacesService
 
 private const val TAG = "PlaceCreatorImpl"
 
 internal class PlaceCreatorImpl(
-    private val api: PlacesApi,
+    private val api: PlacesService,
 ) : PlaceCreator {
 
     override suspend fun submitPlace(form: PlaceForm): CreatePlaceResult {
