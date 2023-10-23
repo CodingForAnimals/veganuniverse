@@ -159,23 +159,27 @@ internal class RecipeBrowsingViewModel(
             val defaultSorter = RecipeSorter.LIKES
             val defaultTag = null
             fun init(rawTag: String?, rawSorter: String?): UiState {
-                val tag = rawTag?.let {
+                val tag = if (rawTag != null && rawTag != "null") {
                     try {
-                        RecipeTag.valueOf(it)
+                        RecipeTag.valueOf(rawTag)
                     } catch (e: Throwable) {
                         Log.e(TAG, e.stackTraceToString())
                         defaultTag
                     }
+                } else {
+                    defaultTag
                 }
 
-                val sorter = rawSorter?.let {
+                val sorter = if (rawSorter != null && rawSorter != "null") {
                     try {
                         RecipeSorter.valueOf(rawSorter)
                     } catch (e: Throwable) {
                         Log.e(TAG, e.stackTraceToString())
                         defaultSorter
                     }
-                } ?: defaultSorter
+                } else {
+                    defaultSorter
+                }
 
                 return UiState(
                     filterTag = tag,

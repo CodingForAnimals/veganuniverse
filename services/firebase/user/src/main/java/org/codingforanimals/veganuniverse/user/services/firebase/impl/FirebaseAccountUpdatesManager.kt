@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.user.services.firebase
+package org.codingforanimals.veganuniverse.user.services.firebase.impl
 
 import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
@@ -6,6 +6,7 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.services.firebase.StoragePath
 import org.codingforanimals.veganuniverse.services.firebase.storageImageMetadata
+import org.codingforanimals.veganuniverse.user.services.firebase.AccountUpdatesManager
 
 internal class FirebaseAccountUpdatesManager(
     private val auth: FirebaseAuth,

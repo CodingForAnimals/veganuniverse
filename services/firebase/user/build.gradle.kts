@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "org.codingforanimals.veganuniverse.auth.services.firebase"
+    namespace = "org.codingforanimals.veganuniverse.user.services.firebase"
 }
 
 dependencies {
@@ -15,7 +15,7 @@ dependencies {
 
     bomImplementation(
         Firebase.BOM,
-        listOf(Firebase.AUTH, Firebase.STORAGE)
+        listOf(Firebase.AUTH, Firebase.STORAGE, Firebase.REALTIME_DATABASE)
     )
     implementation(Google.AUTH)
     testImplementation("junit:junit:4.13.2")

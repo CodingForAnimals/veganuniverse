@@ -5,11 +5,11 @@ import com.google.firebase.ktx.Firebase
 import org.codingforanimals.veganuniverse.services.firebase.di.firebaseServiceModule
 import org.codingforanimals.veganuniverse.user.services.firebase.AccountUpdatesManager
 import org.codingforanimals.veganuniverse.user.services.firebase.Authenticator
-import org.codingforanimals.veganuniverse.user.services.firebase.FirebaseAccountUpdatesManager
-import org.codingforanimals.veganuniverse.user.services.firebase.FirebaseAuthenticator
-import org.codingforanimals.veganuniverse.user.services.firebase.GoogleSignInWrapper
+import org.codingforanimals.veganuniverse.user.services.firebase.config.GoogleSignInWrapper
 import org.codingforanimals.veganuniverse.user.services.firebase.entity.FIREBASE_USER_ENTITY_MAPPER
 import org.codingforanimals.veganuniverse.user.services.firebase.entity.mapperModule
+import org.codingforanimals.veganuniverse.user.services.firebase.impl.FirebaseAccountUpdatesManager
+import org.codingforanimals.veganuniverse.user.services.firebase.impl.FirebaseAuthenticator
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind

@@ -10,7 +10,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 
-private val defaultIconSize = 20.dp
+
+object VUIconDefaults {
+    val defaultIconSize = 20.dp
+}
 
 @Composable
 fun VUIcon(
@@ -19,15 +22,17 @@ fun VUIcon(
     icon: Icon,
     onIconClick: () -> Unit,
     contentDescription: String,
+    tint: Color = Color.Unspecified,
 ) {
     IconButton(
         modifier = modifier,
         onClick = onIconClick,
         content = {
             VUIcon(
-                modifier = iconModifier.size(defaultIconSize),
+                modifier = iconModifier.size(VUIconDefaults.defaultIconSize),
                 icon = icon,
-                contentDescription = contentDescription
+                contentDescription = contentDescription,
+                tint = tint
             )
         },
     )
@@ -42,14 +47,15 @@ fun VUIcon(
     when (icon) {
         is Icon.ImageVectorIcon -> {
             Icon(
-                modifier = modifier.size(defaultIconSize),
+                modifier = modifier.size(VUIconDefaults.defaultIconSize),
                 imageVector = icon.imageVector,
                 contentDescription = contentDescription,
             )
         }
+
         is Icon.DrawableResourceIcon -> {
             Icon(
-                modifier = modifier.size(defaultIconSize),
+                modifier = modifier.size(VUIconDefaults.defaultIconSize),
                 painter = painterResource(icon.id),
                 contentDescription = contentDescription,
             )
@@ -67,15 +73,16 @@ fun VUIcon(
     when (icon) {
         is Icon.ImageVectorIcon -> {
             Icon(
-                modifier = modifier.size(defaultIconSize),
+                modifier = modifier.size(VUIconDefaults.defaultIconSize),
                 imageVector = icon.imageVector,
                 contentDescription = contentDescription,
                 tint = tint,
             )
         }
+
         is Icon.DrawableResourceIcon -> {
             Icon(
-                modifier = modifier.size(defaultIconSize),
+                modifier = modifier.size(VUIconDefaults.defaultIconSize),
                 painter = painterResource(icon.id),
                 contentDescription = contentDescription,
                 tint = tint,

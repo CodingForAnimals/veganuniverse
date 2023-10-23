@@ -25,7 +25,7 @@ import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesD
 import org.codingforanimals.veganuniverse.places.presentation.navigation.placesGraph
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
 import org.codingforanimals.veganuniverse.profile.presentation.navigation.profileGraph
-import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeDestination
+import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.recipesGraph
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
@@ -98,6 +98,9 @@ internal fun VUAppNavHost(
         )
         recipesGraph(
             navController = navController,
+            navigateToAuthenticateScreen = {
+                navController.navigateToRegistrationPromptWithOriginDestination(RecipesDestination.Details)
+            }
         )
     }
 }
@@ -117,7 +120,7 @@ class VUNavHostController(context: Context) : NavHostController(context) {
         return when (currentDestination?.route) {
             PlacesDestination.Home.route,
             CreateDestination.Home.route,
-            RecipesHomeDestination.route,
+            RecipesDestination.Home.route,
             ProfileDestination.route,
             -> {
                 navigate(CommunityDestination.route) {

@@ -23,4 +23,3 @@ internal class ProfileRepositoryImpl(
         accountUpdatesManager.updateProfilePicture(uri)
     }
 }
-

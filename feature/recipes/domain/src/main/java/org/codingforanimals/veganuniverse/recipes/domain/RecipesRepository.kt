@@ -8,5 +8,13 @@ interface RecipesRepository {
     suspend fun getCachedRecipes(key: String): List<Recipe>?
     suspend fun fetchRecipe(id: String): Recipe?
     suspend fun getCachedRecipe(id: String): Recipe?
+    suspend fun isRecipeLikedByUser(recipeId: String, userId: String): Boolean
+    suspend fun isRecipeBookmarkedByUser(recipeId: String, userId: String): Boolean
+    suspend fun updateLikeReturningCurrent(like: Boolean, recipeId: String, userId: String): Boolean
+    suspend fun updateBookmarkReturningCurrent(
+        bookmark: Boolean,
+        recipeId: String,
+        userId: String,
+    ): Boolean
 }
 

@@ -21,6 +21,11 @@ object versions {
 }
 
 object Module {
+    object Storage {
+        const val FIRESTORE = ":storage:firestore"
+        const val RECIPES = ":storage:recipes"
+    }
+
     object Core {
         const val COMMON = ":core:common"
         const val DATASTORE = ":core:datastore"
@@ -28,6 +33,7 @@ object Module {
         const val LOCATION = ":core:location"
         const val AUTH = ":core:auth"
     }
+
     object Entity {
         const val BASE = ":entity"
         const val PLACES = ":entity:places"

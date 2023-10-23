@@ -39,7 +39,7 @@ import org.codingforanimals.veganuniverse.core.ui.R.string.all_tags
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
-import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingNavArgs
+import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeViewModel.RelayAction
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeViewModel.SideEffect
@@ -52,12 +52,12 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun RecipesHomeScreen(
     navigateToRecipeBrowsing: (RecipeBrowsingNavArgs) -> Unit,
-    navigateToRecipe: (String) -> Unit,
+    navigateToRecipeDetails: (String) -> Unit,
     viewModel: RecipesHomeViewModel = koinViewModel(),
 ) {
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,
-        navigateToRecipe = navigateToRecipe,
+        navigateToRecipeDetails = navigateToRecipeDetails,
         navigateToRecipeBrowsing = navigateToRecipeBrowsing,
     )
 
@@ -171,7 +171,7 @@ private fun AllRecipeTags(
 @Composable
 private fun HandleSideEffects(
     sideEffects: Flow<SideEffect>,
-    navigateToRecipe: (String) -> Unit,
+    navigateToRecipeDetails: (String) -> Unit,
     navigateToRecipeBrowsing: (RecipeBrowsingNavArgs) -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -182,7 +182,7 @@ private fun HandleSideEffects(
                 }
 
                 is SideEffect.NavigateToRecipe -> {
-                    navigateToRecipe(sideEffect.id)
+                    navigateToRecipeDetails(sideEffect.id)
                 }
             }
         }.collect()

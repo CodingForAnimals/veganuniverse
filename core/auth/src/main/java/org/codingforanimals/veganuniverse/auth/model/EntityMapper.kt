@@ -4,7 +4,7 @@ import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailLogi
 import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailRegistrationResponse
 import org.codingforanimals.veganuniverse.user.services.firebase.model.ProviderAuthenticationResponse
 import org.codingforanimals.veganuniverse.user.services.firebase.model.UserFirebaseEntity
-import org.codingforanimals.veganuniverse.user.services.firebase.SendVerificationEmailResult as FirebaseSendVerificationEmailResult
+import org.codingforanimals.veganuniverse.user.services.firebase.model.SendVerificationEmailResult as FirebaseSendVerificationEmailResult
 
 internal fun UserFirebaseEntity.toDomainEntity(): User {
     return User(

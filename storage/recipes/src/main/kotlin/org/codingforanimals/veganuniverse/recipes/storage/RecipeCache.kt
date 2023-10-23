@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.domain
+package org.codingforanimals.veganuniverse.recipes.storage
 
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 

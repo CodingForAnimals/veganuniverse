@@ -4,10 +4,10 @@ import android.content.Context
 import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
 import org.codingforanimals.veganuniverse.places.entity.PlaceImageType
 import org.codingforanimals.veganuniverse.places.services.entity.PlaceCard
+import org.codingforanimals.veganuniverse.places.services.firebase.R
 import org.codingforanimals.veganuniverse.places.services.model.GetPlaceResult
 import org.codingforanimals.veganuniverse.places.services.utils.extension
 import org.codingforanimals.veganuniverse.services.firebase.StoragePath
-import org.codingforanimals.veganuniverse.services.firebase.places.R
 import org.codingforanimals.veganuniverse.places.entity.PlaceCard as PlaceCardDomainEntity
 
 internal class GetPlaceResultToPlaceCardMapper(

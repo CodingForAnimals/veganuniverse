@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "org.codingforanimals.veganuniverse.services.firebase.places"
+    namespace = "org.codingforanimals.veganuniverse.places.services.firebase"
 }
 
 dependencies {

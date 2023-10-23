@@ -24,7 +24,7 @@ import org.codingforanimals.veganuniverse.core.ui.R.string.show_more
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.recipes.presentation.R
-import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingNavArgs
+import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.RecipeCarouselViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.RecipeCarouselViewModel.SideEffect
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.RecipeCarouselViewModel.UiState

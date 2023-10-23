@@ -3,7 +3,6 @@ package org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.us
 import android.util.Log
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import org.codingforanimals.veganuniverse.recipes.domain.RecipeListCache
 import org.codingforanimals.veganuniverse.recipes.domain.RecipesRepository
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeQueryParams
@@ -29,10 +28,10 @@ internal class GetCarouselRecipesUseCase(
             try {
                 val prioritizeCacheForFirstLoad = recipes.isEmpty()
                 val result = if (prioritizeCacheForFirstLoad) {
-                    recipesRepository.getCachedRecipes(RecipeListCache.MOST_LIKED)
-                        ?: recipesRepository.fetchRecipes(params, RecipeListCache.MOST_LIKED)
+                    recipesRepository.getCachedRecipes(sorter.name)
+                        ?: recipesRepository.fetchRecipes(params, sorter.name)
                 } else {
-                    recipesRepository.fetchRecipes(params, RecipeListCache.MOST_LIKED)
+                    recipesRepository.fetchRecipes(params, sorter.name)
                 }
                 result
             } catch (e: Throwable) {

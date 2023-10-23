@@ -16,6 +16,7 @@ dependencies {
     implementation(project(Module.Entity.RECIPES))
     implementation(project(Module.Feature.Recipes.DOMAIN))
     implementation(project(Module.Core.COMMON))
+    implementation(project(Module.Core.AUTH))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

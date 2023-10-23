@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.domain
+package org.codingforanimals.veganuniverse.recipes.storage
 
 import android.util.Log
 import android.util.LruCache
@@ -6,8 +6,8 @@ import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 
 private const val TAG = "RecipeListLruCache"
 
-internal class RecipeListLruCache : LruCache<String, List<Recipe>>(4 * 1024 * 1024),
-    RecipeListCache {
+internal class RecipeListLruCache :
+    LruCache<String, List<Recipe>>(4 * 1024 * 1024), RecipeListCache {
 
     override fun appendRecipes(key: String, recipes: List<Recipe>): Boolean {
         return try {

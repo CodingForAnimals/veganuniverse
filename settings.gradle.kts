@@ -62,3 +62,6 @@ include(":feature:profile:domain")
 include(":services:firebase:recipes")
 include(":entity:recipes")
 include(":feature:recipes:domain")
+
+include(":storage:firestore")
+include(":storage:recipes")

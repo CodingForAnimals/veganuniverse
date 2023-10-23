@@ -42,6 +42,7 @@ object VUIcons {
     val Report = DrawableResourceIcon(R.drawable.ic_flag)
     val Share = DrawableResourceIcon(R.drawable.ic_share)
     val Bookmark = DrawableResourceIcon(R.drawable.ic_bookmark)
+    val BookmarkFilled = DrawableResourceIcon(R.drawable.ic_bookmark_filled)
     val Filter = DrawableResourceIcon(R.drawable.ic_filter)
     val Sort = DrawableResourceIcon(R.drawable.ic_sort)
     val Notifications = DrawableResourceIcon(R.drawable.ic_notifications)

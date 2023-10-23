@@ -14,4 +14,14 @@ object DatabasePath {
             }
         }
     }
+
+    object User {
+        object Likes {
+            const val RECIPES = "user/likes/recipes"
+        }
+
+        object Bookmarks {
+            const val RECIPES = "user/bookmarks/recipes"
+        }
+    }
 }

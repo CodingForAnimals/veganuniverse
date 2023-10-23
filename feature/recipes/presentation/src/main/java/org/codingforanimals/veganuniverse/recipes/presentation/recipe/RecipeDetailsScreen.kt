@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package org.codingforanimals.veganuniverse.recipes.presentation.recipe
 
@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,7 +28,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -52,16 +50,14 @@ import java.util.Date
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.veganuniverse.core.ui.R.drawable.vegan_restaurant
 import org.codingforanimals.veganuniverse.core.ui.R.string.back
-import org.codingforanimals.veganuniverse.core.ui.R.string.generic_error_title
 import org.codingforanimals.veganuniverse.core.ui.R.string.ingredient
 import org.codingforanimals.veganuniverse.core.ui.R.string.ingredients
 import org.codingforanimals.veganuniverse.core.ui.R.string.prep_time
 import org.codingforanimals.veganuniverse.core.ui.R.string.servings
 import org.codingforanimals.veganuniverse.core.ui.R.string.steps
 import org.codingforanimals.veganuniverse.core.ui.R.string.tags
-import org.codingforanimals.veganuniverse.core.ui.R.string.unknown_error_message
-import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.core.ui.error.NoActionDialog
@@ -74,73 +70,39 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_08
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_09
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.recipes.presentation.R
-import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeViewModel.Action
-import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeViewModel.RecipeState
-import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeViewModel.SideEffect
-import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeViewModel.UiState
+import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeDetailsViewModel.Action
+import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeDetailsViewModel.SideEffect
+import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeDetailsViewModel.UiState
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.entity.RecipeView
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
 import org.codingforanimals.veganuniverse.shared.ui.FeatureItemScreenHero
 import org.codingforanimals.veganuniverse.shared.ui.FeatureItemScreenTagsFlowRow
 import org.codingforanimals.veganuniverse.shared.ui.TagItem
+import org.codingforanimals.veganuniverse.shared.ui.ToggleableIcon
 import org.codingforanimals.veganuniverse.utils.TimeAgo
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-internal fun RecipeScreen(
+internal fun RecipeDetailsScreen(
     onBackClick: () -> Unit,
-    openDialog: () -> Unit,
-    viewModel: RecipeViewModel = koinViewModel(),
+    navigateToAuthenticateScreen: () -> Unit,
+    viewModel: RecipeDetailsViewModel = koinViewModel(),
 ) {
 
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,
         navigateUp = onBackClick,
+        navigateToAuthenticateScreen = navigateToAuthenticateScreen,
     )
 
-    when (val state = viewModel.recipe.collectAsState().value) {
-        RecipeState.Error -> ErrorScreen(viewModel::onAction)
-        RecipeState.Loading -> LoadingScreen()
-        is RecipeState.Success -> RecipeScreen(
-            recipe = state.recipe,
-            uiState = viewModel.uiState,
-            onAction = viewModel::onAction,
-        )
-    }
-}
-
-@Composable
-private fun HandleSideEffects(
-    sideEffects: Flow<SideEffect>,
-    navigateUp: () -> Unit,
-) {
-    LaunchedEffect(Unit) {
-        sideEffects.onEach { sideEffect ->
-            when (sideEffect) {
-                SideEffect.NavigateUp -> navigateUp()
-            }
-        }.collect()
-    }
-}
-
-@Composable
-private fun ErrorScreen(onAction: (Action) -> Unit) {
-    NoActionDialog(
-        title = generic_error_title,
-        message = unknown_error_message,
-        buttonText = back,
-        onDismissRequest = { onAction(Action.OnBackClick) }
+    RecipeDetailsScreen(
+        uiState = viewModel.uiState,
+        onAction = viewModel::onAction,
     )
 }
 
 @Composable
-private fun LoadingScreen() {
-    VUCircularProgressIndicator()
-}
-
-@Composable
-internal fun RecipeScreen(
-    recipe: RecipeView,
+internal fun RecipeDetailsScreen(
     uiState: UiState,
     onAction: (Action) -> Unit,
 ) {
@@ -169,9 +131,45 @@ internal fun RecipeScreen(
                 }
             }
         )
+        RecipeContent(
+            uiState = uiState,
+            onAction = onAction
+        )
+
+        if (uiState.openImageDialog) {
+            Dialog(
+                onDismissRequest = { onAction(Action.OnImageDialogDismissRequest) },
+                properties = DialogProperties(usePlatformDefaultWidth = false)
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Spacing_09),
+                    model = uiState.recipe?.imageRef,
+                    contentDescription = stringResource(R.string.recipe_image_description)
+                )
+            }
+        }
+    }
+
+    uiState.dialog?.let { dialog ->
+        NoActionDialog(
+            title = dialog.title,
+            message = dialog.message,
+            buttonText = back,
+            onDismissRequest = { onAction(Action.OnBackClick) }
+        )
+    }
+}
+
+@Composable
+private fun RecipeContent(
+    uiState: UiState,
+    onAction: (Action) -> Unit,
+) {
+    uiState.recipe?.let { recipe ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(Spacing_06),
             contentPadding = PaddingValues(bottom = Spacing_08)
         ) {
@@ -191,14 +189,35 @@ internal fun RecipeScreen(
                 )
             }
             item {
-                Text(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = Spacing_06),
-                    text = recipe.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium
-                )
+//                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = recipe.title,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                    ToggleableIcon(
+                        toggled = uiState.likeState.toggled,
+                        loading = uiState.likeState.loading,
+                        onIconClick = { onAction(Action.OnLikeClick) },
+                        onIcon = VUIcons.FavoriteFilled,
+                        onTint = Color.Red,
+                        offIcon = VUIcons.Favorite,
+                    )
+                    ToggleableIcon(
+                        toggled = uiState.bookmarkState.toggled,
+                        loading = uiState.bookmarkState.loading,
+                        onIconClick = { onAction(Action.OnBookmarkClick) },
+                        onIcon = VUIcons.BookmarkFilled,
+                        onTint = MaterialTheme.colorScheme.primary,
+                        offIcon = VUIcons.Bookmark,
+                    )
+                }
             }
             item {
                 Column(
@@ -232,7 +251,7 @@ internal fun RecipeScreen(
                             .size(50.dp)
                             .clip(CircleShape),
                         contentScale = ContentScale.Crop,
-                        painter = painterResource(org.codingforanimals.veganuniverse.core.ui.R.drawable.vegan_restaurant),
+                        painter = painterResource(vegan_restaurant),
                         contentDescription = "Imágen del usuario creador del post",
                     )
                     Column {
@@ -303,49 +322,35 @@ internal fun RecipeScreen(
                     )
                 )
                 recipe.steps.forEachIndexed { index, step ->
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = Spacing_06)
-                            .padding(bottom = Spacing_04),
-                    ) {
-                        Badge(
+                    key(index) {
+                        Row(
                             modifier = Modifier
-                                .size(30.dp)
-                                .aspectRatio(1f),
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            content = {
-                                Text(
-                                    modifier = Modifier.offset(y = (2).dp),
-                                    text = "${index + 1}",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = FontWeight.SemiBold,
-                                )
-                            },
-                        )
-                        Text(modifier = Modifier.padding(start = Spacing_04), text = step)
+                                .padding(horizontal = Spacing_06)
+                                .padding(bottom = Spacing_04),
+                        ) {
+                            Badge(
+                                modifier = Modifier
+                                    .size(30.dp)
+                                    .aspectRatio(1f),
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                content = {
+                                    Text(
+                                        modifier = Modifier.offset(y = (2).dp),
+                                        text = "${index + 1}",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                },
+                            )
+                            Text(modifier = Modifier.padding(start = Spacing_04), text = step)
+                        }
                     }
                 }
             }
-//            item { Comments() }
-        }
-    }
-    if (uiState.openImageDialog) {
-        Dialog(
-            onDismissRequest = { onAction(Action.OnImageDialogDismissRequest) },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
-        ) {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Spacing_09),
-                model = recipe.imageRef,
-                contentDescription = stringResource(R.string.recipe_image_description)
-            )
         }
     }
 }
-
 
 @Composable
 private fun Divider() {
@@ -358,54 +363,51 @@ private fun Divider() {
 }
 
 @Composable
+private fun HandleSideEffects(
+    sideEffects: Flow<SideEffect>,
+    navigateUp: () -> Unit,
+    navigateToAuthenticateScreen: () -> Unit,
+) {
+    LaunchedEffect(Unit) {
+        sideEffects.onEach { sideEffect ->
+            when (sideEffect) {
+                SideEffect.NavigateUp -> navigateUp()
+                SideEffect.NavigateToAuthenticateScreen -> navigateToAuthenticateScreen()
+            }
+        }.collect()
+    }
+}
+
+@Composable
 @Preview
 private fun PreviewRecipeScreen() {
     VeganUniverseTheme {
         Surface {
-            RecipeScreen(
-                recipe = RecipeView(
-                    "",
-                    "",
-                    "User name",
-                    "Titulo de receta",
-                    "Esta es la descripcion de la receta",
-                    3,
-                    Date(),
-                    listOf(
-                        RecipeTag.QUICK_RECIPE,
-                        RecipeTag.LUNCH_AND_DINNER,
-                        RecipeTag.BREAKFAST_AND_EVENING,
-                        RecipeTag.SALTY,
-                        RecipeTag.GLUTEN_FREE
-                    ),
-                    ingredients = listOf("ingrediente 1", "ingrediente 2"),
-                    steps = listOf("paso 1", "paso 2"),
-                    prepTime = "30 minutos",
-                    servings = "4 porciones",
-                    imageRef = "",
+            RecipeDetailsScreen(
+                uiState = UiState(
+                    recipe = RecipeView(
+                        id = "",
+                        userId = "",
+                        username = "User name",
+                        title = "Titulo de receta",
+                        description = "Esta es la descripcion de la receta",
+                        likes = 3,
+                        createdAt = Date(),
+                        tags = listOf(
+                            RecipeTag.QUICK_RECIPE,
+                            RecipeTag.LUNCH_AND_DINNER,
+                            RecipeTag.BREAKFAST_AND_EVENING,
+                            RecipeTag.SALTY,
+                            RecipeTag.GLUTEN_FREE
+                        ),
+                        ingredients = listOf("ingrediente 1", "ingrediente 2"),
+                        steps = listOf("paso 1", "paso 2"),
+                        prepTime = "30 minutos",
+                        servings = "4 porciones",
+                        imageRef = "",
+                    )
                 ),
-                uiState = UiState(),
                 onAction = {})
-        }
-    }
-}
-
-@Composable
-@Preview
-private fun PreviewErrorScreen() {
-    VeganUniverseTheme {
-        Surface {
-            ErrorScreen(onAction = {})
-        }
-    }
-}
-
-@Composable
-@Preview
-private fun PreviewLoadingScreen() {
-    VeganUniverseTheme {
-        Surface {
-            LoadingScreen()
         }
     }
 }

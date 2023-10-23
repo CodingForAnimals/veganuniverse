@@ -4,13 +4,14 @@ plugins {
 }
 
 android {
-    namespace = "org.codingforanimals.veganuniverse.recipes.api"
+    namespace = "org.codingforanimals.veganuniverse.recipes.services.firebase"
 }
 
 dependencies {
     implementation(project(Module.Entity.RECIPES))
     implementation(project(Module.Entity.BASE))
     implementation(project(Module.Services.Firebase.BASE))
+    implementation(project(Module.Storage.FIRESTORE))
     bomImplementation(
         Firebase.BOM,
         listOf(

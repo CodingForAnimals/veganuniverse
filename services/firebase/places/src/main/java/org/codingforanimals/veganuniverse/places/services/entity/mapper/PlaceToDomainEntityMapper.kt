@@ -7,9 +7,9 @@ import org.codingforanimals.veganuniverse.places.entity.PlaceImageType
 import org.codingforanimals.veganuniverse.places.services.entity.AddressComponents
 import org.codingforanimals.veganuniverse.places.services.entity.OpeningHours
 import org.codingforanimals.veganuniverse.places.services.entity.Place
+import org.codingforanimals.veganuniverse.places.services.firebase.R
 import org.codingforanimals.veganuniverse.places.services.utils.extension
 import org.codingforanimals.veganuniverse.services.firebase.StoragePath
-import org.codingforanimals.veganuniverse.services.firebase.places.R
 import org.codingforanimals.veganuniverse.places.entity.AddressComponents as AddressComponentsDomainEntity
 import org.codingforanimals.veganuniverse.places.entity.OpeningHours as OpeningHoursDomainEntity
 import org.codingforanimals.veganuniverse.places.entity.Place as PlaceDomainEntity

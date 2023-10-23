@@ -1,6 +1,10 @@
 package org.codingforanimals.veganuniverse.recipes.presentation.recipe.usecase
 
 import android.util.Log
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
 import org.codingforanimals.veganuniverse.recipes.domain.RecipesRepository
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.entity.RecipeView
@@ -10,13 +14,23 @@ private const val TAG = "GetRecipeUseCase"
 
 internal class GetRecipeUseCase(
     private val recipesRepository: RecipesRepository,
+    private val getUserStatus: GetUserStatus,
 ) {
 
-    suspend operator fun invoke(id: String): Status {
-        return try {
-            val recipe = recipesRepository.getCachedRecipe(id)
-                ?: recipesRepository.fetchRecipe(id)
-            Status.Success(recipe!!.toView())
+    suspend operator fun invoke(id: String?): Status = coroutineScope {
+        if (id == null || id == "null") return@coroutineScope Status.Error
+        try {
+            val recipe = async {
+                recipesRepository.getCachedRecipe(id)
+                    ?: recipesRepository.fetchRecipe(id)
+            }
+            val isLikedByUser = async {
+                getUserStatus().value?.id?.let { userId ->
+                    recipesRepository.isRecipeLikedByUser(id, userId)
+                } ?: false
+            }
+            awaitAll(recipe, isLikedByUser)
+            Status.Success(recipe.await()!!.toView())
         } catch (e: Throwable) {
             Log.e(TAG, e.stackTraceToString())
             Status.Error
@@ -43,7 +57,7 @@ internal class GetRecipeUseCase(
             steps = steps,
             prepTime = prepTime,
             servings = servings,
-            imageRef = imageRef
+            imageRef = imageRef,
         )
     }
 

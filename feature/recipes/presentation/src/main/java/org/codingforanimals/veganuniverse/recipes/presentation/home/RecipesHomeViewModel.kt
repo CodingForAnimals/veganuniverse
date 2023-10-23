@@ -6,7 +6,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingNavArgs
+import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.ContainerLayoutType
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag

@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,27 +32,29 @@ fun FeatureItemScreenTagsFlowRow(
         maxItemsInEachRow = 2,
     ) {
         tags.forEachIndexed { index, tag ->
-            val isSingleTagRow = (index == (tags.size - 1)) && (index.rem(2) == 0)
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(vertical = Spacing_04),
-                horizontalArrangement = Arrangement.spacedBy(Spacing_04, Alignment.Start),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                VUIcon(
-                    icon = tag.icon,
-                    contentDescription = stringResource(tag.label),
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-                Text(
-                    text = stringResource(tag.label),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-            if (isSingleTagRow) {
-                Spacer(modifier = Modifier.weight(1f))
+            key(index) {
+                val isSingleTagRow = remember { (index == (tags.size - 1)) && (index.rem(2) == 0) }
+                Row(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(vertical = Spacing_04),
+                    horizontalArrangement = Arrangement.spacedBy(Spacing_04, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    VUIcon(
+                        icon = tag.icon,
+                        contentDescription = stringResource(tag.label),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        text = stringResource(tag.label),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+                if (isSingleTagRow) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
     }

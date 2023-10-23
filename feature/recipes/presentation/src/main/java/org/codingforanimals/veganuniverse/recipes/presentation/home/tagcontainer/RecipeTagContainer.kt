@@ -25,7 +25,7 @@ import org.codingforanimals.veganuniverse.core.ui.animation.shimmer
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingNavArgs
+import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
 import org.codingforanimals.veganuniverse.recipes.presentation.components.SimpleCard
 import org.codingforanimals.veganuniverse.recipes.presentation.components.SimpleCardLayoutType
 import org.codingforanimals.veganuniverse.recipes.presentation.home.components.RecipesHomeItemHeader
