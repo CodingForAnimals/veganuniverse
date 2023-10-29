@@ -75,10 +75,10 @@ import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeDeta
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeDetailsViewModel.UiState
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.entity.RecipeView
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
-import org.codingforanimals.veganuniverse.shared.ui.FeatureItemScreenHero
-import org.codingforanimals.veganuniverse.shared.ui.FeatureItemScreenTagsFlowRow
-import org.codingforanimals.veganuniverse.shared.ui.TagItem
 import org.codingforanimals.veganuniverse.shared.ui.ToggleableIcon
+import org.codingforanimals.veganuniverse.shared.ui.featureditem.FeatureItemScreenHero
+import org.codingforanimals.veganuniverse.shared.ui.featureditem.FeatureItemScreenTagsFlowRow
+import org.codingforanimals.veganuniverse.shared.ui.featureditem.TagItem
 import org.codingforanimals.veganuniverse.utils.TimeAgo
 import org.koin.androidx.compose.koinViewModel
 

@@ -7,6 +7,7 @@ import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
@@ -79,7 +80,7 @@ internal class PlacesFirebaseService(
         return mapToPlaceCards(getPlacesDeferredList)
     }
 
-    private suspend fun mapToPlaceCards(deferredList: List<GetPlaceDeferred>): List<org.codingforanimals.veganuniverse.places.entity.PlaceCard> {
+    private suspend fun mapToPlaceCards(deferredList: List<GetPlaceDeferred>): List<PlaceCardDomainEntity> {
         val results = deferredList.map { it.await() }
         return results.mapNotNull { result ->
             try {
@@ -94,16 +95,16 @@ internal class PlacesFirebaseService(
     override suspend fun fetchPlace(
         latitude: Double,
         longitude: Double,
-    ): org.codingforanimals.veganuniverse.places.entity.Place? {
+    ): PlaceDomainEntity? {
         val geoHash = createGeoHash(latitude, longitude)
         return fetchPlaceByGeoHashId(geoHash)
     }
 
-    override suspend fun fetchPlace(geoHash: String): org.codingforanimals.veganuniverse.places.entity.Place? {
+    override suspend fun fetchPlace(geoHash: String): PlaceDomainEntity? {
         return fetchPlaceByGeoHashId(geoHash)
     }
 
-    override suspend fun fetchPlaces(params: FetchPlacesQueryParams): List<org.codingforanimals.veganuniverse.places.entity.Place> {
+    override suspend fun fetchPlaces(params: FetchPlacesQueryParams): List<PlaceDomainEntity> {
         val collectionRef = firestore.collection(FirestoreCollection.Content.Places.ITEMS)
         return if (params.userId != null) {
             val parameterizedQuery = collectionRef
@@ -120,7 +121,21 @@ internal class PlacesFirebaseService(
         }
     }
 
-    private suspend fun fetchPlaceByGeoHashId(geoHash: String): org.codingforanimals.veganuniverse.places.entity.Place? {
+    override suspend fun fetchPlaces(ids: List<String>): List<PlaceDomainEntity> {
+        return firestore.collection(FirestoreCollection.Content.Places.ITEMS)
+            .whereIn(FieldPath.documentId(), ids)
+            .get().await().mapNotNull {
+                try {
+                    val place = it.toObject(Place::class.java)
+                    placeToDomainEntityMapper.map(place)
+                } catch (e: Throwable) {
+                    Log.e(TAG, e.stackTraceToString())
+                    null
+                }
+            }
+    }
+
+    private suspend fun fetchPlaceByGeoHashId(geoHash: String): PlaceDomainEntity? {
         val snap = firestore
             .collection(FirestoreCollection.Content.Places.ITEMS)
             .document(geoHash)
@@ -130,7 +145,7 @@ internal class PlacesFirebaseService(
         }
     }
 
-    override suspend fun uploadPlace(form: PlaceForm) {
+    override suspend fun uploadPlace(form: PlaceForm): String {
         val geoHash = createGeoHash(form.latitude, form.longitude)
         val pictureRef = storage.getReference(
             FirebaseImageResizer.getPlacePictureToResizePath(geoHash)
@@ -187,5 +202,6 @@ internal class PlacesFirebaseService(
             uploadImageDeferred,
             geoFireCompletionSource.task.asDeferred(),
         )
+        return geoHash
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -16,24 +17,29 @@ import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
 import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
-import org.codingforanimals.veganuniverse.profile.presentation.usecase.GetUserFeatureContributionsUseCase
+import org.codingforanimals.veganuniverse.profile.presentation.model.Bookmarks
+import org.codingforanimals.veganuniverse.profile.presentation.model.Contributions
+import org.codingforanimals.veganuniverse.profile.presentation.usecase.GetBookmarksUseCase
+import org.codingforanimals.veganuniverse.profile.presentation.usecase.GetContributionsUseCase
 import org.codingforanimals.veganuniverse.profile.presentation.usecase.LogoutState
 import org.codingforanimals.veganuniverse.profile.presentation.usecase.LogoutUseCase
 import org.codingforanimals.veganuniverse.profile.presentation.usecase.UploadNewProfilePictureStatus
 import org.codingforanimals.veganuniverse.profile.presentation.usecase.UploadNewProfilePictureUseCase
-import org.codingforanimals.veganuniverse.profile.presentation.usecase.UserFeatureContributionsStatus
 
 internal class ProfileScreenViewModel(
     private val getUserStatus: GetUserStatus,
     private val logout: LogoutUseCase,
-    private val getUserFeatureContributions: GetUserFeatureContributionsUseCase,
     private val uploadNewProfilePictureUseCase: UploadNewProfilePictureUseCase,
+    private val getBookmarks: GetBookmarksUseCase,
+    private val getContributions: GetContributionsUseCase,
 ) : ViewModel() {
 
     private val _sideEffect = Channel<SideEffect>()
     val sideEffect: Flow<SideEffect> = _sideEffect.receiveAsFlow()
 
     private var contributionsJob: Job? = null
+    private var bookmarkedRecipesJob: Job? = null
+    private var contentJob: Job? = null
     private var imageCropperJob: Job? = null
     private var uploadNewProfilePictureJob: Job? = null
 
@@ -44,34 +50,35 @@ internal class ProfileScreenViewModel(
         viewModelScope.launch {
             getUserStatus().collectLatest { user ->
                 uiState = if (user != null) {
-                    getContributions()
                     uiState.copy(user = user)
                 } else {
-                    uiState.copy(user = null, userContributions = null)
+                    uiState.copy(user = null)
+                }
+
+                contentJob?.cancel()
+                user?.let {
+                    contentJob = launch {
+                        val bookmarks = async { getBookmarks(it.id) }
+                        val contributions = async { getContributions(it.id) }
+                        uiState = uiState.copy(
+                            bookmarks = bookmarks.await(),
+                            contributions = contributions.await()
+                        )
+                    }
                 }
             }
         }
     }
 
-    private fun getContributions() {
-        contributionsJob?.cancel()
-        contributionsJob = viewModelScope.launch {
-            getUserFeatureContributions().collectLatest { contributions ->
-                uiState = uiState.copy(
-                    userContributions = when (contributions) {
-                        UserFeatureContributionsStatus.Error -> ContributionsState.Error
-                        UserFeatureContributionsStatus.Loading -> ContributionsState.Loading
-                        is UserFeatureContributionsStatus.Success -> ContributionsState.Success(
-                            contributions.places
-                        )
-                    }
-                )
-            }
-        }
-    }
 
     fun onAction(action: Action) {
         when (action) {
+            Action.Test -> {
+                viewModelScope.launch {
+                    _sideEffect.send(SideEffect.Test)
+                }
+            }
+
             Action.OnCreateUserButtonClick -> navigateToRegisterScreen()
             Action.LogOut -> logoutAttempt()
             Action.DismissErrorDialog -> dismissErrorDialog()
@@ -95,19 +102,14 @@ internal class ProfileScreenViewModel(
             logout().collect { state ->
                 uiState = when (state) {
                     LogoutState.Error -> uiState.copy(
-                        loading = false,
-                        errorDialog = ErrorDialog(
+                        loading = false, errorDialog = ErrorDialog(
                             errorTitle = R.string.logout_error_title,
                             errorMessage = R.string.logout_error_message
                         )
                     )
 
                     LogoutState.Loading -> uiState.copy(loading = true)
-                    LogoutState.Success -> uiState.copy(
-                        user = null,
-                        userContributions = null,
-                        loading = false
-                    )
+                    LogoutState.Success -> UiState()
                 }
             }
         }
@@ -189,7 +191,8 @@ internal class ProfileScreenViewModel(
         val user: User? = null,
         val loading: Boolean = false,
         val errorDialog: ErrorDialog? = null,
-        val userContributions: ContributionsState? = null,
+        val bookmarks: Bookmarks = Bookmarks(),
+        val contributions: Contributions = Contributions(),
         val showImageDialog: Boolean = false,
         val showNewProfilePictureConfirmationDialog: Boolean = false,
         val newProfilePicUri: Uri? = null,
@@ -200,9 +203,8 @@ internal class ProfileScreenViewModel(
         data object Loading : ContributionsState()
         data object Error : ContributionsState()
         data class Success(val places: List<PlaceCard>) : ContributionsState() {
-            val userHasNoContributions: Boolean = places.isEmpty()
+            val userHasNoContributions: Boolean = places.isEmpty() // && other.isEmpty()
         }
-
     }
 
     data class ErrorDialog(
@@ -212,6 +214,7 @@ internal class ProfileScreenViewModel(
 
     sealed class Action {
         data class NewProfilePictureSelected(val profilePicUri: Uri) : Action()
+        data object Test : Action()
         data object OnCreateUserButtonClick : Action()
         data object LogOut : Action()
         data object DismissErrorDialog : Action()
@@ -223,6 +226,7 @@ internal class ProfileScreenViewModel(
     }
 
     sealed class SideEffect {
+        data object Test : SideEffect()
         data object NavigateToRegister : SideEffect()
         data object LaunchImageCropperForSelectingProfilePicture : SideEffect()
         data class ReloadProfilePicture(val url: String) : SideEffect()

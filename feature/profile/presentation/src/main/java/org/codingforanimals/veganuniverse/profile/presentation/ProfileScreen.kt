@@ -4,11 +4,15 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,12 +26,15 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -36,6 +43,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.core.common.R.string.back
 import org.codingforanimals.veganuniverse.core.common.R.string.update
+import org.codingforanimals.veganuniverse.core.ui.R.drawable.ic_bookmark
+import org.codingforanimals.veganuniverse.core.ui.R.string.show_more
 import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.error.ActionDialog
@@ -49,26 +58,31 @@ import org.codingforanimals.veganuniverse.places.ui.compose.PlaceCard
 import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.Action
 import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.SideEffect
 import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.UiState
+import org.codingforanimals.veganuniverse.profile.presentation.model.BookmarkState
+import org.codingforanimals.veganuniverse.profile.presentation.model.ContributionState
+import org.codingforanimals.veganuniverse.shared.ui.cards.LoadingSimpleCard
+import org.codingforanimals.veganuniverse.shared.ui.cards.SimpleCard
 import org.codingforanimals.veganuniverse.utils.rememberImageCropperLauncherForActivityResult
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ProfileScreen(
     navigateToRegister: () -> Unit,
+    test: () -> Unit,
     viewModel: ProfileScreenViewModel = koinViewModel(),
 ) {
-    val imageCropperLauncher = rememberImageCropperLauncherForActivityResult(
-        onCropSuccess = { profilePicUri ->
+    val imageCropperLauncher =
+        rememberImageCropperLauncherForActivityResult(onCropSuccess = { profilePicUri ->
             if (profilePicUri != null) {
                 viewModel.onAction(Action.NewProfilePictureSelected(profilePicUri))
             }
-        }
-    )
+        })
 
     HandleSideEffects(
         sideEffects = viewModel.sideEffect,
         navigateToRegister = navigateToRegister,
         imageCropperLauncher = imageCropperLauncher,
+        test = test,
     )
 
     ProfileScreen(
@@ -89,12 +103,11 @@ private fun ProfileScreen(
             if (isGuestUser) {
                 GuestUserContent(onAction)
             } else {
-                UserContent(
-                    state = uiState,
-                    onAction = onAction
+                ProfileContent(
+                    state = uiState, onAction = onAction
                 )
             }
-        }
+        },
     )
 
     VUCircularProgressIndicator(visible = uiState.loading)
@@ -140,63 +153,228 @@ private fun GuestUserContent(
 }
 
 @Composable
-private fun UserContent(
+private fun ProfileContent(
     state: UiState,
     onAction: (Action) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(Spacing_06),
-        horizontalAlignment = Alignment.CenterHorizontally
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Spacing_06)
     ) {
-        Box(modifier = Modifier.wrapContentSize()) {
-            IconButton(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ),
-                onClick = { onAction(Action.EditProfilePictureClick) },
-                content = { VUIcon(icon = VUIcons.Edit, contentDescription = "") },
-            )
+        item {
+            Box(modifier = Modifier.wrapContentSize()) {
+                IconButton(
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    onClick = { onAction(Action.EditProfilePictureClick) },
+                    content = { VUIcon(icon = VUIcons.Edit, contentDescription = "") },
+                )
+            }
+            Column {
+                Text(text = state.user?.name ?: "", style = MaterialTheme.typography.titleLarge)
+                Text(text = state.user?.email ?: "", style = MaterialTheme.typography.titleMedium)
+            }
+            Button(onClick = { onAction(Action.LogOut) }) {
+                Text(text = "Cerrar sesión")
+            }
         }
-        Column {
-            Text(text = state.user?.name ?: "", style = MaterialTheme.typography.titleLarge)
-            Text(text = state.user?.email ?: "", style = MaterialTheme.typography.titleMedium)
-        }
-        Button(onClick = { onAction(Action.LogOut) }) {
-            Text(text = "Cerrar sesión")
-        }
-        Crossfade(
-            modifier = Modifier.fillMaxSize(),
-            targetState = state.userContributions,
-            label = "profile_screen_contributions_animation",
-        ) { contributionsState ->
-            when (contributionsState) {
-                ProfileScreenViewModel.ContributionsState.Error -> ErrorView(message = R.string.contributions_error_message)
-                ProfileScreenViewModel.ContributionsState.Loading -> VUCircularProgressIndicator()
-                is ProfileScreenViewModel.ContributionsState.Success -> Column(
-                    verticalArrangement = Arrangement.spacedBy(Spacing_04)
-                ) {
-                    if (contributionsState.userHasNoContributions) {
-                        ErrorView(message = R.string.contributions_empty_message)
-                    } else {
-                        if (contributionsState.places.isNotEmpty()) {
-                            Text(
-                                text = stringResource(R.string.contributions_places_title),
-                                style = MaterialTheme.typography.titleMedium,
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Spacing_06),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Spacing_04)
+            ) {
+                VUIcon(
+                    icon = VUIcons.Bookmark,
+                    contentDescription = stringResource(R.string.your_bookmarks)
+                )
+                Text(
+                    text = stringResource(R.string.your_bookmarks),
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+
+            Row(
+                modifier = Modifier.padding(vertical = Spacing_04, horizontal = Spacing_06),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.your_recipes),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                TextButton(onClick = {}) {
+                    Text(text = stringResource(show_more))
+                }
+            }
+            Crossfade(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize(),
+                targetState = state.bookmarks.recipes,
+                label = "profile_screen_bookmarks_recipes_crossfade"
+            ) { recipes ->
+                when (recipes) {
+                    BookmarkState.Error -> {
+                        ErrorView(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = Spacing_06),
+                            message = R.string.bookmarks_error_recipes_message
+                        )
+                    }
+
+                    BookmarkState.Loading -> {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(Spacing_06)
+                        ) {
+                            LoadingSimpleCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = Spacing_06)
+                                    .aspectRatio(2f)
                             )
-                            contributionsState.places.forEach { card ->
-                                key(card.geoHash) {
-                                    PlaceCard(placeCard = card, onCardClick = {})
+                            LoadingSimpleCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = Spacing_06)
+                                    .aspectRatio(2f)
+                            )
+                        }
+                    }
+
+                    is BookmarkState.Success -> {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(Spacing_04),
+                        ) {
+                            if (recipes.items.isEmpty()) {
+                                Text(text = stringResource(R.string.bookmarks_empty_recipes_message))
+                                Image(
+                                    painter = painterResource(ic_bookmark),
+                                    contentDescription = stringResource(R.string.your_recipes)
+                                )
+                            } else {
+                                recipes.items.forEachIndexed { index, cardItem ->
+                                    key(index) {
+                                        SimpleCard(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(
+                                                    bottom = Spacing_06,
+                                                    start = Spacing_06,
+                                                    end = Spacing_06
+                                                )
+                                                .aspectRatio(2f),
+                                            model = cardItem,
+                                            onClick = {},
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
+            }
+        }
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Spacing_06),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Spacing_04)
+            ) {
+                VUIcon(
+                    icon = VUIcons.Add,
+                    contentDescription = stringResource(R.string.your_contributions)
+                )
+                Text(
+                    text = stringResource(R.string.your_contributions),
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
 
-                null -> Unit
+            Row(
+                modifier = Modifier.padding(vertical = Spacing_04, horizontal = Spacing_06),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.your_places),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                TextButton(onClick = {}) {
+                    Text(text = stringResource(show_more))
+                }
+            }
+
+            Crossfade(
+                modifier = Modifier.fillMaxWidth(),
+                targetState = state.contributions.places,
+                label = "profile_screen_contributions_crossfade",
+            ) { places ->
+                when (places) {
+                    ContributionState.Error -> {
+                        ErrorView(message = R.string.contributions_error_places_message)
+                    }
+
+                    ContributionState.Loading -> {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(Spacing_06)
+                        ) {
+                            LoadingSimpleCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = Spacing_06)
+                                    .aspectRatio(2f)
+                            )
+                            LoadingSimpleCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = Spacing_06)
+                                    .aspectRatio(2f)
+                            )
+                        }
+                    }
+
+                    is ContributionState.Success -> {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(Spacing_04),
+                        ) {
+                            if (places.items.isEmpty()) {
+                                Text(text = stringResource(R.string.contributions_empty_places_message))
+                                Image(
+                                    painter = painterResource(ic_bookmark),
+                                    contentDescription = stringResource(R.string.your_places)
+                                )
+                            } else {
+                                places.items.forEachIndexed { index, card ->
+                                    key(index) {
+                                        PlaceCard(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(
+                                                    bottom = Spacing_06,
+                                                    start = Spacing_06,
+                                                    end = Spacing_06
+                                                ),
+                                            placeCard = card,
+                                            onCardClick = {},
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -220,12 +398,10 @@ private fun UserContent(
     }
 
     state.errorDialog?.let { errorDialog ->
-        NoActionDialog(
-            title = errorDialog.errorTitle,
+        NoActionDialog(title = errorDialog.errorTitle,
             message = errorDialog.errorMessage,
             buttonText = back,
-            onDismissRequest = { onAction(Action.DismissErrorDialog) }
-        )
+            onDismissRequest = { onAction(Action.DismissErrorDialog) })
     }
 }
 
@@ -234,6 +410,7 @@ private fun HandleSideEffects(
     sideEffects: Flow<SideEffect>,
     navigateToRegister: () -> Unit,
     imageCropperLauncher: ActivityResultLauncher<PickVisualMediaRequest>,
+    test: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         sideEffects.onEach { effect ->
@@ -244,6 +421,7 @@ private fun HandleSideEffects(
                 }
 
                 is SideEffect.ReloadProfilePicture -> {}
+                SideEffect.Test -> test()
             }
         }.collect()
     }

@@ -37,7 +37,7 @@ configure<BaseExtension> {
     }
 
     dependencies {
-        implementation(libs.koinAndroid)
+        implementation(Koin.koinAndroid)
         bomImplementation(Firebase.BOM, listOf(Firebase.CRASHLYTICS, Firebase.ANALYTICS))
     }
 }

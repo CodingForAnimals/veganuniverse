@@ -15,13 +15,20 @@ object DatabasePath {
         }
     }
 
-    object User {
+    object Profile {
         object Likes {
-            const val RECIPES = "user/likes/recipes"
+            const val RECIPES = "profile/likes/recipes"
+            const val PLACES = "profile/likes/places"
         }
 
         object Bookmarks {
-            const val RECIPES = "user/bookmarks/recipes"
+            const val RECIPES = "profile/bookmarks/recipes"
+            const val PLACES = "profile/bookmarks/places"
+        }
+
+        object Contributions {
+            const val RECIPES = "profile/contributions/recipes"
+            const val PLACES = "profile/contributions/places"
         }
     }
 }

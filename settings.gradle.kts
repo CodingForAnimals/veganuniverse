@@ -65,3 +65,7 @@ include(":feature:recipes:domain")
 
 include(":storage:firestore")
 include(":storage:recipes")
+
+include(":services:firebase:profile")
+
+include(":shared:ui")

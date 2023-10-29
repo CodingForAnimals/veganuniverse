@@ -10,6 +10,7 @@ android {
 dependencies {
     implementation(project(Module.Entity.RECIPES))
     implementation(project(Module.Services.Firebase.RECIPES))
+    implementation(project(Module.Services.Firebase.PROFILE))
     implementation(project(Module.Storage.RECIPES))
 
     testImplementation("junit:junit:4.13.2")

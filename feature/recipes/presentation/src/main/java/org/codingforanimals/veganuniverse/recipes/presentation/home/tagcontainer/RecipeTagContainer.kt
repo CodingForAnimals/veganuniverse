@@ -26,13 +26,13 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
-import org.codingforanimals.veganuniverse.recipes.presentation.components.SimpleCard
-import org.codingforanimals.veganuniverse.recipes.presentation.components.SimpleCardLayoutType
 import org.codingforanimals.veganuniverse.recipes.presentation.home.components.RecipesHomeItemHeader
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.RecipeTagContainerViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.RecipeTagContainerViewModel.SideEffect
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.usecase.GetContainerRecipesUseCase
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
+import org.codingforanimals.veganuniverse.shared.ui.grid.ContainerLayoutType
+import org.codingforanimals.veganuniverse.shared.ui.grid.StaggeredItemsGrid
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -69,98 +69,11 @@ internal fun RecipeTagContainer(
         when (val state = viewModel.recipes.collectAsState().value) {
             GetContainerRecipesUseCase.Status.Error -> Unit
             GetContainerRecipesUseCase.Status.Loading -> LoadingRecipeTagContainer()
-            is GetContainerRecipesUseCase.Status.Success -> RecipeTagContainer(
-                state = state,
+            is GetContainerRecipesUseCase.Status.Success -> StaggeredItemsGrid(
+                items = state.recipes,
                 layoutType = layoutType,
-                onAction = viewModel::onAction,
+                onClick = { viewModel.onAction(Action.OnRecipeClick(it)) },
             )
-        }
-    }
-}
-
-@Composable
-private fun RecipeTagContainer(
-    state: GetContainerRecipesUseCase.Status.Success,
-    layoutType: ContainerLayoutType,
-    onAction: (Action) -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f),
-        horizontalArrangement = Arrangement.spacedBy(Spacing_04)
-    ) {
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(Spacing_04),
-        ) {
-            when (layoutType) {
-                ContainerLayoutType.VERTICAL_LEFT -> {
-                    state.recipes.getOrNull(0)?.let { recipe ->
-                        SimpleCard(
-                            title = recipe.title,
-                            imageRef = recipe.imageRef,
-                            layoutType = SimpleCardLayoutType.Vertical,
-                            onClick = { onAction(Action.OnRecipeClick(recipe.id)) }
-                        )
-                    }
-                }
-
-                ContainerLayoutType.VERTICAL_RIGHT -> {
-                    state.recipes.getOrNull(1)?.let { recipe ->
-                        SimpleCard(
-                            title = recipe.title,
-                            imageRef = recipe.imageRef,
-                            layoutType = SimpleCardLayoutType.Squared,
-                            onClick = { onAction(Action.OnRecipeClick(recipe.id)) }
-                        )
-                    }
-                    state.recipes.getOrNull(2)?.let { recipe ->
-                        SimpleCard(
-                            title = recipe.title,
-                            imageRef = recipe.imageRef,
-                            layoutType = SimpleCardLayoutType.Squared,
-                            onClick = { onAction(Action.OnRecipeClick(recipe.id)) }
-                        )
-                    }
-                }
-            }
-        }
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(Spacing_04),
-        ) {
-            when (layoutType) {
-                ContainerLayoutType.VERTICAL_LEFT -> {
-                    state.recipes.getOrNull(1)?.let { recipe ->
-                        SimpleCard(
-                            title = recipe.title,
-                            imageRef = recipe.imageRef,
-                            layoutType = SimpleCardLayoutType.Squared,
-                            onClick = { onAction(Action.OnRecipeClick(recipe.id)) }
-                        )
-                    }
-                    state.recipes.getOrNull(2)?.let { recipe ->
-                        SimpleCard(
-                            title = recipe.title,
-                            imageRef = recipe.imageRef,
-                            layoutType = SimpleCardLayoutType.Squared,
-                            onClick = { onAction(Action.OnRecipeClick(recipe.id)) }
-                        )
-                    }
-                }
-
-                ContainerLayoutType.VERTICAL_RIGHT -> {
-                    state.recipes.getOrNull(0)?.let { recipe ->
-                        SimpleCard(
-                            title = recipe.title,
-                            imageRef = recipe.imageRef,
-                            layoutType = SimpleCardLayoutType.Vertical,
-                            onClick = { onAction(Action.OnRecipeClick(recipe.id)) }
-                        )
-                    }
-                }
-            }
         }
     }
 }

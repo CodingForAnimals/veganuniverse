@@ -8,8 +8,9 @@ import org.codingforanimals.veganuniverse.places.services.model.FetchPlacesQuery
 
 interface PlacesService {
     suspend fun fetchPlacesCards(params: GeoLocationQueryParams): List<PlaceCard>
-    suspend fun uploadPlace(form: PlaceForm)
+    suspend fun uploadPlace(form: PlaceForm): String
     suspend fun fetchPlace(latitude: Double, longitude: Double): Place?
     suspend fun fetchPlaces(params: FetchPlacesQueryParams): List<Place>
+    suspend fun fetchPlaces(ids: List<String>): List<Place>
     suspend fun fetchPlace(geoHash: String): Place?
 }

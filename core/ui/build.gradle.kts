@@ -22,6 +22,8 @@ dependencies {
     implementation(libs.compose)
     debugImplementation(libs.composeDebug)
 
+    implementation(Koin.libs)
+
     implementation(libs.permissionsCompose)
 
     implementation(Google.PLACEHOLDER)

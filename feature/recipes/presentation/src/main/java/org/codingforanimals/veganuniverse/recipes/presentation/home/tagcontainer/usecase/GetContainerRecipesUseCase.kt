@@ -2,10 +2,10 @@ package org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontaine
 
 import android.util.Log
 import org.codingforanimals.veganuniverse.recipes.domain.RecipesRepository
-import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeQueryParams
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeSorter
 import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
+import org.codingforanimals.veganuniverse.shared.ui.grid.StaggeredItem
 
 private const val TAG = "GetContainerRecipesUseC"
 
@@ -21,7 +21,15 @@ internal class GetContainerRecipesUseCase(
             )
             val recipes = recipesRepository.getCachedRecipes(tag.name)
                 ?: recipesRepository.fetchRecipes(params, tag.name)
-            Status.Success(recipes)
+            Status.Success(
+                recipes.map {
+                    StaggeredItem(
+                        id = it.id,
+                        title = it.title,
+                        imageRef = it.imageRef
+                    )
+                },
+            )
         } catch (e: Throwable) {
             Log.e(TAG, e.stackTraceToString())
             Status.Error
@@ -32,7 +40,7 @@ internal class GetContainerRecipesUseCase(
         data object Loading : Status()
         data object Error : Status()
         data class Success(
-            val recipes: List<Recipe>,
+            val recipes: List<StaggeredItem>,
         ) : Status()
     }
 }

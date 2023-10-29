@@ -43,6 +43,7 @@ object Module {
         object Firebase {
             const val BASE = ":services:firebase"
             const val USER = ":services:firebase:user"
+            const val PROFILE = ":services:firebase:profile"
             const val PLACES = ":services:firebase:places"
             const val RECIPES = ":services:firebase:recipes"
         }
@@ -110,6 +111,13 @@ object Other {
     const val SHIMMER = "com.valentinilk.shimmer:compose-shimmer:1.0.5"
 }
 
+object Koin {
+    const val koinAndroid = "io.insert-koin:koin-android:${versions.koinAndroid}"
+    const val koinAndroidCompose =
+        "io.insert-koin:koin-androidx-compose:${versions.koinAndroidCompose}"
+    val libs = listOf(koinAndroid, koinAndroidCompose)
+}
+
 object libs {
 
     val android = listOf(
@@ -149,10 +157,6 @@ object libs {
 
     const val coroutines =
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
-
-    const val koinAndroid = "io.insert-koin:koin-android:${versions.koinAndroid}"
-    const val koinAndroidCompose =
-        "io.insert-koin:koin-androidx-compose:${versions.koinAndroidCompose}"
 
     val room = listOf(
         "androidx.room:room-ktx:${versions.room}",

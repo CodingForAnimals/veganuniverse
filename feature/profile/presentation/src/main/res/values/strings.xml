@@ -2,11 +2,18 @@
 <resources>
     <string name="logout_error_title">Error al cerrar sesión</string>
     <string name="logout_error_message">Ha ocurrido un error desconocido al querer cerrar sesion! Lo sentimos. Puedes volver a intentar!</string>
-    <string name="contributions_error_message">Ha ocurrido un error al querer encontrar tus aportes en la comunidad. ¡Lo sentimos!</string>
-    <string name="contributions_empty_message">¡No has realizado ningún aporte en la comunidad todavía! Aquí aparecerán tus lugares, recetas, productos, y otros aportes (cuando los hagas, obvio)</string>
+    <string name="contributions_error_places_message">Ha ocurrido un error al querer encontrar tus lugares aportados en la comunidad. ¡Lo sentimos!</string>
+    <string name="contributions_empty_places_message">¡No has aportado ningún lugar a la comunidad todavía!</string>
+    <string name="contributions_empty_recipes_message">¡No has aportado ningúna receta a la comunidad todavía!</string>
     <string name="contributions_places_title">Tus lugares</string>
+    <string name="bookmarks_empty_recipes_message">Aquí podrás ver las recetas que decidas guardar</string>
+    <string name="bookmarks_error_recipes_message">Ha ocurrido un error al querer encontrar tus recetas guardadas de la comunidad. ¡Lo sentimos!</string>
     <string name="confirm_new_profile_picture_title">Actualizar foto de perfil?</string>
     <string name="confirm_new_profile_picture_message">Has seleccionado una nueva foto de perfil. Quieres reemplazarla por la actual? No podremos ayudarte a recuperar la anterior si lo haces.</string>
     <string name="upload_image_error_dialog_title">Error al subir imagen</string>
     <string name="upload_image_error_dialog_message">Ocurrió un error al intentar subir la imagen que elegiste, lo sentimos! Podés volver a intentar y si el error persiste podés intentar con otra imagen</string>
+    <string name="your_contributions">Tus aportes</string>
+    <string name="your_bookmarks">Tus guardados</string>
+    <string name="your_recipes">Tus recetas</string>
+    <string name="your_places">Tus lugares</string>
 </resources>

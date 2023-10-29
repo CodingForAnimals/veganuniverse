@@ -55,6 +55,7 @@ internal fun VUAppNavHost(
             navigateToRegister = {
                 navController.navigate("${RegistrationDestination.Prompt.route}/${ProfileDestination.route}")
             },
+            navController = navController
         )
         registrationGraph(
             navController = navController,

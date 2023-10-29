@@ -14,8 +14,7 @@ configure<BaseExtension> {
 
         implementation(libs.placeholder)
 
-        implementation(libs.koinAndroid)
-        implementation(libs.koinAndroidCompose)
+        implementation(Koin.libs)
 //        add("androidTestImplementation", bom)
     }
 }
