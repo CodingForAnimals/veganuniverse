@@ -2,8 +2,8 @@ package org.codingforanimals.veganuniverse.profile.presentation.usecase
 
 import android.util.Log
 import org.codingforanimals.veganuniverse.profile.domain.BookmarksRepository
-import org.codingforanimals.veganuniverse.profile.presentation.model.BookmarkState
 import org.codingforanimals.veganuniverse.profile.presentation.model.Bookmarks
+import org.codingforanimals.veganuniverse.profile.presentation.model.ProfileFeatureContentState
 import org.codingforanimals.veganuniverse.shared.ui.cards.SimpleCardItem
 
 private const val TAG = "GetRecipeBookmarksUseCa"
@@ -18,11 +18,11 @@ internal class GetBookmarksUseCase(
         )
     }
 
-    private suspend fun getBookmarkedRecipes(recipesIds: List<String>): BookmarkState {
+    private suspend fun getBookmarkedRecipes(recipesIds: List<String>): ProfileFeatureContentState<SimpleCardItem> {
         return try {
             val lastTwoRecipesIds = recipesIds.getLastTwo()
             val recipes = bookmarksRepository.getBookmarkedRecipes(lastTwoRecipesIds)
-            BookmarkState.Success(
+            ProfileFeatureContentState.Success(
                 recipes.map {
                     SimpleCardItem(
                         id = it.id,
@@ -33,7 +33,7 @@ internal class GetBookmarksUseCase(
             )
         } catch (e: Throwable) {
             Log.e(TAG, e.stackTraceToString())
-            BookmarkState.Error
+            ProfileFeatureContentState.Error
         }
     }
 

@@ -29,7 +29,7 @@ class BookmarksRepositoryImpl(
     }
 
     override suspend fun getBookmarkedRecipes(ids: List<String>): List<Recipe> {
-        return if (ids.isNotEmpty()) recipesService(ids) else emptyList()
+        return if (ids.isNotEmpty()) recipesService.byIds(ids) else emptyList()
     }
 
 }

@@ -21,6 +21,9 @@ object versions {
 }
 
 object Module {
+    object Shared {
+        const val UI = ":shared:ui"
+    }
     object Storage {
         const val FIRESTORE = ":storage:firestore"
         const val RECIPES = ":storage:recipes"

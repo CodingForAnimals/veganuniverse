@@ -8,8 +8,9 @@ import org.codingforanimals.veganuniverse.places.entity.Place
 import org.codingforanimals.veganuniverse.places.entity.utils.administrativeArea
 import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
 import org.codingforanimals.veganuniverse.profile.domain.ContributionsRepository
-import org.codingforanimals.veganuniverse.profile.presentation.model.ContributionState
 import org.codingforanimals.veganuniverse.profile.presentation.model.Contributions
+import org.codingforanimals.veganuniverse.profile.presentation.model.ProfileFeatureContentState
+import org.codingforanimals.veganuniverse.shared.ui.cards.SimpleCardItem
 
 private const val TAG = "GetContributionsUseCase"
 
@@ -19,20 +20,34 @@ class GetContributionsUseCase(
     suspend operator fun invoke(userId: String): Contributions {
         val contributions = contributionsRepository.getContributions(userId)
         return Contributions(
-            places = getContributedPlaces(contributions.placesIds)
+            places = getContributedPlaces(contributions.placesIds),
+            recipes = getContributedRecipes(contributions.recipesIds),
         )
     }
 
-    private suspend fun getContributedPlaces(placesIds: List<String>): ContributionState<PlaceCard> {
+    private suspend fun getContributedPlaces(placesIds: List<String>): ProfileFeatureContentState<PlaceCard> {
         return try {
             val lastTwoContributions = placesIds.getLastTwo()
             val cards = contributionsRepository
                 .getContributedPlaces(lastTwoContributions)
                 .mapNotNull { it.toCard() }
-            ContributionState.Success(cards)
+            ProfileFeatureContentState.Success(cards)
         } catch (e: Throwable) {
             Log.e(TAG, e.stackTraceToString())
-            ContributionState.Error
+            ProfileFeatureContentState.Error
+        }
+    }
+
+    private suspend fun getContributedRecipes(recipesIds: List<String>): ProfileFeatureContentState<SimpleCardItem> {
+        return try {
+            val lastTwoContributions = recipesIds.getLastTwo()
+            val items = contributionsRepository
+                .getContributedRecipes(lastTwoContributions)
+                .map { SimpleCardItem(id = it.id, title = it.title, imageRef = it.imageRef) }
+            ProfileFeatureContentState.Success(items)
+        } catch (e: Throwable) {
+            Log.e(TAG, e.stackTraceToString())
+            ProfileFeatureContentState.Error
         }
     }
 

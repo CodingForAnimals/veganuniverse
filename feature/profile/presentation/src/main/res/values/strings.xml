@@ -2,6 +2,7 @@
 <resources>
     <string name="logout_error_title">Error al cerrar sesión</string>
     <string name="logout_error_message">Ha ocurrido un error desconocido al querer cerrar sesion! Lo sentimos. Puedes volver a intentar!</string>
+    <string name="contributions_error_recipes_message">Ha ocurrido un error al querer encontrar tus recetas aportados en la comunidad. ¡Lo sentimos!</string>
     <string name="contributions_error_places_message">Ha ocurrido un error al querer encontrar tus lugares aportados en la comunidad. ¡Lo sentimos!</string>
     <string name="contributions_empty_places_message">¡No has aportado ningún lugar a la comunidad todavía!</string>
     <string name="contributions_empty_recipes_message">¡No has aportado ningúna receta a la comunidad todavía!</string>

@@ -35,7 +35,7 @@ internal class RecipesRepositoryImpl(
     }
 
     override suspend fun fetchRecipe(id: String): Recipe? {
-        val recipe = fetchRecipeService(id)
+        val recipe = fetchRecipeService.byId(id)
         if (recipe != null) {
             recipeCache.putRecipe(recipe)
         }

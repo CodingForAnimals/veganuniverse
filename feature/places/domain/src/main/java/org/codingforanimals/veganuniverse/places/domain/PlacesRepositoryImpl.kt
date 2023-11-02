@@ -6,8 +6,8 @@ import org.codingforanimals.veganuniverse.places.entity.Place
 import org.codingforanimals.veganuniverse.places.entity.PlaceCard
 import org.codingforanimals.veganuniverse.places.entity.PlaceReview
 import org.codingforanimals.veganuniverse.places.entity.PlaceReviewForm
-import org.codingforanimals.veganuniverse.places.services.PlaceReviewsService
-import org.codingforanimals.veganuniverse.places.services.PlacesService
+import org.codingforanimals.veganuniverse.places.services.firebase.PlaceReviewsService
+import org.codingforanimals.veganuniverse.places.services.firebase.PlacesService
 
 class PlacesRepositoryImpl(
     private val placesService: PlacesService,

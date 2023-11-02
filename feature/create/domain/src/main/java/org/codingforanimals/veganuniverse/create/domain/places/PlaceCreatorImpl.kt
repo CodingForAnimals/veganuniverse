@@ -3,7 +3,7 @@ package org.codingforanimals.veganuniverse.create.domain.places
 import android.util.Log
 import org.codingforanimals.veganuniverse.create.domain.places.model.CreatePlaceResult
 import org.codingforanimals.veganuniverse.places.entity.PlaceForm
-import org.codingforanimals.veganuniverse.places.services.PlacesService
+import org.codingforanimals.veganuniverse.places.services.firebase.PlacesService
 import org.codingforanimals.veganuniverse.profile.services.firebase.ProfileLookupsService
 import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableContentType
 import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableType

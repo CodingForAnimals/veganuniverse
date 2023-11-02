@@ -2,8 +2,10 @@ package org.codingforanimals.veganuniverse.recipes.services.impl
 
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
@@ -19,34 +21,34 @@ internal class FetchRecipeFirebaseService(
     private val recipesCache: DocumentSnapshotCache,
     private val recipeMapper: OneWayEntityMapper<RecipeFirebaseEntity, Recipe>,
 ) : FetchRecipeService {
-    override suspend fun invoke(id: String): Recipe? {
-        return recipesCache.getRecipe(id)?.let { docSnap ->
-            mapDocSnapToRecipe(docSnap)
-        } ?: run {
-            val docSnap = firestore
-                .collection(FirestoreCollection.Content.Recipes.ITEMS)
-                .document(id)
-                .get().await()
-            mapDocSnapToRecipe(docSnap)
-        }
+    override suspend fun byId(id: String): Recipe? {
+        return (
+            recipesCache.getRecipe(id) ?: getFromFirestore(id)?.also { recipesCache.putRecipe(it) }
+            )
+            ?.toRecipe()
     }
 
-    private fun mapDocSnapToRecipe(documentSnapshot: DocumentSnapshot): Recipe? {
+    override suspend fun byIds(ids: List<String>): List<Recipe> = coroutineScope {
+        val deferreds = ids.map { id ->
+            async { byId(id) }
+        }
+        val result = awaitAll(*deferreds.toTypedArray())
+        result.mapNotNull { it }
+    }
+
+    private suspend fun getFromFirestore(id: String): DocumentSnapshot? {
+        return firestore
+            .collection(FirestoreCollection.Content.Recipes.ITEMS)
+            .document(id)
+            .get().await()
+    }
+
+    private fun DocumentSnapshot.toRecipe(): Recipe? {
         return try {
-            recipeMapper.map(documentSnapshot.toObject(RecipeFirebaseEntity::class.java)!!)
+            toObject(RecipeFirebaseEntity::class.java)?.let { recipeMapper.map(it) }
         } catch (e: Throwable) {
             Log.e(TAG, e.stackTraceToString())
             null
         }
     }
-
-    override suspend fun invoke(id: List<String>): List<Recipe> {
-        val docSnapArray = firestore
-            .collection(FirestoreCollection.Content.Recipes.ITEMS)
-            .whereIn(FieldPath.documentId(), id)
-            .get().await()
-        // esta vacia
-        return docSnapArray.mapNotNull { mapDocSnapToRecipe(it) }
-    }
-
 }

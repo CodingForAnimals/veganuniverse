@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -16,7 +17,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
-import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
 import org.codingforanimals.veganuniverse.profile.presentation.model.Bookmarks
 import org.codingforanimals.veganuniverse.profile.presentation.model.Contributions
 import org.codingforanimals.veganuniverse.profile.presentation.usecase.GetBookmarksUseCase
@@ -34,11 +34,9 @@ internal class ProfileScreenViewModel(
     private val getContributions: GetContributionsUseCase,
 ) : ViewModel() {
 
-    private val _sideEffect = Channel<SideEffect>()
-    val sideEffect: Flow<SideEffect> = _sideEffect.receiveAsFlow()
+    private val sideEffectsChannel = Channel<SideEffect>()
+    val sideEffect: Flow<SideEffect> = sideEffectsChannel.receiveAsFlow()
 
-    private var contributionsJob: Job? = null
-    private var bookmarkedRecipesJob: Job? = null
     private var contentJob: Job? = null
     private var imageCropperJob: Job? = null
     private var uploadNewProfilePictureJob: Job? = null
@@ -55,30 +53,37 @@ internal class ProfileScreenViewModel(
                     uiState.copy(user = null)
                 }
 
-                contentJob?.cancel()
-                user?.let {
-                    contentJob = launch {
-                        val bookmarks = async { getBookmarks(it.id) }
-                        val contributions = async { getContributions(it.id) }
-                        uiState = uiState.copy(
-                            bookmarks = bookmarks.await(),
-                            contributions = contributions.await()
-                        )
-                    }
-                }
+                user?.id?.let { userId -> handleBookmarksChange(this, userId) }
+//                contentJob?.cancel()
+//                user?.let {
+//                    contentJob = launch {
+//                        val bookmarks = async { getBookmarks(it.id) }
+//                        val contributions = async { getContributions(it.id) }
+//                        uiState = uiState.copy(
+//                            bookmarks = bookmarks.await(),
+//                            contributions = contributions.await()
+//                        )
+//                    }
+//                }
             }
         }
     }
 
+    fun handleBookmarksChange(scope: CoroutineScope, userId: String? = null) = with(scope) {
+        val id = userId ?: getUserStatus().value?.id ?: return@with
+        contentJob?.cancel()
+        contentJob = launch {
+            val bookmarks = async { getBookmarks(id) }
+            val contributions = async { getContributions(id) }
+            uiState = uiState.copy(
+                bookmarks = bookmarks.await(),
+                contributions = contributions.await()
+            )
+        }
+    }
 
     fun onAction(action: Action) {
         when (action) {
-            Action.Test -> {
-                viewModelScope.launch {
-                    _sideEffect.send(SideEffect.Test)
-                }
-            }
-
             Action.OnCreateUserButtonClick -> navigateToRegisterScreen()
             Action.LogOut -> logoutAttempt()
             Action.DismissErrorDialog -> dismissErrorDialog()
@@ -88,12 +93,23 @@ internal class ProfileScreenViewModel(
             is Action.NewProfilePictureSelected -> showNewProfilePictureConfirmationDialog(action.profilePicUri)
             Action.DismissNewProfilePictureConfirmationDialog -> dismissNewProfilePictureConfirmationDialog()
             Action.UpdateProfilePicture -> uploadNewProfilePicture()
+            is Action.OnPlaceClick -> {
+                viewModelScope.launch {
+                    sideEffectsChannel.send(SideEffect.NavigateToPlace(action.geoHash))
+                }
+            }
+
+            is Action.OnRecipeClick -> {
+                viewModelScope.launch {
+                    sideEffectsChannel.send(SideEffect.NavigateToRecipe(action.id))
+                }
+            }
         }
     }
 
     private fun navigateToRegisterScreen() {
         viewModelScope.launch {
-            _sideEffect.send(SideEffect.NavigateToRegister)
+            sideEffectsChannel.send(SideEffect.NavigateToRegister)
         }
     }
 
@@ -130,7 +146,7 @@ internal class ProfileScreenViewModel(
     private fun launchImageCropperForSelectingProfilePicture() {
         imageCropperJob?.cancel()
         imageCropperJob = viewModelScope.launch {
-            _sideEffect.send(SideEffect.LaunchImageCropperForSelectingProfilePicture)
+            sideEffectsChannel.send(SideEffect.LaunchImageCropperForSelectingProfilePicture)
         }
     }
 
@@ -178,7 +194,7 @@ internal class ProfileScreenViewModel(
                         uiState.user?.profilePictureUrl?.let {
                             val user = uiState.user
 //                            uiState = uiState.copy(user = null, loading = true)
-                            _sideEffect.send(SideEffect.ReloadProfilePicture(it))
+                            sideEffectsChannel.send(SideEffect.ReloadProfilePicture(it))
                             uiState = uiState.copy(loading = false, hideProfilePicture = false)
                         }
                     }
@@ -199,14 +215,6 @@ internal class ProfileScreenViewModel(
         val hideProfilePicture: Boolean = false,
     )
 
-    sealed class ContributionsState {
-        data object Loading : ContributionsState()
-        data object Error : ContributionsState()
-        data class Success(val places: List<PlaceCard>) : ContributionsState() {
-            val userHasNoContributions: Boolean = places.isEmpty() // && other.isEmpty()
-        }
-    }
-
     data class ErrorDialog(
         @StringRes val errorTitle: Int,
         @StringRes val errorMessage: Int,
@@ -214,7 +222,6 @@ internal class ProfileScreenViewModel(
 
     sealed class Action {
         data class NewProfilePictureSelected(val profilePicUri: Uri) : Action()
-        data object Test : Action()
         data object OnCreateUserButtonClick : Action()
         data object LogOut : Action()
         data object DismissErrorDialog : Action()
@@ -223,15 +230,15 @@ internal class ProfileScreenViewModel(
         data object EditProfilePictureClick : Action()
         data object DismissNewProfilePictureConfirmationDialog : Action()
         data object UpdateProfilePicture : Action()
+        data class OnRecipeClick(val id: String) : Action()
+        data class OnPlaceClick(val geoHash: String) : Action()
     }
 
     sealed class SideEffect {
-        data object Test : SideEffect()
         data object NavigateToRegister : SideEffect()
         data object LaunchImageCropperForSelectingProfilePicture : SideEffect()
         data class ReloadProfilePicture(val url: String) : SideEffect()
+        data class NavigateToRecipe(val id: String) : SideEffect()
+        data class NavigateToPlace(val geoHash: String) : SideEffect()
     }
 }
-
-private const val image_test =
-    "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"

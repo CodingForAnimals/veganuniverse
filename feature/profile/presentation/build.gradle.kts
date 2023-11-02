@@ -16,6 +16,7 @@ dependencies {
     implementation(project(Module.Feature.Profile.DOMAIN))
     implementation(project(Module.Entity.PLACES))
     implementation(project(Module.Entity.RECIPES))
+    implementation(project(Module.Shared.UI))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
