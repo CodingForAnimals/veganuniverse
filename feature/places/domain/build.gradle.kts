@@ -15,6 +15,7 @@ dependencies {
     implementation(project(Module.Entity.BASE))
     implementation(project(Module.Services.Firebase.PLACES))
     implementation(project(Module.Services.Firebase.BASE))
+    implementation(project(Module.Services.Firebase.PROFILE))
 
 
     testImplementation("junit:junit:4.13.2")

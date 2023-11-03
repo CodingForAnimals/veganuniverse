@@ -1,6 +1,5 @@
 package org.codingforanimals.veganuniverse.profile.presentation
 
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -46,6 +45,7 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_08
 import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.Action
+import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.ForcedEffect
 import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.SideEffect
 import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.UiState
 import org.codingforanimals.veganuniverse.profile.presentation.components.ContentTitle
@@ -62,8 +62,7 @@ internal fun ProfileScreen(
 ) {
 
     LaunchedEffect(Unit) {
-        Log.e("pepe", "pepeando")
-        viewModel.handleBookmarksChange(this)
+        viewModel.onForcedEffect(ForcedEffect.UpdateSavedContentItems)
     }
 
 
@@ -190,12 +189,24 @@ private fun ProfileContent(
 
             ProfileFeatureContent(
                 state = state.bookmarks.recipes,
-                contributionsLabel = R.string.your_recipes,
+                subtitleLabel = R.string.your_recipes,
+                subtitleIcon = VUIcons.Recipes,
                 onShowMoreClick = {},
                 errorLabel = R.string.bookmarks_error_recipes_message,
                 emptyStateLabel = R.string.bookmarks_empty_recipes_message,
                 emptyStateIcon = VUIcons.Bookmark,
                 onItemClick = { onAction(Action.OnRecipeClick(it)) }
+            )
+
+            ProfileFeatureContent(
+                state = state.bookmarks.places,
+                subtitleLabel = R.string.your_places,
+                subtitleIcon = VUIcons.Location,
+                onShowMoreClick = {},
+                errorLabel = R.string.bookmarks_error_places_message,
+                emptyStateLabel = R.string.bookmarks_empty_places_message,
+                emptyStateIcon = VUIcons.Bookmark,
+                onItemClick = { onAction(Action.OnPlaceClick(it)) }
             )
         }
         item {
@@ -215,7 +226,8 @@ private fun ProfileContent(
 
             ProfileFeatureContent(
                 state = state.contributions.places,
-                contributionsLabel = R.string.your_places,
+                subtitleLabel = R.string.your_places,
+                subtitleIcon = VUIcons.Location,
                 onShowMoreClick = {},
                 errorLabel = R.string.contributions_error_places_message,
                 emptyStateLabel = R.string.contributions_empty_places_message,
@@ -225,7 +237,8 @@ private fun ProfileContent(
 
             ProfileFeatureContent(
                 state = state.contributions.recipes,
-                contributionsLabel = R.string.your_recipes,
+                subtitleLabel = R.string.your_recipes,
+                subtitleIcon = VUIcons.Recipes,
                 onShowMoreClick = {},
                 errorLabel = R.string.contributions_error_recipes_message,
                 emptyStateLabel = R.string.contributions_empty_recipes_message,

@@ -13,7 +13,7 @@ import org.codingforanimals.veganuniverse.places.presentation.model.toViewEntity
 
 private const val TAG = "GetPlaceReviewsUseCase"
 
-class GetPlaceReviewsUseCase(
+internal class GetPlaceReviewsUseCase(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val placesRepository: PlacesRepository,
     private val userRepository: UserRepository,

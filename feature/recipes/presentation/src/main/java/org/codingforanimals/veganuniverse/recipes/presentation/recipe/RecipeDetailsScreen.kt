@@ -202,16 +202,14 @@ private fun RecipeContent(
                         fontWeight = FontWeight.Medium
                     )
                     ToggleableIcon(
-                        toggled = uiState.likeState.toggled,
-                        loading = uiState.likeState.loading,
+                        state = uiState.likeState,
                         onIconClick = { onAction(Action.OnLikeClick) },
                         onIcon = VUIcons.FavoriteFilled,
                         onTint = Color.Red,
                         offIcon = VUIcons.Favorite,
                     )
                     ToggleableIcon(
-                        toggled = uiState.bookmarkState.toggled,
-                        loading = uiState.bookmarkState.loading,
+                        state = uiState.bookmarkState,
                         onIconClick = { onAction(Action.OnBookmarkClick) },
                         onIcon = VUIcons.BookmarkFilled,
                         onTint = MaterialTheme.colorScheme.primary,

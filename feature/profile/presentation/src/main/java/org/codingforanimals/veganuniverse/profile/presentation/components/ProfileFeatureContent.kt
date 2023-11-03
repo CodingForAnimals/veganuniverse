@@ -29,7 +29,8 @@ import org.codingforanimals.veganuniverse.shared.ui.cards.SimpleCardItem
 @Composable
 internal fun <T : Any> ProfileFeatureContent(
     state: ProfileFeatureContentState<T>,
-    contributionsLabel: Int,
+    subtitleLabel: Int,
+    subtitleIcon: Icon,
     onShowMoreClick: () -> Unit,
     errorLabel: Int,
     emptyStateLabel: Int,
@@ -41,9 +42,10 @@ internal fun <T : Any> ProfileFeatureContent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = Spacing_04, horizontal = Spacing_06),
-        label = contributionsLabel,
+        label = subtitleLabel,
         buttonLabel = show_more,
         onButtonClick = onShowMoreClick,
+        leadingIcon = subtitleIcon,
     )
 
 

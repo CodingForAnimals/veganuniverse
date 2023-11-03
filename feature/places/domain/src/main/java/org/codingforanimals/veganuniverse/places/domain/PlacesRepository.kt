@@ -18,4 +18,7 @@ interface PlacesRepository {
     ): PlaceReview
 
     suspend fun deleteReview(placeId: String, placeReview: PlaceReview)
+    suspend fun bookmarkPlaceReturningCurrent(placeId: String, userId: String): Boolean
+    suspend fun unbookmarkPlaceReturningCurrent(placeId: String, userId: String): Boolean
+    suspend fun isPlaceBookmarkedByUser(placeId: String, userId: String): Boolean
 }

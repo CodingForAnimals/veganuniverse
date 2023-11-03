@@ -20,6 +20,7 @@ import org.codingforanimals.veganuniverse.places.presentation.details.entity.Pla
 import org.codingforanimals.veganuniverse.places.presentation.details.model.DeleteUserReviewStatus
 import org.codingforanimals.veganuniverse.places.presentation.details.model.PlaceDetailsScreenItem
 import org.codingforanimals.veganuniverse.places.presentation.details.model.SubmitReviewStatus
+import org.codingforanimals.veganuniverse.places.presentation.details.usecase.BookmarkPlaceUseCase
 import org.codingforanimals.veganuniverse.places.presentation.details.usecase.DeleteUserReviewUseCase
 import org.codingforanimals.veganuniverse.places.presentation.details.usecase.GetPlaceDetailsScreenContent
 import org.codingforanimals.veganuniverse.places.presentation.details.usecase.GetPlaceDetailsUseCase
@@ -29,6 +30,7 @@ import org.codingforanimals.veganuniverse.places.presentation.model.GetPlaceDeta
 import org.codingforanimals.veganuniverse.places.presentation.model.GetPlaceReviewsStatus
 import org.codingforanimals.veganuniverse.places.presentation.model.GetUserReviewStatus
 import org.codingforanimals.veganuniverse.places.presentation.navigation.selected_place_id
+import org.codingforanimals.veganuniverse.shared.ui.ToggleIconState
 
 internal class PlaceDetailsViewModel(
     savedStateHandle: SavedStateHandle,
@@ -38,12 +40,14 @@ internal class PlaceDetailsViewModel(
     private val getPlaceReviewsUseCase: GetPlaceReviewsUseCase,
     private val submitReviewUseCase: SubmitReviewUseCase,
     private val deleteUserReviewUseCase: DeleteUserReviewUseCase,
+    private val bookmarkPlace: BookmarkPlaceUseCase,
 ) : ViewModel() {
 
     private var submitReviewJob: Job? = null
     private var getPlaceReviewsJob: Job? = null
     private var getMoreReviewsJob: Job? = null
     private var deleteUserReviewJob: Job? = null
+    private var bookmarkJob: Job? = null
 
     private val _sideEffects: Channel<SideEffect> = Channel()
     val sideEffects: Flow<SideEffect> = _sideEffects.receiveAsFlow()
@@ -130,6 +134,28 @@ internal class PlaceDetailsViewModel(
                 uiState = uiState.copy(reviewsState = state)
             }
         }
+        viewModelScope.launch {
+            bookmarkPlace.getCurrent(placeId).collectLatest { status ->
+                val bookmarkState = when (status) {
+                    BookmarkPlaceUseCase.Status.Error,
+                    BookmarkPlaceUseCase.Status.GuestUser,
+                    -> ToggleIconState(
+                        loading = false,
+                        toggled = false
+                    )
+
+                    BookmarkPlaceUseCase.Status.Loading -> ToggleIconState(
+                        loading = true,
+                    )
+
+                    is BookmarkPlaceUseCase.Status.Success -> ToggleIconState(
+                        loading = false,
+                        toggled = status.toggled,
+                    )
+                }
+                uiState = uiState.copy(bookmarkState = bookmarkState)
+            }
+        }
     }
 
     fun onAction(action: Action) {
@@ -161,6 +187,9 @@ internal class PlaceDetailsViewModel(
 
             is Action.OnConfirmDeleteReviewButtonClick -> deleteUserReview(action.review)
             Action.OnConfirmReportReviewButtonClick -> Unit
+            Action.OnBookmarkClick -> {
+                handleBookmarkClick()
+            }
         }
     }
 
@@ -242,7 +271,7 @@ internal class PlaceDetailsViewModel(
 
     private fun navigateToAuthenticateScreen() {
         viewModelScope.launch {
-            _sideEffects.send(SideEffect.NavigateToAuthenticateScreen(placeId))
+            _sideEffects.send(SideEffect.NavigateToAuthenticateScreen)
         }
     }
 
@@ -295,6 +324,40 @@ internal class PlaceDetailsViewModel(
         }
     }
 
+    private fun handleBookmarkClick() {
+        bookmarkJob?.cancel()
+        bookmarkJob = viewModelScope.launch {
+            bookmarkPlace(placeId, !uiState.bookmarkState.toggled).collectLatest { status ->
+                uiState = when (status) {
+                    BookmarkPlaceUseCase.Status.Error ->
+                        uiState.copy(
+                            alertDialog = AlertDialog.Error(),
+                            bookmarkState = uiState.bookmarkState.copy(loading = false)
+                        )
+
+                    BookmarkPlaceUseCase.Status.GuestUser -> {
+                        _sideEffects.send(SideEffect.NavigateToAuthenticateScreen)
+                        uiState.copy(
+                            bookmarkState = uiState.bookmarkState.copy(loading = false)
+                        )
+                    }
+
+                    BookmarkPlaceUseCase.Status.Loading ->
+                        uiState.copy(
+                            bookmarkState = uiState.bookmarkState.copy(loading = true)
+                        )
+
+                    is BookmarkPlaceUseCase.Status.Success -> uiState.copy(
+                        bookmarkState = uiState.bookmarkState.copy(
+                            toggled = status.toggled,
+                            loading = false
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     data class UiState(
         val detailsState: DetailsState = DetailsState.Loading,
         val reviewsState: ReviewsState = ReviewsState.Loading,
@@ -302,6 +365,7 @@ internal class PlaceDetailsViewModel(
         val alertDialog: AlertDialog? = null,
         val loading: Boolean = false,
         val user: User? = null,
+        val bookmarkState: ToggleIconState = ToggleIconState(),
     )
 
     sealed class AlertDialog {
@@ -361,10 +425,11 @@ internal class PlaceDetailsViewModel(
         data class OnConfirmDeleteReviewButtonClick(val review: PlaceReview) : Action()
         data object OnConfirmReportReviewButtonClick : Action()
         data object SubmitReview : Action()
+        data object OnBookmarkClick : Action()
     }
 
     sealed class SideEffect {
-        data class NavigateToAuthenticateScreen(val placeId: String) : SideEffect()
+        data object NavigateToAuthenticateScreen : SideEffect()
     }
 
     companion object {

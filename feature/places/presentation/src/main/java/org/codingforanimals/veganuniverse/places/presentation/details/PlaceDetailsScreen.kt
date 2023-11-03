@@ -2,28 +2,29 @@ package org.codingforanimals.veganuniverse.places.presentation.details
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.veganuniverse.core.ui.components.RatingBar
 import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.shared.FeatureItemTitle
 import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHero
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
@@ -43,12 +44,14 @@ import org.codingforanimals.veganuniverse.places.presentation.details.composable
 import org.codingforanimals.veganuniverse.places.presentation.details.composables.Reviews
 import org.codingforanimals.veganuniverse.places.presentation.details.composables.StaticMap
 import org.codingforanimals.veganuniverse.places.presentation.details.model.PlaceDetailsScreenItem
+import org.codingforanimals.veganuniverse.shared.ui.ToggleIconState
+import org.codingforanimals.veganuniverse.shared.ui.ToggleableIcon
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun PlaceDetailsScreen(
     onBackClick: () -> Unit,
-    navigateToAuthenticateScreen: (String) -> Unit,
+    navigateToAuthenticateScreen: () -> Unit,
     viewModel: PlaceDetailsViewModel = koinViewModel(),
 ) {
 
@@ -91,6 +94,7 @@ private fun PlaceDetailsScreen(
                     onAction = onAction,
                     reviewsState = uiState.reviewsState,
                     userReviewState = uiState.userReviewState,
+                    bookmarkState = uiState.bookmarkState,
                 )
                 uiState.alertDialog?.let { alertDialog ->
                     HandleAlertDialog(alertDialog, onAction)
@@ -150,6 +154,7 @@ private fun PlaceDetails(
     detailsState: DetailsState.Success,
     reviewsState: ReviewsState,
     userReviewState: UserReviewState,
+    bookmarkState: ToggleIconState,
     onAction: (Action) -> Unit,
 ) {
     LazyColumn(
@@ -165,10 +170,28 @@ private fun PlaceDetails(
                             url = item.url
                         )
 
-                        is PlaceDetailsScreenItem.Header -> FeatureItemTitle(
-                            title = item.title,
-                            subtitle = { RatingBar(item.rating) }
-                        )
+                        is PlaceDetailsScreenItem.Header -> {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = Spacing_06),
+//                    verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    modifier = Modifier.weight(1f),
+                                    text = item.title,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Medium
+                                )
+                                ToggleableIcon(
+                                    state = bookmarkState,
+                                    onIconClick = { onAction(Action.OnBookmarkClick) },
+                                    onIcon = VUIcons.BookmarkFilled,
+                                    onTint = MaterialTheme.colorScheme.primary,
+                                    offIcon = VUIcons.Bookmark,
+                                )
+                            }
+                        }
 
                         is PlaceDetailsScreenItem.AddressAndOpeningHours -> AddressAndOpeningHours(
                             addressComponents = item.addressComponents,
@@ -216,13 +239,13 @@ private fun PlaceDetails(
 @Composable
 private fun HandleSideEffects(
     sideEffects: Flow<PlaceDetailsViewModel.SideEffect>,
-    navigateToAuthenticateScreen: (String) -> Unit,
+    navigateToAuthenticateScreen: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         sideEffects.onEach { sideEffect ->
             when (sideEffect) {
                 is PlaceDetailsViewModel.SideEffect.NavigateToAuthenticateScreen -> {
-                    navigateToAuthenticateScreen(sideEffect.placeId)
+                    navigateToAuthenticateScreen()
                 }
             }
         }.collect()

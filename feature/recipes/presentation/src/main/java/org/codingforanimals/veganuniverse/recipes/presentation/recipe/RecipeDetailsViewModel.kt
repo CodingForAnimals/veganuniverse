@@ -18,6 +18,7 @@ import org.codingforanimals.veganuniverse.recipes.presentation.recipe.model.Reci
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.usecase.CollectUserRecipeToggleableStateUseCase
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.usecase.GetRecipeUseCase
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.usecase.UpdateRecipeToggleableStatusUseCase
+import org.codingforanimals.veganuniverse.shared.ui.ToggleIconState
 
 internal class RecipeDetailsViewModel(
     savedStateHandle: SavedStateHandle,
@@ -250,9 +251,4 @@ internal class RecipeDetailsViewModel(
         data object NavigateUp : SideEffect()
         data object NavigateToAuthenticateScreen : SideEffect()
     }
-
-    data class ToggleIconState(
-        val loading: Boolean = true,
-        val toggled: Boolean = false,
-    )
 }

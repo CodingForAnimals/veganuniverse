@@ -15,27 +15,31 @@ import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.components.VUIconDefaults
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 
+data class ToggleIconState(
+    val loading: Boolean = true,
+    val toggled: Boolean = false,
+)
+
 @Composable
 fun ToggleableIcon(
     modifier: Modifier = Modifier,
-    toggled: Boolean,
+    state: ToggleIconState = ToggleIconState(),
     onIconClick: () -> Unit,
     onIcon: Icon,
     onTint: Color = Color.Unspecified,
     offIcon: Icon,
     offTint: Color = Color.Unspecified,
-    loading: Boolean = false,
 ) {
-    val icon = remember(toggled) {
-        if (toggled) {
+    val icon = remember(state.toggled) {
+        if (state.toggled) {
             onIcon
         } else {
             offIcon
         }
     }
 
-    val tint = remember(toggled) {
-        if (toggled) {
+    val tint = remember(state.toggled) {
+        if (state.toggled) {
             onTint
         } else {
             offTint
@@ -44,7 +48,7 @@ fun ToggleableIcon(
 
     Crossfade(
         modifier = modifier,
-        targetState = loading,
+        targetState = state.loading,
         label = "toggleable_icon_crossfade_animation"
     ) {
         if (it) {

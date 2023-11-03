@@ -1,12 +1,22 @@
 package org.codingforanimals.veganuniverse.create.domain.recipes
 
+import org.codingforanimals.veganuniverse.profile.services.firebase.ProfileLookupsService
+import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableContentType
+import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableType
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeForm
 import org.codingforanimals.veganuniverse.recipes.services.SubmitRecipeService
 
 internal class RecipeCreatorImpl(
     private val submitRecipeService: SubmitRecipeService,
+    private val profileLookupsService: ProfileLookupsService,
 ) : RecipeCreator {
     override suspend fun createRecipe(recipeForm: RecipeForm) {
-        submitRecipeService(recipeForm)
+        val recipeId = submitRecipeService(recipeForm)
+        profileLookupsService.saveContent(
+            contentId = recipeId,
+            saveableType = SaveableType.CONTRIBUTION,
+            contentType = SaveableContentType.RECIPE,
+            userId = recipeForm.userId,
+        )
     }
 }

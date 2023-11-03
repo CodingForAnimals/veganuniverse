@@ -1,7 +1,9 @@
 package org.codingforanimals.veganuniverse.profile.presentation.usecase
 
 import android.util.Log
+import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
 import org.codingforanimals.veganuniverse.profile.domain.BookmarksRepository
+import org.codingforanimals.veganuniverse.profile.presentation.entity.toCard
 import org.codingforanimals.veganuniverse.profile.presentation.model.Bookmarks
 import org.codingforanimals.veganuniverse.profile.presentation.model.ProfileFeatureContentState
 import org.codingforanimals.veganuniverse.shared.ui.cards.SimpleCardItem
@@ -15,6 +17,7 @@ internal class GetBookmarksUseCase(
         val allBookmarks = bookmarksRepository.getBookmarks(userId)
         return Bookmarks(
             recipes = getBookmarkedRecipes(allBookmarks.recipesIds),
+            places = getBookmarkedPlaces(allBookmarks.placesIds)
         )
     }
 
@@ -31,6 +34,19 @@ internal class GetBookmarksUseCase(
                     )
                 }
             )
+        } catch (e: Throwable) {
+            Log.e(TAG, e.stackTraceToString())
+            ProfileFeatureContentState.Error
+        }
+    }
+
+    private suspend fun getBookmarkedPlaces(placesIds: List<String>): ProfileFeatureContentState<PlaceCard> {
+        return try {
+            val lastTwoPlacesIds = placesIds.getLastTwo()
+            val cards = bookmarksRepository
+                .getBookmarkedPlaces(lastTwoPlacesIds)
+                .mapNotNull { it.toCard() }
+            ProfileFeatureContentState.Success(cards)
         } catch (e: Throwable) {
             Log.e(TAG, e.stackTraceToString())
             ProfileFeatureContentState.Error

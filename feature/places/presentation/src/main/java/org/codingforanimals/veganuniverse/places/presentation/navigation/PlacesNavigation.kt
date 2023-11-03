@@ -20,7 +20,7 @@ internal const val selected_place_id = "selected_place_id_argument"
 fun NavGraphBuilder.placesGraph(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
-    navigateToAuthenticateScreen: (String) -> Unit,
+    navigateToAuthenticateScreen: () -> Unit,
 ) {
     composable(
         route = PlacesDestination.Home.route,

@@ -21,7 +21,7 @@ internal class SubmitRecipeFirebaseService(
     private val database: FirebaseDatabase,
     private val storage: FirebaseStorage,
 ) : SubmitRecipeService {
-    override suspend fun invoke(recipeForm: RecipeForm) {
+    override suspend fun invoke(recipeForm: RecipeForm): String {
         val documentReference = firestore
             .collection(FirestoreCollection.Content.Recipes.ITEMS)
             .document()
@@ -62,6 +62,7 @@ internal class SubmitRecipeFirebaseService(
         }
 
         awaitAll(recipeDef, userRecipeLookupDef, recipePictureDef)
+        return documentReference.id
     }
 
     private fun RecipeForm.toFirebaseEntity(): RecipeFirebaseEntity {

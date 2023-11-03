@@ -9,6 +9,8 @@
     <string name="contributions_places_title">Tus lugares</string>
     <string name="bookmarks_empty_recipes_message">Aquí podrás ver las recetas que decidas guardar</string>
     <string name="bookmarks_error_recipes_message">Ha ocurrido un error al querer encontrar tus recetas guardadas de la comunidad. ¡Lo sentimos!</string>
+    <string name="bookmarks_empty_places_message">Aquí podrás ver los lugares que decidas guardar</string>
+    <string name="bookmarks_error_places_message">Ha ocurrido un error al querer encontrar tus lugares guardadas de la comunidad. ¡Lo sentimos!</string>
     <string name="confirm_new_profile_picture_title">Actualizar foto de perfil?</string>
     <string name="confirm_new_profile_picture_message">Has seleccionado una nueva foto de perfil. Quieres reemplazarla por la actual? No podremos ayudarte a recuperar la anterior si lo haces.</string>
     <string name="upload_image_error_dialog_title">Error al subir imagen</string>

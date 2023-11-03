@@ -1,6 +1,5 @@
 package org.codingforanimals.veganuniverse.profile.presentation.navigation
 
-import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -18,8 +17,6 @@ fun NavGraphBuilder.profileGraph(
     composable(
         route = ProfileDestination.route
     ) {
-        val result = it.savedStateHandle.get<Boolean>("bool")
-        Log.e("pepe", "navigated with result $result")
         ProfileScreen(
             navigateToRegister = navigateToRegister,
             navigateToRecipe = navigateToRecipe,

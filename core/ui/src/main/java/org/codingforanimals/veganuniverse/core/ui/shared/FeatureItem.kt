@@ -3,7 +3,6 @@
 package org.codingforanimals.veganuniverse.core.ui.shared
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -133,7 +132,6 @@ fun ItemDetailHero(
                             is AsyncImagePainter.State.Loading -> "loading"
                             is AsyncImagePainter.State.Success -> "source ${state.result.dataSource}"
                         }
-                        Log.e("pepe", print)
                     }
                 )
             }

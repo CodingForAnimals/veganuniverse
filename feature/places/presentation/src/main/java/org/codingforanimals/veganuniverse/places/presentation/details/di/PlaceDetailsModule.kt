@@ -1,6 +1,8 @@
-package org.codingforanimals.veganuniverse.places.presentation.details
+package org.codingforanimals.veganuniverse.places.presentation.details.di
 
 
+import org.codingforanimals.veganuniverse.places.presentation.details.PlaceDetailsViewModel
+import org.codingforanimals.veganuniverse.places.presentation.details.usecase.BookmarkPlaceUseCase
 import org.codingforanimals.veganuniverse.places.presentation.details.usecase.DeleteUserReviewUseCase
 import org.codingforanimals.veganuniverse.places.presentation.details.usecase.GetPlaceDetailsScreenContent
 import org.codingforanimals.veganuniverse.places.presentation.details.usecase.GetPlaceDetailsUseCase
@@ -16,5 +18,6 @@ internal val placeDetailsModule = module {
     factoryOf(::GetPlaceDetailsUseCase)
     factoryOf(::SubmitReviewUseCase)
     factoryOf(::DeleteUserReviewUseCase)
+    factoryOf(::BookmarkPlaceUseCase)
     viewModelOf(::PlaceDetailsViewModel)
 }

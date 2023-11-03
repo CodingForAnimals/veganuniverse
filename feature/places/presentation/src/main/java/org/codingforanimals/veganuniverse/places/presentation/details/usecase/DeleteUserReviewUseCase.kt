@@ -10,7 +10,7 @@ import org.codingforanimals.veganuniverse.places.presentation.details.model.Dele
 
 private const val TAG = "DeleteUserReviewUseCase"
 
-class DeleteUserReviewUseCase(
+internal class DeleteUserReviewUseCase(
     private val placesRepository: PlacesRepository,
 ) {
     suspend operator fun invoke(

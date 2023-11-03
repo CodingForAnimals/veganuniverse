@@ -1,6 +1,5 @@
 package org.codingforanimals.veganuniverse.profile.services.firebase.impl
 
-import android.util.Log
 import android.util.LruCache
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
@@ -86,10 +85,8 @@ internal class ProfileLookupsFirebaseService(
                 .children
             val remoteSavedContentIds = savedContentIdsMap.mapNotNull { it.key }
             savedContentCache.put(cacheKey, remoteSavedContentIds.distinct())
-            Log.e("pepe", "ids from remote")
             remoteSavedContentIds
         } else {
-            Log.e("pepe", "ids from cache")
             cachedSavedContentIds
         }
     }

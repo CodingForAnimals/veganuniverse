@@ -52,24 +52,30 @@ internal class ProfileScreenViewModel(
                 } else {
                     uiState.copy(user = null)
                 }
-
-                user?.id?.let { userId -> handleBookmarksChange(this, userId) }
-//                contentJob?.cancel()
-//                user?.let {
-//                    contentJob = launch {
-//                        val bookmarks = async { getBookmarks(it.id) }
-//                        val contributions = async { getContributions(it.id) }
-//                        uiState = uiState.copy(
-//                            bookmarks = bookmarks.await(),
-//                            contributions = contributions.await()
-//                        )
-//                    }
-//                }
             }
         }
     }
 
-    fun handleBookmarksChange(scope: CoroutineScope, userId: String? = null) = with(scope) {
+    fun onForcedEffect(effect: ForcedEffect) {
+        when (effect) {
+            ForcedEffect.UpdateSavedContentItems -> {
+                viewModelScope.launch {
+                    val id = getUserStatus().value?.id ?: return@launch
+                    contentJob?.cancel()
+                    contentJob = launch {
+                        val bookmarks = async { getBookmarks(id) }
+                        val contributions = async { getContributions(id) }
+                        uiState = uiState.copy(
+                            bookmarks = bookmarks.await(),
+                            contributions = contributions.await()
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateSavedContent(scope: CoroutineScope, userId: String? = null) = with(scope) {
         val id = userId ?: getUserStatus().value?.id ?: return@with
         contentJob?.cancel()
         contentJob = launch {
@@ -240,5 +246,9 @@ internal class ProfileScreenViewModel(
         data class ReloadProfilePicture(val url: String) : SideEffect()
         data class NavigateToRecipe(val id: String) : SideEffect()
         data class NavigateToPlace(val geoHash: String) : SideEffect()
+    }
+
+    sealed class ForcedEffect {
+        data object UpdateSavedContentItems : ForcedEffect()
     }
 }

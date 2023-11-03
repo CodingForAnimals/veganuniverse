@@ -6,12 +6,18 @@ import org.codingforanimals.veganuniverse.places.entity.Place
 import org.codingforanimals.veganuniverse.places.entity.PlaceCard
 import org.codingforanimals.veganuniverse.places.entity.PlaceReview
 import org.codingforanimals.veganuniverse.places.entity.PlaceReviewForm
+import org.codingforanimals.veganuniverse.places.services.firebase.FetchPlaceService
 import org.codingforanimals.veganuniverse.places.services.firebase.PlaceReviewsService
 import org.codingforanimals.veganuniverse.places.services.firebase.PlacesService
+import org.codingforanimals.veganuniverse.profile.services.firebase.ProfileLookupsService
+import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableContentType
+import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableType
 
 class PlacesRepositoryImpl(
     private val placesService: PlacesService,
     private val placeReviewsService: PlaceReviewsService,
+    private val profileLookupsService: ProfileLookupsService,
+    private val fetchPlaceService: FetchPlaceService,
 ) : PlacesRepository {
 
     override suspend fun getPlaces(params: GeoLocationQueryParams): List<PlaceCard> {
@@ -19,7 +25,7 @@ class PlacesRepositoryImpl(
     }
 
     override suspend fun getPlace(id: String): Place? {
-        return placesService.fetchPlace(id)
+        return fetchPlaceService.byId(id)
     }
 
     override suspend fun getReview(placeId: String, userId: String): PlaceReview? {
@@ -43,5 +49,34 @@ class PlacesRepositoryImpl(
 
     override suspend fun deleteReview(placeId: String, placeReview: PlaceReview) {
         placeReviewsService.deleteReview(placeId, placeReview)
+    }
+
+    override suspend fun bookmarkPlaceReturningCurrent(placeId: String, userId: String): Boolean {
+        profileLookupsService.saveContent(
+            contentId = placeId,
+            saveableType = SaveableType.BOOKMARK,
+            contentType = SaveableContentType.PLACE,
+            userId = userId,
+        )
+        return true
+    }
+
+    override suspend fun unbookmarkPlaceReturningCurrent(placeId: String, userId: String): Boolean {
+        profileLookupsService.removeContent(
+            contentId = placeId,
+            saveableType = SaveableType.BOOKMARK,
+            contentType = SaveableContentType.PLACE,
+            userId = userId,
+        )
+        return false
+    }
+
+    override suspend fun isPlaceBookmarkedByUser(placeId: String, userId: String): Boolean {
+        return profileLookupsService.isContentSavedByUser(
+            contentId = placeId,
+            saveableType = SaveableType.BOOKMARK,
+            contentType = SaveableContentType.PLACE,
+            userId = userId,
+        )
     }
 }

@@ -11,7 +11,7 @@ import org.codingforanimals.veganuniverse.places.presentation.model.toViewEntity
 
 private const val TAG = "SubmitReviewUseCase"
 
-class SubmitReviewUseCase(
+internal class SubmitReviewUseCase(
     private val placesRepository: PlacesRepository,
     private val userRepository: UserRepository,
 ) {
