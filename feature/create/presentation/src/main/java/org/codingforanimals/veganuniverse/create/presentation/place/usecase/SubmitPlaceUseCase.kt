@@ -1,6 +1,7 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.usecase
 
 import android.util.Log
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.auth.UserRepository
@@ -23,7 +24,8 @@ internal class SubmitPlaceUseCase(
     private val ioDispatcher = coroutineDispatcherProvider.io()
 
     operator fun invoke(uiState: CreatePlaceViewModel.UiState) = flow {
-        val user = userRepository.user.value ?: return@flow emit(SubmitPlaceStatus.UnauthorizedUser)
+        val user = userRepository.user.firstOrNull()
+            ?: return@flow emit(SubmitPlaceStatus.UnauthorizedUser)
 
         if (!user.isEmailVerified) {
             emit(SubmitPlaceStatus.Loading)

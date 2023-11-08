@@ -29,7 +29,6 @@ internal class FetchPlaceFirebaseService(
     }
 
     override suspend fun byIds(ids: List<String>): List<PlaceDomainEntity> = coroutineScope {
-        Log.e("pepe", "ids $ids")
         val deferreds = ids.map { id ->
             async { byId(id) }
         }

@@ -4,8 +4,8 @@ import android.util.Log
 import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
 import org.codingforanimals.veganuniverse.profile.domain.BookmarksRepository
 import org.codingforanimals.veganuniverse.profile.presentation.entity.toCard
-import org.codingforanimals.veganuniverse.profile.presentation.model.Bookmarks
 import org.codingforanimals.veganuniverse.profile.presentation.model.ProfileFeatureContentState
+import org.codingforanimals.veganuniverse.profile.presentation.model.ProfileFeatureItemsState
 import org.codingforanimals.veganuniverse.shared.ui.cards.SimpleCardItem
 
 private const val TAG = "GetRecipeBookmarksUseCa"
@@ -13,9 +13,9 @@ private const val TAG = "GetRecipeBookmarksUseCa"
 internal class GetBookmarksUseCase(
     private val bookmarksRepository: BookmarksRepository,
 ) {
-    suspend operator fun invoke(userId: String): Bookmarks {
+    suspend operator fun invoke(userId: String): ProfileFeatureItemsState {
         val allBookmarks = bookmarksRepository.getBookmarks(userId)
-        return Bookmarks(
+        return ProfileFeatureItemsState(
             recipes = getBookmarkedRecipes(allBookmarks.recipesIds),
             places = getBookmarkedPlaces(allBookmarks.placesIds)
         )

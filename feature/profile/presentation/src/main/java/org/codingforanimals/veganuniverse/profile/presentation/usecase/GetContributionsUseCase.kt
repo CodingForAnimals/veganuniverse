@@ -4,8 +4,8 @@ import android.util.Log
 import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
 import org.codingforanimals.veganuniverse.profile.domain.ContributionsRepository
 import org.codingforanimals.veganuniverse.profile.presentation.entity.toCard
-import org.codingforanimals.veganuniverse.profile.presentation.model.Contributions
 import org.codingforanimals.veganuniverse.profile.presentation.model.ProfileFeatureContentState
+import org.codingforanimals.veganuniverse.profile.presentation.model.ProfileFeatureItemsState
 import org.codingforanimals.veganuniverse.shared.ui.cards.SimpleCardItem
 
 private const val TAG = "GetContributionsUseCase"
@@ -13,9 +13,9 @@ private const val TAG = "GetContributionsUseCase"
 class GetContributionsUseCase(
     private val contributionsRepository: ContributionsRepository,
 ) {
-    suspend operator fun invoke(userId: String): Contributions {
+    suspend operator fun invoke(userId: String): ProfileFeatureItemsState {
         val contributions = contributionsRepository.getContributions(userId)
-        return Contributions(
+        return ProfileFeatureItemsState(
             places = getContributedPlaces(contributions.placesIds),
             recipes = getContributedRecipes(contributions.recipesIds),
         )

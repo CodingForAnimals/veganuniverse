@@ -1,8 +1,8 @@
-package org.codingforanimals.veganuniverse.recipes.services.entity.mapper
+package org.codingforanimals.veganuniverse.recipes.services.firebase.entity.mapper
 
 import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
-import org.codingforanimals.veganuniverse.recipes.services.entity.RecipeFirebaseEntity
+import org.codingforanimals.veganuniverse.recipes.services.firebase.entity.RecipeFirebaseEntity
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

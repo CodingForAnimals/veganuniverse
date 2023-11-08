@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.services.impl
+package org.codingforanimals.veganuniverse.recipes.services.firebase.impl
 
 import android.graphics.Bitmap
 import android.net.Uri
@@ -9,8 +9,8 @@ import java.io.ByteArrayOutputStream
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.tasks.asDeferred
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeForm
-import org.codingforanimals.veganuniverse.recipes.services.SubmitRecipeService
-import org.codingforanimals.veganuniverse.recipes.services.entity.RecipeFirebaseEntity
+import org.codingforanimals.veganuniverse.recipes.services.firebase.SubmitRecipeService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.entity.RecipeFirebaseEntity
 import org.codingforanimals.veganuniverse.services.firebase.DatabasePath
 import org.codingforanimals.veganuniverse.services.firebase.FirebaseImageResizer
 import org.codingforanimals.veganuniverse.services.firebase.FirestoreCollection

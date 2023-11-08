@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.services
+package org.codingforanimals.veganuniverse.recipes.services.firebase
 
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeForm
 

@@ -18,8 +18,8 @@ import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 fun ContentSubtitle(
     modifier: Modifier = Modifier,
     label: Int,
-    buttonLabel: Int,
-    onButtonClick: () -> Unit,
+    buttonLabel: Int? = null,
+    onButtonClick: () -> Unit = {},
     leadingIcon: Icon? = null,
 ) {
     Row(
@@ -34,8 +34,10 @@ fun ContentSubtitle(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
         )
-        TextButton(onClick = onButtonClick) {
-            Text(text = stringResource(buttonLabel))
+        buttonLabel?.let {
+            TextButton(onClick = onButtonClick) {
+                Text(text = stringResource(buttonLabel))
+            }
         }
     }
 }

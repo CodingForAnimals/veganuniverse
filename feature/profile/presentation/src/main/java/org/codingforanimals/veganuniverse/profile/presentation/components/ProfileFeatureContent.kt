@@ -6,21 +6,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import org.codingforanimals.veganuniverse.core.ui.R.string.show_more
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.places.ui.compose.PlaceCard
 import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
-import org.codingforanimals.veganuniverse.profile.presentation.R
 import org.codingforanimals.veganuniverse.profile.presentation.model.ProfileFeatureContentState
 import org.codingforanimals.veganuniverse.shared.ui.cards.LoadingSimpleCard
 import org.codingforanimals.veganuniverse.shared.ui.cards.SimpleCard
@@ -33,22 +28,8 @@ internal fun <T : Any> ProfileFeatureContent(
     subtitleIcon: Icon,
     onShowMoreClick: () -> Unit,
     errorLabel: Int,
-    emptyStateLabel: Int,
-    emptyStateIcon: Icon,
     onItemClick: (String) -> Unit,
 ) {
-
-    ContentSubtitle(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = Spacing_04, horizontal = Spacing_06),
-        label = subtitleLabel,
-        buttonLabel = show_more,
-        onButtonClick = onShowMoreClick,
-        leadingIcon = subtitleIcon,
-    )
-
-
     Crossfade(
         modifier = Modifier.fillMaxWidth(),
         targetState = state,
@@ -56,13 +37,31 @@ internal fun <T : Any> ProfileFeatureContent(
     ) { currentState ->
         when (currentState) {
             ProfileFeatureContentState.Error -> {
-                ErrorView(message = errorLabel)
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(Spacing_06)
+                ) {
+                    ContentSubtitle(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = Spacing_04, horizontal = Spacing_06),
+                        label = subtitleLabel,
+                        leadingIcon = subtitleIcon,
+                    )
+                    ErrorView(message = errorLabel)
+                }
             }
 
             ProfileFeatureContentState.Loading -> {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(Spacing_06)
                 ) {
+                    ContentSubtitle(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = Spacing_04, horizontal = Spacing_06),
+                        label = subtitleLabel,
+                        leadingIcon = subtitleIcon,
+                    )
                     LoadingSimpleCard(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -83,24 +82,16 @@ internal fun <T : Any> ProfileFeatureContent(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(Spacing_04),
                 ) {
-                    if (currentState.items.isEmpty()) {
-                        Text(
-                            modifier = Modifier.padding(horizontal = Spacing_06),
-                            text = stringResource(emptyStateLabel)
+                    if (currentState.items.isNotEmpty()) {
+                        ContentSubtitle(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = Spacing_04, horizontal = Spacing_06),
+                            label = subtitleLabel,
+                            buttonLabel = show_more,
+                            onButtonClick = onShowMoreClick,
+                            leadingIcon = subtitleIcon,
                         )
-                        VUIcon(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            icon = emptyStateIcon,
-                            contentDescription = stringResource(R.string.your_places),
-                        )
-//                        Image(
-//                            modifier = Modifier
-//                                .size(24.dp)
-//                                .align(Alignment.CenterHorizontally),
-//                            painter = painterResource(emptyStateIcon),
-//                            contentDescription = stringResource(R.string.your_places)
-//                        )
-                    } else {
                         currentState.items.forEachIndexed { index, item ->
                             key(index) {
                                 when (item) {

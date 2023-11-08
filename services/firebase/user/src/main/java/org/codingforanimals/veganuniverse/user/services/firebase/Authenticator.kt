@@ -1,6 +1,7 @@
 package org.codingforanimals.veganuniverse.user.services.firebase
 
 import android.content.Intent
+import kotlinx.coroutines.flow.Flow
 import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailLoginResponse
 import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailRegistrationResponse
 import org.codingforanimals.veganuniverse.user.services.firebase.model.ProviderAuthenticationResponse
@@ -8,6 +9,7 @@ import org.codingforanimals.veganuniverse.user.services.firebase.model.SendVerif
 import org.codingforanimals.veganuniverse.user.services.firebase.model.UserFirebaseEntity
 
 interface Authenticator {
+    val userFlow: Flow<UserFirebaseEntity?>
     suspend fun emailLogin(email: String, password: String): EmailLoginResponse
     suspend fun reauthenticateUser(): UserFirebaseEntity?
     suspend fun emailRegistration(
@@ -20,4 +22,5 @@ interface Authenticator {
     suspend fun gmailAuthentication(intent: Intent): ProviderAuthenticationResponse
     suspend fun sendUserVerificationEmail(): SendVerificationEmailResult
     suspend fun logout()
+    fun getCurrentUser(): UserFirebaseEntity?
 }

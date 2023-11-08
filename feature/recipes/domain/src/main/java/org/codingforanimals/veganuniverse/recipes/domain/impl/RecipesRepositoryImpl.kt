@@ -6,8 +6,8 @@ import org.codingforanimals.veganuniverse.profile.services.firebase.model.Saveab
 import org.codingforanimals.veganuniverse.recipes.domain.RecipesRepository
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeQueryParams
-import org.codingforanimals.veganuniverse.recipes.services.FetchRecipeService
-import org.codingforanimals.veganuniverse.recipes.services.RecipesQueryService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.FetchRecipeService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.RecipesQueryService
 import org.codingforanimals.veganuniverse.recipes.storage.RecipeCache
 import org.codingforanimals.veganuniverse.recipes.storage.RecipeListCache
 

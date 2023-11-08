@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.places.presentation.details.usecase
 
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import org.codingforanimals.veganuniverse.auth.UserRepository
 import org.codingforanimals.veganuniverse.places.domain.PlacesRepository
@@ -23,7 +24,7 @@ internal class SubmitReviewUseCase(
     ): Flow<SubmitReviewStatus> =
         flow {
             emit(SubmitReviewStatus.Loading)
-            val user = userRepository.user.value
+            val user = userRepository.user.firstOrNull()
                 ?: return@flow emit(SubmitReviewStatus.Exception.GuestUserException)
             val form = PlaceReviewForm(
                 userId = user.id,

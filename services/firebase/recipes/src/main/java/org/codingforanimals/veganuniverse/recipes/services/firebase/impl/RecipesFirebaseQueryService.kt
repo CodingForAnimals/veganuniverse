@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.services.impl
+package org.codingforanimals.veganuniverse.recipes.services.firebase.impl
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
@@ -8,8 +8,8 @@ import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeQueryParams
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeSorter
-import org.codingforanimals.veganuniverse.recipes.services.RecipesQueryService
-import org.codingforanimals.veganuniverse.recipes.services.entity.RecipeFirebaseEntity
+import org.codingforanimals.veganuniverse.recipes.services.firebase.RecipesQueryService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.entity.RecipeFirebaseEntity
 import org.codingforanimals.veganuniverse.services.firebase.FirestoreCollection
 import org.codingforanimals.veganuniverse.services.firebase.FirestoreFields
 import org.codingforanimals.veganuniverse.storage.firestore.DocumentSnapshotCache

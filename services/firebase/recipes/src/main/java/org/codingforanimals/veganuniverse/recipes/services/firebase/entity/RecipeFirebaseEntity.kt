@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.services.entity
+package org.codingforanimals.veganuniverse.recipes.services.firebase.entity
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId

@@ -12,7 +12,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation(project(Module.Entity.RECIPES))
     implementation(project(Module.Feature.Recipes.DOMAIN))
     implementation(project(Module.Core.COMMON))

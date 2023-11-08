@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.recipes.presentation.recipe.usecase
 
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
 import org.codingforanimals.veganuniverse.recipes.domain.RecipesRepository
@@ -19,7 +20,7 @@ class UpdateRecipeToggleableStatusUseCase(
         item: RecipeToggleableItem,
     ): Flow<Status> = flow {
         val result = try {
-            getUserStatus().value?.id?.let { userId ->
+            getUserStatus().firstOrNull()?.id?.let { userId ->
                 emit(Status.Loading)
                 val toggled = when (item) {
                     RecipeToggleableItem.Bookmark -> recipesRepository.updateBookmarkReturningCurrent(

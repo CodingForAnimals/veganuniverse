@@ -8,7 +8,7 @@ import org.codingforanimals.veganuniverse.profile.services.firebase.ProfileLooku
 import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableContentType
 import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableType
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
-import org.codingforanimals.veganuniverse.recipes.services.FetchRecipeService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.FetchRecipeService
 
 internal class ContributionsRepositoryImpl(
     private val profileLookupsService: ProfileLookupsService,

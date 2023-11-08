@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -41,6 +43,7 @@ import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.core.ui.error.ActionDialog
 import org.codingforanimals.veganuniverse.core.ui.error.NoActionDialog
 import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
+import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_08
@@ -64,7 +67,6 @@ internal fun ProfileScreen(
     LaunchedEffect(Unit) {
         viewModel.onForcedEffect(ForcedEffect.UpdateSavedContentItems)
     }
-
 
     val imageCropperLauncher =
         rememberImageCropperLauncherForActivityResult(onCropSuccess = { profilePicUri ->
@@ -154,7 +156,9 @@ private fun ProfileContent(
     onAction: (Action) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .animateContentSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Spacing_06),
         contentPadding = PaddingValues(vertical = Spacing_08)
@@ -176,7 +180,7 @@ private fun ProfileContent(
                 Text(text = state.user?.email ?: "", style = MaterialTheme.typography.titleMedium)
             }
             Button(onClick = { onAction(Action.LogOut) }) {
-                Text(text = "Cerrar sesión")
+                Text(text = "Cerrar session")
             }
         }
         item {
@@ -186,28 +190,45 @@ private fun ProfileContent(
                     .padding(horizontal = Spacing_06),
                 icon = VUIcons.Bookmark, label = R.string.your_bookmarks
             )
+            Crossfade(
+                modifier = Modifier.animateContentSize(),
+                targetState = state.bookmarks.hasNoItems,
+                label = "profile_screen_bookmarks_empty_crossfade",
+            ) { hasNoBookmarks ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(),
+                    verticalArrangement = Arrangement.spacedBy(Spacing_04),
+                ) {
+                    if (hasNoBookmarks) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = Spacing_06, vertical = Spacing_04),
+                            text = stringResource(R.string.bookmarks_empty_message),
+                        )
+                    } else {
+                        ProfileFeatureContent(
+                            state = state.bookmarks.recipes,
+                            subtitleLabel = R.string.your_recipes,
+                            subtitleIcon = VUIcons.Recipes,
+                            onShowMoreClick = {},
+                            errorLabel = R.string.bookmarks_error_recipes_message,
+                            onItemClick = { onAction(Action.OnRecipeClick(it)) }
+                        )
 
-            ProfileFeatureContent(
-                state = state.bookmarks.recipes,
-                subtitleLabel = R.string.your_recipes,
-                subtitleIcon = VUIcons.Recipes,
-                onShowMoreClick = {},
-                errorLabel = R.string.bookmarks_error_recipes_message,
-                emptyStateLabel = R.string.bookmarks_empty_recipes_message,
-                emptyStateIcon = VUIcons.Bookmark,
-                onItemClick = { onAction(Action.OnRecipeClick(it)) }
-            )
-
-            ProfileFeatureContent(
-                state = state.bookmarks.places,
-                subtitleLabel = R.string.your_places,
-                subtitleIcon = VUIcons.Location,
-                onShowMoreClick = {},
-                errorLabel = R.string.bookmarks_error_places_message,
-                emptyStateLabel = R.string.bookmarks_empty_places_message,
-                emptyStateIcon = VUIcons.Bookmark,
-                onItemClick = { onAction(Action.OnPlaceClick(it)) }
-            )
+                        ProfileFeatureContent(
+                            state = state.bookmarks.places,
+                            subtitleLabel = R.string.your_places,
+                            subtitleIcon = VUIcons.Location,
+                            onShowMoreClick = {},
+                            errorLabel = R.string.bookmarks_error_places_message,
+                            onItemClick = { onAction(Action.OnPlaceClick(it)) }
+                        )
+                    }
+                }
+            }
         }
         item {
             Divider(
@@ -224,27 +245,45 @@ private fun ProfileContent(
                 icon = VUIcons.Add, label = R.string.your_contributions
             )
 
-            ProfileFeatureContent(
-                state = state.contributions.places,
-                subtitleLabel = R.string.your_places,
-                subtitleIcon = VUIcons.Location,
-                onShowMoreClick = {},
-                errorLabel = R.string.contributions_error_places_message,
-                emptyStateLabel = R.string.contributions_empty_places_message,
-                emptyStateIcon = VUIcons.Create,
-                onItemClick = { onAction(Action.OnPlaceClick(it)) }
-            )
+            Crossfade(
+                modifier = Modifier.animateContentSize(),
+                targetState = state.contributions.hasNoItems,
+                label = "profile_screen_contributions_empty_crossfade"
+            ) { hasNoContributions ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(),
+                    verticalArrangement = Arrangement.spacedBy(Spacing_04),
+                ) {
+                    if (hasNoContributions) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = Spacing_06, vertical = Spacing_04),
+                            text = stringResource(R.string.contributions_empty_message),
+                        )
+                    } else {
+                        ProfileFeatureContent(
+                            state = state.contributions.places,
+                            subtitleLabel = R.string.your_places,
+                            subtitleIcon = VUIcons.Location,
+                            onShowMoreClick = {},
+                            errorLabel = R.string.contributions_error_places_message,
+                            onItemClick = { onAction(Action.OnPlaceClick(it)) }
+                        )
 
-            ProfileFeatureContent(
-                state = state.contributions.recipes,
-                subtitleLabel = R.string.your_recipes,
-                subtitleIcon = VUIcons.Recipes,
-                onShowMoreClick = {},
-                errorLabel = R.string.contributions_error_recipes_message,
-                emptyStateLabel = R.string.contributions_empty_recipes_message,
-                emptyStateIcon = VUIcons.Create,
-                onItemClick = { onAction(Action.OnRecipeClick(it)) }
-            )
+                        ProfileFeatureContent(
+                            state = state.contributions.recipes,
+                            subtitleLabel = R.string.your_recipes,
+                            subtitleIcon = VUIcons.Recipes,
+                            onShowMoreClick = {},
+                            errorLabel = R.string.contributions_error_recipes_message,
+                            onItemClick = { onAction(Action.OnRecipeClick(it)) }
+                        )
+                    }
+                }
+            }
         }
     }
 

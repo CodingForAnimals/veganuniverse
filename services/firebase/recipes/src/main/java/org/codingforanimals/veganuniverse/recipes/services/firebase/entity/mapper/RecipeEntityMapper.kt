@@ -1,9 +1,9 @@
-package org.codingforanimals.veganuniverse.recipes.services.entity.mapper
+package org.codingforanimals.veganuniverse.recipes.services.firebase.entity.mapper
 
 import java.util.Date
 import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
-import org.codingforanimals.veganuniverse.recipes.services.entity.RecipeFirebaseEntity
+import org.codingforanimals.veganuniverse.recipes.services.firebase.entity.RecipeFirebaseEntity
 import org.codingforanimals.veganuniverse.services.firebase.StorageBucketWrapper
 import org.codingforanimals.veganuniverse.services.firebase.StoragePath
 

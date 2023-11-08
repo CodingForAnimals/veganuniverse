@@ -193,7 +193,6 @@ private fun RecipeContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = Spacing_06),
-//                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         modifier = Modifier.weight(1f),

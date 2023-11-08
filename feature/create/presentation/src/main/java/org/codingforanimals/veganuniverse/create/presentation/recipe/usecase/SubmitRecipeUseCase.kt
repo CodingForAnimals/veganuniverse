@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.create.presentation.recipe.usecase
 
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
@@ -16,7 +17,8 @@ internal class SubmitRecipeUseCase(
     private val recipeCreator: RecipeCreator,
 ) {
     operator fun invoke(uiState: CreateRecipeViewModel.UiState): Flow<SubmitRecipeStatus> = flow {
-        val user = getUserStatus().value ?: return@flow emit(SubmitRecipeStatus.UnauthorizedUser)
+        val user =
+            getUserStatus().firstOrNull() ?: return@flow emit(SubmitRecipeStatus.UnauthorizedUser)
 
         if (!user.isEmailVerified) {
             emit(SubmitRecipeStatus.Loading)

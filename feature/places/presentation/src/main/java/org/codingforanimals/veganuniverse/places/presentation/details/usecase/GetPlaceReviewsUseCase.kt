@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.places.presentation.details.usecase
 
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.auth.UserRepository
@@ -24,7 +25,7 @@ internal class GetPlaceReviewsUseCase(
     suspend operator fun invoke(placeId: String): Flow<GetPlaceReviewsStatus> = flow {
         emit(GetPlaceReviewsStatus.Loading)
         val status = try {
-            val userId = userRepository.user.value?.id
+            val userId = userRepository.user.firstOrNull()?.id
             val (userReview, paginationResponse) = withContext(ioDispatcher) {
                 val userReview = userId?.let { placesRepository.getReview(placeId, it) }
                 val paginatedReviews = placesRepository.getReviews(placeId)
@@ -47,7 +48,7 @@ internal class GetPlaceReviewsUseCase(
     suspend fun getUserReview(placeId: String): Flow<GetUserReviewStatus> = flow {
         emit(GetUserReviewStatus.Loading)
         val status = try {
-            val userReview = userRepository.user.value?.id?.let { userId ->
+            val userReview = userRepository.user.firstOrNull()?.id?.let { userId ->
                 withContext(ioDispatcher) { placesRepository.getReview(placeId, userId) }
             }
             GetUserReviewStatus.Success(userReview = userReview?.toViewEntity())
@@ -61,7 +62,7 @@ internal class GetPlaceReviewsUseCase(
     suspend fun getMoreReviews(placeId: String): Flow<GetPlaceReviewsStatus> = flow {
         emit(GetPlaceReviewsStatus.Loading)
         val status = try {
-            val userId = userRepository.user.value?.id
+            val userId = userRepository.user.firstOrNull()?.id
             val paginationResponse = placesRepository.getReviews(placeId)
             GetPlaceReviewsStatus.Success(
                 paginatedReviews = paginationResponse.content

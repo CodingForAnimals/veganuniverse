@@ -15,6 +15,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
@@ -40,6 +43,18 @@ class FirebaseAuthenticator(
     private val FirebaseAuth.userIsProvidedByGoogle
         get() = currentUser?.providerData?.map { it.providerId }
             ?.contains(GoogleAuthProvider.PROVIDER_ID) == true
+
+    override val userFlow = callbackFlow {
+        trySendBlocking(firebaseAuth.currentUser?.let { firebaseUserEntityMapper.map(it) })
+        val authListener = FirebaseAuth.AuthStateListener { auth ->
+            val user = auth.currentUser?.let { firebaseUserEntityMapper.map(it) }
+            trySendBlocking(user)
+        }
+        firebaseAuth.addAuthStateListener(authListener)
+        awaitClose {
+            firebaseAuth.removeAuthStateListener(authListener)
+        }
+    }
 
     override suspend fun emailLogin(email: String, password: String): EmailLoginResponse {
         return try {
@@ -121,6 +136,11 @@ class FirebaseAuthenticator(
         }
         firebaseAuth.signOut()
     }
+
+    override fun getCurrentUser(): UserFirebaseEntity? {
+        return firebaseAuth.currentUser?.let { firebaseUserEntityMapper.map(it) }
+    }
+
 
     override suspend fun sendUserVerificationEmail(): SendVerificationEmailResult {
         return try {

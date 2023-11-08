@@ -2,14 +2,11 @@
 <resources>
     <string name="logout_error_title">Error al cerrar sesión</string>
     <string name="logout_error_message">Ha ocurrido un error desconocido al querer cerrar sesion! Lo sentimos. Puedes volver a intentar!</string>
+    <string name="contributions_empty_message">¡Todavía no has aportado contenido a la comunidad! ¿Qué estás esperando?</string>
     <string name="contributions_error_recipes_message">Ha ocurrido un error al querer encontrar tus recetas aportados en la comunidad. ¡Lo sentimos!</string>
     <string name="contributions_error_places_message">Ha ocurrido un error al querer encontrar tus lugares aportados en la comunidad. ¡Lo sentimos!</string>
-    <string name="contributions_empty_places_message">¡No has aportado ningún lugar a la comunidad todavía!</string>
-    <string name="contributions_empty_recipes_message">¡No has aportado ningúna receta a la comunidad todavía!</string>
-    <string name="contributions_places_title">Tus lugares</string>
-    <string name="bookmarks_empty_recipes_message">Aquí podrás ver las recetas que decidas guardar</string>
+    <string name="bookmarks_empty_message">¡No tenés ninguna publicación guardada! Acá vas a poder acceder rápidamente a tu contenido favorito</string>
     <string name="bookmarks_error_recipes_message">Ha ocurrido un error al querer encontrar tus recetas guardadas de la comunidad. ¡Lo sentimos!</string>
-    <string name="bookmarks_empty_places_message">Aquí podrás ver los lugares que decidas guardar</string>
     <string name="bookmarks_error_places_message">Ha ocurrido un error al querer encontrar tus lugares guardadas de la comunidad. ¡Lo sentimos!</string>
     <string name="confirm_new_profile_picture_title">Actualizar foto de perfil?</string>
     <string name="confirm_new_profile_picture_message">Has seleccionado una nueva foto de perfil. Quieres reemplazarla por la actual? No podremos ayudarte a recuperar la anterior si lo haces.</string>

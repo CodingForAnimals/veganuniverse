@@ -1,13 +1,13 @@
-package org.codingforanimals.veganuniverse.recipes.services.di
+package org.codingforanimals.veganuniverse.recipes.services.firebase.di
 
-import org.codingforanimals.veganuniverse.recipes.services.FetchRecipeService
-import org.codingforanimals.veganuniverse.recipes.services.RecipesQueryService
-import org.codingforanimals.veganuniverse.recipes.services.SubmitRecipeService
-import org.codingforanimals.veganuniverse.recipes.services.entity.mapper.RECIPE_ENTITY_MAPPER
-import org.codingforanimals.veganuniverse.recipes.services.entity.mapper.mapperModule
-import org.codingforanimals.veganuniverse.recipes.services.impl.FetchRecipeFirebaseService
-import org.codingforanimals.veganuniverse.recipes.services.impl.RecipesFirebaseQueryService
-import org.codingforanimals.veganuniverse.recipes.services.impl.SubmitRecipeFirebaseService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.FetchRecipeService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.RecipesQueryService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.SubmitRecipeService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.entity.mapper.RECIPE_ENTITY_MAPPER
+import org.codingforanimals.veganuniverse.recipes.services.firebase.entity.mapper.mapperModule
+import org.codingforanimals.veganuniverse.recipes.services.firebase.impl.FetchRecipeFirebaseService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.impl.RecipesFirebaseQueryService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.impl.SubmitRecipeFirebaseService
 import org.codingforanimals.veganuniverse.services.firebase.di.firebaseServiceModule
 import org.codingforanimals.veganuniverse.storage.firestore.di.firestoreStorageModule
 import org.koin.core.module.dsl.factoryOf

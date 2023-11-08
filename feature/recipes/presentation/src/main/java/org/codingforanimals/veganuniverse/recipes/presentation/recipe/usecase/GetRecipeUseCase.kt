@@ -4,6 +4,7 @@ import android.util.Log
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.firstOrNull
 import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
 import org.codingforanimals.veganuniverse.recipes.domain.RecipesRepository
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
@@ -25,7 +26,7 @@ internal class GetRecipeUseCase(
                     ?: recipesRepository.fetchRecipe(id)
             }
             val isLikedByUser = async {
-                getUserStatus().value?.id?.let { userId ->
+                getUserStatus().firstOrNull()?.id?.let { userId ->
                     recipesRepository.isRecipeLikedByUser(id, userId)
                 } ?: false
             }

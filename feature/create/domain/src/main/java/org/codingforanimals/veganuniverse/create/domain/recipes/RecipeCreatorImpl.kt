@@ -4,7 +4,7 @@ import org.codingforanimals.veganuniverse.profile.services.firebase.ProfileLooku
 import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableContentType
 import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableType
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeForm
-import org.codingforanimals.veganuniverse.recipes.services.SubmitRecipeService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.SubmitRecipeService
 
 internal class RecipeCreatorImpl(
     private val submitRecipeService: SubmitRecipeService,

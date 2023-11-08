@@ -7,18 +7,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.auth.model.User
 import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
-import org.codingforanimals.veganuniverse.profile.presentation.model.Bookmarks
-import org.codingforanimals.veganuniverse.profile.presentation.model.Contributions
+import org.codingforanimals.veganuniverse.profile.presentation.model.ProfileFeatureItemsState
 import org.codingforanimals.veganuniverse.profile.presentation.usecase.GetBookmarksUseCase
 import org.codingforanimals.veganuniverse.profile.presentation.usecase.GetContributionsUseCase
 import org.codingforanimals.veganuniverse.profile.presentation.usecase.LogoutState
@@ -60,7 +59,7 @@ internal class ProfileScreenViewModel(
         when (effect) {
             ForcedEffect.UpdateSavedContentItems -> {
                 viewModelScope.launch {
-                    val id = getUserStatus().value?.id ?: return@launch
+                    val id = getUserStatus().firstOrNull()?.id ?: return@launch
                     contentJob?.cancel()
                     contentJob = launch {
                         val bookmarks = async { getBookmarks(id) }
@@ -72,19 +71,6 @@ internal class ProfileScreenViewModel(
                     }
                 }
             }
-        }
-    }
-
-    private fun updateSavedContent(scope: CoroutineScope, userId: String? = null) = with(scope) {
-        val id = userId ?: getUserStatus().value?.id ?: return@with
-        contentJob?.cancel()
-        contentJob = launch {
-            val bookmarks = async { getBookmarks(id) }
-            val contributions = async { getContributions(id) }
-            uiState = uiState.copy(
-                bookmarks = bookmarks.await(),
-                contributions = contributions.await()
-            )
         }
     }
 
@@ -213,8 +199,8 @@ internal class ProfileScreenViewModel(
         val user: User? = null,
         val loading: Boolean = false,
         val errorDialog: ErrorDialog? = null,
-        val bookmarks: Bookmarks = Bookmarks(),
-        val contributions: Contributions = Contributions(),
+        val bookmarks: ProfileFeatureItemsState = ProfileFeatureItemsState(),
+        val contributions: ProfileFeatureItemsState = ProfileFeatureItemsState(),
         val showImageDialog: Boolean = false,
         val showNewProfilePictureConfirmationDialog: Boolean = false,
         val newProfilePicUri: Uri? = null,

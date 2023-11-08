@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.places.presentation.details.usecase
 
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.transform
 import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
@@ -14,7 +15,7 @@ internal class BookmarkPlaceUseCase(
     private val placesRepository: PlacesRepository,
 ) {
     operator fun invoke(placeId: String, bookmark: Boolean): Flow<Status> = flow {
-        getUserStatus().value?.id?.let { userId ->
+        getUserStatus().firstOrNull()?.id?.let { userId ->
             emit(Status.Loading)
             try {
                 val bookmarked = if (bookmark) {

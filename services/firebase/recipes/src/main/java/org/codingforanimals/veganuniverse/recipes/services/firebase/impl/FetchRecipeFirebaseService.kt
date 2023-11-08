@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.recipes.services.impl
+package org.codingforanimals.veganuniverse.recipes.services.firebase.impl
 
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
@@ -9,8 +9,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
-import org.codingforanimals.veganuniverse.recipes.services.FetchRecipeService
-import org.codingforanimals.veganuniverse.recipes.services.entity.RecipeFirebaseEntity
+import org.codingforanimals.veganuniverse.recipes.services.firebase.FetchRecipeService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.entity.RecipeFirebaseEntity
 import org.codingforanimals.veganuniverse.services.firebase.FirestoreCollection
 import org.codingforanimals.veganuniverse.storage.firestore.DocumentSnapshotCache
 
