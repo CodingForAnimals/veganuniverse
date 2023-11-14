@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.common.R.drawable.featured_topic_abc_vegan_test
-import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
 
 @Composable
 internal fun FeaturedTopicCard(

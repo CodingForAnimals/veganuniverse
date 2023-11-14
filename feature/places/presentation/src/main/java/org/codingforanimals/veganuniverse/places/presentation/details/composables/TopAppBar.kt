@@ -12,10 +12,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
 import org.codingforanimals.veganuniverse.places.presentation.R
+import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 @Composable
 internal fun PlaceDetailsTopAppBar(

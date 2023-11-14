@@ -14,13 +14,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.core.ui.model.Dialog
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.model.GetRecipesStatus
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.usecase.GetRecipesUseCase
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
+import org.codingforanimals.veganuniverse.ui.dialog.Dialog
 
 private const val TAG = "RecipeBrowsingViewModel"
 
@@ -72,7 +70,7 @@ internal class RecipeBrowsingViewModel(
 
             Action.OnClearFiltersClick -> {
                 val defaultFilterTag = null
-                val defaultSorter = RecipeSorter.DATE
+                val defaultSorter = org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter.DATE
                 if (uiState.filtersChanged(defaultFilterTag, defaultSorter)) {
                     uiState = uiState.copy(
                         recipes = emptyList(),
@@ -132,13 +130,16 @@ internal class RecipeBrowsingViewModel(
 
     data class UiState(
         val recipes: List<Recipe> = emptyList(),
-        val filterTag: RecipeTag? = defaultTag,
-        val sorter: RecipeSorter = defaultSorter,
+        val filterTag: org.codingforanimals.veganuniverse.recipes.ui.RecipeTag? = defaultTag,
+        val sorter: org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter = defaultSorter,
         val dialog: Dialog? = null,
         val loadingMore: Boolean = false,
         val canLoadMore: Boolean = true,
     ) {
-        fun filtersChanged(tag: RecipeTag?, sorter: RecipeSorter): Boolean {
+        fun filtersChanged(
+            tag: org.codingforanimals.veganuniverse.recipes.ui.RecipeTag?,
+            sorter: org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter,
+        ): Boolean {
             return (filterTag != tag || this.sorter != sorter)
         }
 
@@ -156,12 +157,12 @@ internal class RecipeBrowsingViewModel(
         }
 
         companion object {
-            val defaultSorter = RecipeSorter.LIKES
+            val defaultSorter = org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter.LIKES
             val defaultTag = null
             fun init(rawTag: String?, rawSorter: String?): UiState {
                 val tag = if (rawTag != null && rawTag != "null") {
                     try {
-                        RecipeTag.valueOf(rawTag)
+                        org.codingforanimals.veganuniverse.recipes.ui.RecipeTag.valueOf(rawTag)
                     } catch (e: Throwable) {
                         Log.e(TAG, e.stackTraceToString())
                         defaultTag
@@ -172,7 +173,7 @@ internal class RecipeBrowsingViewModel(
 
                 val sorter = if (rawSorter != null && rawSorter != "null") {
                     try {
-                        RecipeSorter.valueOf(rawSorter)
+                        org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter.valueOf(rawSorter)
                     } catch (e: Throwable) {
                         Log.e(TAG, e.stackTraceToString())
                         defaultSorter
@@ -196,7 +197,10 @@ internal class RecipeBrowsingViewModel(
         data object OnFilterIconClick : Action()
         data object DismissFiltersSheet : Action()
         data object OnClearFiltersClick : Action()
-        data class OnApplyFilters(val tag: RecipeTag?, val sorter: RecipeSorter) : Action()
+        data class OnApplyFilters(
+            val tag: org.codingforanimals.veganuniverse.recipes.ui.RecipeTag?,
+            val sorter: org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter,
+        ) : Action()
     }
 
     sealed class SideEffect {

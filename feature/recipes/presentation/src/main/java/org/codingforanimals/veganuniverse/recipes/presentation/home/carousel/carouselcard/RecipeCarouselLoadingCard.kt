@@ -18,9 +18,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.core.ui.animation.ShimmerItem
-import org.codingforanimals.veganuniverse.core.ui.animation.shimmer
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
+import org.codingforanimals.veganuniverse.ui.Spacing_05
+import org.codingforanimals.veganuniverse.ui.animation.ShimmerItem
+import org.codingforanimals.veganuniverse.ui.animation.shimmer
 import org.codingforanimals.veganuniverse.utils.toDp
 
 

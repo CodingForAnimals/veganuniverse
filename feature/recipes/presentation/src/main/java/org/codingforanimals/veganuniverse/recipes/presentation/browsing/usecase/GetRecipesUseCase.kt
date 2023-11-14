@@ -10,8 +10,6 @@ import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.entity.RecipeQueryParams
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.model.GetRecipesStatus
 import org.codingforanimals.veganuniverse.recipes.presentation.entity.toDomainSorter
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
 
 private const val TAG = "GetRecipesUseCase"
 
@@ -24,8 +22,8 @@ internal class GetRecipesUseCase(
 
     operator fun invoke(
         recipes: List<Recipe>,
-        filterTag: RecipeTag?,
-        sorter: RecipeSorter,
+        filterTag: org.codingforanimals.veganuniverse.recipes.ui.RecipeTag?,
+        sorter: org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter,
     ): Flow<GetRecipesStatus> =
         flow {
             emit(GetRecipesStatus.Loading)

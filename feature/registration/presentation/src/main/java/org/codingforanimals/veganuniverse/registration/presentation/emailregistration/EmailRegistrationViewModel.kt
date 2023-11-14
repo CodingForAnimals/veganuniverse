@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.StringField
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.areFieldsValid
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.usecase.EmailAndPasswordRegistrationUseCase
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.usecase.GetEmailRegistrationScreenContent
 import org.codingforanimals.veganuniverse.registration.presentation.model.RegistrationStatus
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.EmailField
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.PasswordField
+import org.codingforanimals.veganuniverse.ui.viewmodel.StringField
+import org.codingforanimals.veganuniverse.ui.viewmodel.areFieldsValid
 
 class EmailRegistrationViewModel(
     getRegisterScreenContent: GetEmailRegistrationScreenContent,

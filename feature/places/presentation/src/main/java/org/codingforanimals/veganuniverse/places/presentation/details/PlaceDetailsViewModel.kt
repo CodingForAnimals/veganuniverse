@@ -30,7 +30,7 @@ import org.codingforanimals.veganuniverse.places.presentation.model.GetPlaceDeta
 import org.codingforanimals.veganuniverse.places.presentation.model.GetPlaceReviewsStatus
 import org.codingforanimals.veganuniverse.places.presentation.model.GetUserReviewStatus
 import org.codingforanimals.veganuniverse.places.presentation.navigation.selected_place_id
-import org.codingforanimals.veganuniverse.shared.ui.ToggleIconState
+import org.codingforanimals.veganuniverse.ui.icon.ToggleIconState
 
 internal class PlaceDetailsViewModel(
     savedStateHandle: SavedStateHandle,

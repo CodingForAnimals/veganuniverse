@@ -24,13 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
-import org.codingforanimals.veganuniverse.core.ui.components.SelectableChip
-import org.codingforanimals.veganuniverse.core.ui.components.VURadioButton
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
+import org.codingforanimals.veganuniverse.places.ui.PlaceSorter
+import org.codingforanimals.veganuniverse.places.ui.PlaceTag
+import org.codingforanimals.veganuniverse.places.ui.PlaceType
+import org.codingforanimals.veganuniverse.ui.Spacing_03
+import org.codingforanimals.veganuniverse.ui.Spacing_05
+import org.codingforanimals.veganuniverse.ui.components.SelectableChip
+import org.codingforanimals.veganuniverse.ui.components.VURadioButton
 
 @Composable
 internal fun FilterDialog(

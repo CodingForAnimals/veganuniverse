@@ -36,16 +36,16 @@ import androidx.compose.ui.window.Dialog
 import org.codingforanimals.veganuniverse.core.common.R.string.back
 import org.codingforanimals.veganuniverse.core.common.R.string.closed
 import org.codingforanimals.veganuniverse.core.common.R.string.edit
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.create.presentation.R
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.Action
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.OpeningHoursTimePickerState
 import org.codingforanimals.veganuniverse.create.presentation.place.model.OpeningHoursField
 import org.codingforanimals.veganuniverse.create.presentation.place.model.PeriodEnd
 import org.codingforanimals.veganuniverse.create.presentation.place.model.PeriodType
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 @Composable
 internal fun OpeningHours(

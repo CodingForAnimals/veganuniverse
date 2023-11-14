@@ -28,14 +28,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.codingforanimals.veganuniverse.core.ui.R.string.like
 import org.codingforanimals.veganuniverse.core.ui.R.string.report
-import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
-import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChipDefaults
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
-import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.recipes.presentation.R
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_05
+import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.ui.components.VUAssistChip
+import org.codingforanimals.veganuniverse.ui.components.VUAssistChipDefaults
+import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 @Composable
 internal fun RecipeCard(

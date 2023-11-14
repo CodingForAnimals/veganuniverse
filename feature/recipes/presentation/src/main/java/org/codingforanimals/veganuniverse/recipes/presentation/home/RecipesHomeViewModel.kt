@@ -7,9 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
-import org.codingforanimals.veganuniverse.shared.ui.grid.ContainerLayoutType
+import org.codingforanimals.veganuniverse.ui.grid.ContainerLayoutType
 
 internal class RecipesHomeViewModel : ViewModel() {
 
@@ -18,18 +16,18 @@ internal class RecipesHomeViewModel : ViewModel() {
 
     val content = listOf(
         RecipeHomeScreenItem.Carousel(
-            sorter = RecipeSorter.LIKES
+            sorter = org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter.LIKES
         ),
         RecipeHomeScreenItem.Container(
-            tag = RecipeTag.BREAKFAST_AND_EVENING,
+            tag = org.codingforanimals.veganuniverse.recipes.ui.RecipeTag.BREAKFAST_AND_EVENING,
             layoutType = ContainerLayoutType.VERTICAL_RIGHT
         ),
         RecipeHomeScreenItem.Container(
-            tag = RecipeTag.QUICK_RECIPE,
+            tag = org.codingforanimals.veganuniverse.recipes.ui.RecipeTag.QUICK_RECIPE,
             layoutType = ContainerLayoutType.VERTICAL_LEFT
         ),
         RecipeHomeScreenItem.Container(
-            tag = RecipeTag.LUNCH_AND_DINNER,
+            tag = org.codingforanimals.veganuniverse.recipes.ui.RecipeTag.LUNCH_AND_DINNER,
             layoutType = ContainerLayoutType.VERTICAL_RIGHT
         ),
     )
@@ -62,7 +60,8 @@ internal class RecipesHomeViewModel : ViewModel() {
     }
 
     sealed class Action {
-        data class OnRecipeTagCardClick(val recipeTag: RecipeTag) : Action()
+        data class OnRecipeTagCardClick(val recipeTag: org.codingforanimals.veganuniverse.recipes.ui.RecipeTag) :
+            Action()
     }
 
     sealed class RelayAction {
@@ -77,7 +76,12 @@ internal class RecipesHomeViewModel : ViewModel() {
 }
 
 internal sealed class RecipeHomeScreenItem {
-    data class Carousel(val sorter: RecipeSorter) : RecipeHomeScreenItem()
-    data class Container(val tag: RecipeTag, val layoutType: ContainerLayoutType) :
+    data class Carousel(val sorter: org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter) :
+        RecipeHomeScreenItem()
+
+    data class Container(
+        val tag: org.codingforanimals.veganuniverse.recipes.ui.RecipeTag,
+        val layoutType: ContainerLayoutType,
+    ) :
         RecipeHomeScreenItem()
 }

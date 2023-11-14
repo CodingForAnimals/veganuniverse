@@ -6,8 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.FeaturedTopicScreen
+import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 object FeaturedTopicDestination : Destination(route = "topic_route") {
     const val topicArgument = "topic_argument"

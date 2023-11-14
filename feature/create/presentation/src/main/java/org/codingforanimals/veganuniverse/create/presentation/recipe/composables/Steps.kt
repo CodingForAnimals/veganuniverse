@@ -32,16 +32,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.core.ui.R.string.step
 import org.codingforanimals.veganuniverse.core.ui.R.string.steps
-import org.codingforanimals.veganuniverse.core.ui.animation.animateAlphaOnStart
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.components.VUNormalTextField
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.create.presentation.R
 import org.codingforanimals.veganuniverse.create.presentation.recipe.CreateRecipeViewModel.Action
 import org.codingforanimals.veganuniverse.create.presentation.recipe.model.StringListField
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_05
+import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.animation.animateAlphaOnStart
+import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.ui.components.VUNormalTextField
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 @Composable
 internal fun Steps(

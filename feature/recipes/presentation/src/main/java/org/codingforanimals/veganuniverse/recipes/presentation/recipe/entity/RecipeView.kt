@@ -1,7 +1,6 @@
 package org.codingforanimals.veganuniverse.recipes.presentation.recipe.entity
 
 import java.util.Date
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
 
 data class RecipeView(
     val id: String,
@@ -11,7 +10,7 @@ data class RecipeView(
     val description: String,
     val likes: Int,
     val createdAt: Date,
-    val tags: List<RecipeTag>,
+    val tags: List<org.codingforanimals.veganuniverse.recipes.ui.RecipeTag>,
     val ingredients: List<String>,
     val steps: List<String>,
     val prepTime: String,

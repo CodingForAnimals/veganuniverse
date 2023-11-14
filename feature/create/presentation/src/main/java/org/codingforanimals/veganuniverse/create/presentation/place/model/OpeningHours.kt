@@ -7,8 +7,8 @@ import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_sunday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_thursday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_tuesday
 import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_wednesday
-import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
 import org.codingforanimals.veganuniverse.places.entity.Period
+import org.codingforanimals.veganuniverse.ui.calendar.DayOfWeek
 
 data class OpeningHours(
     val dayOfWeek: DayOfWeek,

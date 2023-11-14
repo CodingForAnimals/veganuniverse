@@ -21,8 +21,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.core.ui.R.string.load_more
 import org.codingforanimals.veganuniverse.core.ui.R.string.show_more
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.RecipeCarouselViewModel.Action
@@ -31,7 +29,8 @@ import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.Rec
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.carouselcard.RecipeCarouselAsyncCards
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.carouselcard.RecipeCarouselLoadingCard
 import org.codingforanimals.veganuniverse.recipes.presentation.home.components.RecipesHomeItemHeader
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.utils.toDp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -39,7 +38,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 internal fun RecipeCarousel(
     modifier: Modifier = Modifier,
-    sorter: RecipeSorter,
+    sorter: org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter,
     navigateToRecipe: (String) -> Unit,
     navigateToRecipeBrowsing: (RecipeBrowsingNavArgs) -> Unit,
     viewModel: RecipeCarouselViewModel = koinViewModel(parameters = { parametersOf(sorter) }),

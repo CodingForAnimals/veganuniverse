@@ -1,9 +1,9 @@
 package org.codingforanimals.veganuniverse.create.presentation.place.entity
 
-import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
 import org.codingforanimals.veganuniverse.create.presentation.model.AddressField
 import org.codingforanimals.veganuniverse.create.presentation.place.model.OpeningHours
 import org.codingforanimals.veganuniverse.places.entity.AddressComponents
+import org.codingforanimals.veganuniverse.ui.calendar.DayOfWeek
 import org.codingforanimals.veganuniverse.places.entity.OpeningHours as DomainOpeningHours
 
 internal fun AddressField.toAddressComponents(): AddressComponents {

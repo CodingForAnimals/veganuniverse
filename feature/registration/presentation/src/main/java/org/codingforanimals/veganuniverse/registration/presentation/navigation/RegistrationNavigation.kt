@@ -6,13 +6,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationScreen
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.EmailSignInScreen
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailRegistration
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailSignIn
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.Prompt
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreen
+import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 sealed class RegistrationDestination(route: String) : Destination(route) {
     data object Prompt : RegistrationDestination("registration_prompt")

@@ -9,9 +9,9 @@ import org.codingforanimals.veganuniverse.places.entity.PlaceReviewForm
 import org.codingforanimals.veganuniverse.places.services.firebase.FetchPlaceService
 import org.codingforanimals.veganuniverse.places.services.firebase.PlaceReviewsService
 import org.codingforanimals.veganuniverse.places.services.firebase.PlacesService
+import org.codingforanimals.veganuniverse.profile.model.SaveableContentType
+import org.codingforanimals.veganuniverse.profile.model.SaveableType
 import org.codingforanimals.veganuniverse.profile.services.firebase.ProfileLookupsService
-import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableContentType
-import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableType
 
 class PlacesRepositoryImpl(
     private val placesService: PlacesService,

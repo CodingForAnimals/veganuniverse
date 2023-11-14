@@ -6,11 +6,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
-import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.RecipeDetailsScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.report.RecipeReportDialog
+import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 sealed class RecipesDestination(route: String) : Destination(route) {
     data object Home : RecipesDestination("feature_recipes_home")

@@ -35,16 +35,16 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerInfoWindow
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel.Action
 import org.codingforanimals.veganuniverse.places.presentation.home.state.PlacesState
 import org.codingforanimals.veganuniverse.places.presentation.home.state.UserLocationState
 import org.codingforanimals.veganuniverse.places.presentation.utils.mapStyleJson
+import org.codingforanimals.veganuniverse.ui.Spacing_02
+import org.codingforanimals.veganuniverse.ui.Spacing_03
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 
 @Composable
@@ -87,7 +87,7 @@ internal fun PlacesHomeScreenContent(
                     PlacesState.Error, PlacesState.Loading -> Unit
                     is PlacesState.Success -> {
                         for (entity in placesState.content) {
-                            key(entity.card.geoHash) {
+                            key(entity.card.id) {
                                 val selected = isPlaceSelected(entity)
                                 MarkerInfoWindow(
                                     state = entity.markerState,
@@ -114,7 +114,7 @@ internal fun PlacesHomeScreenContent(
                                                     horizontal = Spacing_04,
                                                     vertical = Spacing_02
                                                 ),
-                                                text = entity.card.name,
+                                                text = entity.card.title,
                                                 fontWeight = FontWeight.SemiBold,
                                             )
                                         }

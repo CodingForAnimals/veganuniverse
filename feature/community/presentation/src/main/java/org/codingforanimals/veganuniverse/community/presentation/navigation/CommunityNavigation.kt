@@ -3,7 +3,7 @@ package org.codingforanimals.veganuniverse.community.presentation.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import org.codingforanimals.veganuniverse.community.presentation.CommunityScreen
-import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 object CommunityDestination : Destination(route = "community_route")
 

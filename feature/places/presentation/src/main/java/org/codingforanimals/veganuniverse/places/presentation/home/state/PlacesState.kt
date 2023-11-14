@@ -2,7 +2,7 @@ package org.codingforanimals.veganuniverse.places.presentation.home.state
 
 import com.google.android.gms.maps.model.LatLng
 import org.codingforanimals.veganuniverse.places.presentation.home.entity.PlaceCardViewEntity
-import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
+import org.codingforanimals.veganuniverse.places.ui.PlaceCardItem
 
 internal sealed class PlacesState {
     data object Error : PlacesState()
@@ -18,12 +18,12 @@ internal sealed class PlacesState {
             rawContent
                 .filter { it.card.isMatchingType && it.card.containsAllTags }
 
-        private val PlaceCard.isMatchingType: Boolean
+        private val PlaceCardItem.isMatchingType: Boolean
             get() = if (filterState.activePlaceType == null) true else {
                 type == filterState.activePlaceType
             }
 
-        private val PlaceCard.containsAllTags: Boolean
+        private val PlaceCardItem.containsAllTags: Boolean
             get() = tags.containsAll(filterState.activePlaceTags)
     }
 }

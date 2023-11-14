@@ -20,7 +20,11 @@ include(":core:common")
 include(":core:ui")
 include(":core:location")
 
-include(":feature:profile:presentation")
+include(":feature:profile")
+include(":feature:profile:home:domain")
+include(":feature:profile:home:presentation")
+include(":feature:profile:itemlist:domain")
+include(":feature:profile:itemlist:presentation")
 
 include(":feature:community:presentation")
 
@@ -58,7 +62,6 @@ include(":services:firebase:user")
 
 include(":services:firebase")
 include(":services:google:places")
-include(":feature:profile:domain")
 include(":services:firebase:recipes")
 include(":entity:recipes")
 include(":feature:recipes:domain")
@@ -69,3 +72,6 @@ include(":storage:recipes")
 include(":services:firebase:profile")
 
 include(":shared:ui")
+include(":ui:places")
+include("ui:recipes")
+include("model:profile")

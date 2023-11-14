@@ -60,25 +60,23 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.core.ui.R
 import org.codingforanimals.veganuniverse.core.ui.R.string.load_more
-import org.codingforanimals.veganuniverse.core.ui.animation.ShimmerItem
-import org.codingforanimals.veganuniverse.core.ui.animation.animateAlphaOnStart
-import org.codingforanimals.veganuniverse.core.ui.animation.shimmer
-import org.codingforanimals.veganuniverse.core.ui.components.SelectableChip
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_05
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
-import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.SideEffect
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.UiState
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.components.RecipeCard
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
+import org.codingforanimals.veganuniverse.ui.Spacing_02
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_05
+import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.ui.animation.ShimmerItem
+import org.codingforanimals.veganuniverse.ui.animation.animateAlphaOnStart
+import org.codingforanimals.veganuniverse.ui.animation.shimmer
+import org.codingforanimals.veganuniverse.ui.components.SelectableChip
+import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.utils.TimeAgo
 import org.koin.androidx.compose.koinViewModel
 
@@ -209,7 +207,7 @@ private fun RecipeBrowsingScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalArrangement = Arrangement.spacedBy(Spacing_02),
                 ) {
-                    RecipeTag.values().forEach {
+                    org.codingforanimals.veganuniverse.recipes.ui.RecipeTag.values().forEach {
                         key(it.name.hashCode()) {
                             SelectableChip(
                                 label = stringResource(it.label),
@@ -229,7 +227,7 @@ private fun RecipeBrowsingScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalArrangement = Arrangement.spacedBy(Spacing_02),
                 ) {
-                    RecipeSorter.values().forEach {
+                    org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter.values().forEach {
                         key(it.name.hashCode()) {
                             SelectableChip(
                                 label = stringResource(it.label),
@@ -250,7 +248,8 @@ private fun RecipeBrowsingScreen(
                         modifier = Modifier.weight(1f),
                         onClick = {
                             currentTag = null
-                            currentSorter = RecipeSorter.DATE
+                            currentSorter =
+                                org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter.DATE
                             onAction(Action.OnClearFiltersClick)
                         }) {
                         Text(text = "Limpiar filtros")

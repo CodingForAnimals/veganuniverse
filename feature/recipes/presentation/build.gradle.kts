@@ -13,7 +13,8 @@ android {
 
 dependencies {
     implementation(project(Module.Entity.RECIPES))
-    implementation(project(Module.Feature.Recipes.DOMAIN))
+    implementation(project(Module.Recipes.DOMAIN))
+    implementation(project(Module.Recipes.UI))
     implementation(project(Module.Core.COMMON))
     implementation(project(Module.Core.AUTH))
     implementation(project(Module.Shared.UI))

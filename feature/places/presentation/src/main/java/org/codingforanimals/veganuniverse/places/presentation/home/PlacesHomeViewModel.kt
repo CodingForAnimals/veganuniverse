@@ -28,9 +28,6 @@ import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.core.location.UserLocationManager
 import org.codingforanimals.veganuniverse.core.location.model.LocationResponse
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.places.presentation.home.entity.PlaceCardViewEntity
 import org.codingforanimals.veganuniverse.places.presentation.home.state.FilterState
 import org.codingforanimals.veganuniverse.places.presentation.home.state.PlacesHomeSavedStateHandler
@@ -42,6 +39,9 @@ import org.codingforanimals.veganuniverse.places.presentation.home.usecase.GetPl
 import org.codingforanimals.veganuniverse.places.presentation.home.usecase.model.GetLocationDataStatus
 import org.codingforanimals.veganuniverse.places.presentation.home.usecase.model.GetPlacesStatus
 import org.codingforanimals.veganuniverse.places.presentation.utils.visibleRadiusInKm
+import org.codingforanimals.veganuniverse.places.ui.PlaceSorter
+import org.codingforanimals.veganuniverse.places.ui.PlaceTag
+import org.codingforanimals.veganuniverse.places.ui.PlaceType
 
 internal class PlacesHomeViewModel(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
@@ -309,7 +309,7 @@ internal class PlacesHomeViewModel(
     private fun onPlaceClick(place: PlaceCardViewEntity) {
         if (uiState.isPlaceSelected(place)) {
             viewModelScope.launch {
-                _sideEffects.send(SideEffect.NavigateToPlaceDetails(place.card.geoHash))
+                _sideEffects.send(SideEffect.NavigateToPlaceDetails(place.card.id))
             }
         } else {
             focusOnPlace(place)
@@ -360,7 +360,7 @@ internal class PlacesHomeViewModel(
 
         fun isPlaceSelected(entity: PlaceCardViewEntity): Boolean {
             if (!isFocused) return false
-            return entity.card.geoHash == selectedPlace?.card?.geoHash
+            return entity.card.id == selectedPlace?.card?.id
         }
 
         companion object {

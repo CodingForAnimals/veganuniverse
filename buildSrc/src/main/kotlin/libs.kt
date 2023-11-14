@@ -21,9 +21,11 @@ object versions {
 }
 
 object Module {
+    const val UI = ":ui"
     object Shared {
         const val UI = ":shared:ui"
     }
+
     object Storage {
         const val FIRESTORE = ":storage:firestore"
         const val RECIPES = ":storage:recipes"
@@ -42,6 +44,7 @@ object Module {
         const val PLACES = ":entity:places"
         const val RECIPES = ":entity:recipes"
     }
+
     object Services {
         object Firebase {
             const val BASE = ":services:firebase"
@@ -50,27 +53,42 @@ object Module {
             const val PLACES = ":services:firebase:places"
             const val RECIPES = ":services:firebase:recipes"
         }
+
         object Google {
             const val PLACES = ":services:google:places"
         }
     }
-    object Feature {
-        object Places {
-            const val DOMAIN = ":feature:places:domain"
-            const val PRESENTATION = ":feature:places:presentation"
+
+    object Places {
+        const val DOMAIN = ":feature:places:domain"
+        const val PRESENTATION = ":feature:places:presentation"
+        const val UI = ":ui:places"
+    }
+
+    object Profile {
+        const val GRAPH = ":feature:profile"
+        const val MODEL = ":model:profile"
+
+        object Home {
+            const val DOMAIN = ":feature:profile:home:domain"
+            const val PRESENTATION = ":feature:profile:home:presentation"
         }
-        object Profile {
-            const val DOMAIN = ":feature:profile:domain"
-            const val PRESENTATION = ":feature:profile:presentation"
+
+        object ItemList {
+            const val DOMAIN = ":feature:profile:itemlist:domain"
+            const val PRESENTATION = ":feature:profile:itemlist:presentation"
         }
-        object Create {
-            const val DOMAIN = ":feature:create:domain"
-            const val PRESENTATION = ":feature:create:presentation"
-        }
-        object Recipes {
-            const val DOMAIN = ":feature:recipes:domain"
-            const val PRESENTATION = ":feature:recipes:presentation"
-        }
+    }
+
+    object Create {
+        const val DOMAIN = ":feature:create:domain"
+        const val PRESENTATION = ":feature:create:presentation"
+    }
+
+    object Recipes {
+        const val DOMAIN = ":feature:recipes:domain"
+        const val PRESENTATION = ":feature:recipes:presentation"
+        const val UI = ":ui:recipes"
     }
 }
 

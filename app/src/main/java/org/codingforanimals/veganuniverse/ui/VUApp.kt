@@ -18,8 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.navigation.VUAppNavHost
+import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.ui.navbar.VUBottomNavBar
 import org.codingforanimals.veganuniverse.ui.topappbar.VUTopAppBar
 

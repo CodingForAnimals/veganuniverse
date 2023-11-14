@@ -17,14 +17,14 @@ import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.auth.model.SendVerificationEmailResult
 import org.codingforanimals.veganuniverse.auth.usecase.SendVerificationEmailUseCase
 import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.PictureField
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.StringField
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.areFieldsValid
 import org.codingforanimals.veganuniverse.create.presentation.R
 import org.codingforanimals.veganuniverse.create.presentation.recipe.model.StringListField
 import org.codingforanimals.veganuniverse.create.presentation.recipe.model.TagsField
 import org.codingforanimals.veganuniverse.create.presentation.recipe.usecase.SubmitRecipeStatus
 import org.codingforanimals.veganuniverse.create.presentation.recipe.usecase.SubmitRecipeUseCase
+import org.codingforanimals.veganuniverse.ui.viewmodel.PictureField
+import org.codingforanimals.veganuniverse.ui.viewmodel.StringField
+import org.codingforanimals.veganuniverse.ui.viewmodel.areFieldsValid
 import org.codingforanimals.veganuniverse.user.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.user.R.string.verification_email_too_many_requests
 

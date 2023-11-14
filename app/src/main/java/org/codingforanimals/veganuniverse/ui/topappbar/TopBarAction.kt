@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.ui.topappbar
 
-import org.codingforanimals.veganuniverse.core.ui.icons.Icon
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
+import org.codingforanimals.veganuniverse.ui.icon.Icon
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 
 sealed class TopBarAction(

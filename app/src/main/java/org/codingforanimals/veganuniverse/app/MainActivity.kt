@@ -21,9 +21,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingScreen
 import org.codingforanimals.veganuniverse.ui.VUApp
+import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {

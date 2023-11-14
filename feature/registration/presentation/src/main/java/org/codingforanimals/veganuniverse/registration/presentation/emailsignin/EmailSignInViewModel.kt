@@ -10,12 +10,12 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.areFieldsValid
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.usecase.EmailSignInUseCase
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.usecase.GetEmailSignInScreenContent
 import org.codingforanimals.veganuniverse.registration.presentation.model.EmailSignInStatus
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.EmailField
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.PasswordField
+import org.codingforanimals.veganuniverse.ui.viewmodel.areFieldsValid
 
 class EmailSignInViewModel(
     getEmailSignInScreenContent: GetEmailSignInScreenContent,

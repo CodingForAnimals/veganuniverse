@@ -1,11 +1,13 @@
 package org.codingforanimals.veganuniverse.recipes.services.firebase.di
 
 import org.codingforanimals.veganuniverse.recipes.services.firebase.FetchRecipeService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.IncrementRecipeLikesService
 import org.codingforanimals.veganuniverse.recipes.services.firebase.RecipesQueryService
 import org.codingforanimals.veganuniverse.recipes.services.firebase.SubmitRecipeService
 import org.codingforanimals.veganuniverse.recipes.services.firebase.entity.mapper.RECIPE_ENTITY_MAPPER
 import org.codingforanimals.veganuniverse.recipes.services.firebase.entity.mapper.mapperModule
 import org.codingforanimals.veganuniverse.recipes.services.firebase.impl.FetchRecipeFirebaseService
+import org.codingforanimals.veganuniverse.recipes.services.firebase.impl.IncrementRecipeLikesFirebaseService
 import org.codingforanimals.veganuniverse.recipes.services.firebase.impl.RecipesFirebaseQueryService
 import org.codingforanimals.veganuniverse.recipes.services.firebase.impl.SubmitRecipeFirebaseService
 import org.codingforanimals.veganuniverse.services.firebase.di.firebaseServiceModule
@@ -30,6 +32,7 @@ val recipesFirebaseServiceModule = module {
     }
 
     factoryOf(::SubmitRecipeFirebaseService) bind SubmitRecipeService::class
+    factoryOf(::IncrementRecipeLikesFirebaseService) bind IncrementRecipeLikesService::class
 
     factory<FetchRecipeService> {
         FetchRecipeFirebaseService(

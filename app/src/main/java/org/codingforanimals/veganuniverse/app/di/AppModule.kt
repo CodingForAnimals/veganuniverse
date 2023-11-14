@@ -7,7 +7,7 @@ import org.codingforanimals.veganuniverse.core.location.di.locationModule
 import org.codingforanimals.veganuniverse.create.presentation.di.createContentPresentationModule
 import org.codingforanimals.veganuniverse.onboarding.presentation.di.onboardingModule
 import org.codingforanimals.veganuniverse.places.presentation.di.placesFeaturePresentationModule
-import org.codingforanimals.veganuniverse.profile.presentation.di.profilePresentationModule
+import org.codingforanimals.veganuniverse.profile.di.profileFeatureModule
 import org.codingforanimals.veganuniverse.recipes.presentation.recipesPresentationModule
 import org.codingforanimals.veganuniverse.registration.presentation.di.registrationModule
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -22,7 +22,7 @@ internal val appModule = module {
         placesFeaturePresentationModule,
         createContentPresentationModule,
         registrationModule,
-        profilePresentationModule,
+        profileFeatureModule,
         recipesPresentationModule,
     )
     viewModelOf(::MainViewModel)

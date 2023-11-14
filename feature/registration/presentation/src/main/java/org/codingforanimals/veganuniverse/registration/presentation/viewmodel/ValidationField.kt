@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.registration.presentation.viewmodel
 
 import android.util.Patterns
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.ValidationField
+import org.codingforanimals.veganuniverse.ui.viewmodel.ValidationField
 
 data class EmailField(
     val value: String = "",

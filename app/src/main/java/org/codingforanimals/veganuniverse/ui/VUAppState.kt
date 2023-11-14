@@ -12,7 +12,7 @@ import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.navigation.rememberVUNavController
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.NotificationsDestination
 import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
-import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
+import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
 import org.codingforanimals.veganuniverse.search.presentation.navigation.SearchDestination
 import org.codingforanimals.veganuniverse.settings.presentation.navigation.SettingsDestination
@@ -49,7 +49,7 @@ class VUAppState(
             PlacesDestination.Home.route -> TopLevelDestination.PLACES
             CreateDestination.Home.route -> TopLevelDestination.CREATE
             RecipesDestination.Home.route -> TopLevelDestination.RECIPES
-            ProfileDestination.route -> TopLevelDestination.PROFILE
+            ProfileDestination.Home.route -> TopLevelDestination.PROFILE
             else -> null
         }
 
@@ -61,7 +61,7 @@ class VUAppState(
             TopLevelDestination.PLACES -> navController.navigate(PlacesDestination.Home.route)
             TopLevelDestination.CREATE -> navController.navigate(CreateDestination.Home.route)
             TopLevelDestination.RECIPES -> navController.navigate(RecipesDestination.Home.route)
-            TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination.route)
+            TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination.Home.route)
         }
     }
 

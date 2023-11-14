@@ -25,17 +25,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.core.common.R.string.back
-import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
-import org.codingforanimals.veganuniverse.core.ui.components.VUTextField
-import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.core.ui.error.NoActionDialog
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_07
 import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.EmailSignInViewModel.Action
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.EmailSignInViewModel.UiState
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.viewmodel.EmailSignInScreenItem
+import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.Spacing_07
+import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
+import org.codingforanimals.veganuniverse.ui.components.VUTextField
+import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.ui.dialog.NoActionDialog
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

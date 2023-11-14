@@ -4,14 +4,14 @@ import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import kotlin.math.roundToInt
-import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceMarker
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.places.presentation.details.entity.PlaceReview
 import org.codingforanimals.veganuniverse.places.presentation.details.model.OpeningHours
 import org.codingforanimals.veganuniverse.places.presentation.entity.Place
-import org.codingforanimals.veganuniverse.places.ui.entity.PlaceCard
+import org.codingforanimals.veganuniverse.places.ui.PlaceCardItem
+import org.codingforanimals.veganuniverse.places.ui.PlaceMarker
+import org.codingforanimals.veganuniverse.places.ui.PlaceTag
+import org.codingforanimals.veganuniverse.places.ui.PlaceType
+import org.codingforanimals.veganuniverse.ui.calendar.DayOfWeek
 import org.codingforanimals.veganuniverse.places.entity.OpeningHours as OpeningHoursDomainEntity
 import org.codingforanimals.veganuniverse.places.entity.Place as PlaceDomainEntity
 import org.codingforanimals.veganuniverse.places.entity.PlaceCard as PlaceCardDomainEntity
@@ -19,10 +19,10 @@ import org.codingforanimals.veganuniverse.places.entity.PlaceReview as PlaceRevi
 
 private const val TAG = "EntityMapper"
 
-internal fun PlaceCardDomainEntity.toViewEntity(): PlaceCard? {
+internal fun PlaceCardDomainEntity.toViewEntity(): PlaceCardItem? {
     return try {
         val type = PlaceType.valueOf(type)
-        PlaceCard(
+        PlaceCardItem(
             geoHash = geoHash,
             name = name,
             rating = rating.roundToInt(),
@@ -53,6 +53,13 @@ private fun PlaceCardDomainEntity.getTags(): List<PlaceTag> {
     }
 }
 
+private fun getMarker(type: PlaceType) = when (type) {
+    PlaceType.RESTAURANT -> PlaceMarker.RestaurantMarker
+    PlaceType.CAFE -> PlaceMarker.CafeMarker
+    PlaceType.STORE -> PlaceMarker.StoreMarker
+    PlaceType.BAR -> PlaceMarker.StoreMarker
+}
+
 internal fun PlaceDomainEntity.toViewEntity(): Place? {
     return try {
         val type = PlaceType.valueOf(type)
@@ -74,13 +81,6 @@ internal fun PlaceDomainEntity.toViewEntity(): Place? {
         Log.e(TAG, e.stackTraceToString())
         null
     }
-}
-
-private fun getMarker(type: PlaceType) = when (type) {
-    PlaceType.RESTAURANT -> PlaceMarker.RestaurantMarker
-    PlaceType.CAFE -> PlaceMarker.CafeMarker
-    PlaceType.STORE -> PlaceMarker.StoreMarker
-    PlaceType.BAR -> PlaceMarker.StoreMarker
 }
 
 internal fun List<OpeningHoursDomainEntity>.toViewEntity(): List<OpeningHours> =

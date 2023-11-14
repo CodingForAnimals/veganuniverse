@@ -19,13 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
-import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChipDefaults
-import org.codingforanimals.veganuniverse.core.ui.components.VUImage
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.icons.VUImages
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel.Action
 import org.codingforanimals.veganuniverse.places.presentation.home.composables.FilterDialog
@@ -33,7 +26,14 @@ import org.codingforanimals.veganuniverse.places.presentation.home.composables.S
 import org.codingforanimals.veganuniverse.places.presentation.home.entity.PlaceCardViewEntity
 import org.codingforanimals.veganuniverse.places.presentation.home.state.FilterState
 import org.codingforanimals.veganuniverse.places.presentation.home.state.PlacesState
-import org.codingforanimals.veganuniverse.places.ui.compose.PlaceCard
+import org.codingforanimals.veganuniverse.places.ui.PlaceCard
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.components.VUAssistChip
+import org.codingforanimals.veganuniverse.ui.components.VUAssistChipDefaults
+import org.codingforanimals.veganuniverse.ui.components.VUImage
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.ui.icon.VUImages
 
 @Composable
 internal fun SuccessSheet(

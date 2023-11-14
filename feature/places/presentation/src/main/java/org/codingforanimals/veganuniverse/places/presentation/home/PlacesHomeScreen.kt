@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.core.ui.lifecycle.LifecycleObserver
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel.Action
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel.SideEffect
 import org.codingforanimals.veganuniverse.places.presentation.home.bottomsheet.ErrorSheet
@@ -40,6 +39,7 @@ import org.codingforanimals.veganuniverse.places.presentation.home.bottomsheet.L
 import org.codingforanimals.veganuniverse.places.presentation.home.bottomsheet.PlacesHomeScreenContent
 import org.codingforanimals.veganuniverse.places.presentation.home.bottomsheet.SuccessSheet
 import org.codingforanimals.veganuniverse.places.presentation.home.state.PlacesState
+import org.codingforanimals.veganuniverse.ui.lifecycle.LifecycleObserver
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

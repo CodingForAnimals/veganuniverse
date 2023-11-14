@@ -32,11 +32,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_02
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 @Composable
 internal fun SearchScreen(

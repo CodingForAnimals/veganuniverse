@@ -1,9 +1,9 @@
 package org.codingforanimals.veganuniverse.places.presentation.home.state
 
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceSorter
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeViewModel
+import org.codingforanimals.veganuniverse.places.ui.PlaceSorter
+import org.codingforanimals.veganuniverse.places.ui.PlaceTag
+import org.codingforanimals.veganuniverse.places.ui.PlaceType
 
 internal data class FilterState(
     val activePlaceType: PlaceType? = null,

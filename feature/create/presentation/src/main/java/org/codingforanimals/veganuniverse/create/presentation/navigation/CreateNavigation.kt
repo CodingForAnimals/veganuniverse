@@ -3,9 +3,9 @@ package org.codingforanimals.veganuniverse.create.presentation.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.create.presentation.CreateScreen
 import org.codingforanimals.veganuniverse.create.presentation.thankyou.ThankYouScreen
+import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 sealed class CreateDestination(route: String) : Destination(route) {
     data object Home : CreateDestination(route = "create_route")

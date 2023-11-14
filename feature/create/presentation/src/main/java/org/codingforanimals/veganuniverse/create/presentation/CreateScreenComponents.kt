@@ -16,8 +16,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_02
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_02
+import org.codingforanimals.veganuniverse.ui.Spacing_04
 
 @Composable
 internal fun BottomPageScroller(

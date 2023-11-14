@@ -24,11 +24,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.auth.model.SendVerificationEmailResult
 import org.codingforanimals.veganuniverse.auth.usecase.SendVerificationEmailUseCase
-import org.codingforanimals.veganuniverse.core.ui.place.DayOfWeek
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.PictureField
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.StringField
 import org.codingforanimals.veganuniverse.create.presentation.R
 import org.codingforanimals.veganuniverse.create.presentation.model.AddressField
 import org.codingforanimals.veganuniverse.create.presentation.model.LocationField
@@ -46,6 +41,11 @@ import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetC
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.GetPlaceDataUseCase
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.SubmitPlaceStatus
 import org.codingforanimals.veganuniverse.create.presentation.place.usecase.SubmitPlaceUseCase
+import org.codingforanimals.veganuniverse.places.ui.PlaceTag
+import org.codingforanimals.veganuniverse.places.ui.PlaceType
+import org.codingforanimals.veganuniverse.ui.calendar.DayOfWeek
+import org.codingforanimals.veganuniverse.ui.viewmodel.PictureField
+import org.codingforanimals.veganuniverse.ui.viewmodel.StringField
 import org.codingforanimals.veganuniverse.user.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.user.R.string.verification_email_too_many_requests
 

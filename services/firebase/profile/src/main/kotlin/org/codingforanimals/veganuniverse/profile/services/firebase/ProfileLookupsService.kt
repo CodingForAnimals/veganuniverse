@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.profile.services.firebase
 
-import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableContentType
-import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableType
+import org.codingforanimals.veganuniverse.profile.model.SaveableContentType
+import org.codingforanimals.veganuniverse.profile.model.SaveableType
 
 interface ProfileLookupsService {
     suspend fun isContentSavedByUser(

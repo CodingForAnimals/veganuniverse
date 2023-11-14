@@ -22,12 +22,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.veganuniverse.core.ui.components.VUCircularProgressIndicator
-import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.shared.ItemDetailHero
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
-import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.places.presentation.R
 import org.codingforanimals.veganuniverse.places.presentation.details.PlaceDetailsViewModel.Action
 import org.codingforanimals.veganuniverse.places.presentation.details.PlaceDetailsViewModel.AlertDialog
@@ -44,8 +38,14 @@ import org.codingforanimals.veganuniverse.places.presentation.details.composable
 import org.codingforanimals.veganuniverse.places.presentation.details.composables.Reviews
 import org.codingforanimals.veganuniverse.places.presentation.details.composables.StaticMap
 import org.codingforanimals.veganuniverse.places.presentation.details.model.PlaceDetailsScreenItem
-import org.codingforanimals.veganuniverse.shared.ui.ToggleIconState
-import org.codingforanimals.veganuniverse.shared.ui.ToggleableIcon
+import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
+import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
+import org.codingforanimals.veganuniverse.ui.icon.ToggleIconState
+import org.codingforanimals.veganuniverse.ui.icon.ToggleableIcon
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.ui.shared.ItemDetailHero
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

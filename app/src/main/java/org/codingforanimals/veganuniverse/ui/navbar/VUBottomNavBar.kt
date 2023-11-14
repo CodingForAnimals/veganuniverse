@@ -10,10 +10,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import org.codingforanimals.veganuniverse.core.ui.components.BottomNavBar
-import org.codingforanimals.veganuniverse.core.ui.components.BottomNavBarItem
-import org.codingforanimals.veganuniverse.core.ui.icons.Icon
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
+import org.codingforanimals.veganuniverse.ui.components.BottomNavBar
+import org.codingforanimals.veganuniverse.ui.components.BottomNavBarItem
+import org.codingforanimals.veganuniverse.ui.icon.Icon
 
 
 @Composable

@@ -6,9 +6,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.places.presentation.details.PlaceDetailsScreen
 import org.codingforanimals.veganuniverse.places.presentation.home.PlacesHomeScreen
+import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 sealed class PlacesDestination(route: String) : Destination(route) {
     data object Home : PlacesDestination("places_home")

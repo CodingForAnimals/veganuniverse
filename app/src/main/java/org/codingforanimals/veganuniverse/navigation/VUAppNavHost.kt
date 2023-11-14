@@ -15,7 +15,6 @@ import org.codingforanimals.post.presentation.navigation.navigateToPost
 import org.codingforanimals.post.presentation.navigation.postGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.communityGraph
-import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
 import org.codingforanimals.veganuniverse.create.presentation.navigation.createGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.featuredTopicGraph
@@ -23,14 +22,15 @@ import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigat
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
 import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.places.presentation.navigation.placesGraph
-import org.codingforanimals.veganuniverse.profile.presentation.navigation.ProfileDestination
-import org.codingforanimals.veganuniverse.profile.presentation.navigation.profileGraph
+import org.codingforanimals.veganuniverse.profile.ProfileDestination
+import org.codingforanimals.veganuniverse.profile.profileGraph
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.recipesGraph
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
 import org.codingforanimals.veganuniverse.search.presentation.navigation.searchGraph
 import org.codingforanimals.veganuniverse.settings.presentation.navigation.settingsGraph
+import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 @Composable
 internal fun rememberVUNavController(): NavHostController {
@@ -53,7 +53,7 @@ internal fun VUAppNavHost(
     ) {
         profileGraph(
             navigateToRegister = {
-                navController.navigate("${RegistrationDestination.Prompt.route}/${ProfileDestination.route}")
+                navController.navigate("${RegistrationDestination.Prompt.route}/${ProfileDestination.Home.route}")
             },
             navigateToRecipe = { navController.navigate("${RecipesDestination.Details.route}/$it") },
             navigateToPlace = { navController.navigate("${PlacesDestination.Details.route}/$it") },
@@ -124,7 +124,7 @@ class VUNavHostController(context: Context) : NavHostController(context) {
             PlacesDestination.Home.route,
             CreateDestination.Home.route,
             RecipesDestination.Home.route,
-            ProfileDestination.route,
+            ProfileDestination.Home.route,
             -> {
                 navigate(CommunityDestination.route) {
                     popUpTo(CommunityDestination.route) { inclusive = true }

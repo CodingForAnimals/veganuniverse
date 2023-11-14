@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
-import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.components.VUAssistChip
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 private fun Modifier.loadingPlaceholder() = composed {
     placeholder(

@@ -25,13 +25,6 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.components.VUTextField
-import org.codingforanimals.veganuniverse.core.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
-import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.create.presentation.R
 import org.codingforanimals.veganuniverse.create.presentation.composables.CreateContentHero
 import org.codingforanimals.veganuniverse.create.presentation.composables.HeroAnchorDefaults
@@ -40,6 +33,13 @@ import org.codingforanimals.veganuniverse.create.presentation.model.LocationFiel
 import org.codingforanimals.veganuniverse.create.presentation.model.TypeField
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.Action
 import org.codingforanimals.veganuniverse.create.presentation.place.CreatePlaceViewModel.UiState
+import org.codingforanimals.veganuniverse.ui.Spacing_03
+import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.ui.components.VUTextField
+import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 @Composable
 internal fun SearchMap(

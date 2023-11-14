@@ -3,9 +3,9 @@ package org.codingforanimals.veganuniverse.profile.services.firebase.impl
 import android.util.LruCache
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
+import org.codingforanimals.veganuniverse.profile.model.SaveableContentType
+import org.codingforanimals.veganuniverse.profile.model.SaveableType
 import org.codingforanimals.veganuniverse.profile.services.firebase.ProfileLookupsService
-import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableContentType
-import org.codingforanimals.veganuniverse.profile.services.firebase.model.SaveableType
 import org.codingforanimals.veganuniverse.services.firebase.DatabasePath
 
 internal class ProfileLookupsFirebaseService(

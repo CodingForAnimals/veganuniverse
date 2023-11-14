@@ -7,7 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.codingforanimals.post.presentation.PostScreen
-import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 object PostDestination : Destination(route = "post_route") {
     const val postIdArgument = "post_id_arg"

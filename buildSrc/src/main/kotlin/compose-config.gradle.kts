@@ -7,6 +7,7 @@ configure<BaseExtension> {
     }
     dependencies {
         add("implementation", project(Module.Core.UI))
+        add("implementation", project(Module.UI))
         val bom = platform("androidx.compose:compose-bom:${versions.composeBom}")
         add("implementation", bom)
         implementation(libs.compose)

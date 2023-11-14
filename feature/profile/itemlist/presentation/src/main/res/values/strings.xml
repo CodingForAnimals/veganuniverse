@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_item_list_bookmarked_places_title">Lugares guardados</string>
+    <string name="profile_item_list_bookmarked_recipes_title">Recetas guardadas</string>
+    <string name="profile_item_list_contributed_places_title">Lugares aportados</string>
+    <string name="profile_item_list_contributed_recipes_title">Recetas aportadas</string>
+</resources>

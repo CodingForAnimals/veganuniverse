@@ -19,12 +19,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.common.test_post_list
 import org.codingforanimals.veganuniverse.community.presentation.component.FeaturedTopicCard
-import org.codingforanimals.veganuniverse.core.ui.components.VUAssistChip
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.shared.Post
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
+import org.codingforanimals.veganuniverse.ui.Spacing_03
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.components.VUAssistChip
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.ui.shared.Post
 import org.codingforanimals.veganuniverse.core.common.R as commonR
 
 @Composable

@@ -1,11 +1,11 @@
 package org.codingforanimals.veganuniverse.places.presentation.entity
 
 import com.google.maps.android.compose.MarkerState
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceMarker
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
 import org.codingforanimals.veganuniverse.places.entity.AddressComponents
 import org.codingforanimals.veganuniverse.places.presentation.details.model.OpeningHours
+import org.codingforanimals.veganuniverse.places.ui.PlaceMarker
+import org.codingforanimals.veganuniverse.places.ui.PlaceTag
+import org.codingforanimals.veganuniverse.places.ui.PlaceType
 
 internal data class Place(
     val geoHash: String,

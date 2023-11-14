@@ -5,10 +5,10 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import org.codingforanimals.veganuniverse.common.utils.areNotBlank
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceMarker
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceType
-import org.codingforanimals.veganuniverse.core.ui.viewmodel.ValidationField
+import org.codingforanimals.veganuniverse.places.ui.PlaceMarker
+import org.codingforanimals.veganuniverse.places.ui.PlaceTag
+import org.codingforanimals.veganuniverse.places.ui.PlaceType
+import org.codingforanimals.veganuniverse.ui.viewmodel.ValidationField
 
 data class LocationField(
     val latLng: LatLng? = null,

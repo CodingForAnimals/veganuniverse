@@ -12,6 +12,7 @@ dependencies {
     implementation(project(Module.Services.Firebase.RECIPES))
     implementation(project(Module.Services.Firebase.PROFILE))
     implementation(project(Module.Storage.RECIPES))
+    implementation(project(Module.Profile.MODEL))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

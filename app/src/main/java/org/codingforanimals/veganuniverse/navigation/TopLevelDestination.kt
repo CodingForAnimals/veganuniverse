@@ -1,8 +1,8 @@
 package org.codingforanimals.veganuniverse.navigation
 
 import org.codingforanimals.veganuniverse.app.R
-import org.codingforanimals.veganuniverse.core.ui.icons.Icon
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
+import org.codingforanimals.veganuniverse.ui.icon.Icon
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 enum class TopLevelDestination(
     val unselectedIcon: Icon,

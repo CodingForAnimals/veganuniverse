@@ -2,8 +2,8 @@ package org.codingforanimals.veganuniverse.settings.presentation.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import org.codingforanimals.veganuniverse.core.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.settings.presentation.SettingsScreen
+import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 object SettingsDestination : Destination(route = "settings_route")
 

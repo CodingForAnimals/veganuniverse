@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.core.ui.model.Dialog
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.entity.RecipeView
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.model.RecipeToggleableItem
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.usecase.CollectUserRecipeToggleableStateUseCase
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.usecase.GetRecipeUseCase
 import org.codingforanimals.veganuniverse.recipes.presentation.recipe.usecase.UpdateRecipeToggleableStatusUseCase
-import org.codingforanimals.veganuniverse.shared.ui.ToggleIconState
+import org.codingforanimals.veganuniverse.ui.dialog.Dialog
+import org.codingforanimals.veganuniverse.ui.icon.ToggleIconState
 
 internal class RecipeDetailsViewModel(
     savedStateHandle: SavedStateHandle,

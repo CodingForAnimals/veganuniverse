@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.core.ui.icons.Icon
+import org.codingforanimals.veganuniverse.ui.icon.Icon
 
 @Composable
 internal fun CreateContentHero(

@@ -36,9 +36,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.core.ui.R.string.all_tags
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeViewModel.RelayAction
@@ -46,7 +43,9 @@ import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeV
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.RecipeCarousel
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.cardShapeAndShadow
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.RecipeTagContainer
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
+import org.codingforanimals.veganuniverse.ui.Spacing_03
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_06
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -124,17 +123,18 @@ private fun AllRecipeTags(
             horizontalArrangement = Arrangement.spacedBy(Spacing_04),
             verticalArrangement = Arrangement.spacedBy(Spacing_04),
         ) {
-            RecipeTag.values().forEachIndexed { index, recipeTag ->
-                key(index) {
-                    Card(
-                        modifier = Modifier
-                            .weight(1f)
-                            .aspectRatio(1f)
-                            .cardShapeAndShadow()
-                            .clickable {
-                                onAction(Action.OnRecipeTagCardClick(recipeTag))
-                            },
-                    ) {
+            org.codingforanimals.veganuniverse.recipes.ui.RecipeTag.values()
+                .forEachIndexed { index, recipeTag ->
+                    key(index) {
+                        Card(
+                            modifier = Modifier
+                                .weight(1f)
+                                .aspectRatio(1f)
+                                .cardShapeAndShadow()
+                                .clickable {
+                                    onAction(Action.OnRecipeTagCardClick(recipeTag))
+                                },
+                        ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {

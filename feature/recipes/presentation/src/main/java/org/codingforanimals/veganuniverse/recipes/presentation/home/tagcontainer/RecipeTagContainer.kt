@@ -20,26 +20,25 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.core.ui.R.string.show_more
-import org.codingforanimals.veganuniverse.core.ui.animation.ShimmerItem
-import org.codingforanimals.veganuniverse.core.ui.animation.shimmer
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
-import org.codingforanimals.veganuniverse.core.ui.theme.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
 import org.codingforanimals.veganuniverse.recipes.presentation.home.components.RecipesHomeItemHeader
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.RecipeTagContainerViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.RecipeTagContainerViewModel.SideEffect
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.usecase.GetContainerRecipesUseCase
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
-import org.codingforanimals.veganuniverse.shared.ui.grid.ContainerLayoutType
-import org.codingforanimals.veganuniverse.shared.ui.grid.StaggeredItemsGrid
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.ui.animation.ShimmerItem
+import org.codingforanimals.veganuniverse.ui.animation.shimmer
+import org.codingforanimals.veganuniverse.ui.grid.ContainerLayoutType
+import org.codingforanimals.veganuniverse.ui.grid.StaggeredItemsGrid
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun RecipeTagContainer(
     modifier: Modifier = Modifier,
-    tag: RecipeTag,
+    tag: org.codingforanimals.veganuniverse.recipes.ui.RecipeTag,
     layoutType: ContainerLayoutType,
     navigateToRecipe: (String) -> Unit,
     navigateToRecipeBrowsing: (RecipeBrowsingNavArgs) -> Unit,

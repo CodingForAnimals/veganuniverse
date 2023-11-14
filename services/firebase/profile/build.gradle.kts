@@ -9,6 +9,7 @@ android {
 
 dependencies {
     implementation(project(Module.Services.Firebase.BASE))
+    implementation(project(Module.Profile.MODEL))
     bomImplementation(
         Firebase.BOM,
         listOf(

@@ -28,7 +28,7 @@ internal class GetCarouselRecipesUseCase(
             try {
                 val prioritizeCacheForFirstLoad = recipes.isEmpty()
                 val result = if (prioritizeCacheForFirstLoad) {
-                    recipesRepository.getCachedRecipes(sorter.name)
+                    recipesRepository.getRecipeList(sorter.name)
                         ?: recipesRepository.fetchRecipes(params, sorter.name)
                 } else {
                     recipesRepository.fetchRecipes(params, sorter.name)

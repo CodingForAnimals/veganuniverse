@@ -29,17 +29,17 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberMarkerState
 import org.codingforanimals.veganuniverse.core.common.R.string.closed
-import org.codingforanimals.veganuniverse.core.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.core.ui.icons.VUIcons
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceMarker
-import org.codingforanimals.veganuniverse.core.ui.place.PlaceTag
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_03
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_04
-import org.codingforanimals.veganuniverse.core.ui.theme.Spacing_06
 import org.codingforanimals.veganuniverse.places.entity.AddressComponents
 import org.codingforanimals.veganuniverse.places.entity.utils.fullStreetAddress
 import org.codingforanimals.veganuniverse.places.presentation.details.model.OpeningHours
 import org.codingforanimals.veganuniverse.places.presentation.utils.mapStyleJson
+import org.codingforanimals.veganuniverse.places.ui.PlaceMarker
+import org.codingforanimals.veganuniverse.places.ui.PlaceTag
+import org.codingforanimals.veganuniverse.ui.Spacing_03
+import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 @Composable
 internal fun AddressAndOpeningHours(
