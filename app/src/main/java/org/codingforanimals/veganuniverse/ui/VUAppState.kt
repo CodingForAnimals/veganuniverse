@@ -7,7 +7,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
-import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
+import org.codingforanimals.veganuniverse.create.graph.CreateDestination
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.navigation.rememberVUNavController
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.NotificationsDestination

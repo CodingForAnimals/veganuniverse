@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="create_recipe_title">¡Comparte tu receta favorita!</string>
+    <string name="create_recipe_description_placeholder">Descripción de la receta.\nQué la hace especial?\nCon qué se acompaña?</string>
+    <string name="create_recipe_servings_placeholder">Ej. 4 porciones o 500g</string>
+    <string name="create_recipe_ingredient_placeholder">Ej. 250g de lentejas hervidas</string>
+    <string name="create_recipe_steps_placeholder">Ej. Hervir las lentejas</string>
+    <string name="create_recipe_add_ingredient">Agregar ingrediente</string>
+    <string name="create_recipe_delete_ingredient">Eliminar ingrediente</string>
+    <string name="create_recipe_add_next_step">Agregar paso siguiente</string>
+    <string name="create_recipe_add_step">Agregar paso</string>
+    <string name="create_recipe_remove_step">Eliminar este paso</string>
+    <string name="create_recipe">Aportar receta</string>
+</resources>

@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.community.presentation.component
+package org.codingforanimals.veganuniverse.community.presentation.components
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image

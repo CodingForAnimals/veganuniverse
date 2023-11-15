@@ -15,8 +15,8 @@ import org.codingforanimals.post.presentation.navigation.navigateToPost
 import org.codingforanimals.post.presentation.navigation.postGraph
 import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.community.presentation.navigation.communityGraph
-import org.codingforanimals.veganuniverse.create.presentation.navigation.CreateDestination
-import org.codingforanimals.veganuniverse.create.presentation.navigation.createGraph
+import org.codingforanimals.veganuniverse.create.graph.CreateDestination
+import org.codingforanimals.veganuniverse.create.graph.createGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.featuredTopicGraph
 import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigateToFeaturedTopic
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
@@ -89,26 +89,26 @@ internal fun VUAppNavHost(
             navController = navController,
             snackbarHostState = snackbarHostState,
             navigateToAuthenticateScreen = {
-                navController.navigateToRegistrationPromptWithOriginDestination(PlacesDestination.Details)
+                navController.navigateToAuthPromptWithOriginDestination(PlacesDestination.Details)
             }
         )
         createGraph(
             navController = navController,
-            navigateToPlaceDetails = { navController.navigate(PlacesDestination.Details.route) },
-            navigateToAuthenticateScreen = {
-                navController.navigateToRegistrationPromptWithOriginDestination(CreateDestination.Home)
+            navigateToPlaceDetailsScreen = { navController.navigate("${PlacesDestination.Details.route}/$it") },
+            navigateToAuthenticationScreen = {
+                navController.navigateToAuthPromptWithOriginDestination(it)
             }
         )
         recipesGraph(
             navController = navController,
             navigateToAuthenticateScreen = {
-                navController.navigateToRegistrationPromptWithOriginDestination(RecipesDestination.Details)
+                navController.navigateToAuthPromptWithOriginDestination(RecipesDestination.Details)
             }
         )
     }
 }
 
-private fun NavController.navigateToRegistrationPromptWithOriginDestination(originDestination: Destination) {
+private fun NavController.navigateToAuthPromptWithOriginDestination(originDestination: Destination) {
     navigate("${RegistrationDestination.Prompt.route}/${originDestination.route}")
 }
 

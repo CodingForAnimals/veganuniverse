@@ -59,4 +59,6 @@
     <string name="sort_by">Ordenar por</string>
     <string name="show_more">Mostrar más</string>
     <string name="all_tags">Todas las etiquetas</string>
+
+    <string name="success">¡Éxito!</string>
 </resources>

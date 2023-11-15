@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.community.presentation.component
+package org.codingforanimals.veganuniverse.community.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

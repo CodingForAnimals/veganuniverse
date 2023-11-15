@@ -50,8 +50,13 @@ include(":feature:onboarding:model")
 
 include(":feature:notifications:presentation")
 
-include(":feature:create:presentation")
-include(":feature:create:domain")
+include(":feature:create:graph")
+include(":feature:create:home:presentation")
+include(":feature:create:place:domain")
+include(":feature:create:place:presentation")
+include(":feature:create:recipe:domain")
+include(":feature:create:recipe:presentation")
+include(":feature:create:thank_you:presentation")
 
 include(":feature:search:presentation")
 
@@ -74,4 +79,5 @@ include(":services:firebase:profile")
 include(":shared:ui")
 include(":ui:places")
 include("ui:recipes")
+include("ui:create")
 include("model:profile")

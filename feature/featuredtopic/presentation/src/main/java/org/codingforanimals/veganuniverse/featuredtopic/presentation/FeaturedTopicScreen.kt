@@ -18,7 +18,6 @@ import org.codingforanimals.veganuniverse.core.common.R.drawable.featured_topic_
 import org.codingforanimals.veganuniverse.ui.Spacing_04
 import org.codingforanimals.veganuniverse.ui.Spacing_06
 import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.ui.shared.Post
 
 @Composable
 internal fun FeaturedTopicScreen(
@@ -43,11 +42,11 @@ internal fun FeaturedTopicScreen(
             items(
                 items = posts,
                 itemContent = { post ->
-                    Post(
-                        title = post.title,
-                        subtitle = post.subtitle,
-                        description = post.description,
-                    )
+//                    Post(
+//                        title = post.title,
+//                        subtitle = post.subtitle,
+//                        description = post.description,
+//                    )
                 }
             )
         }

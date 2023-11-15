@@ -63,6 +63,11 @@ object Module {
         const val DOMAIN = ":feature:places:domain"
         const val PRESENTATION = ":feature:places:presentation"
         const val UI = ":ui:places"
+        const val ENTITY = ":entity:places"
+
+        object Services {
+            const val FIREBASE = ":services:firebase:places"
+        }
     }
 
     object Profile {
@@ -78,11 +83,29 @@ object Module {
             const val DOMAIN = ":feature:profile:itemlist:domain"
             const val PRESENTATION = ":feature:profile:itemlist:presentation"
         }
+
+        object Services {
+            const val FIREBASE = ":services:firebase:profile"
+        }
     }
 
     object Create {
-        const val DOMAIN = ":feature:create:domain"
-        const val PRESENTATION = ":feature:create:presentation"
+        const val UI = ":ui:create"
+        const val GRAPH = ":feature:create:graph"
+        object Home {
+            const val PRESENTATION = ":feature:create:home:presentation"
+        }
+        object Place {
+            const val DOMAIN = ":feature:create:place:domain"
+            const val PRESENTATION = ":feature:create:place:presentation"
+        }
+        object Recipe {
+            const val DOMAIN = ":feature:create:recipe:domain"
+            const val PRESENTATION = ":feature:create:recipe:presentation"
+        }
+        object ThankYou {
+            const val PRESENTATION = ":feature:create:thank_you:presentation"
+        }
     }
 
     object Recipes {
