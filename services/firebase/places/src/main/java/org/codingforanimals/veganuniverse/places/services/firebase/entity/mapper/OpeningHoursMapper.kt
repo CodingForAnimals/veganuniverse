@@ -15,7 +15,7 @@ internal class OpeningHoursMapper(
             OpeningHoursDomainEntity(
                 dayOfWeek = dayOfWeek,
                 mainPeriod = mainPeriod?.let { periodMapper.mapHigher(it) },
-                secondaryPeriod = secondaryPeriod?.let { periodMapper.mapHigher(it) }
+                secondaryPeriod = secondaryPeriod?.let { periodMapper.mapHigher(it) },
             )
         }
     }
@@ -24,7 +24,8 @@ internal class OpeningHoursMapper(
         return with(obj) {
             OpeningHours(
                 dayOfWeek = dayOfWeek,
-                mainPeriod = mainPeriod?.let { periodMapper.mapLower(it) }
+                mainPeriod = mainPeriod?.let { periodMapper.mapLower(it) },
+                secondaryPeriod = secondaryPeriod?.let { periodMapper.mapLower(it) },
             )
         }
     }

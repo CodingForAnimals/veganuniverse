@@ -11,6 +11,7 @@ internal class PeriodMapper : EntityMapper<Period, PeriodDomainEntity> {
             PeriodDomainEntity(
                 openingHour = openingHour,
                 openingMinute = openingMinute,
+                closingHour = closingHour,
                 closingMinute = closingMinute
             )
         }
