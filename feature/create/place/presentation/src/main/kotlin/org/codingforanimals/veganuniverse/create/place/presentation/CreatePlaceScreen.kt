@@ -69,7 +69,7 @@ import org.codingforanimals.veganuniverse.ui.components.VUNormalTextField
 import org.codingforanimals.veganuniverse.ui.components.VUTextField
 import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.utils.rememberImageCropperLauncherForActivityResult
+import org.codingforanimals.veganuniverse.ui.utils.rememberImageCropperLauncherForActivityResult
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

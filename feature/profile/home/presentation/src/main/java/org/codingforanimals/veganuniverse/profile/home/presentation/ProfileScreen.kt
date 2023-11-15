@@ -55,7 +55,7 @@ import org.codingforanimals.veganuniverse.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.ui.dialog.ActionDialog
 import org.codingforanimals.veganuniverse.ui.dialog.NoActionDialog
 import org.codingforanimals.veganuniverse.ui.icon.VUIcons
-import org.codingforanimals.veganuniverse.utils.rememberImageCropperLauncherForActivityResult
+import org.codingforanimals.veganuniverse.ui.utils.rememberImageCropperLauncherForActivityResult
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

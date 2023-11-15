@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.utils
+package org.codingforanimals.veganuniverse.ui.utils
 
 import android.net.Uri
 import android.util.Log
