@@ -61,6 +61,8 @@ class GetProfileItemsUseCase(
                 SaveableContentType.PLACE -> fetchPlaceService.byIds(ids).mapNotNull {
                     it.toPlaceCardItem()
                 }
+
+                SaveableContentType.PRODUCT -> TODO()
             }
             Result.Success(
                 items = items,

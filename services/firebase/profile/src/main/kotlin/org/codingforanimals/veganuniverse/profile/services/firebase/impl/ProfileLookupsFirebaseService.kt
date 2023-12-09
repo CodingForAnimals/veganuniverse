@@ -100,6 +100,7 @@ internal class ProfileLookupsFirebaseService(
                 when (contentType) {
                     SaveableContentType.RECIPE -> DatabasePath.Profile.Likes.RECIPES
                     SaveableContentType.PLACE -> DatabasePath.Profile.Likes.PLACES
+                    else -> ""
                 }
             }
 
@@ -107,12 +108,14 @@ internal class ProfileLookupsFirebaseService(
                 when (contentType) {
                     SaveableContentType.RECIPE -> DatabasePath.Profile.Bookmarks.RECIPES
                     SaveableContentType.PLACE -> DatabasePath.Profile.Bookmarks.PLACES
+                    SaveableContentType.PRODUCT -> DatabasePath.Profile.Bookmarks.PRODUCT
                 }
 
             SaveableType.CONTRIBUTION ->
                 when (contentType) {
                     SaveableContentType.RECIPE -> DatabasePath.Profile.Contributions.RECIPES
                     SaveableContentType.PLACE -> DatabasePath.Profile.Contributions.PLACES
+                    SaveableContentType.PRODUCT -> DatabasePath.Profile.Contributions.PRODUCT
                 }
         }
     }

@@ -10,11 +10,11 @@ enum class TopLevelDestination(
     val iconTextId: Int,
     val titleRes: Int
 ) {
-    COMMUNITY(
-        unselectedIcon = VUIcons.Community,
-        selectedIcon = VUIcons.CommunityFilled,
-        iconTextId = R.string.nav_label_community,
-        titleRes = R.string.nav_label_community,
+    PRODUCTS(
+        unselectedIcon = VUIcons.Leaf,
+        selectedIcon = VUIcons.Leaf,
+        iconTextId = R.string.nav_label_is_vegan,
+        titleRes = R.string.nav_label_is_vegan,
     ),
     PLACES(
         unselectedIcon = VUIcons.Location,

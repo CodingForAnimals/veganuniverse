@@ -2,6 +2,8 @@
 <resources>
     <string name="profile_item_list_bookmarked_places_title">Lugares guardados</string>
     <string name="profile_item_list_bookmarked_recipes_title">Recetas guardadas</string>
+    <string name="profile_item_list_bookmarked_products_title">Productos guardadas</string>
     <string name="profile_item_list_contributed_places_title">Lugares aportados</string>
     <string name="profile_item_list_contributed_recipes_title">Recetas aportadas</string>
+    <string name="profile_item_list_contributed_products_title">Productos aportadas</string>
 </resources>

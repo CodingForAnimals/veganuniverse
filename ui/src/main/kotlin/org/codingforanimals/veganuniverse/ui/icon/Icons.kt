@@ -10,7 +10,7 @@ import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.ui.graphics.vector.ImageVector
-import org.codingforanimals.veganuniverse.core.ui.R
+import org.codingforanimals.veganuniverse.ui.R
 import org.codingforanimals.veganuniverse.ui.icon.Icon.DrawableResourceIcon
 import org.codingforanimals.veganuniverse.ui.icon.Icon.ImageVectorIcon
 
@@ -94,6 +94,11 @@ object VUIcons {
     // Registration icons
     val Email = DrawableResourceIcon(R.drawable.ic_email)
     val Lock = DrawableResourceIcon(R.drawable.ic_lock)
+
+    // Product icons
+    val ProductConfirmedVegan = DrawableResourceIcon(R.drawable.ic_product_confirmed_vegan)
+    val ProductNotVegan = DrawableResourceIcon(R.drawable.ic_product_not_vegan)
+    val ProductDoubtfulVegan = DrawableResourceIcon(R.drawable.ic_product_doubtful_vegan)
 }
 
 sealed class Icon {

@@ -29,7 +29,7 @@ internal fun VUTopAppBar(
         VUMediumTopAppBar(
             modifier = modifier,
             title = topLevelDestination?.titleRes?.let { stringResource(it) } ?: "",
-            onBackClick = if (topLevelDestination == TopLevelDestination.COMMUNITY) null else onBackClick,
+            onBackClick = if (topLevelDestination == TopLevelDestination.PRODUCTS) null else onBackClick,
             actions = {
                 actions.forEach { action ->
                     IconButton(onClick = { onActionClick(action) }) {
