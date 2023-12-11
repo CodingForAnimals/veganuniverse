@@ -19,7 +19,6 @@ dependencies {
     implementation(project(Module.Entity.PLACES))
     implementation(project(Module.Places.DOMAIN))
     implementation(project(Module.Places.UI))
-    implementation(project(Module.Shared.UI))
     implementation(Google.MAPS)
 
 

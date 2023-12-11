@@ -16,7 +16,6 @@ dependencies {
     implementation(project(Module.Profile.Home.DOMAIN))
     implementation(project(Module.Entity.PLACES))
     implementation(project(Module.Entity.RECIPES))
-    implementation(project(Module.Shared.UI))
     implementation(project(Module.Profile.Home.PRESENTATION))
     implementation(project(Module.Profile.ItemList.PRESENTATION))
 

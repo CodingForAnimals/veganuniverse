@@ -58,10 +58,7 @@ class VUAppState(
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
         when (destination) {
             TopLevelDestination.PRODUCTS -> navigateBackHomeToProducts()
-            TopLevelDestination.PLACES -> navController.navigate(PlacesDestination.Home.route)
-            TopLevelDestination.CREATE -> navController.navigate(CreateDestination.Home.route)
-            TopLevelDestination.RECIPES -> navController.navigate(RecipesDestination.Home.route)
-            TopLevelDestination.PROFILE -> navController.navigate(ProfileDestination.Home.route)
+            else -> navController.navigate(destination.route)
         }
     }
 

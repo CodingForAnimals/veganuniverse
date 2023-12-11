@@ -8,7 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Entity.PRODUCT))
+    implementation(project(Module.Product.ENTITY))
     implementation(project(Module.Entity.BASE))
     implementation(project(Module.Services.Firebase.BASE))
     implementation(project(Module.Storage.FIRESTORE))

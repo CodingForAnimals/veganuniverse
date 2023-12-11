@@ -23,10 +23,6 @@ object versions {
 object Module {
     const val UI = ":ui"
 
-    object Shared {
-        const val UI = ":shared:ui"
-    }
-
     object Storage {
         const val FIRESTORE = ":storage:firestore"
         const val RECIPES = ":storage:recipes"
@@ -44,7 +40,6 @@ object Module {
         const val BASE = ":entity"
         const val PLACES = ":entity:places"
         const val RECIPES = ":entity:recipes"
-        const val PRODUCT = ":entity:product"
     }
 
     object Services {
@@ -73,8 +68,9 @@ object Module {
     }
 
     object Product {
+        const val STORAGE = ":storage:product"
         const val GRAPH = ":feature:product:graph"
-
+        const val ENTITY = ":entity:product"
         object Categories {
             const val DOMAIN = ":feature:product:categories:domain"
             const val PRESENTATION = ":feature:product:categories:presentation"

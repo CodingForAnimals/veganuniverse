@@ -11,7 +11,7 @@ android {
 
 dependencies {
     implementation(project(Module.Create.Product.DOMAIN))
-    implementation(project(Module.Entity.PRODUCT))
+    implementation(project(Module.Product.ENTITY))
     implementation(project(Module.Core.COMMON))
     implementation(project(Module.Core.AUTH))
     implementation(project(Module.UI))

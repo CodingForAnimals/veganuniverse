@@ -17,7 +17,6 @@ dependencies {
     implementation(project(Module.Profile.MODEL))
     implementation(project(Module.Entity.PLACES))
     implementation(project(Module.Entity.RECIPES))
-    implementation(project(Module.Shared.UI))
     implementation(project(Module.Places.UI))
     implementation(project(Module.UI))
 
