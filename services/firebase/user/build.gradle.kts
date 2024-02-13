@@ -15,7 +15,7 @@ dependencies {
 
     bomImplementation(
         Firebase.BOM,
-        listOf(Firebase.AUTH, Firebase.STORAGE, Firebase.REALTIME_DATABASE)
+        listOf(Firebase.AUTH, Firebase.STORAGE, Firebase.REALTIME_DATABASE, Firebase.FIRESTORE)
     )
     implementation(Google.AUTH)
     testImplementation("junit:junit:4.13.2")

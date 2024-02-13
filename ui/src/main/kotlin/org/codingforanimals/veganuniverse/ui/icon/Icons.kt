@@ -12,6 +12,7 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.codingforanimals.veganuniverse.ui.R
 import org.codingforanimals.veganuniverse.ui.icon.Icon.DrawableResourceIcon
+import org.codingforanimals.veganuniverse.ui.icon.Icon.ImageDrawableResourceIcon
 import org.codingforanimals.veganuniverse.ui.icon.Icon.ImageVectorIcon
 
 object VUIcons {
@@ -96,18 +97,20 @@ object VUIcons {
     val Lock = DrawableResourceIcon(R.drawable.ic_lock)
 
     // Product icons
-    val ProductConfirmedVegan = DrawableResourceIcon(R.drawable.ic_product_confirmed_vegan)
-    val ProductNotVegan = DrawableResourceIcon(R.drawable.ic_product_not_vegan)
-    val ProductDoubtfulVegan = DrawableResourceIcon(R.drawable.ic_product_doubtful_vegan)
+    val ProductConfirmedVegan = ImageDrawableResourceIcon(R.drawable.ic_product_isvegan_confirmed)
+    val ProductNotVegan = ImageDrawableResourceIcon(R.drawable.ic_product_isvegan_not)
+    val ProductDoubtfulVegan = ImageDrawableResourceIcon(R.drawable.ic_product_isvegan_doubtful)
 }
 
 sealed class Icon {
     data class ImageVectorIcon(val imageVector: ImageVector) : Icon()
     data class DrawableResourceIcon(@DrawableRes val id: Int) : Icon()
+    data class ImageDrawableResourceIcon(@DrawableRes val id: Int) : Icon()
 
     val model: Any
         get() = when (this) {
             is DrawableResourceIcon -> id
             is ImageVectorIcon -> imageVector
+            is ImageDrawableResourceIcon -> id
         }
 }

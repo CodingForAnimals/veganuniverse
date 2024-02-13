@@ -1,5 +1,7 @@
 package org.codingforanimals.veganuniverse.user.services.firebase.model
 
+import org.codingforanimals.veganuniverse.user.services.firebase.entity.UserFirebaseEntity
+
 sealed class EmailLoginResponse {
     data class Success(val userFirebaseEntity: UserFirebaseEntity) : EmailLoginResponse()
     sealed class Exception : EmailLoginResponse() {

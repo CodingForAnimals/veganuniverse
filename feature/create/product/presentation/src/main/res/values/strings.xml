@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="create_product_top_app_bar_title">Aportar producto</string>
     <string name="create_product_title">Agrega un producto a la lista</string>
     <string name="product_name">Nombre del producto</string>
     <string name="product_brand">Marca del producto</string>
     <string name="product_comments">Aclaraciones (opcional)</string>
     <string name="product_type">Tipo de producto</string>
     <string name="product_category">Selecciona una categoría</string>
+    <string name="product_already_exists">Ya existe un producto con ese nombre</string>
 </resources>

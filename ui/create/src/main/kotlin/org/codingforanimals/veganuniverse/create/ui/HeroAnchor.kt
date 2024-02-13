@@ -23,7 +23,7 @@ import org.codingforanimals.veganuniverse.ui.icon.Icon
 @Composable
 fun HeroAnchor(
     modifier: Modifier = Modifier,
-    icon: Icon,
+    icon: Icon?,
     colors: HeroAnchorColors = HeroAnchorDefaults.secondaryColors(),
 ) {
     Box(
@@ -56,12 +56,14 @@ fun HeroAnchor(
                         )
                     },
                 )
-                VUIcon(
-                    modifier = Modifier.align(Alignment.Center),
-                    icon = icon,
-                    contentDescription = "",
-                    tint = colors.icon,
-                )
+                icon?.let {
+                    VUIcon(
+                        modifier = Modifier.align(Alignment.Center),
+                        icon = it,
+                        contentDescription = "",
+                        tint = colors.icon,
+                    )
+                }
             }
         }
     }

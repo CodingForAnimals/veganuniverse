@@ -9,5 +9,7 @@ android {
 }
 
 dependencies {
+    implementation(AndroidX.paging)
+    implementation(project(Module.Product.List.DATA))
     implementation(project(Module.Core.AUTH))
 }

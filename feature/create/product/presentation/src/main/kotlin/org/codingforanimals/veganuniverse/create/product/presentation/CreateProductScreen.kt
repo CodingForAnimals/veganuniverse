@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -58,38 +60,60 @@ import org.codingforanimals.veganuniverse.product.ui.ProductType
 import org.codingforanimals.veganuniverse.ui.Spacing_03
 import org.codingforanimals.veganuniverse.ui.Spacing_04
 import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.Spacing_07
 import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.ui.components.VUNormalTextField
 import org.codingforanimals.veganuniverse.ui.components.VURadioButton
+import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
+import org.codingforanimals.veganuniverse.ui.dialog.NoActionDialog
 import org.codingforanimals.veganuniverse.ui.utils.rememberImageCropperLauncherForActivityResult
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CreateProductScreen(
+    navigateUp: () -> Unit,
     navigateToThankYouScreen: () -> Unit,
     navigateToAuthenticationScreen: () -> Unit,
     viewModel: CreateProductViewModel = koinViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val imagePicker = rememberImageCropperLauncherForActivityResult(
         onCropSuccess = { viewModel.onAction(Action.ImagePicker.Success(it)) },
     )
 
-    CreateProductScreen(
-        uiState = viewModel.uiState,
-        onAction = viewModel::onAction,
-    )
-
-    VUCircularProgressIndicator(visible = viewModel.uiState.loading)
-
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,
+        navigateUp = navigateUp,
         imagePicker = imagePicker,
         navigateToThankYouScreen = navigateToThankYouScreen,
         navigateToAuthenticationScreen = navigateToAuthenticationScreen,
     )
+
+    Column {
+        VUTopAppBar(
+            title = stringResource(R.string.create_product_top_app_bar_title),
+            onBackClick = { viewModel.onAction(Action.OnBackClick) }
+        )
+
+
+        CreateProductScreen(
+            uiState = uiState,
+            onAction = viewModel::onAction,
+        )
+    }
+
+    VUCircularProgressIndicator(visible = uiState.loading)
+
+    uiState.dialog?.let { dialog ->
+        NoActionDialog(
+            title = dialog.title,
+            message = dialog.message,
+            buttonText = dialog.back,
+            onDismissRequest = { viewModel.onAction(Action.DismissDialog) }
+        )
+    }
 }
 
 @Composable
@@ -100,7 +124,7 @@ private fun CreateProductScreen(
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Spacing_06),
-        contentPadding = PaddingValues(vertical = Spacing_07),
+        contentPadding = PaddingValues(bottom = Spacing_06)
     ) {
         item {
             val heroAnchorColors = when {
@@ -302,6 +326,7 @@ private fun CreateProductScreen(
 @Composable
 fun HandleSideEffects(
     sideEffects: Flow<SideEffect>,
+    navigateUp: () -> Unit,
     imagePicker: ActivityResultLauncher<PickVisualMediaRequest>,
     navigateToThankYouScreen: () -> Unit,
     navigateToAuthenticationScreen: () -> Unit,
@@ -309,6 +334,7 @@ fun HandleSideEffects(
     LaunchedEffect(Unit) {
         sideEffects.onEach { sideEffect ->
             when (sideEffect) {
+                SideEffect.NavigateUp -> navigateUp()
                 SideEffect.OpenImageSelector -> {
                     imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }

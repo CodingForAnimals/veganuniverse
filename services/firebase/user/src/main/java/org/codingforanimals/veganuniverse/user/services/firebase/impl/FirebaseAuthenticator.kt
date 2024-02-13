@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -27,15 +28,18 @@ import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailLogi
 import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailRegistrationResponse
 import org.codingforanimals.veganuniverse.user.services.firebase.model.ProviderAuthenticationResponse
 import org.codingforanimals.veganuniverse.user.services.firebase.model.SendVerificationEmailResult
-import org.codingforanimals.veganuniverse.user.services.firebase.model.UserFirebaseEntity
+import org.codingforanimals.veganuniverse.user.services.firebase.entity.UserFirebaseEntity
 
 private const val TAG = "FirebaseAuthenticator"
 
 class FirebaseAuthenticator(
+    firestore: FirebaseFirestore,
     googleSignInWrapper: GoogleSignInWrapper,
     private val firebaseAuth: FirebaseAuth,
     private val firebaseUserEntityMapper: OneWayEntityMapper<FirebaseUser, UserFirebaseEntity>,
 ) : Authenticator {
+
+    private val usersCollection = firestore.collection("users")
 
     private val googleSignInClient = googleSignInWrapper.client
     override val googleSignInIntent = googleSignInClient.signInIntent
@@ -88,17 +92,19 @@ class FirebaseAuthenticator(
     ): EmailRegistrationResponse {
         return try {
             val res = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-            val user = res.user!!
-            val updateName = user.updateProfile(
+            val firebaseUser = res.user!!
+            val updateName = firebaseUser.updateProfile(
                 UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
                     .build()
             ).asDeferred()
-            val sendEmailVerification = user.sendEmailVerification().asDeferred()
+            val sendEmailVerification = firebaseUser.sendEmailVerification().asDeferred()
+            val userEntity = firebaseUserEntityMapper.map(firebaseUser)
+            val userDocumentDeferred = usersCollection.document().set(userEntity).asDeferred()
 
-            awaitAll(updateName, sendEmailVerification)
+            awaitAll(updateName, sendEmailVerification, userDocumentDeferred)
 
-            EmailRegistrationResponse.Success(firebaseUserEntityMapper.map(res.user!!))
+            EmailRegistrationResponse.Success(userEntity)
         } catch (e: FirebaseException) {
             Log.e(TAG, e.stackTraceToString())
             when (e) {
@@ -117,7 +123,11 @@ class FirebaseAuthenticator(
                 .getResult(ApiException::class.java)
             val credentials = GoogleAuthProvider.getCredential(account.idToken, null)
             val result = firebaseAuth.signInWithCredential(credentials).await()
-            ProviderAuthenticationResponse.Success(firebaseUserEntityMapper.map(result.user!!))
+            val userEntity = firebaseUserEntityMapper.map(result.user!!)
+            if (result.additionalUserInfo?.isNewUser == true) {
+                usersCollection.document().set(userEntity).await()
+            }
+            ProviderAuthenticationResponse.Success(userEntity)
         } catch (e: FirebaseException) {
             Log.e(TAG, e.stackTraceToString())
             when (e) {

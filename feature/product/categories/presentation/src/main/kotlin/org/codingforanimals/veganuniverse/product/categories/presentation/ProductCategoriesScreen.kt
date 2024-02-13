@@ -5,6 +5,7 @@ package org.codingforanimals.veganuniverse.product.categories.presentation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,7 @@ import org.codingforanimals.veganuniverse.product.categories.presentation.Produc
 import org.codingforanimals.veganuniverse.product.categories.presentation.ProductCategoriesViewModel.SideEffect
 import org.codingforanimals.veganuniverse.product.categories.presentation.ProductCategoriesViewModel.UiState
 import org.codingforanimals.veganuniverse.ui.Spacing_03
+import org.codingforanimals.veganuniverse.ui.Spacing_04
 import org.codingforanimals.veganuniverse.ui.Spacing_06
 import org.koin.androidx.compose.koinViewModel
 
@@ -59,7 +61,9 @@ private fun ProductCategoriesScreen(
     uiState: UiState,
     onAction: (Action) -> Unit,
 ) {
-    LazyColumn {
+    LazyColumn(
+        contentPadding = PaddingValues(Spacing_04)
+    ) {
         item {
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),

@@ -1,5 +1,7 @@
 package org.codingforanimals.veganuniverse.user.services.firebase.model
 
+import org.codingforanimals.veganuniverse.user.services.firebase.entity.UserFirebaseEntity
+
 sealed class ProviderAuthenticationResponse {
     data class Success(val userFirebaseEntity: UserFirebaseEntity) :
         ProviderAuthenticationResponse()

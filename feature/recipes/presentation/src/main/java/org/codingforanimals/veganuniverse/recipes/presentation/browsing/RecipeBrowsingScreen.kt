@@ -193,71 +193,81 @@ private fun RecipeBrowsingScreen(
             onDismissRequest = { onAction(Action.DismissFiltersSheet) }) {
             var currentTag by rememberSaveable { mutableStateOf(uiState.filterTag) }
             var currentSorter by rememberSaveable { mutableStateOf(uiState.sorter) }
-            Column(
+            LazyColumn(
                 modifier = Modifier.padding(Spacing_06),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(Spacing_04),
             ) {
-                Text(
-                    text = stringResource(R.string.filter_by),
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalArrangement = Arrangement.spacedBy(Spacing_02),
-                ) {
-                    org.codingforanimals.veganuniverse.recipes.ui.RecipeTag.values().forEach {
-                        key(it.name.hashCode()) {
-                            SelectableChip(
-                                label = stringResource(it.label),
-                                icon = it.icon,
-                                selected = currentTag == it,
-                                onClick = { currentTag = if (currentTag == it) null else it },
-                            )
+                item {
+                    Text(
+                        text = stringResource(R.string.filter_by),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalArrangement = Arrangement.spacedBy(Spacing_02),
+                    ) {
+                        org.codingforanimals.veganuniverse.recipes.ui.RecipeTag.values().forEach {
+                            key(it.name.hashCode()) {
+                                SelectableChip(
+                                    label = stringResource(it.label),
+                                    icon = it.icon,
+                                    selected = currentTag == it,
+                                    onClick = { currentTag = if (currentTag == it) null else it },
+                                )
+                            }
                         }
                     }
-                }
-                Text(
-                    text = stringResource(R.string.sort_by),
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalArrangement = Arrangement.spacedBy(Spacing_02),
-                ) {
-                    org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter.values().forEach {
-                        key(it.name.hashCode()) {
-                            SelectableChip(
-                                label = stringResource(it.label),
-                                icon = it.icon,
-                                selected = currentSorter == it,
-                                onClick = { currentSorter = it },
-                            )
+                    Text(
+                        text = stringResource(R.string.sort_by),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalArrangement = Arrangement.spacedBy(Spacing_02),
+                    ) {
+                        org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter.values()
+                            .forEach {
+                                key(it.name.hashCode()) {
+                                    SelectableChip(
+                                        label = stringResource(it.label),
+                                        icon = it.icon,
+                                        selected = currentSorter == it,
+                                        onClick = { currentSorter = it },
+                                    )
+                                }
+                            }
+                    }
+                    Divider(modifier = Modifier.padding(vertical = Spacing_04))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = Spacing_06)
+                    ) {
+                        TextButton(
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                currentTag = null
+                                currentSorter =
+                                    org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter.DATE
+                                onAction(Action.OnClearFiltersClick)
+                            }) {
+                            Text(text = "Limpiar filtros")
                         }
-                    }
-                }
-                Divider(modifier = Modifier.padding(vertical = Spacing_04))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = Spacing_06)
-                ) {
-                    TextButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = {
-                            currentTag = null
-                            currentSorter =
-                                org.codingforanimals.veganuniverse.recipes.ui.RecipeSorter.DATE
-                            onAction(Action.OnClearFiltersClick)
-                        }) {
-                        Text(text = "Limpiar filtros")
-                    }
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        onClick = { onAction(Action.OnApplyFilters(currentTag, currentSorter)) }) {
-                        Text(text = "Aplicar filtros")
+                        Button(
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                onAction(
+                                    Action.OnApplyFilters(
+                                        currentTag,
+                                        currentSorter
+                                    )
+                                )
+                            }) {
+                            Text(text = "Aplicar filtros")
+                        }
                     }
                 }
             }

@@ -10,6 +10,9 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Core.AUTH))
+    implementation(AndroidX.paging)
+    implementation(AndroidX.paging_compose)
+    implementation(project(":commons:user:domain"))
+    implementation(project(Module.Product.List.DOMAIN))
     implementation(project(Module.Product.UI))
 }

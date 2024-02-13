@@ -39,6 +39,7 @@
 
     <string name="generic_error_title">Oops, algo salió mal…</string>
     <string name="unknown_error_message">Lo sentimos, ocurrió un error inesperado</string>
+    <string name="email_not_yet_verified">Tu correo electrónico no ha sido verificado todavía. Por favor revisa tu correo</string>
 
     <string name="time_ago_just_now">Ahora</string>
     <string name="time_ago_a_minute_ago">Hace un minuto</string>
