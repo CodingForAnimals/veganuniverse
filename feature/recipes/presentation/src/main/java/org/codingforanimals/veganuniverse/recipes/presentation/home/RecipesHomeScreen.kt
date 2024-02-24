@@ -1,8 +1,7 @@
-@file:OptIn(ExperimentalLayoutApi::class)
+@file:OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 
 package org.codingforanimals.veganuniverse.recipes.presentation.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -17,6 +16,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,11 +41,12 @@ import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeV
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeViewModel.RelayAction
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeViewModel.SideEffect
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.RecipeCarousel
-import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.cardShapeAndShadow
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.RecipeTagContainer
+import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
 import org.codingforanimals.veganuniverse.ui.Spacing_03
 import org.codingforanimals.veganuniverse.ui.Spacing_04
 import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.ui.cards.VUCardDefaults
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -123,47 +124,45 @@ private fun AllRecipeTags(
             horizontalArrangement = Arrangement.spacedBy(Spacing_04),
             verticalArrangement = Arrangement.spacedBy(Spacing_04),
         ) {
-            org.codingforanimals.veganuniverse.recipes.ui.RecipeTag.values()
+            RecipeTag.values()
                 .forEachIndexed { index, recipeTag ->
                     key(index) {
                         Card(
                             modifier = Modifier
                                 .weight(1f)
-                                .aspectRatio(1f)
-                                .cardShapeAndShadow()
-                                .clickable {
-                                    onAction(Action.OnRecipeTagCardClick(recipeTag))
-                                },
+                                .aspectRatio(1f),
+                            onClick = { onAction(Action.OnRecipeTagCardClick(recipeTag)) },
+                            elevation = VUCardDefaults.elevatedCardElevation(),
                         ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .sizeIn(maxWidth = 50.dp, maxHeight = 50.dp)
-                                    .padding(top = Spacing_06, bottom = Spacing_04),
-                                model = recipeTag.icon.model,
-                                contentScale = ContentScale.Fit,
-                                contentDescription = stringResource(recipeTag.label),
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-                            )
-                            Text(
-                                modifier = Modifier
-                                    .wrapContentHeight()
-                                    .fillMaxWidth()
-                                    .padding(Spacing_03),
-                                text = stringResource(recipeTag.label),
-                                maxLines = 1,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                textAlign = TextAlign.Center,
-                                overflow = TextOverflow.Ellipsis,
-                            )
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .sizeIn(maxWidth = 50.dp, maxHeight = 50.dp)
+                                        .padding(top = Spacing_06, bottom = Spacing_04),
+                                    model = recipeTag.icon.model,
+                                    contentScale = ContentScale.Fit,
+                                    contentDescription = stringResource(recipeTag.label),
+                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .wrapContentHeight()
+                                        .fillMaxWidth()
+                                        .padding(Spacing_03),
+                                    text = stringResource(recipeTag.label),
+                                    maxLines = 1,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    textAlign = TextAlign.Center,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
                         }
                     }
                 }
-            }
         }
     }
 }

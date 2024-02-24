@@ -25,6 +25,7 @@ import org.codingforanimals.veganuniverse.recipes.presentation.home.components.R
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.RecipeTagContainerViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.RecipeTagContainerViewModel.SideEffect
 import org.codingforanimals.veganuniverse.recipes.presentation.home.tagcontainer.usecase.GetContainerRecipesUseCase
+import org.codingforanimals.veganuniverse.ui.Spacing_02
 import org.codingforanimals.veganuniverse.ui.Spacing_04
 import org.codingforanimals.veganuniverse.ui.Spacing_06
 import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
@@ -56,7 +57,7 @@ internal fun RecipeTagContainer(
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Spacing_04),
+        verticalArrangement = Arrangement.spacedBy(Spacing_02),
     ) {
         RecipesHomeItemHeader(
             icon = tag.icon,

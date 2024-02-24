@@ -7,11 +7,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ChipColors
+import androidx.compose.material3.ChipElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.ui.Spacing_01
 import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.ui.icon.Icon
@@ -23,7 +25,8 @@ fun VUAssistChip(
     icon: Icon? = null,
     label: String? = null,
     onClick: () -> Unit,
-    iconDescription: String,
+    iconDescription: String? = null,
+    chipElevation: ChipElevation = AssistChipDefaults.assistChipElevation(),
     colors: ChipColors = VUAssistChipDefaults.primaryColors(),
 ) {
     AssistChip(
@@ -46,11 +49,16 @@ fun VUAssistChip(
             label?.let {
                 Text(label)
             }
-        }
+        },
+        elevation = chipElevation
     )
 }
 
 object VUAssistChipDefaults {
+    @Composable
+    fun elevatedAssistChipElevation() =
+        AssistChipDefaults.elevatedAssistChipElevation(elevation = 3.dp)
+
     @Composable
     fun primarySelectedColors() = AssistChipDefaults.assistChipColors(
         containerColor = MaterialTheme.colorScheme.primary,
@@ -78,7 +86,7 @@ private fun PreviewVUAssistChip() {
     VeganUniverseTheme {
         Column {
             VUAssistChip(
-                label = "Assist chip",
+                icon = VUIcons.Filter,
                 onClick = {},
                 iconDescription = "",
             )

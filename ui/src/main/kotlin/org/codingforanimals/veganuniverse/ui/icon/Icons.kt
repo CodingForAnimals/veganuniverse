@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.icons.rounded.ArrowUpward
@@ -30,7 +29,8 @@ object VUIcons {
     val CreateFilled = DrawableResourceIcon(R.drawable.ic_create_filled)
 
     // Generic icons used throughout the app
-    val ArrowBack = ImageVectorIcon(Icons.Rounded.ArrowBack)
+    val ArrowBack = ImageVectorIcon(Icons.AutoMirrored.Rounded.ArrowBack)
+    val ArrowForward = ImageVectorIcon(Icons.AutoMirrored.Rounded.ArrowForward)
     val Close = ImageVectorIcon(Icons.Rounded.Close)
     val MoreOptions = ImageVectorIcon(Icons.Default.MoreVert)
     val Settings = DrawableResourceIcon(R.drawable.ic_settings)

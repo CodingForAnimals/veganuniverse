@@ -29,6 +29,7 @@ import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.Rec
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.carouselcard.RecipeCarouselAsyncCards
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.carouselcard.RecipeCarouselLoadingCard
 import org.codingforanimals.veganuniverse.recipes.presentation.home.components.RecipesHomeItemHeader
+import org.codingforanimals.veganuniverse.ui.Spacing_02
 import org.codingforanimals.veganuniverse.ui.Spacing_04
 import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.utils.toDp
@@ -66,7 +67,7 @@ private fun RecipeCarousel(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Spacing_04),
+        verticalArrangement = Arrangement.spacedBy(Spacing_02),
     ) {
         RecipesHomeItemHeader(
             icon = VUIcons.Favorite,

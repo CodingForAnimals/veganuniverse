@@ -11,7 +11,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import org.codingforanimals.veganuniverse.ui.Spacing_01
 import org.codingforanimals.veganuniverse.ui.Spacing_02
@@ -44,13 +43,11 @@ internal fun RecipesHomeItemHeader(
             Text(
                 modifier = Modifier.padding(top = Spacing_01),
                 text = label,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Medium,
+                style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
-//        Spacer(modifier = Modifier.weight(1f))
         TextButton(
             modifier = Modifier.widthIn(min = ButtonDefaults.MinWidth), onClick = onButtonClick
         ) {
@@ -58,6 +55,7 @@ internal fun RecipesHomeItemHeader(
                 text = buttonLabel,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }

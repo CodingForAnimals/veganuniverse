@@ -3,7 +3,7 @@ package org.codingforanimals.veganuniverse.navigation
 import org.codingforanimals.veganuniverse.app.R
 import org.codingforanimals.veganuniverse.create.graph.CreateDestination
 import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
-import org.codingforanimals.veganuniverse.product.graph.ProductDestination
+import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
 import org.codingforanimals.veganuniverse.ui.icon.Icon
@@ -17,7 +17,7 @@ enum class TopLevelDestination(
     val titleRes: Int,
 ) {
     PRODUCTS(
-        route = ProductDestination.Categories.route,
+        route = ProductDestination.Home.route,
         unselectedIcon = VUIcons.Leaf,
         selectedIcon = VUIcons.Leaf,
         iconTextId = R.string.nav_label_is_vegan,

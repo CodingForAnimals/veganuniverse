@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.codingforanimals.veganuniverse.ui.Spacing_04
+import org.codingforanimals.veganuniverse.ui.cards.VUCardDefaults
 
 @Composable
 fun StaggeredItemsGrid(
@@ -32,7 +33,8 @@ fun StaggeredItemsGrid(
                             title = item.title,
                             imageRef = item.imageRef,
                             layoutType = SimpleCardLayoutType.Vertical,
-                            onClick = { onClick(item.id) }
+                            onClick = { onClick(item.id) },
+                            elevation = VUCardDefaults.elevatedCardElevation(),
                         )
                     }
                 }
@@ -43,7 +45,8 @@ fun StaggeredItemsGrid(
                             title = item.title,
                             imageRef = item.imageRef,
                             layoutType = SimpleCardLayoutType.Squared,
-                            onClick = { onClick(item.id) }
+                            onClick = { onClick(item.id) },
+                            elevation = VUCardDefaults.elevatedCardElevation(),
                         )
                     }
                     items.getOrNull(2)?.let { item ->
@@ -51,7 +54,8 @@ fun StaggeredItemsGrid(
                             title = item.title,
                             imageRef = item.imageRef,
                             layoutType = SimpleCardLayoutType.Squared,
-                            onClick = { onClick(item.id) }
+                            onClick = { onClick(item.id) },
+                            elevation = VUCardDefaults.elevatedCardElevation(),
                         )
                     }
                 }
@@ -68,7 +72,8 @@ fun StaggeredItemsGrid(
                             title = item.title,
                             imageRef = item.imageRef,
                             layoutType = SimpleCardLayoutType.Squared,
-                            onClick = { onClick(item.id) }
+                            onClick = { onClick(item.id) },
+                            elevation = VUCardDefaults.elevatedCardElevation(),
                         )
                     }
                     items.getOrNull(2)?.let { item ->
@@ -76,7 +81,8 @@ fun StaggeredItemsGrid(
                             title = item.title,
                             imageRef = item.imageRef,
                             layoutType = SimpleCardLayoutType.Squared,
-                            onClick = { onClick(item.id) }
+                            onClick = { onClick(item.id) },
+                            elevation = VUCardDefaults.elevatedCardElevation(),
                         )
                     }
                 }
@@ -87,7 +93,8 @@ fun StaggeredItemsGrid(
                             title = item.title,
                             imageRef = item.imageRef,
                             layoutType = SimpleCardLayoutType.Vertical,
-                            onClick = { onClick(item.id) }
+                            onClick = { onClick(item.id) },
+                            elevation = VUCardDefaults.elevatedCardElevation(),
                         )
                     }
                 }
