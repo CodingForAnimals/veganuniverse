@@ -204,7 +204,6 @@ private fun ProductListScreen(
                                 )
                             )
                         },
-                        onBookmarkClick = {}
                     )
                 }
             }

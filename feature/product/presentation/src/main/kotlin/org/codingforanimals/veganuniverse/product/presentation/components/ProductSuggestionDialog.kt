@@ -193,7 +193,7 @@ private fun HandleSideEffects(
 
 internal class ProductSuggestionDialogViewModel(
     private val type: ProductSuggestionType,
-    private val productSuggestionUseCases: ProductSuggestionUseCases,
+    private val useCases: ProductSuggestionUseCases,
 ) : ViewModel() {
 
     private var sendJob: Job? = null
@@ -222,10 +222,8 @@ internal class ProductSuggestionDialogViewModel(
                     sendJob?.cancel()
                     sendJob = viewModelScope.launch {
                         val result = when (type) {
-                            is ProductSuggestionType.Edit -> productSuggestionUseCases.edit(message)
-                            is ProductSuggestionType.Report -> productSuggestionUseCases.report(
-                                message
-                            )
+                            is ProductSuggestionType.Edit -> useCases.sendEdit(message)
+                            is ProductSuggestionType.Report -> useCases.sendReport(message)
                         }
                         when (result) {
                             ProductSuggestionUseCases.Result.Error -> _uiState.value =
@@ -254,7 +252,7 @@ internal class ProductSuggestionDialogViewModel(
                                     SideEffect.DismissDialog(
                                         snackbarMessage = R.string.user_has_unverified_email,
                                         actionLabel = R.string.resend_email,
-                                        action = productSuggestionUseCases::sendVerificationEmail,
+                                        action = useCases::sendVerificationEmail,
                                     )
                                 )
                             }

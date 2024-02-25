@@ -1,6 +1,7 @@
 package org.codingforanimals.veganuniverse.ui.components
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -28,9 +29,12 @@ fun VUAssistChip(
     iconDescription: String? = null,
     chipElevation: ChipElevation = AssistChipDefaults.assistChipElevation(),
     colors: ChipColors = VUAssistChipDefaults.primaryColors(),
+    enabled: Boolean = true,
+    borderStroke: BorderStroke? = null,
 ) {
     AssistChip(
         modifier = modifier,
+        enabled = enabled,
         leadingIcon = {
             icon?.let {
                 VUIcon(
@@ -40,11 +44,10 @@ fun VUAssistChip(
                 )
             }
         },
-        border = null,
+        border = borderStroke,
         colors = colors,
         onClick = onClick,
         shape = CircleShape,
-        interactionSource = MutableInteractionSource(),
         label = {
             label?.let {
                 Text(label)
@@ -84,7 +87,7 @@ object VUAssistChipDefaults {
 @Preview
 private fun PreviewVUAssistChip() {
     VeganUniverseTheme {
-        Column {
+        Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
             VUAssistChip(
                 icon = VUIcons.Filter,
                 onClick = {},

@@ -6,6 +6,7 @@ import org.codingforanimals.veganuniverse.commons.firebase.storage.di.commonsFir
 import org.codingforanimals.veganuniverse.product.data.source.GetLatestProductsFirestoreDataSource
 import org.codingforanimals.veganuniverse.product.data.source.GetLatestProductsRemoteDataSource
 import org.codingforanimals.veganuniverse.product.data.source.GetPaginatedProductFirestoreDataSource
+import org.codingforanimals.veganuniverse.product.data.source.GetPaginatedProductsRemoteDataSource
 import org.codingforanimals.veganuniverse.product.data.source.SuggestionFirestoreRepository
 import org.codingforanimals.veganuniverse.product.data.source.SuggestionRepository
 import org.koin.dsl.module
@@ -24,7 +25,7 @@ val productDataModule = module {
             publicImageApi = get(),
         )
     }
-    factory {
+    factory<GetPaginatedProductsRemoteDataSource> {
         GetPaginatedProductFirestoreDataSource(
             productsCollection = get<FirebaseFirestore>().collection(PRODUCTS_ITEMS_COLLECTION),
             publicImageApi = get(),
