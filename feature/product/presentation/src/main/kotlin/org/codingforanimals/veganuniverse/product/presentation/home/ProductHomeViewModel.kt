@@ -37,7 +37,7 @@ class ProductHomeViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = LatestProductsState.Idle,
+        initialValue = LatestProductsState.Loading,
     )
 
     private val mutableUiState = MutableStateFlow(UiState())
@@ -120,7 +120,6 @@ class ProductHomeViewModel(
     )
 
     sealed class LatestProductsState {
-        data object Idle : LatestProductsState()
         data object Loading : LatestProductsState()
         data object Error : LatestProductsState()
         data class Success(val products: List<Product>) : LatestProductsState()

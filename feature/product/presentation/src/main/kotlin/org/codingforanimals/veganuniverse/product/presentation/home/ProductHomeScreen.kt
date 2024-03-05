@@ -1,8 +1,9 @@
-@file:OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalLayoutApi::class)
 
 package org.codingforanimals.veganuniverse.product.presentation.home
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -15,8 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
@@ -31,12 +32,14 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -100,21 +103,18 @@ private fun ProductHomeScreen(
     latestProductsState: ProductHomeViewModel.LatestProductsState,
     onAction: (Action) -> Unit,
 ) {
-
     LazyColumn(
-        contentPadding = PaddingValues(vertical = Spacing_06),
-        verticalArrangement = Arrangement.spacedBy(Spacing_05)
+        contentPadding = PaddingValues(Spacing_06),
+        verticalArrangement = Arrangement.spacedBy(Spacing_05),
     ) {
         item {
             Text(
-                modifier = Modifier.padding(horizontal = Spacing_06),
                 text = stringResource(R.string.categories_header_message),
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
         items(items = ProductType.values()) { type ->
             Row(
-                modifier = Modifier.padding(horizontal = Spacing_06),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Spacing_05),
             ) {
@@ -126,17 +126,11 @@ private fun ProductHomeScreen(
             }
         }
         item {
-            HorizontalDivider(
-                modifier = Modifier.padding(
-                    top = Spacing_03, start = Spacing_06, end = Spacing_06
-                )
-            )
+            HorizontalDivider(modifier = Modifier.padding(top = Spacing_03))
         }
         item {
             Row(
-                modifier = Modifier.padding(
-                    bottom = Spacing_02, start = Spacing_06, end = Spacing_05
-                ),
+                modifier = Modifier.padding(bottom = Spacing_02),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -155,7 +149,6 @@ private fun ProductHomeScreen(
                 label = "products_home_latest_products_crossfade",
                 content = { state ->
                     when (state) {
-                        ProductHomeViewModel.LatestProductsState.Idle -> Unit
                         ProductHomeViewModel.LatestProductsState.Error -> ErrorView(message = unknown_error_message)
                         ProductHomeViewModel.LatestProductsState.Loading -> {
                             Column(
@@ -170,7 +163,16 @@ private fun ProductHomeScreen(
                         }
 
                         is ProductHomeViewModel.LatestProductsState.Success -> {
-                            Column {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .border(
+                                        width = 1.dp,
+                                        color = MaterialTheme.colorScheme.outlineVariant,
+                                        shape = RoundedCornerShape(Spacing_05),
+                                    )
+                                    .clip(RoundedCornerShape(Spacing_05)),
+                            ) {
                                 state.products.forEach { product ->
                                     key(product.id) {
                                         ProductRow(
@@ -207,9 +209,7 @@ private fun ProductHomeScreen(
         }
         item {
             Row(
-                modifier = Modifier.padding(
-                    bottom = Spacing_02, start = Spacing_06, end = Spacing_05
-                ),
+                modifier = Modifier.padding(bottom = Spacing_02),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -225,9 +225,7 @@ private fun ProductHomeScreen(
                 }
             }
             FlowRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Spacing_06),
+                modifier = Modifier.fillMaxWidth(),
                 maxItemsInEachRow = 2,
                 horizontalArrangement = Arrangement.spacedBy(
                     Spacing_06, Alignment.CenterHorizontally
@@ -267,20 +265,14 @@ private fun ProductHomeScreen(
             }
         }
         item {
-            HorizontalDivider(
-                modifier = Modifier.padding(
-                    top = Spacing_03, start = Spacing_06, end = Spacing_06
-                )
-            )
+            HorizontalDivider(modifier = Modifier.padding(top = Spacing_03))
         }
         item {
             Text(
-                modifier = Modifier.padding(horizontal = Spacing_06),
                 text = stringResource(R.string.add_product_suggestion),
                 style = MaterialTheme.typography.bodyMedium
             )
             VUAssistChip(
-                modifier = Modifier.padding(horizontal = Spacing_06),
                 onClick = { onAction(Action.OnCreateProductClick) },
                 label = stringResource(R.string.go_to_add_product),
                 icon = VUIcons.ArrowForward,

@@ -10,4 +10,17 @@
     <string name="product_confirmed_vegan">Apto vegan</string>
     <string name="product_not_vegan">No apto vegan</string>
     <string name="product_doubtful_vegan">Dudoso</string>
+    <string name="chocolates">Chocolates</string>
+    <string name="sweet_snacks">Snacks dulces</string>
+    <string name="salty_snacks">Snacks salados</string>
+    <string name="baked_goods">Panificados</string>
+    <string name="pasta">Pastas</string>
+    <string name="frozen">Congelados</string>
+    <string name="spreadable">Untables</string>
+    <string name="alcoholic_beverages">Bebidas con alcohol</string>
+    <string name="dough_discs">Tapas de tarta y empanada</string>
+    <string name="personal_care">Cuidado personal</string>
+    <string name="vitamins_and_supplements">Vitaminas y suplementos</string>
+    <string name="additives">Aditivos</string>
+    <string name="other">Otros</string>
 </resources>

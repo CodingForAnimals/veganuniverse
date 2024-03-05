@@ -17,9 +17,13 @@ class GetLatestProducts(
             runCatching {
                 remoteDataSource.getProducts()
             }.getOrNull()?.let { remoteProducts ->
-                val products = remoteProducts.map { it.toDomainModel() }
-                cache = products
-                emit(State.Success(products))
+                if (remoteProducts.isEmpty()) {
+                    emit(State.Error)
+                } else {
+                    val products = remoteProducts.map { it.toDomainModel() }
+                    cache = products
+                    emit(State.Success(products))
+                }
             } ?: emit(State.Error)
         }
     }
