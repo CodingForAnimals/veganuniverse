@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="user_profile_thumbnail">Foto de perfil del usuario</string>
+    <string name="recipe_image">Imágen de la receta</string>
+    <string name="all_recipes">Todas las recetas</string>
+    <string name="recipes_carousel_title_most_liked">Directo al corazón</string>
+    <string name="recipe_image_description">Imagen de la receta</string>
+    <string name="back">Volver</string>
+    <string name="oops_something_went_wrong">¡Oops, ha ocurrido un error!</string>
+    <string name="snackbar_unexpected_error_message">¡Oops, ha ocurrido un error! Lo sentimos, puedes volver a intentarlo.</string>
+    <string name="try_again">Reintentar</string>
+    <string name="sorry_can_not_find_recipe_details">Lo sentimos, no hemos podido encontrar los detalles de esta receta.</string>
+    <string name="latest_recipes">Últimas recetas</string>
+    <string name="show_more">Ver más</string>
+    <string name="search_recipe">Buscar receta</string>
+    <string name="no_recipes_found">¡No hemos encontrado recetas!</string>
+    <string name="filter_by">Filtrar por</string>
+    <string name="sort_by">Ordenar por</string>
+    <string name="clear_filters">Limpiar filtros</string>
+    <string name="apply_filters">Aplicar filtros</string>
+</resources>

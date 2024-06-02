@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
@@ -47,7 +48,13 @@ fun SelectableChip(
         modifier = modifier,
         shape = shape,
         onClick = onClick,
-        label = { Text(label) },
+        label = {
+            Text(
+                text = label,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
         leadingIcon = {
             icon?.let {
                 Crossfade(targetState = selected, label = "${label}_crossfade_animation") {
@@ -72,7 +79,7 @@ fun SelectableChip(
         border = AssistChipDefaults.assistChipBorder(
             enabled = true,
             borderColor = borderColor.value
-        )
+        ),
     )
 }
 

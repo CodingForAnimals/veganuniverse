@@ -8,10 +8,10 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Entity.RECIPES))
-    implementation(project(Module.Entity.BASE))
-    implementation(project(Module.Services.Firebase.BASE))
-    implementation(project(Module.Storage.FIRESTORE))
+    implementation(project(":entity:recipes"))
+    implementation(project(":entity"))
+    implementation(project(":services:firebase"))
+    implementation(project(":storage:firestore"))
     bomImplementation(
         Firebase.BOM,
         listOf(

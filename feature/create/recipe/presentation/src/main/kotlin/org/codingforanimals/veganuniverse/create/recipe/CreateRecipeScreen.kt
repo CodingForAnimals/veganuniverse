@@ -17,8 +17,8 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -69,8 +69,8 @@ fun CreateRecipeScreen(
     navigateToThankYouScreen: () -> Unit,
     navigateToAuthenticationScreen: () -> Unit,
     navigateUp: () -> Unit,
-    viewModel: CreateRecipeViewModel = koinViewModel(),
 ) {
+    val viewModel: CreateRecipeViewModel = koinViewModel()
     val imagePicker = rememberImageCropperLauncherForActivityResult(
         onCropSuccess = { viewModel.onAction(Action.ImagePicker.Success(it)) },
     )
@@ -224,7 +224,7 @@ private fun CreateRecipeScreen(
             )
         }
 
-        item { Divider() }
+        item { HorizontalDivider() }
 
         item {
             Ingredients(
@@ -234,7 +234,7 @@ private fun CreateRecipeScreen(
             )
         }
 
-        item { Divider() }
+        item { HorizontalDivider() }
 
         item {
             Steps(
@@ -244,7 +244,7 @@ private fun CreateRecipeScreen(
             )
         }
 
-        item { Divider() }
+        item { HorizontalDivider() }
 
         item {
             val color = when {

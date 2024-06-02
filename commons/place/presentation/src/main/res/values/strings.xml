@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="place_type_store_label">Negocio / Tienda</string>
+    <string name="place_type_restaurant_label">Restaurant</string>
+    <string name="place_type_cafe_label">Café</string>
+    <string name="place_type_bar_label">Bar</string>
+    <string name="place_sorter_label_name">Nombre</string>
+    <string name="place_sorter_label_date">Más recientes</string>
+    <string name="place_sorter_label_rating">Mejor puntaje</string>
+    <string name="place_sorter_label_reviews">Cantidad de reseñas</string>
+
+    <string name="day_of_week_sunday">Domingo</string>
+    <string name="day_of_week_monday">Lunes</string>
+    <string name="day_of_week_tuesday">Martes</string>
+    <string name="day_of_week_wednesday">Miércoles</string>
+    <string name="day_of_week_thursday">Jueves</string>
+    <string name="day_of_week_friday">Viernes</string>
+    <string name="day_of_week_saturday">Sábado</string>
+</resources>

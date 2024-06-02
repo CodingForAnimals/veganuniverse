@@ -7,13 +7,13 @@ import org.codingforanimals.veganuniverse.auth.usecase.GetUserStatus
 import org.codingforanimals.veganuniverse.create.product.data.source.SaveProductRemoteDataSource
 import org.codingforanimals.veganuniverse.create.product.data.model.SaveProductResult
 import org.codingforanimals.veganuniverse.create.product.domain.mapper.toEntity
-import org.codingforanimals.veganuniverse.create.product.domain.model.ProductForm
+import org.codingforanimals.veganuniverse.create.product.domain.model._ProductForm
 
 internal class SaveProductImpl(
     private val remoteDataSource: SaveProductRemoteDataSource,
     private val getUserStatus: GetUserStatus,
 ) : SaveProduct {
-    override suspend fun invoke(productForm: ProductForm): Flow<SaveProductStatus> = flow {
+    override suspend fun invoke(productForm: _ProductForm): Flow<SaveProductStatus> = flow {
         val user = getUserStatus().firstOrNull()
             ?: return@flow emit(SaveProductStatus.Error.UnregisteredUser)
         if (!user.isEmailVerified) return@flow emit(SaveProductStatus.Error.UnverifiedEmail)

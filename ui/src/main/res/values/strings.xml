@@ -37,6 +37,8 @@
     <string name="recipe_tag_label_canned">Conservas</string>
     <string name="back">Volver</string>
 
+    <string name="connection_error_title">Sin conexión</string>
+    <string name="connection_error_message">Para realizar esta acción necesitás conexión a internet</string>
     <string name="generic_error_title">Oops, algo salió mal…</string>
     <string name="unknown_error_message">Lo sentimos, ocurrió un error inesperado</string>
 
@@ -61,4 +63,29 @@
     <string name="all_tags">Todas las etiquetas</string>
 
     <string name="success">¡Éxito!</string>
+
+    <string name="beverages">Gaseosas y otras bebidas</string>
+    <string name="cookies">Golosinas, galletitas, alfajores y más</string>
+    <string name="not_dairy">No lácteos</string>
+    <string name="shelf">Productos de alacena</string>
+    <string name="dressings_sauces">Salsas y aderezos</string>
+    <string name="cleaning_hygiene">Limpieza e higiene</string>
+    <string name="cosmetics">Cosmética</string>
+    <string name="product_confirmed_vegan">Apto vegan</string>
+    <string name="product_not_vegan">No apto vegan</string>
+    <string name="product_doubtful_vegan">Dudoso</string>
+    <string name="chocolates">Chocolates</string>
+    <string name="sweet_snacks">Snacks dulces</string>
+    <string name="salty_snacks">Snacks salados</string>
+    <string name="baked_goods">Panificados</string>
+    <string name="pasta">Pastas</string>
+    <string name="frozen">Congelados</string>
+    <string name="spreadable">Untables</string>
+    <string name="alcoholic_beverages">Bebidas con alcohol</string>
+    <string name="dough_discs">Tapas de tarta y empanada</string>
+    <string name="personal_care">Cuidado personal</string>
+    <string name="vitamins_and_supplements">Vitaminas y suplementos</string>
+    <string name="additives">Aditivos</string>
+    <string name="other">Otros</string>
+
 </resources>

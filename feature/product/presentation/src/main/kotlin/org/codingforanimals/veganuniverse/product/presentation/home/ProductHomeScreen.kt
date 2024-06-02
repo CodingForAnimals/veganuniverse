@@ -2,10 +2,7 @@
 
 package org.codingforanimals.veganuniverse.product.presentation.home
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -28,18 +24,15 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,31 +42,26 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.product.presentation.R
-import org.codingforanimals.veganuniverse.product.presentation.components.ProductRow
-import org.codingforanimals.veganuniverse.product.presentation.components.ProductRowLoading
 import org.codingforanimals.veganuniverse.product.presentation.components.ProductSuggestionDialog
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel.Action
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel.SideEffect
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel.UiState
 import org.codingforanimals.veganuniverse.product.ui.ProductType
-import org.codingforanimals.veganuniverse.ui.R.string.unknown_error_message
 import org.codingforanimals.veganuniverse.ui.Spacing_02
 import org.codingforanimals.veganuniverse.ui.Spacing_03
 import org.codingforanimals.veganuniverse.ui.Spacing_05
 import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.animation.shimmer
 import org.codingforanimals.veganuniverse.ui.cards.VUCardDefaults
 import org.codingforanimals.veganuniverse.ui.components.VUAssistChip
 import org.codingforanimals.veganuniverse.ui.components.VUAssistChipDefaults
 import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProductHomeScreen(
     snackbarHostState: SnackbarHostState,
-    navigateToCategoryListScreen: (String?) -> Unit,
+    navigateToCategoryListScreen: (category: String?, type: String?, sorter: String?) -> Unit,
     navigateToCreateProductScreen: () -> Unit,
     navigateToAuthScreen: () -> Unit,
     viewModel: ProductHomeViewModel = koinViewModel(),
@@ -129,154 +117,27 @@ private fun ProductHomeScreen(
             HorizontalDivider(modifier = Modifier.padding(top = Spacing_03))
         }
         item {
-            Row(
-                modifier = Modifier.padding(bottom = Spacing_02),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.all_products),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                TextButton(onClick = { onAction(Action.OnSeeAllClick) }) {
-                    Text(
-                        text = stringResource(R.string.see_all),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
-            }
-            Crossfade(targetState = latestProductsState,
-                label = "products_home_latest_products_crossfade",
-                content = { state ->
-                    when (state) {
-                        ProductHomeViewModel.LatestProductsState.Error -> ErrorView(message = unknown_error_message)
-                        ProductHomeViewModel.LatestProductsState.Loading -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .shimmer()
-                            ) {
-                                ProductRowLoading()
-                                ProductRowLoading()
-                                ProductRowLoading()
-                            }
-                        }
-
-                        is ProductHomeViewModel.LatestProductsState.Success -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .border(
-                                        width = 1.dp,
-                                        color = MaterialTheme.colorScheme.outlineVariant,
-                                        shape = RoundedCornerShape(Spacing_05),
-                                    )
-                                    .clip(RoundedCornerShape(Spacing_05)),
-                            ) {
-                                state.products.forEach { product ->
-                                    key(product.id) {
-                                        ProductRow(
-                                            product = product,
-                                            onImageClick = {
-                                                onAction(
-                                                    Action.ImageDialogAction.Open(
-                                                        product.imageUrl
-                                                    )
-                                                )
-                                            },
-                                            onEditClick = {
-                                                onAction(
-                                                    Action.ProductSuggestionDialogAction.OpenEdit(
-                                                        product
-                                                    )
-                                                )
-                                            },
-                                            onReportClick = {
-                                                onAction(
-                                                    Action.ProductSuggestionDialogAction.OpenReport(
-                                                        product
-                                                    )
-                                                )
-                                            },
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                })
+            LatestProducts(
+                latestProductsState = latestProductsState,
+                onShowMoreClick = { onAction(Action.OnMostRecentShowMoreClick) },
+                onImageClick = { onAction(Action.ImageDialogAction.Open(it)) },
+                onEditClick = { onAction(Action.ProductSuggestionDialogAction.OpenEdit(it)) },
+                onReportClick = { onAction(Action.ProductSuggestionDialogAction.OpenReport(it)) }
+            )
         }
         item {
-            Row(
-                modifier = Modifier.padding(bottom = Spacing_02),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.categories),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                TextButton(onClick = { onAction(Action.OnSeeAllClick) }) {
-                    Text(
-                        text = stringResource(R.string.see_all),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
-            }
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                maxItemsInEachRow = 2,
-                horizontalArrangement = Arrangement.spacedBy(
-                    Spacing_06, Alignment.CenterHorizontally
-                ),
-                verticalArrangement = Arrangement.spacedBy(Spacing_06),
-            ) {
-                uiState.categories.forEach { category ->
-                    Card(
-                        modifier = Modifier
-                            .weight(1f)
-                            .aspectRatio(1f),
-                        onClick = { onAction(Action.OnProductCategorySelected(category)) },
-                        elevation = VUCardDefaults.elevatedCardElevation(),
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
-                            contentScale = ContentScale.Crop,
-                            model = category.imageRef,
-                            contentDescription = stringResource(category.label),
-                        )
-                        Text(
-                            modifier = Modifier
-                                .wrapContentHeight()
-                                .fillMaxWidth()
-                                .padding(Spacing_03),
-                            text = stringResource(category.label),
-                            maxLines = 2,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            textAlign = TextAlign.Center,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-                }
-            }
+            AllCategories(
+                onShowMoreClick = { onAction(Action.OnMostRecentShowMoreClick) },
+                categories = uiState.categories,
+                onItemClick = { onAction(Action.OnProductCategorySelected(it)) },
+            )
         }
         item {
             HorizontalDivider(modifier = Modifier.padding(top = Spacing_03))
         }
         item {
-            Text(
-                text = stringResource(R.string.add_product_suggestion),
-                style = MaterialTheme.typography.bodyMedium
-            )
-            VUAssistChip(
-                onClick = { onAction(Action.OnCreateProductClick) },
-                label = stringResource(R.string.go_to_add_product),
-                icon = VUIcons.ArrowForward,
-                chipElevation = VUAssistChipDefaults.elevatedAssistChipElevation(),
+            CreateProductCTA(
+                onButtonClick = { onAction(Action.OnCreateProductClick) },
             )
         }
     }
@@ -317,7 +178,7 @@ private fun ProductHomeScreen(
 @Composable
 private fun HandleSideEffects(
     sideEffects: Flow<SideEffect>,
-    navigateToCategoryListScreen: (String?) -> Unit,
+    navigateToCategoryListScreen: (category: String?, type: String?, sorter: String?) -> Unit,
     navigateToCreateProductScreen: () -> Unit,
     navigateToAuthScreen: () -> Unit,
     snackbarHostState: SnackbarHostState,
@@ -327,11 +188,15 @@ private fun HandleSideEffects(
     LaunchedEffect(Unit) {
         sideEffects.onEach { sideEffect ->
             when (sideEffect) {
-                is SideEffect.NavigateToCategoryListScreen -> {
-                    navigateToCategoryListScreen(sideEffect.categoryName)
+                is SideEffect.NavigateToProductBrowsing -> {
+                    navigateToCategoryListScreen(
+                        sideEffect.category?.name,
+                        sideEffect.type?.name,
+                        sideEffect.sorter?.name,
+                    )
                 }
 
-                SideEffect.NavigateToCreateProductScreen -> navigateToCreateProductScreen()
+                SideEffect.NavigateToCreateProduct -> navigateToCreateProductScreen()
                 is SideEffect.ShowSnackbar -> {
                     when (snackbarHostState.showSnackbar(
                         message = context.getString(sideEffect.message),
@@ -346,7 +211,7 @@ private fun HandleSideEffects(
                     }
                 }
 
-                SideEffect.NavigateToAuthScreen -> navigateToAuthScreen()
+                SideEffect.NavigateToAuthentication -> navigateToAuthScreen()
             }
         }.collect()
     }

@@ -11,14 +11,14 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Core.COMMON))
-    implementation(project(Module.Core.AUTH))
-    implementation(project(Module.Profile.Home.DOMAIN))
-    implementation(project(Module.Profile.MODEL))
-    implementation(project(Module.Entity.PLACES))
-    implementation(project(Module.Entity.RECIPES))
-    implementation(project(Module.Places.UI))
-    implementation(project(Module.UI))
+    implementation(project(":core:common"))
+    implementation(project(":core:auth"))
+    implementation(project(":feature:profile:home:domain"))
+    implementation(project(":model:profile"))
+    implementation(project(":entity:places"))
+    implementation(project(":entity:recipes"))
+    implementation(project(":ui:places"))
+    implementation(project(":ui"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
-import org.codingforanimals.veganuniverse.create.place.presentation.entity.toViewEntity
 import org.codingforanimals.veganuniverse.create.place.presentation.model.GetPlaceDataStatus
 import org.codingforanimals.veganuniverse.services.google.places.api.PlacesClient
 import org.codingforanimals.veganuniverse.services.google.places.model.PlaceAutocompleteResult
@@ -32,7 +31,7 @@ class GetPlaceDataUseCase(
                 latLng = LatLng(latitude, longitude),
                 name = name,
                 addressComponents = addressComponents,
-                openingHours = openingHours.map { it.toViewEntity() },
+                openingHours = openingHours,
                 bitmap = bitmap,
             )
 

@@ -42,6 +42,9 @@ import org.codingforanimals.veganuniverse.create.place.presentation.R
 import org.codingforanimals.veganuniverse.create.place.presentation.model.OpeningHoursField
 import org.codingforanimals.veganuniverse.create.place.presentation.model.PeriodEnd
 import org.codingforanimals.veganuniverse.create.place.presentation.model.PeriodType
+import org.codingforanimals.veganuniverse.place.model.displayPeriod
+import org.codingforanimals.veganuniverse.place.model.fromDisplayPeriod
+import org.codingforanimals.veganuniverse.place.model.toDisplayPeriod
 import org.codingforanimals.veganuniverse.ui.Spacing_04
 import org.codingforanimals.veganuniverse.ui.Spacing_06
 import org.codingforanimals.veganuniverse.ui.components.VUIcon

@@ -22,14 +22,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.auth.model.SendVerificationEmailResult
-import org.codingforanimals.veganuniverse.auth.usecase.SendVerificationEmailUseCase
+import org.codingforanimals.veganuniverse.create.place.domain.model.PlaceForm
+import org.codingforanimals.veganuniverse.create.place.domain.usecase.SubmitPlace
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem
 import org.codingforanimals.veganuniverse.create.place.presentation.error.CreatePlaceErrorDialog
 import org.codingforanimals.veganuniverse.create.place.presentation.model.AddressField
+import org.codingforanimals.veganuniverse.create.place.presentation.model.CreatePlaceOpeningHoursUI
 import org.codingforanimals.veganuniverse.create.place.presentation.model.GetPlaceDataStatus
 import org.codingforanimals.veganuniverse.create.place.presentation.model.LocationField
-import org.codingforanimals.veganuniverse.create.place.presentation.model.OpeningHours
 import org.codingforanimals.veganuniverse.create.place.presentation.model.OpeningHoursField
 import org.codingforanimals.veganuniverse.create.place.presentation.model.PeriodEnd
 import org.codingforanimals.veganuniverse.create.place.presentation.model.PeriodType
@@ -38,24 +38,20 @@ import org.codingforanimals.veganuniverse.create.place.presentation.model.TypeFi
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetAutoCompleteIntentUseCase
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetCreatePlaceScreenContent
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetPlaceDataUseCase
-import org.codingforanimals.veganuniverse.create.place.presentation.usecase.SubmitPlaceStatus
-import org.codingforanimals.veganuniverse.create.place.presentation.usecase.SubmitPlaceUseCase
-import org.codingforanimals.veganuniverse.places.ui.PlaceTag
-import org.codingforanimals.veganuniverse.places.ui.PlaceType
-import org.codingforanimals.veganuniverse.ui.R.string.generic_error_title
-import org.codingforanimals.veganuniverse.ui.R.string.success
+import org.codingforanimals.veganuniverse.place.model.AddressComponents
+import org.codingforanimals.veganuniverse.place.model.OpeningHours
+import org.codingforanimals.veganuniverse.place.model.OpeningHoursUI
+import org.codingforanimals.veganuniverse.place.model.PlaceTag
+import org.codingforanimals.veganuniverse.place.model.PlaceType
 import org.codingforanimals.veganuniverse.ui.calendar.DayOfWeek
 import org.codingforanimals.veganuniverse.ui.viewmodel.PictureField
 import org.codingforanimals.veganuniverse.ui.viewmodel.StringField
-import org.codingforanimals.veganuniverse.user.R.string.verification_email_sent
-import org.codingforanimals.veganuniverse.user.R.string.verification_email_too_many_requests
 
 class CreatePlaceViewModel(
     getCreatePlaceScreenContent: GetCreatePlaceScreenContent,
     private val getPlaceDataUseCase: GetPlaceDataUseCase,
     private val getAutoCompleteIntentUseCase: GetAutoCompleteIntentUseCase,
-    private val submitPlaceUseCase: SubmitPlaceUseCase,
-    private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
+    private val submitPlace: SubmitPlace,
 ) : ViewModel() {
 
     var uiState by mutableStateOf(UiState(content = getCreatePlaceScreenContent()))
@@ -71,7 +67,7 @@ class CreatePlaceViewModel(
             Action.OnErrorDialogDismissRequest -> dismissErrorDialog()
             is Action.OnPlaceSelected -> getPlaceData(action.activityResult)
             is Action.OnFormChange -> onFormChange(action)
-            Action.OnSubmitClick -> submitForm()
+            Action.OnSubmitClick -> attemptSubmitForm()
             Action.OnOpeningHoursEditButtonClick -> openOpeningHoursEditDialog()
             Action.OnOpeningHoursDismissEditDialog -> dismissOpeningHoursEditDialog()
             Action.OnTimePickerDismissed -> updateSelectedPeriod()
@@ -79,8 +75,6 @@ class CreatePlaceViewModel(
             is Action.OnDayOpenCloseSwitchClick -> updateDayOpenCloseStatus(action.day)
             is Action.OnChangeSplitPeriodClick -> updateDaySplitStatus(action.day)
             Action.OnHideExpandOpeningHoursClick -> updateHideExpandOpeningHoursState()
-            Action.OnVerifyEmailPromptDismissRequest -> dismissVerifyEmailPromptScreen()
-            Action.OnVerifyEmailPromptSendRequest -> sendVerificationEmail()
             Action.OnBackClick -> {
                 viewModelScope.launch {
                     sideEffectChannel.send(SideEffect.NavigateUp)
@@ -126,11 +120,11 @@ class CreatePlaceViewModel(
                 uiState = uiState.copy(
                     locationField = LocationField(latLng),
                     addressField = AddressField(
-                        streetAddress = addressComponents.streetAddress,
-                        locality = addressComponents.locality,
-                        primaryAdminArea = addressComponents.primaryAdminArea,
-                        secondaryAdminArea = addressComponents.secondaryAdminArea,
-                        country = addressComponents.country,
+                        streetAddress = addressComponents.streetAddress.orEmpty(),
+                        locality = addressComponents.locality.orEmpty(),
+                        primaryAdminArea = addressComponents.primaryAdminArea.orEmpty(),
+                        secondaryAdminArea = addressComponents.secondaryAdminArea.orEmpty(),
+                        country = addressComponents.country.orEmpty(),
                     ),
                     isLoading = false
                 )
@@ -140,14 +134,18 @@ class CreatePlaceViewModel(
             is GetPlaceDataStatus.EstablishmentData -> with(placeDataStatus) {
                 uiState = uiState.copy(
                     nameField = StringField(name),
-                    openingHoursField = OpeningHoursField(openingHours = openingHours),
+                    openingHoursField = OpeningHoursField(
+                        openingHours = openingHours.mapNotNull {
+                            CreatePlaceOpeningHoursUI.fromModel(it)
+                        }
+                    ),
                     locationField = LocationField(latLng),
                     addressField = AddressField(
-                        streetAddress = addressComponents.streetAddress,
-                        locality = addressComponents.locality,
-                        primaryAdminArea = addressComponents.primaryAdminArea,
-                        secondaryAdminArea = addressComponents.secondaryAdminArea,
-                        country = addressComponents.country,
+                        streetAddress = addressComponents.streetAddress.orEmpty(),
+                        locality = addressComponents.locality.orEmpty(),
+                        primaryAdminArea = addressComponents.primaryAdminArea.orEmpty(),
+                        secondaryAdminArea = addressComponents.secondaryAdminArea.orEmpty(),
+                        country = addressComponents.country.orEmpty(),
                     ),
                     pictureField = PictureField(placeDataStatus.bitmap),
                     isLoading = false
@@ -188,52 +186,43 @@ class CreatePlaceViewModel(
         }
     }
 
-    private fun submitForm() {
+    private fun attemptSubmitForm() {
+        val placeForm = uiState.toForm() ?: run {
+            uiState = uiState.copy(isValidating = true)
+            return
+        }
+
         viewModelScope.launch {
-            submitPlaceUseCase(uiState).collectLatest { createPlaceStatus ->
-                when (createPlaceStatus) {
-                    SubmitPlaceStatus.Loading -> {
-                        uiState = uiState.copy(isLoading = true)
-                    }
-
-                    SubmitPlaceStatus.Success -> {
-                        uiState = uiState.copy(isLoading = false)
-                        sideEffectChannel.send(SideEffect.NavigateToThankYouScreen)
-                    }
-
-                    SubmitPlaceStatus.PlaceAlreadyExists -> {
-                        uiState = uiState.copy(
-                            isLoading = false,
-                            errorDialog = CreatePlaceErrorDialog.PlaceAlreadyExists {
-                                sideEffectChannel.send(SideEffect.NavigateToAlreadyExistingPlace)
-                            },
-                        )
-                    }
-
-                    SubmitPlaceStatus.UnknownError -> {
-                        uiState = uiState.copy(
-                            isLoading = false,
-                            errorDialog = CreatePlaceErrorDialog.UnknownErrorDialog,
-                        )
-                    }
-
-                    SubmitPlaceStatus.UnauthorizedUser -> {
-                        uiState = uiState.copy(isLoading = false)
+            uiState = uiState.copy(isLoading = true)
+            val result = submitPlace(placeForm)
+            uiState = uiState.copy(isLoading = false)
+            when (result) {
+                SubmitPlace.Result.GuestUser -> {
+                    viewModelScope.launch {
                         sideEffectChannel.send(SideEffect.NavigateToAuthenticateScreen)
                     }
+                }
 
-                    SubmitPlaceStatus.UnverifiedEmail -> {
-                        uiState = uiState.copy(
-                            isLoading = false,
-                            showVerifyEmailPrompt = true
-                        )
+                SubmitPlace.Result.NoInternet -> {
+                    uiState = uiState.copy(errorDialog = CreatePlaceErrorDialog.NoInternet)
+                }
+
+                SubmitPlace.Result.UnexpectedError -> {
+                    uiState = uiState.copy(errorDialog = CreatePlaceErrorDialog.UnknownErrorDialog)
+                }
+
+                SubmitPlace.Result.UnverifiedEmail -> {
+                    uiState = uiState.copy(errorDialog = CreatePlaceErrorDialog.UnverifiedEmail)
+                }
+
+                is SubmitPlace.Result.AlreadyExists -> {
+                    uiState = uiState.copy(errorDialog = CreatePlaceErrorDialog.PlaceAlreadyExists)
+                }
+
+                is SubmitPlace.Result.Success -> {
+                    viewModelScope.launch {
+                        sideEffectChannel.send(SideEffect.NavigateToThankYouScreen)
                     }
-
-                    SubmitPlaceStatus.FormError -> uiState = uiState.copy(
-                        isLoading = false,
-                        isValidating = true,
-                        errorDialog = CreatePlaceErrorDialog.InvalidFormErrorDialog
-                    )
                 }
             }
         }
@@ -286,7 +275,7 @@ class CreatePlaceViewModel(
                     )
                 )
 
-                else -> OpeningHours(day.dayOfWeek)
+                else -> CreatePlaceOpeningHoursUI(day.dayOfWeek)
             }
             val updatedOpeningHours = uiState.openingHoursField.sortedOpeningHours.toMutableList()
             if (updatedOpeningHours.remove(day)) {
@@ -302,8 +291,8 @@ class CreatePlaceViewModel(
     private fun openTimePickerOnSelectedPeriod(action: Action.EditPeriodButtonClick) {
         val day = uiState.openingHoursField.sortedOpeningHours.first { it.dayOfWeek == action.day }
         val period = when (action.periodType) {
-            PeriodType.MAIN -> day.mainPeriod
-            PeriodType.SECONDARY -> day.secondaryPeriod
+            PeriodType.MAIN -> day.mainPeriod ?: return
+            PeriodType.SECONDARY -> day.secondaryPeriod ?: return
         }
         val (hours, minutes) = when (action.periodEnd) {
             PeriodEnd.FROM -> Pair(period.openingHour, period.openingMinute)
@@ -346,37 +335,6 @@ class CreatePlaceViewModel(
         uiState = uiState.copy(openingHoursField = updatedOpeningHours)
     }
 
-    private fun dismissVerifyEmailPromptScreen() {
-        uiState = uiState.copy(showVerifyEmailPrompt = false)
-    }
-
-    private fun sendVerificationEmail() {
-        viewModelScope.launch {
-            when (sendVerificationEmailUseCase()) {
-                SendVerificationEmailResult.Success -> uiState = uiState.copy(
-                    showVerifyEmailPrompt = false,
-                    errorDialog = CreatePlaceErrorDialog(
-                        title = success,
-                        message = verification_email_sent
-                    )
-                )
-
-                SendVerificationEmailResult.TooManyRequests -> uiState = uiState.copy(
-                    showVerifyEmailPrompt = false,
-                    errorDialog = CreatePlaceErrorDialog(
-                        title = generic_error_title,
-                        message = verification_email_too_many_requests,
-                    )
-                )
-
-                SendVerificationEmailResult.UnknownError -> uiState = uiState.copy(
-                    showVerifyEmailPrompt = false,
-                    errorDialog = CreatePlaceErrorDialog.UnknownErrorDialog
-                )
-            }
-        }
-    }
-
     data class OpeningHoursTimePickerState(
         val dayOfWeek: DayOfWeek,
         val periodEnd: PeriodEnd,
@@ -399,8 +357,40 @@ class CreatePlaceViewModel(
         val selectedTagsField: SelectedTagsField = SelectedTagsField(),
         val isLoading: Boolean = false,
         val isValidating: Boolean = false,
-        val showVerifyEmailPrompt: Boolean = false,
     ) {
+
+        fun toForm(): PlaceForm? {
+            return PlaceForm(
+                name = nameField.value.trim().ifBlank { return null },
+                imageModel = pictureField.model ?: return null,
+                addressComponents = addressField?.toAddressComponents() ?: return null,
+                openingHours = openingHoursField.sortedOpeningHours.map { it.toModel() },
+                description = descriptionField.value.ifBlank { return null },
+                type = typeField.value ?: return null,
+                latitude = locationField.latLng?.latitude ?: return null,
+                longitude = locationField.latLng.longitude,
+                tags = selectedTagsField.tags
+            )
+        }
+
+
+        private fun AddressField.toAddressComponents(): AddressComponents {
+            return AddressComponents(
+                streetAddress = streetAddress.ifBlank { throw IllegalArgumentException() },
+                locality = locality,
+                primaryAdminArea = primaryAdminArea,
+                secondaryAdminArea = secondaryAdminArea,
+                country = country
+            )
+        }
+
+        private fun CreatePlaceOpeningHoursUI.toModel(): OpeningHours {
+            return OpeningHours(
+                dayOfWeek = dayOfWeek.name,
+                mainPeriod = mainPeriod.takeIf { !isClosed },
+                secondaryPeriod = secondaryPeriod.takeIf { isSplit },
+            )
+        }
 
         companion object {
             private val defaultCameraPosition = CameraPosition.fromLatLngZoom(
@@ -436,8 +426,6 @@ class CreatePlaceViewModel(
         ) : Action()
 
         data object OnHideExpandOpeningHoursClick : Action()
-        data object OnVerifyEmailPromptDismissRequest : Action()
-        data object OnVerifyEmailPromptSendRequest : Action()
         data object OnBackClick : Action()
 
         data class OnDayOpenCloseSwitchClick(val day: DayOfWeek) : Action()
@@ -448,7 +436,6 @@ class CreatePlaceViewModel(
         data object ShowVerifyEmailPrompt : SideEffect()
         data object NavigateToAuthenticateScreen : SideEffect()
         data object NavigateToThankYouScreen : SideEffect()
-        data object NavigateToAlreadyExistingPlace : SideEffect()
         data object OpenImageSelector : SideEffect()
         data object NavigateUp : SideEffect()
 

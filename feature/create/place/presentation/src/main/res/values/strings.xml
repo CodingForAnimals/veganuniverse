@@ -26,4 +26,7 @@
     <string name="empty_type_message">Tenés que seleccionar un tipo de ícono</string>
     <string name="empty_name_message">El nombre del lugar no puede estar vacío</string>
     <string name="create_place">Aportar lugar</string>
+    <string name="no_internet_title">Sin conexión</string>
+    <string name="no_internet_message">Necesitas conexión a internet para realizar esta acción!</string>
+    <string name="email_not_yet_verified">Tu correo electrónico no ha sido verificado todavía. Por favor revisa tu correo</string>
 </resources>

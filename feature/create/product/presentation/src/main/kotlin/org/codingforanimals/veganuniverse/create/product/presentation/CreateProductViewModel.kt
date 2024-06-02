@@ -11,12 +11,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.create.product.domain.model.ProductForm
+import org.codingforanimals.veganuniverse.create.product.domain.model._ProductForm
 import org.codingforanimals.veganuniverse.create.product.domain.usecase.SaveProduct
 import org.codingforanimals.veganuniverse.create.product.domain.usecase.SaveProductStatus
+import org.codingforanimals.veganuniverse.create.product.domain.usecase.SubmitProduct
 import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductCategoryField
 import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductTypeField
-import org.codingforanimals.veganuniverse.product.ui.ProductCategory
-import org.codingforanimals.veganuniverse.product.ui.ProductType
+import org.codingforanimals.veganuniverse.product.model.ProductCategory
+import org.codingforanimals.veganuniverse.product.model.ProductType
+import org.codingforanimals.veganuniverse.product.presentation.toUI
 import org.codingforanimals.veganuniverse.ui.dialog.Dialog
 import org.codingforanimals.veganuniverse.ui.viewmodel.PictureField
 import org.codingforanimals.veganuniverse.ui.viewmodel.StringField
@@ -24,6 +27,7 @@ import org.codingforanimals.veganuniverse.ui.viewmodel.areFieldsValid
 
 class CreateProductViewModel(
     private val saveProduct: SaveProduct,
+    private val submitProduct: SubmitProduct,
 ) : ViewModel() {
 
     private var imagePickerJob: Job? = null
@@ -41,7 +45,7 @@ class CreateProductViewModel(
             is Action.OnTextChange -> updateTextForm(action)
             is Action.OnProductTypeSelected -> handleProductTypeSelect(action)
             is Action.OnProductCategorySelected -> handleProductCategorySelect(action)
-            Action.OnSubmitClick -> handleSubmitClick()
+            Action.OnSubmitClick -> attemptSubmitProduct()
             Action.DismissDialog -> dismissDialog()
         }
     }
@@ -80,7 +84,81 @@ class CreateProductViewModel(
     }
 
     private fun handleProductCategorySelect(action: Action.OnProductCategorySelected) {
-        _uiState.value = uiState.value.copy(productCategoryField = ProductCategoryField(action.category))
+        _uiState.value =
+            uiState.value.copy(productCategoryField = ProductCategoryField(action.category))
+    }
+
+    private fun attemptSubmitProduct() {
+        if (!uiState.value.isFormValid()) {
+            return showFormAsInvalid()
+        }
+
+        with(uiState.value) {
+            val category = productCategoryField.category ?: return@with showFormAsInvalid()
+            val type = productTypeField.type ?: return@with showFormAsInvalid()
+            val imageModel = pictureField.model ?: return@with showFormAsInvalid()
+            val productForm = ProductForm(
+                name = nameField.value.trim(),
+                brand = brandField.value.trim(),
+                category = category,
+                type = type,
+                comment = commentsField.value.trim().ifBlank { null },
+                imageModel = imageModel,
+            )
+            viewModelScope.launch {
+                _uiState.value = uiState.value.copy(loading = true)
+                when (submitProduct(productForm)) {
+                    SubmitProduct.Result.GuestUser -> {
+                        sideEffectsChannel.send(SideEffect.NavigateToAuthenticateScreen)
+                    }
+
+                    SubmitProduct.Result.NoInternet -> {
+                        _uiState.value = uiState.value.copy(
+                            loading = false,
+                            dialog = Dialog(
+                                title = org.codingforanimals.veganuniverse.ui.R.string.connection_error_title,
+                                message = org.codingforanimals.veganuniverse.ui.R.string.connection_error_message,
+                            )
+                        )
+                    }
+
+                    SubmitProduct.Result.UnexpectedError -> {
+                        _uiState.value = uiState.value.copy(
+                            loading = false,
+                            dialog = Dialog(
+                                title = org.codingforanimals.veganuniverse.ui.R.string.generic_error_title,
+                                message = org.codingforanimals.veganuniverse.ui.R.string.unknown_error_message,
+                            )
+                        )
+                    }
+
+                    SubmitProduct.Result.UnverifiedEmail -> {
+                        _uiState.value = uiState.value.copy(
+                            loading = false,
+                            dialog = Dialog(
+                                title = org.codingforanimals.veganuniverse.ui.R.string.generic_error_title,
+                                message = org.codingforanimals.veganuniverse.core.ui.R.string.email_not_yet_verified,
+                            )
+                        )
+                    }
+
+                    is SubmitProduct.Result.AlreadyExists -> {
+                        _uiState.value = uiState.value.copy(
+                            loading = false,
+                            dialog = Dialog(
+                                title = org.codingforanimals.veganuniverse.ui.R.string.generic_error_title,
+                                message = R.string.product_already_exists
+                            )
+                        )
+
+                    }
+
+                    is SubmitProduct.Result.Success -> {
+                        sideEffectsChannel.send(SideEffect.NavigateToThankYouScreen)
+                    }
+                }
+            }
+        }
     }
 
     private var saveProductJob: Job? = null
@@ -97,7 +175,7 @@ class CreateProductViewModel(
                 val imageModel = uiState.value.pictureField.model
                     ?: return@launch showFormAsInvalid()
                 saveProduct(
-                    productForm = ProductForm(
+                    productForm = _ProductForm(
                         name = uiState.value.nameField.value.trim(),
                         brand = uiState.value.brandField.value.trim(),
                         category = category,
@@ -176,7 +254,7 @@ class CreateProductViewModel(
         val dialog: Dialog? = null,
         val loading: Boolean = false,
     ) {
-        val heroAnchorIcon = productTypeField.type?.icon
+        val heroAnchorIcon = productTypeField.type?.toUI()?.icon
         fun isFormValid() = areFieldsValid(
             pictureField,
             nameField,

@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.entity.OneWayEntityMapper
+import org.codingforanimals.veganuniverse.services.firebase.StoragePath
 import org.codingforanimals.veganuniverse.user.services.firebase.Authenticator
 import org.codingforanimals.veganuniverse.user.services.firebase.config.GoogleSignInWrapper
 import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailLoginResponse
@@ -99,7 +100,7 @@ class FirebaseAuthenticator(
                     .build()
             ).asDeferred()
             val sendEmailVerification = firebaseUser.sendEmailVerification().asDeferred()
-            val userEntity = firebaseUserEntityMapper.map(firebaseUser)
+            val userEntity = firebaseUser.toEntity(name)
             val userDocumentDeferred = usersCollection.document().set(userEntity).asDeferred()
 
             awaitAll(updateName, sendEmailVerification, userDocumentDeferred)
@@ -115,6 +116,15 @@ class FirebaseAuthenticator(
                 else -> EmailRegistrationResponse.Exception.UnknownFailure
             }
         }
+    }
+
+    private fun FirebaseUser.toEntity(name: String): UserFirebaseEntity {
+        return UserFirebaseEntity(
+            userId = uid,
+            name = name,
+            email = email ?: "",
+            isEmailVerified = isEmailVerified,
+        )
     }
 
     override suspend fun gmailAuthentication(intent: Intent): ProviderAuthenticationResponse {

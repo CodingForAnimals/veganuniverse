@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.create.product.domain.mapper
 
 import org.codingforanimals.veganuniverse.create.product.data.dto.ProductFormDTO
-import org.codingforanimals.veganuniverse.create.product.domain.model.ProductForm
+import org.codingforanimals.veganuniverse.create.product.domain.model._ProductForm
 
 private fun createKeywords(vararg searchableFields: String): List<String> {
     val keywords = mutableListOf<String>()
@@ -26,7 +26,7 @@ private fun createKeywords(vararg searchableFields: String): List<String> {
     return keywords
 }
 
-fun ProductForm.toEntity(userId: String): ProductFormDTO {
+fun _ProductForm.toEntity(userId: String): ProductFormDTO {
     return ProductFormDTO(
         userId = userId,
         name = name,

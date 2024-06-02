@@ -10,8 +10,9 @@ import com.google.android.libraries.places.api.model.RectangularBounds
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import org.codingforanimals.veganuniverse.places.entity.OpeningHours
-import org.codingforanimals.veganuniverse.places.entity.Period
+import org.codingforanimals.veganuniverse.place.model.AddressComponents
+import org.codingforanimals.veganuniverse.place.model.OpeningHours
+import org.codingforanimals.veganuniverse.place.model.Period
 import org.codingforanimals.veganuniverse.services.google.places.model.PlaceAutocompleteResult
 import com.google.android.libraries.places.api.model.AddressComponents as GoogleAddressComponents
 import com.google.android.libraries.places.api.model.Period as GooglePlacesPeriod
@@ -89,7 +90,7 @@ class PlacesClientImpl(
             .build(context)
     }
 
-    private fun GoogleAddressComponents.getAddressComponents(): org.codingforanimals.veganuniverse.places.entity.AddressComponents {
+    private fun GoogleAddressComponents.getAddressComponents(): AddressComponents {
         with(asList()) {
             // fix to firstOrNull or something like that
             val streetName = firstOrNull { it.types.contains(STREET_NAME) }?.name ?: ""
@@ -103,8 +104,12 @@ class PlacesClientImpl(
             val primaryAdminArea = firstOrNull { it.types.contains(ADMIN_AREA_1) }?.name ?: ""
             val secondaryAdminArea = firstOrNull { it.types.contains(ADMIN_AREA_2) }?.name ?: ""
             val country = firstOrNull { it.types.contains(COUNTRY) }?.name ?: ""
-            return org.codingforanimals.veganuniverse.places.entity.AddressComponents(
-                streetAddress, locality, primaryAdminArea, secondaryAdminArea, country
+            return AddressComponents(
+                streetAddress = streetAddress,
+                locality = locality,
+                primaryAdminArea = primaryAdminArea,
+                secondaryAdminArea = secondaryAdminArea,
+                country = country,
             )
         }
     }

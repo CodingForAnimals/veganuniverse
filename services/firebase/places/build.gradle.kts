@@ -10,10 +10,10 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Services.Firebase.BASE))
-    implementation(project(Module.Entity.BASE))
-    implementation(project(Module.Entity.PLACES))
-    implementation(project(Module.Core.COMMON))
+    implementation(project(":services:firebase"))
+    implementation(project(":entity"))
+    implementation(project(":entity:places"))
+    implementation(project(":core:common"))
 
 
     bomImplementation(

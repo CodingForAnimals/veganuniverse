@@ -70,6 +70,9 @@ internal class ProfileLookupsFirebaseService(
     }
 
     override suspend fun getContentSavedByUser(
+//        reveer todo esto parece innecesariamente complicado
+//        deberia tener la lista de ids desde RTDB
+//        y de ahí usar caché local o remoto si no hay local
         saveableType: SaveableType,
         contentType: SaveableContentType,
         userId: String,

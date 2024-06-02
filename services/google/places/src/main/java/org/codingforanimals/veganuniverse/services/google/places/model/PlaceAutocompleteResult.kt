@@ -1,8 +1,8 @@
 package org.codingforanimals.veganuniverse.services.google.places.model
 
 import android.graphics.Bitmap
-import org.codingforanimals.veganuniverse.places.entity.AddressComponents
-import org.codingforanimals.veganuniverse.places.entity.OpeningHours
+import org.codingforanimals.veganuniverse.place.model.AddressComponents
+import org.codingforanimals.veganuniverse.place.model.OpeningHours
 
 sealed class PlaceAutocompleteResult {
     data class Establishment(

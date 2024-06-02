@@ -26,7 +26,7 @@ import org.codingforanimals.veganuniverse.ui.Spacing_04
 internal fun StaggeredItemCard(
     modifier: Modifier = Modifier,
     title: String,
-    imageRef: String,
+    imageRef: String?,
     layoutType: SimpleCardLayoutType,
     onClick: () -> Unit,
     elevation: CardElevation = CardDefaults.cardElevation(),

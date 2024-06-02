@@ -22,7 +22,7 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("C:\\Users\\agusm\\Dev\\codingforanimals\\veganuniverse\\vukey.jks")
+            storeFile = file("/Users/agustin.magne/agus/veganuniverse/vukey.jks")
             storePassword = "123123"
             keyAlias = "vukey"
             keyPassword = "123123"
@@ -50,23 +50,17 @@ dependencies {
      */
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
     implementation(project(":feature:onboarding:presentation"))
-    implementation(project(Module.Profile.GRAPH))
-    implementation(project(Module.Create.GRAPH))
+    implementation(project(":commons:profile:domain"))
+    implementation(project(":feature:profile"))
+    implementation(project(":feature:create:graph"))
     implementation(project(":feature:product:presentation"))
-    implementation(project(":feature:community:presentation"))
-    implementation(project(":feature:featuredtopic:presentation"))
-    implementation(project(Module.Recipes.PRESENTATION))
-    implementation(project(":feature:post:presentation"))
-    implementation(project(Module.Places.PRESENTATION))
+    implementation(project(":feature:recipe:presentation"))
+    implementation(project(":feature:place:presentation"))
     implementation(project(":feature:registration:presentation"))
-    implementation(project(":feature:notifications:presentation"))
-    implementation(project(Module.Create.Home.PRESENTATION))
-    implementation(project(":feature:search:presentation"))
     implementation(project(":feature:settings:presentation"))
-    implementation(project(Module.Core.COMMON))
-    implementation(project(Module.Core.LOCATION))
-    implementation(project(Module.Core.AUTH))
-    implementation(project(Module.Services.Firebase.BASE))
+    implementation(project(":core:common"))
+    implementation(project(":core:location"))
+    implementation(project(":core:auth"))
     implementation("com.google.maps.android:maps-compose:${versions.googleMapCompose}")
     implementation("com.google.android.gms:play-services-maps:${versions.googleMapServices}")
 

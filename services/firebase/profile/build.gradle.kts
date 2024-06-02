@@ -8,8 +8,8 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Services.Firebase.BASE))
-    implementation(project(Module.Profile.MODEL))
+    implementation(project(":services:firebase"))
+    implementation(project(":model:profile"))
     bomImplementation(
         Firebase.BOM,
         listOf(

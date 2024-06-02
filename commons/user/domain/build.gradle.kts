@@ -4,9 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "org.codingforanimals.veganuniverse.commons.user.domain"
+    namespace = "org.codingforanimals.veganuniverse.user.domain"
 }
 
 dependencies {
     implementation(project(":commons:user:data"))
+
+    bomImplementation(libs.firebase.bom, listOf(libs.firebase.auth))
 }

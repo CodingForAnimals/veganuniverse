@@ -9,11 +9,14 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Core.COMMON))
-    implementation(project(Module.Core.LOCATION))
-    implementation(project(Module.Core.AUTH))
-    implementation(project(Module.Places.ENTITY))
-    implementation(project(Module.Places.Services.FIREBASE))
-    implementation(project(Module.Profile.Services.FIREBASE))
-    implementation(project(Module.Profile.MODEL))
+    implementation(project(":commons:place:domain"))
+    implementation(project(":commons:network"))
+    implementation(project(":commons:user:domain"))
+    implementation(project(":core:common"))
+    implementation(project(":core:location"))
+    implementation(project(":core:auth"))
+    implementation(project(":entity:places"))
+    implementation(project(":services:firebase:places"))
+    implementation(project(":services:firebase:profile"))
+    implementation(project(":model:profile"))
 }

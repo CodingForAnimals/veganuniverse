@@ -9,7 +9,6 @@ import androidx.compose.ui.res.stringResource
 @Composable
 internal fun ErrorDialog(
     errorData: CreatePlaceErrorDialog,
-    navigateToAlreadyExistingPlace: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     val dismissButton: (@Composable () -> Unit)? =

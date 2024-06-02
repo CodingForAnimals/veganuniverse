@@ -4,17 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import org.codingforanimals.veganuniverse.create.graph.CreateDestination
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.navigation.rememberVUNavController
-import org.codingforanimals.veganuniverse.notifications.presentation.navigation.NotificationsDestination
-import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
+import org.codingforanimals.veganuniverse.places.presentation.navigation.PlaceDestination
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
-import org.codingforanimals.veganuniverse.search.presentation.navigation.SearchDestination
 import org.codingforanimals.veganuniverse.settings.presentation.navigation.SettingsDestination
 import org.codingforanimals.veganuniverse.ui.topappbar.TopBarAction
 
@@ -35,8 +34,6 @@ class VUAppState(
 ) {
 
     val topBarActions: List<TopBarAction> = listOf(
-        TopBarAction.SearchTopBarAction,
-        TopBarAction.NotificationTopBarAction,
         TopBarAction.SettingsTopBarAction,
     )
 
@@ -46,7 +43,7 @@ class VUAppState(
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
             ProductDestination.Home.route -> TopLevelDestination.PRODUCTS
-            PlacesDestination.Home.route -> TopLevelDestination.PLACES
+            PlaceDestination.Home.route -> TopLevelDestination.PLACES
             CreateDestination.Home.route -> TopLevelDestination.CREATE
             RecipesDestination.Home.route -> TopLevelDestination.RECIPES
             ProfileDestination.Home.route -> TopLevelDestination.PROFILE
@@ -56,10 +53,16 @@ class VUAppState(
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
 
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
-        when (destination) {
-            TopLevelDestination.PRODUCTS -> navigateBackHomeToProducts()
-            else -> navController.navigate(destination.route)
+        navController.navigate(destination.route) {
+            restoreState = true
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
         }
+//        when (destination) {
+//            TopLevelDestination.PRODUCTS -> navigateBackHomeToProducts()
+//            else -> navController.navigate(destination.route)
+//        }
     }
 
     fun navigateBackHomeToProducts() {
@@ -70,8 +73,6 @@ class VUAppState(
 
     fun onActionClick(action: TopBarAction) {
         when (action) {
-            TopBarAction.SearchTopBarAction -> navController.navigate(SearchDestination.route)
-            TopBarAction.NotificationTopBarAction -> navController.navigate(NotificationsDestination.route)
             TopBarAction.SettingsTopBarAction -> navController.navigate(SettingsDestination.route)
         }
     }

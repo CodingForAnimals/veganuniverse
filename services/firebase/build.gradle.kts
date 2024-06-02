@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Core.COMMON))
+    implementation(project(":core:common"))
 
     bomImplementation(
         Firebase.BOM,

@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.create.product.presentation.model
 
-import org.codingforanimals.veganuniverse.product.ui.ProductCategory
-import org.codingforanimals.veganuniverse.product.ui.ProductType
+import org.codingforanimals.veganuniverse.product.model.ProductCategory
+import org.codingforanimals.veganuniverse.product.model.ProductType
 import org.codingforanimals.veganuniverse.ui.viewmodel.ValidationField
 
 data class ProductTypeField(

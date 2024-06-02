@@ -8,19 +8,29 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.core.location.UserLocationManager
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingPresenter
+import org.codingforanimals.veganuniverse.profile.domain.repository.ProfileRepository
 
 class MainViewModel(
     private val onboardingPresenter: OnboardingPresenter,
     private val userLocationManager: UserLocationManager,
+    private val profileRepository: ProfileRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<LaunchState> = MutableStateFlow(LaunchState.Loading)
     val uiState: StateFlow<LaunchState> = _uiState
 
+    init {
+        viewModelScope.launch {
+            profileRepository.downloadAndStoreProfile()
+        }
+    }
+
     fun onPermissionsChange(fineLocation: Boolean?) {
         checkUserState()
         if (fineLocation == true) {
-            userLocationManager.fetchUserLocation()
+            viewModelScope.launch {
+                userLocationManager.requestUserLocation()
+            }
         }
     }
 
