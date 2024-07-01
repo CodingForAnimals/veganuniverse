@@ -11,10 +11,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
+import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.create.graph.CreateDestination
 import org.codingforanimals.veganuniverse.create.graph.createGraph
-import org.codingforanimals.veganuniverse.places.presentation.navigation.PlaceDestination
-import org.codingforanimals.veganuniverse.places.presentation.navigation.placesGraph
+import org.codingforanimals.veganuniverse.place.presentation.navigation.PlaceDestination
+import org.codingforanimals.veganuniverse.place.presentation.navigation.placesGraph
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 import org.codingforanimals.veganuniverse.product.presentation.navigation.productGraph
 import org.codingforanimals.veganuniverse.profile.ProfileDestination
@@ -23,8 +24,6 @@ import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestinatio
 import org.codingforanimals.veganuniverse.recipes.presentation.recipesGraph
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
-import org.codingforanimals.veganuniverse.settings.presentation.navigation.settingsGraph
-import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 @Composable
 internal fun rememberVUNavController(): NavHostController {
@@ -49,9 +48,9 @@ internal fun VUAppNavHost(
             navigateToRegister = {
                 navController.navigateToAuthPromptWithOriginDestination(ProfileDestination.Home)
             },
-            navigateToRecipe = { navController.navigate("${RecipesDestination.Details.route}/$it") },
-            navigateToPlace = { navController.navigate("${PlaceDestination.Details.route}/$it") },
-            navController = navController
+//            navigateToRecipe = { navController.navigate("${RecipesDestination.Details.route}/$it") },
+//            navigateToPlace = { navController.navigate("${PlaceDestination.Details.route}/$it") },
+            navController = navController,
         )
         productGraph(
             navController = navController,
@@ -65,14 +64,15 @@ internal fun VUAppNavHost(
             navController = navController,
             defaultOriginNavigationRoute = ProductDestination.Home.route
         )
-        settingsGraph(
-            onBackClick = navController::navigateUp,
-        )
         placesGraph(
-            navController = navController
-        ) {
-            navController.navigateToAuthPromptWithOriginDestination(PlaceDestination.Details)
-        }
+            navController = navController,
+            navigateToAuthenticateScreen = {
+                navController.navigateToAuthPromptWithOriginDestination(PlaceDestination.Details)
+            },
+            navigatoToReauthenticateScreen = {
+                navController.navigate(RegistrationDestination.EmailReauthentication.route)
+            }
+        )
         createGraph(
             navController = navController,
             navigateToAuthenticationScreen = {
@@ -81,7 +81,6 @@ internal fun VUAppNavHost(
         )
         recipesGraph(
             navController = navController,
-            snackbarHostState = snackbarHostState,
             navigateToAuthenticateScreen = {
                 navController.navigateToAuthPromptWithOriginDestination(RecipesDestination.Details)
             }

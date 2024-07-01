@@ -2,12 +2,12 @@ package org.codingforanimals.veganuniverse.navigation
 
 import org.codingforanimals.veganuniverse.app.R
 import org.codingforanimals.veganuniverse.create.graph.CreateDestination
-import org.codingforanimals.veganuniverse.places.presentation.navigation.PlaceDestination
+import org.codingforanimals.veganuniverse.place.presentation.navigation.PlaceDestination
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
-import org.codingforanimals.veganuniverse.ui.icon.Icon
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.ui.icon.Icon
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 
 enum class TopLevelDestination(
     val route: String,

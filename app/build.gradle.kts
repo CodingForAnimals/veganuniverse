@@ -3,6 +3,7 @@ plugins {
     id("kotlin-android")
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
     `android-config`
     `compose-config`
 }
@@ -18,11 +19,16 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file("C:\\Users\\agusm\\Dev\\codingforanimals\\veganuniverse\\vukey.jks")
+            storeFile = file("/Users/agustin.magne/agus/veganuniverse/vukey.jks")
+//            storeFile = file("C:\\Users\\agusm\\Dev\\codingforanimals\\veganuniverse\\vukey.jks")
             storePassword = "123123"
             keyAlias = "vukey"
             keyPassword = "123123"
@@ -50,17 +56,15 @@ dependencies {
      */
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
     implementation(project(":feature:onboarding:presentation"))
-    implementation(project(":commons:profile:domain"))
+    implementation(project(":commons-profile:domain"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:create:graph"))
     implementation(project(":feature:product:presentation"))
     implementation(project(":feature:recipe:presentation"))
     implementation(project(":feature:place:presentation"))
     implementation(project(":feature:registration:presentation"))
-    implementation(project(":feature:settings:presentation"))
-    implementation(project(":core:common"))
-    implementation(project(":core:location"))
-    implementation(project(":core:auth"))
+    implementation(project(":services:location"))
+    implementation(project(":commons:navigation"))
     implementation("com.google.maps.android:maps-compose:${versions.googleMapCompose}")
     implementation("com.google.android.gms:play-services-maps:${versions.googleMapServices}")
 
@@ -70,16 +74,4 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:31.2.3"))
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
-
-    // For TimeManager
-//    implementation("com.google.android.things:androidthings:1.0")
-
-    // Declare the dependency for the Cloud Firestore library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
-
-
-//    testImplementation 'junit:junit:4.13.2'
-//    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-//    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 }

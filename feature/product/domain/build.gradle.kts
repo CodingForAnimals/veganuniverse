@@ -10,7 +10,6 @@ android {
 
 dependencies {
     implementation(libs.androidx.paging)
-    implementation(project(":feature:product:data"))
-    implementation(project(":commons:product:domain"))
-    implementation(project(":core:auth"))
+    implementation(project(":commons-product:domain"))
+    implementation(project(":commons:user:domain"))
 }

@@ -1,10 +1,10 @@
 package org.codingforanimals.veganuniverse.create.recipe.model
 
 import androidx.annotation.StringRes
-import org.codingforanimals.veganuniverse.recipe.model.RecipeTag
-import org.codingforanimals.veganuniverse.recipe.presentation.toUI
-import org.codingforanimals.veganuniverse.ui.icon.Icon
-import org.codingforanimals.veganuniverse.ui.viewmodel.ValidationField
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
+import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.ui.icon.Icon
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.ValidationField
 
 internal data class TagsField(
     val tags: List<Tag> = RecipeTag.values().toViewEntity(),

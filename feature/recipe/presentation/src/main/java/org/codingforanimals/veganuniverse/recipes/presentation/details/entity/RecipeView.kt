@@ -1,6 +1,6 @@
 package org.codingforanimals.veganuniverse.recipes.presentation.details.entity
 
-import org.codingforanimals.veganuniverse.recipe.presentation.RecipeTagUI
+import org.codingforanimals.veganuniverse.commons.recipe.presentation.RecipeTagUI
 import java.util.Date
 
 data class RecipeView(

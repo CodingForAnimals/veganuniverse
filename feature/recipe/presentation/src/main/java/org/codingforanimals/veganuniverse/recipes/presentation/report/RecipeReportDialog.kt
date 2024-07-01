@@ -21,12 +21,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.components.VUTag
-import org.codingforanimals.veganuniverse.ui.components.VUTagDefaults
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTag
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTagDefaults
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 
 @Composable
 internal fun RecipeReportDialog(

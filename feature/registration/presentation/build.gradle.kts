@@ -11,8 +11,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":core:auth"))
+    implementation(project(":commons:user:domain"))
+    implementation(project(":commons:navigation"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

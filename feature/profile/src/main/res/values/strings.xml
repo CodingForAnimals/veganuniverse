@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profie_screen_unauthenticated_user_title">¡Bienvenido a tu Universo Vegano!</string>
+    <string name="profie_screen_unauthenticated_user_subtitle">Aún no has creado tu usuario</string>
+    <string name="profie_screen_unauthenticated_user_text">Para sumar contenido en el Universo Vegano neceistás estar registrado. Podés iniciar sesión o crear un usuario nuevo</string>
+    <string name="access">Ingresar</string>
+</resources>

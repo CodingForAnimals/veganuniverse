@@ -34,18 +34,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.codingforanimals.veganuniverse.recipe.model.Recipe
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.home.components.RecipesHomeItemHeader
-import org.codingforanimals.veganuniverse.ui.Spacing_02
-import org.codingforanimals.veganuniverse.ui.Spacing_03
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_05
-import org.codingforanimals.veganuniverse.ui.animation.ShimmerItem
-import org.codingforanimals.veganuniverse.ui.animation.shimmer
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.error.ErrorView
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.ui.animation.ShimmerItem
+import org.codingforanimals.veganuniverse.commons.ui.animation.shimmer
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 
 @Composable
 internal fun MostLikedRecipes(

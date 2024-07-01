@@ -1,7 +1,6 @@
 package org.codingforanimals.veganuniverse.recipes.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,10 +12,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeViewModel.SideEffect
-import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -28,7 +28,7 @@ internal fun RecipesHomeScreen(
     val mostLikedRecipesState by viewModel.mostLikedRecipes.collectAsStateWithLifecycle()
     val latestRecipesState by viewModel.latestRecipes.collectAsStateWithLifecycle()
 
-    RecipesHomeScreens(
+    RecipesHomeScreen(
         mostLikedRecipesState = mostLikedRecipesState,
         latestRecipesState = latestRecipesState,
         onAction = viewModel::onAction,
@@ -42,7 +42,7 @@ internal fun RecipesHomeScreen(
 }
 
 @Composable
-private fun RecipesHomeScreens(
+private fun RecipesHomeScreen(
     mostLikedRecipesState: RecipesHomeViewModel.RecipeListState,
     latestRecipesState: RecipesHomeViewModel.RecipeListState,
     onAction: (Action) -> Unit,
@@ -50,7 +50,10 @@ private fun RecipesHomeScreens(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
-        contentPadding = PaddingValues(Spacing_06),
+        contentPadding = PaddingValues(
+            vertical = Spacing_06,
+            horizontal = Spacing_05,
+        ),
         verticalArrangement = Arrangement.spacedBy(Spacing_06)
     ) {
         item {

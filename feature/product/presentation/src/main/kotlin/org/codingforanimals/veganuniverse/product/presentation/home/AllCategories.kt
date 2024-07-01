@@ -2,6 +2,7 @@
 
 package org.codingforanimals.veganuniverse.product.presentation.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -23,14 +25,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.codingforanimals.veganuniverse.product.model.ProductCategory
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.product.presentation.R
-import org.codingforanimals.veganuniverse.product.presentation.toUI
-import org.codingforanimals.veganuniverse.ui.Spacing_02
-import org.codingforanimals.veganuniverse.ui.Spacing_03
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.cards.VUCardDefaults
+import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
 
 @Composable
 fun AllCategories(
@@ -69,8 +71,8 @@ fun AllCategories(
                     modifier = Modifier
                         .weight(1f)
                         .aspectRatio(1f),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                     onClick = { onItemClick(category) },
-                    elevation = VUCardDefaults.elevatedCardElevation(),
                 ) {
                     AsyncImage(
                         modifier = Modifier

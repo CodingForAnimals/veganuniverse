@@ -10,16 +10,17 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.usecase.EmailSignInUseCase
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
+import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.usecase.GetEmailSignInScreenContent
-import org.codingforanimals.veganuniverse.registration.presentation.model.EmailSignInStatus
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.EmailField
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.PasswordField
-import org.codingforanimals.veganuniverse.ui.viewmodel.areFieldsValid
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.areFieldsValid
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.AuthenticationUseCases
 
 class EmailSignInViewModel(
     getEmailSignInScreenContent: GetEmailSignInScreenContent,
-    private val emailSignInUseCase: EmailSignInUseCase,
+    private val authenticationUseCases: AuthenticationUseCases,
 ) : ViewModel() {
 
     val content = getEmailSignInScreenContent()
@@ -53,30 +54,21 @@ class EmailSignInViewModel(
 
     private fun signIn() {
         viewModelScope.launch {
-            emailSignInUseCase(
+            uiState = uiState.copy(loading = true)
+            val result = authenticationUseCases.loginWithEmailAndPassword(
                 email = uiState.emailField.value,
                 password = uiState.passwordField.value,
-            ).collect { status ->
-                when (status) {
-                    EmailSignInStatus.Loading -> {
-                        uiState = uiState.copy(loading = true)
-                    }
-
-                    EmailSignInStatus.Success -> {
-                        uiState = uiState.copy(loading = false)
-                        _sideEffects.send(SideEffect.NavigateToOriginDestination)
-                    }
-
-                    is EmailSignInStatus.Exception -> {
-                        uiState = uiState.copy(
-                            loading = false,
-                            errorDialog = ErrorDialog(
-                                title = status.title,
-                                message = status.message,
-                            )
-                        )
-                    }
-                }
+            )
+            uiState = uiState.copy(loading = false)
+            if (result.isSuccess) {
+                _sideEffects.send(SideEffect.NavigateToOriginDestination)
+            } else {
+                uiState = uiState.copy(
+                    errorDialog = ErrorDialog(
+                        title = unexpected_error,
+                        message = R.string.email_login_error,
+                    )
+                )
             }
         }
     }

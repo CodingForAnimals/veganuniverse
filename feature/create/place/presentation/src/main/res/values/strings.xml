@@ -10,10 +10,8 @@
     <string name="place_missing_field_error_dialog_title">Error en lugar seleccionado</string>
     <string name="place_missing_field_error_dialog_message">El lugar seleccionado no contiene la información necesaria para autocompletar. Podés probar de nuevo o agregarlo manualmente buscando su dirección</string>
     <string name="image_picker_label">Subir foto</string>
-    <string name="generic_error_title">Oops, algo salió mal…</string>
-    <string name="unknown_error_message">Lo sentimos, ocurrió un error inesperado</string>
-    <string name="submit_button_label">Publicar</string>
     <string name="ok">OK</string>
+    <string name="edit">Editar</string>
     <string name="place_description_field_placeholder">Qué se comercializa?\nQué se puede encontrar?</string>
     <string name="place_selected_tags_field_title">Etiquetas</string>
     <string name="invalid_form_title">Error en el formulario</string>
@@ -29,4 +27,5 @@
     <string name="no_internet_title">Sin conexión</string>
     <string name="no_internet_message">Necesitas conexión a internet para realizar esta acción!</string>
     <string name="email_not_yet_verified">Tu correo electrónico no ha sido verificado todavía. Por favor revisa tu correo</string>
+    <string name="closed">Cerrado</string>
 </resources>

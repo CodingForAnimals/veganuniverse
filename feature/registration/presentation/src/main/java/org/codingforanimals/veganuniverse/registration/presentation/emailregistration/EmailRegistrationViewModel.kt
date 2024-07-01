@@ -5,26 +5,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.usecase.EmailAndPasswordRegistrationUseCase
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
+import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.usecase.GetEmailRegistrationScreenContent
-import org.codingforanimals.veganuniverse.registration.presentation.model.RegistrationStatus
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.EmailField
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.PasswordField
-import org.codingforanimals.veganuniverse.ui.viewmodel.StringField
-import org.codingforanimals.veganuniverse.ui.viewmodel.areFieldsValid
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.StringField
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.areFieldsValid
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.AuthenticationUseCases
 
 class EmailRegistrationViewModel(
     getRegisterScreenContent: GetEmailRegistrationScreenContent,
-    private val emailAndPasswordRegistration: EmailAndPasswordRegistrationUseCase,
+    private val authenticationUseCases: AuthenticationUseCases,
 ) : ViewModel() {
-
-    private var createAccountJob: Job? = null
 
     private val _sideEffects = Channel<SideEffect>()
     val sideEffects: Flow<SideEffect> = _sideEffects.receiveAsFlow()
@@ -59,33 +56,23 @@ class EmailRegistrationViewModel(
     }
 
     private fun registerUser() {
-        createAccountJob?.cancel()
-        createAccountJob = viewModelScope.launch {
-            emailAndPasswordRegistration(
+        viewModelScope.launch {
+            uiState = uiState.copy(isLoading = true)
+            val result = authenticationUseCases.createUserWithEmailAndPassword(
                 email = uiState.emailField.value,
                 password = uiState.passwordField.value,
                 name = uiState.usernameField.value,
-            ).collectLatest { status ->
-                when (status) {
-                    RegistrationStatus.Loading -> {
-                        uiState = uiState.copy(isLoading = true)
-                    }
-
-                    RegistrationStatus.Success -> {
-                        uiState = uiState.copy(isLoading = false)
-                        _sideEffects.send(SideEffect.NavigateToValidateEmailScreen)
-                    }
-
-                    is RegistrationStatus.Exception -> {
-                        uiState = uiState.copy(
-                            isLoading = false,
-                            errorDialog = ErrorDialog(
-                                title = status.title,
-                                message = status.message,
-                            )
-                        )
-                    }
-                }
+            )
+            uiState = uiState.copy(isLoading = false)
+            if (result.isSuccess) {
+                _sideEffects.send(SideEffect.NavigateToValidateEmailScreen)
+            } else {
+                uiState = uiState.copy(
+                    errorDialog = ErrorDialog(
+                        title = unexpected_error,
+                        message = R.string.email_registration_error,
+                    )
+                )
             }
         }
     }

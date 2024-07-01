@@ -1,8 +1,8 @@
 package org.codingforanimals.veganuniverse.place.details
 
 import android.util.Log
-import org.codingforanimals.veganuniverse.place.domain.repository.PlaceRepository
-import org.codingforanimals.veganuniverse.place.model.Place
+import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceRepository
+import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 
 private const val TAG = "GetPlaceDetails"
 

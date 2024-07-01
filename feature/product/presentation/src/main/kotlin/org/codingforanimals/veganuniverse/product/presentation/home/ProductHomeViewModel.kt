@@ -1,6 +1,9 @@
 package org.codingforanimals.veganuniverse.product.presentation.home
 
-import androidx.annotation.StringRes
+import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
@@ -11,33 +14,46 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.product.domain.ProductRepository
-import org.codingforanimals.veganuniverse.product.model.ProductCategory
-import org.codingforanimals.veganuniverse.product.model.ProductQueryParams
-import org.codingforanimals.veganuniverse.product.model.ProductSorter
-import org.codingforanimals.veganuniverse.product.model.ProductType
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductSorter
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
+import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
+import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
+import org.codingforanimals.veganuniverse.product.domain.usecase.EditProduct
+import org.codingforanimals.veganuniverse.product.domain.usecase.GetLatestProducts
+import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
+import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.browsing.mapper.toView
-import org.codingforanimals.veganuniverse.product.presentation.components.ProductSuggestionType
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
 
+data class ProductHomeUseCases(
+    val getLatestProducts: GetLatestProducts,
+    val reportProduct: ReportProduct,
+    val editProduct: EditProduct,
+)
+
 class ProductHomeViewModel(
-    productRepository: ProductRepository,
+    private val useCases: ProductHomeUseCases,
 ) : ViewModel() {
 
-    private val sideEffectsChannel = Channel<SideEffect>()
-    val sideEffects = sideEffectsChannel.receiveAsFlow()
+    private val navigationEffectsChannel = Channel<NavigationEffect>()
+    val navigationEffects = navigationEffectsChannel.receiveAsFlow()
+
+    private val snackbarEffectsChannel = Channel<Snackbar>()
+    val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
 
     val latestProductsState = flow {
-        val params = ProductQueryParams.Builder()
-            .withSorter(ProductSorter.DATE)
-            .withMaxSize(3)
-            .withPageSize(3)
-            .build()
         val result = runCatching {
-            productRepository.queryProducts(params).map { it.toView() }
-        }.getOrNull()?.let {
-            LatestProductsState.Success(it)
-        } ?: LatestProductsState.Error
+            val latestProducts = useCases.getLatestProducts().map { it.toView() }
+            LatestProductsState.Success(latestProducts)
+        }.getOrElse {
+            Log.e(TAG, it.stackTraceToString())
+            LatestProductsState.Error
+        }
         emit(result)
     }.stateIn(
         scope = viewModelScope,
@@ -47,6 +63,15 @@ class ProductHomeViewModel(
 
     private val mutableUiState = MutableStateFlow(UiState())
     val uiState = mutableUiState.asStateFlow()
+
+    var showReportDialog: String? by mutableStateOf(null)
+        private set
+
+    var showSuggestionDialog: String? by mutableStateOf(null)
+        private set
+
+    var showUnverifiedEmailDialog: Boolean by mutableStateOf(false)
+        private set
 
     fun onAction(action: Action) {
         when (action) {
@@ -60,7 +85,7 @@ class ProductHomeViewModel(
 
             Action.OnCreateProductClick -> {
                 viewModelScope.launch {
-                    sideEffectsChannel.send(SideEffect.NavigateToCreateProduct)
+                    navigationEffectsChannel.send(NavigationEffect.NavigateToCreateProduct)
                 }
             }
 
@@ -68,12 +93,107 @@ class ProductHomeViewModel(
                 handleImageDialogAction(action)
             }
 
-            is Action.ProductSuggestionDialogAction -> {
-                handleProductActionDialog(action)
-            }
-
             is Action.RelayAction.NavigateToAuthScreen -> {
                 handleRelayActions(action)
+            }
+
+            is Action.OpenReportDialog -> {
+                showReportDialog = action.productId
+            }
+            is Action.OpenSuggestDialog -> {
+                showSuggestionDialog = action.productId
+            }
+        }
+    }
+
+    fun onReportResult(action: ReportContentDialogResult) {
+        when (action) {
+            ReportContentDialogResult.Dismiss -> {
+                showReportDialog = null
+            }
+
+            ReportContentDialogResult.SendReport -> {
+                viewModelScope.launch {
+                    showReportDialog?.let {
+                        val result = useCases.reportProduct(it)
+                        showReportDialog = null
+                        when (result) {
+                            ReportProduct.Result.UnauthenticatedUser -> {
+                                navigationEffectsChannel.send(NavigationEffect.NavigateToAuthentication)
+                            }
+
+                            ReportProduct.Result.Success -> {
+                                snackbarEffectsChannel.send(
+                                    Snackbar(R.string.product_report_success)
+                                )
+                            }
+
+                            ReportProduct.Result.UnexpectedError -> {
+                                snackbarEffectsChannel.send(Snackbar(R.string.product_report_error))
+                            }
+
+                            ReportProduct.Result.UnverifiedEmail -> {
+                                showUnverifiedEmailDialog = true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun onEditResult(action: EditContentDialogResult) {
+        when (action) {
+            EditContentDialogResult.Dismiss -> {
+                showSuggestionDialog = null
+            }
+
+            is EditContentDialogResult.SendEdit -> {
+                viewModelScope.launch {
+                    showSuggestionDialog?.let {
+                        val result = useCases.editProduct(it, action.edition)
+                        showSuggestionDialog = null
+                        when (result) {
+                            EditProduct.Result.UnauthenticatedUser -> {
+                                navigationEffectsChannel.send(NavigationEffect.NavigateToAuthentication)
+                            }
+
+                            EditProduct.Result.UnverifiedEmail -> {
+                                showUnverifiedEmailDialog = true
+                            }
+
+                            EditProduct.Result.UnexpectedError -> {
+                                snackbarEffectsChannel.send(Snackbar(R.string.product_edit_error))
+                            }
+
+                            EditProduct.Result.Success -> {
+                                snackbarEffectsChannel.send(Snackbar(R.string.product_edit_success))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun onUnverifiedEmailResult(result: UnverifiedEmailResult) {
+        showUnverifiedEmailDialog = false
+        when (result) {
+            UnverifiedEmailResult.Dismissed -> Unit
+            UnverifiedEmailResult.UnexpectedError -> {
+                viewModelScope.launch {
+                    snackbarEffectsChannel.send(
+                        Snackbar(message = verification_email_not_sent)
+                    )
+                }
+            }
+
+            UnverifiedEmailResult.VerificationEmailSent -> {
+                viewModelScope.launch {
+                    snackbarEffectsChannel.send(
+                        Snackbar(message = verification_email_sent)
+                    )
+                }
             }
         }
     }
@@ -83,13 +203,13 @@ class ProductHomeViewModel(
         type: ProductType? = null,
         sorter: ProductSorter? = null,
     ) {
-        val sideEffect = SideEffect.NavigateToProductBrowsing(
+        val navigationEffect = NavigationEffect.NavigateToProductBrowsing(
             category = category,
             type = type,
             sorter = sorter
         )
         viewModelScope.launch {
-            sideEffectsChannel.send(sideEffect)
+            navigationEffectsChannel.send(navigationEffect)
         }
     }
 
@@ -102,49 +222,19 @@ class ProductHomeViewModel(
         )
     }
 
-    private fun handleProductActionDialog(action: Action.ProductSuggestionDialogAction) {
-        mutableUiState.value = uiState.value.copy(
-            productActionDialog = when (action) {
-                is Action.ProductSuggestionDialogAction.OpenEdit -> {
-                    ProductSuggestionType.Edit(action.product)
-                }
-
-                is Action.ProductSuggestionDialogAction.OpenReport -> {
-                    ProductSuggestionType.Report(action.product)
-                }
-
-                is Action.ProductSuggestionDialogAction.Dismiss -> {
-                    if (action.snackbarMessage != null) {
-                        viewModelScope.launch {
-                            sideEffectsChannel.send(
-                                SideEffect.ShowSnackbar(
-                                    message = action.snackbarMessage,
-                                    actionLabel = action.actionLabel,
-                                    action = action.action,
-                                )
-                            )
-                        }
-                    }
-                    null
-                }
-            }
-        )
-    }
-
     private fun handleRelayActions(action: Action.RelayAction) {
         when (action) {
             Action.RelayAction.NavigateToAuthScreen -> {
                 viewModelScope.launch {
-                    sideEffectsChannel.send(SideEffect.NavigateToAuthentication)
+                    navigationEffectsChannel.send(NavigationEffect.NavigateToAuthentication)
                 }
             }
         }
     }
 
     data class UiState(
-        val categories: List<ProductCategory> = ProductCategory.values().asList(),
+        val categories: List<ProductCategory> = ProductCategory.entries,
         val imageUrl: String? = null,
-        val productActionDialog: ProductSuggestionType? = null,
     )
 
     sealed class LatestProductsState {
@@ -162,35 +252,26 @@ class ProductHomeViewModel(
             data object Close : ImageDialogAction()
         }
 
-        sealed class ProductSuggestionDialogAction : Action() {
-            data class OpenEdit(val product: Product) : ProductSuggestionDialogAction()
-            data class OpenReport(val product: Product) : ProductSuggestionDialogAction()
-            data class Dismiss(
-                val snackbarMessage: Int?,
-                val actionLabel: Int? = null,
-                val action: (suspend () -> Unit)? = null,
-            ) : ProductSuggestionDialogAction()
-        }
-
         sealed class RelayAction : Action() {
             data object NavigateToAuthScreen : RelayAction()
         }
+
+        data class OpenReportDialog(val productId: String) : Action()
+        data class OpenSuggestDialog(val productId: String) : Action()
     }
 
-    sealed class SideEffect {
+    sealed class NavigationEffect {
         data class NavigateToProductBrowsing(
             val category: ProductCategory? = null,
             val type: ProductType? = null,
             val sorter: ProductSorter? = null,
-        ) : SideEffect()
+        ) : NavigationEffect()
 
-        data object NavigateToCreateProduct : SideEffect()
-        data object NavigateToAuthentication : SideEffect()
+        data object NavigateToCreateProduct : NavigationEffect()
+        data object NavigateToAuthentication : NavigationEffect()
+    }
 
-        data class ShowSnackbar(
-            @StringRes val message: Int,
-            @StringRes val actionLabel: Int?,
-            val action: (suspend () -> Unit)?,
-        ) : SideEffect()
+    companion object {
+        private const val TAG = "ProductHomeViewModel"
     }
 }

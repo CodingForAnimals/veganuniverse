@@ -12,39 +12,39 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.codingforanimals.veganuniverse.auth.model.SendVerificationEmailResult
-import org.codingforanimals.veganuniverse.auth.usecase.SendVerificationEmailUseCase
-import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
+import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
+import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_title
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message
 import org.codingforanimals.veganuniverse.create.recipe.domain.model.RecipeForm
 import org.codingforanimals.veganuniverse.create.recipe.domain.usecase.SubmitRecipe
 import org.codingforanimals.veganuniverse.create.recipe.model.StringListField
 import org.codingforanimals.veganuniverse.create.recipe.model.TagsField
-import org.codingforanimals.veganuniverse.recipe.model.RecipeTag
-import org.codingforanimals.veganuniverse.ui.R.string.connection_error_message
-import org.codingforanimals.veganuniverse.ui.R.string.connection_error_title
-import org.codingforanimals.veganuniverse.ui.R.string.generic_error_title
-import org.codingforanimals.veganuniverse.ui.R.string.success
-import org.codingforanimals.veganuniverse.ui.R.string.unknown_error_message
-import org.codingforanimals.veganuniverse.ui.viewmodel.PictureField
-import org.codingforanimals.veganuniverse.ui.viewmodel.StringField
-import org.codingforanimals.veganuniverse.ui.viewmodel.areFieldsValid
-import org.codingforanimals.veganuniverse.user.R.string.verification_email_sent
-import org.codingforanimals.veganuniverse.user.R.string.verification_email_too_many_requests
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.PictureField
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.StringField
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.areFieldsValid
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 
 internal class CreateRecipeViewModel(
-    private val sendVerificationEmail: SendVerificationEmailUseCase,
     private val submitRecipe: SubmitRecipe,
-    coroutineDispatcherProvider: CoroutineDispatcherProvider,
+    private val deeplinkNavigator: DeeplinkNavigator,
 ) : ViewModel() {
 
-    private val ioDispatcher = coroutineDispatcherProvider.io()
     private var imagePickerJob: Job? = null
     private var submitRecipeJob: Job? = null
-    private var sendVerificationEmailJob: Job? = null
 
     private val sideEffectChannel: Channel<SideEffect> = Channel()
     val sideEffect: Flow<SideEffect> = sideEffectChannel.receiveAsFlow()
+
+    private val snackbarEffectsChannel = Channel<Snackbar>()
+    val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
+
+    var showUnverifiedEmailDialog by mutableStateOf(false)
+        private set
 
     var uiState by mutableStateOf(UiState())
         private set
@@ -56,12 +56,33 @@ internal class CreateRecipeViewModel(
             is Action.OnIngredientChange -> updateIngredients(action)
             is Action.OnStepChange -> updateSteps(action)
             is Action.OnTagSelected -> updateTags(action)
-            is Action.VerifyEmail -> handleVerifyEmailAction(action)
             Action.OnSubmitClick -> validateFieldsAndSubmit()
             Action.DialogDismissRequest -> dismissDialog()
             Action.OnBackClick -> {
                 viewModelScope.launch {
                     sideEffectChannel.send(SideEffect.NavigateUp)
+                }
+            }
+        }
+    }
+
+    fun onUnverifiedEmailResult(result: UnverifiedEmailResult) {
+        showUnverifiedEmailDialog = false
+        when (result) {
+            UnverifiedEmailResult.Dismissed -> Unit
+            UnverifiedEmailResult.UnexpectedError -> {
+                viewModelScope.launch {
+                    snackbarEffectsChannel.send(
+                        Snackbar(message = verification_email_not_sent)
+                    )
+                }
+            }
+
+            UnverifiedEmailResult.VerificationEmailSent -> {
+                viewModelScope.launch {
+                    snackbarEffectsChannel.send(
+                        Snackbar(message = verification_email_sent)
+                    )
                 }
             }
         }
@@ -160,22 +181,12 @@ internal class CreateRecipeViewModel(
                     sideEffectChannel.send(SideEffect.NavigateToThankYouScreen)
                 }
 
-                SubmitRecipe.Result.NoInternet -> {
-                    uiState = uiState.copy(
-                        loading = false,
-                        dialog = Dialog(
-                            title = connection_error_title,
-                            message = connection_error_message,
-                        )
-                    )
-                }
-
                 SubmitRecipe.Result.UnexpectedError -> {
                     uiState = uiState.copy(
                         loading = false,
                         dialog = Dialog(
-                            title = generic_error_title,
-                            message = unknown_error_message,
+                            title = unexpected_error_title,
+                            message = unexpected_error_message,
                         )
                     )
                 }
@@ -186,45 +197,9 @@ internal class CreateRecipeViewModel(
                         showVerifyEmailPrompt = true,
                     )
                 }
-            }
-        }
-    }
 
-    private fun handleVerifyEmailAction(action: Action.VerifyEmail) {
-        when (action) {
-            Action.VerifyEmail.Dismiss -> uiState = uiState.copy(showVerifyEmailPrompt = false)
-            Action.VerifyEmail.Send -> {
-                sendVerificationEmailJob?.cancel()
-                sendVerificationEmailJob = viewModelScope.launch {
-                    uiState = uiState.copy(loading = true)
-                    uiState = when (withContext(ioDispatcher) { sendVerificationEmail() }) {
-                        SendVerificationEmailResult.Success -> uiState.copy(
-                            showVerifyEmailPrompt = false,
-                            loading = false,
-                            dialog = Dialog(
-                                title = success,
-                                message = verification_email_sent,
-                            )
-                        )
-
-                        SendVerificationEmailResult.TooManyRequests -> uiState.copy(
-                            showVerifyEmailPrompt = false,
-                            loading = false,
-                            dialog = Dialog(
-                                title = generic_error_title,
-                                message = verification_email_too_many_requests
-                            )
-                        )
-
-                        SendVerificationEmailResult.UnknownError -> uiState.copy(
-                            showVerifyEmailPrompt = false,
-                            loading = false,
-                            dialog = Dialog(
-                                title = generic_error_title,
-                                message = unknown_error_message
-                            )
-                        )
-                    }
+                SubmitRecipe.Result.UserMustReauthenticate -> {
+                    deeplinkNavigator.navigate(Deeplink.Reauthentication)
                 }
             }
         }
@@ -306,11 +281,6 @@ internal class CreateRecipeViewModel(
             data class Delete(val index: Int) : OnStepChange()
             data class AddAt(val index: Int) : OnStepChange()
             data object Add : OnStepChange()
-        }
-
-        sealed class VerifyEmail : Action() {
-            data object Send : VerifyEmail()
-            data object Dismiss : VerifyEmail()
         }
 
         data class OnTagSelected(val name: Int) : Action()

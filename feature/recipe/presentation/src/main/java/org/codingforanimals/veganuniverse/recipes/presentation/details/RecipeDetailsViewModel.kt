@@ -1,29 +1,42 @@
 package org.codingforanimals.veganuniverse.recipes.presentation.details
 
 import android.util.Log
-import androidx.annotation.StringRes
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.profile.model.ToggleResult
-import org.codingforanimals.veganuniverse.recipe.model.Recipe
-import org.codingforanimals.veganuniverse.recipe.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
+import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
+import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleResult
+import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
+import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_error
+import org.codingforanimals.veganuniverse.commons.ui.R.string.report_success
+import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_success
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message_try_again
+import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
+import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
+import org.codingforanimals.veganuniverse.recipes.domain.usecase.EditRecipe
 import org.codingforanimals.veganuniverse.recipes.domain.usecase.RecipeDetailsUseCases
+import org.codingforanimals.veganuniverse.recipes.domain.usecase.ReportRecipe
 import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.RECIPE_ID
 import org.codingforanimals.veganuniverse.recipes.presentation.details.entity.RecipeView
@@ -33,10 +46,14 @@ private const val TAG = "RecipeDetailsViewModel"
 internal class RecipeDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     private val useCases: RecipeDetailsUseCases,
+    private val deeplinkNavigator: DeeplinkNavigator,
 ) : ViewModel() {
 
-    private val sideEffectsChannel: Channel<SideEffect> = Channel()
-    val sideEffects: Flow<SideEffect> = sideEffectsChannel.receiveAsFlow()
+    private val snackbarEffectsChannel = Channel<Snackbar>()
+    val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
+
+    private val navigationEffectsChannel: Channel<NavigationEffect> = Channel()
+    val navigationEffects: Flow<NavigationEffect> = navigationEffectsChannel.receiveAsFlow()
 
     private val recipeId = savedStateHandle.get<String>(RECIPE_ID)
 
@@ -62,7 +79,7 @@ internal class RecipeDetailsViewModel(
             likeEnabled.value = false
             send(!currentState)
             val result = useCases.toggleLike(recipeId, currentState)
-            handleToggleResultSideEffects(result, ::toggleLike)
+            handleToggleResult(result, ::toggleLike)
             send(result.newValue)
             likeEnabled.value = true
         }
@@ -82,7 +99,7 @@ internal class RecipeDetailsViewModel(
             bookmarkEnabled.value = false
             send(!currentState)
             val result = useCases.toggleBookmark(recipeId, currentState)
-            handleToggleResultSideEffects(result, ::toggleBookmark)
+            handleToggleResult(result, ::toggleBookmark)
             send(result.newValue)
             bookmarkEnabled.value = true
         }
@@ -92,23 +109,32 @@ internal class RecipeDetailsViewModel(
         initialValue = false,
     )
 
-    private val _showImageDialog: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val showImageDialog: StateFlow<Boolean> = _showImageDialog.asStateFlow()
+    var dialog: Dialog? by mutableStateOf(null)
+        private set
+
+    sealed class Dialog {
+        data object UnverifiedEmail : Dialog()
+        data class Image(val url: String) : Dialog()
+        data object Report : Dialog()
+        data object Edit : Dialog()
+    }
 
     fun onAction(action: Action) {
         when (action) {
             Action.OnBackClick -> {
                 viewModelScope.launch {
-                    sideEffectsChannel.send(SideEffect.NavigateUp)
+                    navigationEffectsChannel.send(NavigationEffect.NavigateUp)
                 }
             }
 
-            Action.OnImageClick -> {
-                _showImageDialog.value = true
+            is Action.OnImageClick -> {
+                action.url?.let {
+                    dialog = Dialog.Image(it)
+                }
             }
 
             Action.OnImageDialogDismissRequest -> {
-                _showImageDialog.value = false
+                dialog = null
             }
 
             Action.OnBookmarkClick -> {
@@ -125,7 +151,103 @@ internal class RecipeDetailsViewModel(
 
             Action.OnErrorDialogDismissRequest -> {
                 viewModelScope.launch {
-                    sideEffectsChannel.send(SideEffect.NavigateUp)
+                    navigationEffectsChannel.send(NavigationEffect.NavigateUp)
+                }
+            }
+
+            Action.OnEditClick -> {
+                dialog = Dialog.Edit
+            }
+
+            Action.OnReportClick -> {
+                dialog = Dialog.Report
+            }
+
+            is Action.OnReportResult -> onReportResult(action.result)
+            is Action.OnEditResult -> onEditResult(action.result)
+            is Action.OnUnverifiedEmailResult -> onUnverifiedEmailResult(action.result)
+        }
+    }
+
+    private fun onReportResult(result: ReportContentDialogResult) {
+        when (result) {
+            ReportContentDialogResult.Dismiss -> {
+                dialog = null
+            }
+
+            ReportContentDialogResult.SendReport -> {
+                recipeId ?: return
+                viewModelScope.launch {
+                    val reportResult = useCases.reportRecipe(recipeId)
+                    dialog = null
+                    when (reportResult) {
+                        ReportRecipe.Result.Success -> {
+                            snackbarEffectsChannel.send(Snackbar(report_success))
+                        }
+
+                        ReportRecipe.Result.UnauthenticatedUser -> {
+                            navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
+                        }
+
+                        ReportRecipe.Result.UnexpectedError -> {
+                            snackbarEffectsChannel.send(Snackbar(unexpected_error_message))
+                        }
+
+                        ReportRecipe.Result.UnverifiedEmail -> {
+                            dialog = Dialog.UnverifiedEmail
+                        }
+
+                        ReportRecipe.Result.UserMustReathenticate -> {
+                            deeplinkNavigator.navigate(Deeplink.Reauthentication)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onEditResult(result: EditContentDialogResult) {
+        dialog = null
+        when (result) {
+            EditContentDialogResult.Dismiss -> Unit
+            is EditContentDialogResult.SendEdit -> {
+                recipeId ?: return
+                viewModelScope.launch {
+                    when (useCases.editRecipe(recipeId, result.edition)) {
+                        EditRecipe.Result.Success -> {
+                            snackbarEffectsChannel.send(Snackbar(edit_success))
+                        }
+                        EditRecipe.Result.UnauthenticatedUser -> {
+                            navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
+                        }
+                        EditRecipe.Result.UnexpectedError -> {
+                            snackbarEffectsChannel.send(Snackbar(edit_error))
+                        }
+                        EditRecipe.Result.UnverifiedEmail -> {
+                            dialog = Dialog.UnverifiedEmail
+                        }
+                        EditRecipe.Result.UserMustReauthenticate -> {
+                            deeplinkNavigator.navigate(Deeplink.Reauthentication)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onUnverifiedEmailResult(result: UnverifiedEmailResult) {
+        dialog = null
+        when (result) {
+            UnverifiedEmailResult.Dismissed -> Unit
+            UnverifiedEmailResult.UnexpectedError -> {
+                viewModelScope.launch {
+                    snackbarEffectsChannel.send(Snackbar(verification_email_not_sent))
+                }
+            }
+
+            UnverifiedEmailResult.VerificationEmailSent -> {
+                viewModelScope.launch {
+                    snackbarEffectsChannel.send(Snackbar(verification_email_sent))
                 }
             }
         }
@@ -141,19 +263,25 @@ internal class RecipeDetailsViewModel(
         toggleBookmarkActionChannel.send(isBookmarked.value)
     }
 
-    private suspend fun handleToggleResultSideEffects(
+    private suspend fun handleToggleResult(
         result: ToggleResult,
         retryAction: suspend () -> Unit,
     ) {
         when (result) {
             is ToggleResult.Success -> Unit
             is ToggleResult.GuestUser -> {
-                sideEffectsChannel.send(SideEffect.NavigateToAuthenticateScreen)
+                navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
             }
 
             is ToggleResult.UnexpectedError -> {
-                sideEffectsChannel.send(
-                    SideEffect.DisplaySnackbar.UnexpectedErrorSnackbar(retryAction)
+                snackbarEffectsChannel.send(
+                    Snackbar(
+                        message = unexpected_error_message_try_again,
+                        actionLabel = R.string.try_again,
+                        action = {
+                            viewModelScope.launch { retryAction() }
+                        }
+                    )
                 )
             }
         }
@@ -185,28 +313,20 @@ internal class RecipeDetailsViewModel(
 
     sealed class Action {
         data object OnBackClick : Action()
-        data object OnImageClick : Action()
+        data object OnEditClick : Action()
+        data object OnReportClick : Action()
+        data class OnImageClick(val url: String?) : Action()
         data object OnImageDialogDismissRequest : Action()
         data object OnLikeClick : Action()
         data object OnBookmarkClick : Action()
         data object OnErrorDialogDismissRequest : Action()
+        data class OnEditResult(val result: EditContentDialogResult) : Action()
+        data class OnReportResult(val result: ReportContentDialogResult) : Action()
+        data class OnUnverifiedEmailResult(val result: UnverifiedEmailResult) : Action()
     }
 
-    sealed class SideEffect {
-        data object NavigateUp : SideEffect()
-        data object NavigateToAuthenticateScreen : SideEffect()
-        sealed class DisplaySnackbar(
-            @StringRes open val message: Int,
-            @StringRes open val actionLabel: Int? = null,
-            open val action: (suspend () -> Unit)? = null,
-        ) : SideEffect() {
-            data class UnexpectedErrorSnackbar(
-                override val action: (suspend () -> Unit)? = null,
-            ) : DisplaySnackbar(
-                message = R.string.snackbar_unexpected_error_message,
-                actionLabel = R.string.try_again,
-                action = action,
-            )
-        }
+    sealed class NavigationEffect {
+        data object NavigateUp : NavigationEffect()
+        data object NavigateToAuthenticateScreen : NavigationEffect()
     }
 }

@@ -9,19 +9,9 @@
     <string name="product_list_default_title">Todos los productos</string>
     <string name="search_product">Buscar producto</string>
     <string name="no_image">Sin imagen</string>
-    <string name="product_suggestion_dialog_edit_message">¿Qué es lo que querés editar de este producto?</string>
-    <string name="product_suggestion_dialog_report_message">¿Por qué querés reportar este producto?</string>
     <string name="product_suggestion_dialog_edit_title">Editar producto</string>
-    <string name="product_suggestion_dialog_report_title">Reportar producto</string>
+    <string name="report_product">Reportar producto</string>
     <string name="send">Enviar</string>
-    <string name="product_suggestion_dialog_edit_textField_placeholder">¿Qué te gustaría editar del producto?</string>
-    <string name="product_suggestion_dialog_report_textField_placeholder">¿Por qué quieres reportar este producto?</string>
-    <string name="product_suggestion_dialog_productname">Nombre: %1$s</string>
-    <string name="product_suggestion_dialog_productbrand">Marca: %1$s</string>
-    <string name="product_suggestion_dialog_error_try_again">Algo salió mal, puedes volver a intentar</string>
-    <string name="thank_you_for_contributing">¡Enviado! Muchas gracias por tu aporte</string>
-    <string name="product_suggestion_dialog_error_message_empty">Mensaje requerido</string>
-    <string name="user_has_unverified_email">Para realizar esta acción necesitas validar tu correo electrónico</string>
     <string name="resend_email">Reenviar email</string>
     <string name="product_additional_info_suggest_changes">Editar</string>
     <string name="product_additional_info_report">Reportar</string>
@@ -29,4 +19,8 @@
     <string name="clear_filters">Limpiar filtros</string>
     <string name="apply_filters">Aplicar filtros</string>
     <string name="order_by">Ordenar por</string>
+    <string name="product_report_success">¡Producto reportado! Lo estamos revisando, gracias.</string>
+    <string name="product_report_error">¡Oops! Ocurrió un error inesperado. No pudimos reportar el producto. Podés volver a intentarlo.</string>
+    <string name="product_edit_error">¡Oops! Ocurrió un error inesperado. No pudimos enviar tu sugerencia del producto. Podés volver a intentarlo.</string>
+    <string name="product_edit_success">¡Sugerencia enviada! Lo estamos revisando, gracias.</string>
 </resources>

@@ -17,10 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.ui.Spacing_03
-import org.codingforanimals.veganuniverse.ui.Spacing_05
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.animation.ShimmerItem
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.ui.animation.ShimmerItem
 
 @Composable
 fun ColumnScope.ProductRowLoading() {

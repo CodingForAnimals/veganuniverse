@@ -6,12 +6,14 @@ import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetA
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetCreatePlaceScreenContent
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetPlaceDataUseCase
 import org.codingforanimals.veganuniverse.services.google.places.googlePlacesModule
+import org.codingforanimals.veganuniverse.commons.user.presentation.di.userCommonPresentationModule
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val createPlacePresentationModule = module {
     includes(
+        userCommonPresentationModule,
         googlePlacesModule,
         createPlaceDomainModule
     )

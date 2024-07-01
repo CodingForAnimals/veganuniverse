@@ -18,22 +18,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message
+import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
+import org.codingforanimals.veganuniverse.commons.ui.animation.shimmer
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.components.ProductRow
 import org.codingforanimals.veganuniverse.product.presentation.components.ProductRowLoading
-import org.codingforanimals.veganuniverse.product.presentation.model.Product
-import org.codingforanimals.veganuniverse.ui.Spacing_02
-import org.codingforanimals.veganuniverse.ui.Spacing_05
-import org.codingforanimals.veganuniverse.ui.animation.shimmer
-import org.codingforanimals.veganuniverse.ui.error.ErrorView
 
 @Composable
 fun LatestProducts(
     latestProductsState: ProductHomeViewModel.LatestProductsState,
     onShowMoreClick: () -> Unit,
     onImageClick: (String) -> Unit,
-    onEditClick: (Product) -> Unit,
-    onReportClick: (Product) -> Unit,
+    onEditClick: (String) -> Unit,
+    onReportClick: (String) -> Unit,
 ) {
     Row(
         modifier = Modifier.padding(bottom = Spacing_02),
@@ -57,7 +57,7 @@ fun LatestProducts(
         label = "products_home_latest_products_crossfade",
         content = { state ->
             when (state) {
-                ProductHomeViewModel.LatestProductsState.Error -> ErrorView(message = org.codingforanimals.veganuniverse.ui.R.string.unknown_error_message)
+                ProductHomeViewModel.LatestProductsState.Error -> ErrorView(message = unexpected_error_message)
                 ProductHomeViewModel.LatestProductsState.Loading -> {
                     Column(
                         modifier = Modifier
@@ -90,8 +90,16 @@ fun LatestProducts(
                                             onImageClick(product.imageUrl)
                                         }
                                     },
-                                    onEditClick = { onEditClick(product) },
-                                    onReportClick = { onReportClick(product) },
+                                    onEditClick = {
+                                        product.id?.let {
+                                            onEditClick(it)
+                                        }
+                                    },
+                                    onReportClick = {
+                                        product.id?.let {
+                                            onReportClick(it)
+                                        }
+                                    },
                                 )
                             }
                         }

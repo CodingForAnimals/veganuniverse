@@ -10,18 +10,13 @@ android {
 }
 
 dependencies {
+    implementation(project(":services:location"))
     implementation(project(":commons:user:domain"))
-    implementation(project(":commons:place:presentation"))
-    implementation(project(":commons:place:domain"))
-    implementation(project(":core:common"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:auth"))
-    implementation(project(":core:location"))
-    implementation(project(":services:google:places"))
-    implementation(project(":entity"))
-    implementation(project(":entity:places"))
+    implementation(project(":commons:user:presentation"))
+    implementation(project(":commons-place:presentation"))
+    implementation(project(":commons-place:domain"))
+    implementation(project(":commons:navigation"))
     implementation(project(":feature:place:domain"))
-    implementation(project(":ui:places"))
     implementation(Google.MAPS)
 
     implementation(libs.androidx.paging)

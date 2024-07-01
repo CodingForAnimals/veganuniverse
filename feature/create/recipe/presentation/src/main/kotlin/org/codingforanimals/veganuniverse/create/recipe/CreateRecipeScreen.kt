@@ -6,7 +6,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,10 +19,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,35 +36,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.veganuniverse.core.common.R.string.back
-import org.codingforanimals.veganuniverse.core.ui.R.string.description
-import org.codingforanimals.veganuniverse.core.ui.R.string.prep_time
-import org.codingforanimals.veganuniverse.core.ui.R.string.servings
-import org.codingforanimals.veganuniverse.core.ui.R.string.tags
-import org.codingforanimals.veganuniverse.core.ui.R.string.title
+import org.codingforanimals.veganuniverse.commons.create.presentation.CreateContentHero
+import org.codingforanimals.veganuniverse.commons.create.presentation.HeroAnchorDefaults
+import org.codingforanimals.veganuniverse.commons.create.presentation.ImagePicker
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
+import org.codingforanimals.veganuniverse.commons.create.presentation.R.string.publish
 import org.codingforanimals.veganuniverse.create.recipe.CreateRecipeViewModel.Action
 import org.codingforanimals.veganuniverse.create.recipe.CreateRecipeViewModel.SideEffect
 import org.codingforanimals.veganuniverse.create.recipe.CreateRecipeViewModel.UiState
 import org.codingforanimals.veganuniverse.create.recipe.composables.Ingredients
 import org.codingforanimals.veganuniverse.create.recipe.composables.Steps
 import org.codingforanimals.veganuniverse.create.recipe.presentation.R
-import org.codingforanimals.veganuniverse.create.ui.CreateContentHero
-import org.codingforanimals.veganuniverse.create.ui.HeroAnchorDefaults
-import org.codingforanimals.veganuniverse.create.ui.ImagePicker
-import org.codingforanimals.veganuniverse.create.ui.R.string.submit_button_label
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_05
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.Spacing_12
-import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.ui.auth.VerifyEmailPromptScreen
-import org.codingforanimals.veganuniverse.ui.components.SelectableChip
-import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
-import org.codingforanimals.veganuniverse.ui.components.VUNormalTextField
-import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.ui.dialog.NoActionDialog
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
-import org.codingforanimals.veganuniverse.ui.utils.rememberImageCropperLauncherForActivityResult
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.ui.components.SelectableChip
+import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
+import org.codingforanimals.veganuniverse.commons.ui.components.VUNormalTextField
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.commons.ui.dialog.NoActionDialog
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.ui.utils.rememberImageCropperLauncherForActivityResult
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -75,6 +73,40 @@ fun CreateRecipeScreen(
         onCropSuccess = { viewModel.onAction(Action.ImagePicker.Success(it)) },
     )
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            VUTopAppBar(
+                title = stringResource(R.string.create_recipe),
+                onBackClick = { viewModel.onAction(Action.OnBackClick) }
+            )
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { paddingValues ->
+        CreateRecipeScreen(
+            modifier = Modifier.padding(paddingValues),
+            uiState = viewModel.uiState,
+            onAction = viewModel::onAction,
+        )
+    }
+
+    VUCircularProgressIndicator(visible = viewModel.uiState.loading)
+
+    viewModel.uiState.dialog?.let {
+        NoActionDialog(
+            title = it.title,
+            message = it.message,
+            buttonText = back,
+            onDismissRequest = { viewModel.onAction(Action.DialogDismissRequest) }
+        )
+    }
+
+    if (viewModel.showUnverifiedEmailDialog) {
+        UnverifiedEmailDialog(onResult = viewModel::onUnverifiedEmailResult)
+    }
+
     HandleSideEffects(
         sideEffect = viewModel.sideEffect,
         imagePicker = imagePicker,
@@ -83,45 +115,20 @@ fun CreateRecipeScreen(
         navigateUp = navigateUp,
     )
 
-
-    Column(modifier = Modifier.fillMaxSize()) {
-
-        VUTopAppBar(
-            title = stringResource(R.string.create_recipe),
-            onBackClick = { viewModel.onAction(Action.OnBackClick) }
-        )
-        CreateRecipeScreen(
-            uiState = viewModel.uiState,
-            onAction = viewModel::onAction,
-        )
-
-        if (viewModel.uiState.showVerifyEmailPrompt) {
-            VerifyEmailPromptScreen(
-                onSendRequest = { viewModel.onAction(Action.VerifyEmail.Send) },
-                onDismissRequest = { viewModel.onAction(Action.VerifyEmail.Dismiss) },
-            )
-        }
-
-        viewModel.uiState.dialog?.let {
-            NoActionDialog(
-                title = it.title,
-                message = it.message,
-                buttonText = back,
-                onDismissRequest = { viewModel.onAction(Action.DialogDismissRequest) }
-            )
-        }
-
-        VUCircularProgressIndicator(visible = viewModel.uiState.loading)
-    }
+    HandleSnackbarEffects(
+        snackbarEffects = viewModel.snackbarEffects,
+        snackbarHostState = snackbarHostState,
+    )
 }
 
 @Composable
 private fun CreateRecipeScreen(
+    modifier: Modifier = Modifier,
     uiState: UiState,
     onAction: (Action) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Spacing_06),
         contentPadding = PaddingValues(bottom = Spacing_06)
     ) {
@@ -159,7 +166,7 @@ private fun CreateRecipeScreen(
                     .padding(horizontal = Spacing_06),
                 value = uiState.titleField.value,
                 onValueChange = { onAction(Action.OnTextChange.Title(it)) },
-                label = stringResource(title),
+                label = stringResource(R.string.title),
                 isError = uiState.isValidating && !uiState.titleField.isValid,
                 maxChars = 64,
                 keyboardOptions = KeyboardOptions(
@@ -176,7 +183,7 @@ private fun CreateRecipeScreen(
                     .padding(horizontal = Spacing_06),
                 value = uiState.descriptionField.value,
                 onValueChange = { onAction(Action.OnTextChange.Description(it)) },
-                label = stringResource(description),
+                label = stringResource(R.string.description),
                 placeholder = stringResource(R.string.create_recipe_description_placeholder),
                 isError = uiState.isValidating && !uiState.descriptionField.isValid,
                 maxChars = 600,
@@ -194,7 +201,7 @@ private fun CreateRecipeScreen(
                     .padding(horizontal = Spacing_06),
                 value = uiState.servingsField.value,
                 onValueChange = { onAction(Action.OnTextChange.Servings(it)) },
-                label = stringResource(servings),
+                label = stringResource(R.string.servings),
                 placeholder = stringResource(R.string.create_recipe_servings_placeholder),
                 isError = uiState.isValidating && !uiState.servingsField.isValid,
                 maxChars = 24,
@@ -213,7 +220,7 @@ private fun CreateRecipeScreen(
                     .padding(horizontal = Spacing_06),
                 value = uiState.prepTimeField.value,
                 onValueChange = { onAction(Action.OnTextChange.PrepTime(it)) },
-                label = stringResource(prep_time),
+                label = stringResource(R.string.prep_time),
                 isError = uiState.isValidating && !uiState.prepTimeField.isValid,
                 maxChars = 64,
                 keyboardOptions = KeyboardOptions(
@@ -254,7 +261,7 @@ private fun CreateRecipeScreen(
             }
             Text(
                 modifier = Modifier.padding(horizontal = Spacing_06),
-                text = stringResource(tags),
+                text = stringResource(R.string.tags),
                 style = MaterialTheme.typography.titleLarge,
                 color = color,
             )
@@ -285,7 +292,7 @@ private fun CreateRecipeScreen(
                     .padding(horizontal = Spacing_06),
                 onClick = { onAction(Action.OnSubmitClick) },
                 content = {
-                    Text(text = stringResource(submit_button_label))
+                    Text(text = stringResource(publish))
                 },
             )
         }

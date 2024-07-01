@@ -26,21 +26,21 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
-import org.codingforanimals.veganuniverse.user.domain.usecase.GetUser
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.GetUser
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.components.ProductAdditionalInfoViewModel.ProductAdditionalInfoState
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
 import org.codingforanimals.veganuniverse.product.presentation.model.ProductAdditionalInfo
-import org.codingforanimals.veganuniverse.ui.Spacing_03
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.animation.ShimmerItem
-import org.codingforanimals.veganuniverse.ui.animation.shimmer
-import org.codingforanimals.veganuniverse.ui.components.VUAssistChip
-import org.codingforanimals.veganuniverse.ui.components.VUAssistChipDefaults
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
-import org.codingforanimals.veganuniverse.utils.TimeAgo
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.ui.animation.ShimmerItem
+import org.codingforanimals.veganuniverse.commons.ui.animation.shimmer
+import org.codingforanimals.veganuniverse.commons.ui.components.VUAssistChip
+import org.codingforanimals.veganuniverse.commons.ui.components.VUAssistChipDefaults
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.ui.utils.DateUtils
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -161,7 +161,7 @@ fun ProductAdditionalInfo(
                                 VUIcon(icon = VUIcons.Clock, contentDescription = "")
                                 Text(
                                     modifier = Modifier.wrapContentHeight(),
-                                    text = TimeAgo.getTimeAgo(createdAt),
+                                    text = DateUtils.getTimeAgo(createdAt),
                                     style = MaterialTheme.typography.bodyMedium,
                                 )
                             }

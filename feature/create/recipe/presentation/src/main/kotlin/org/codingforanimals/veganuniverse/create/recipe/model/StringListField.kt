@@ -1,6 +1,6 @@
 package org.codingforanimals.veganuniverse.create.recipe.model
 
-import org.codingforanimals.veganuniverse.ui.viewmodel.ValidationField
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.ValidationField
 
 data class StringListField(
     val list: List<String> = DEFAULT_EMPTY_LIST,

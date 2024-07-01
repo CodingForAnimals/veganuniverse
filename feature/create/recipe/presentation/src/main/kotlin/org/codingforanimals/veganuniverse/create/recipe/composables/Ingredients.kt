@@ -20,18 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import org.codingforanimals.veganuniverse.core.ui.R.string.ingredient
-import org.codingforanimals.veganuniverse.core.ui.R.string.ingredients
 import org.codingforanimals.veganuniverse.create.recipe.CreateRecipeViewModel.Action
 import org.codingforanimals.veganuniverse.create.recipe.model.StringListField
 import org.codingforanimals.veganuniverse.create.recipe.presentation.R
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_05
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.animation.animateAlphaOnStart
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.components.VUNormalTextField
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.ui.animation.animateAlphaOnStart
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.components.VUNormalTextField
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 
 
 @Composable
@@ -53,7 +51,7 @@ internal fun Ingredients(
             else -> MaterialTheme.colorScheme.onSurfaceVariant
         }
         Text(
-            text = stringResource(ingredients),
+            text = stringResource(R.string.ingredients),
             style = MaterialTheme.typography.titleLarge,
             color = color,
         )
@@ -106,7 +104,7 @@ internal fun Ingredients(
                 tint = MaterialTheme.colorScheme.primary,
             )
             Text(
-                text = stringResource(ingredient),
+                text = stringResource(R.string.ingredient),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
             )

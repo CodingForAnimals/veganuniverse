@@ -1,17 +1,20 @@
 package org.codingforanimals.veganuniverse.recipes.domain.usecase
 
 import android.util.Log
-import kotlinx.coroutines.delay
-import org.codingforanimals.veganuniverse.profile.domain.usecase.ProfileContentUseCases
-import org.codingforanimals.veganuniverse.profile.model.ToggleResult
-import org.codingforanimals.veganuniverse.recipe.domain.repository.RecipeRepository
-import org.codingforanimals.veganuniverse.recipe.model.Recipe
-import org.codingforanimals.veganuniverse.user.domain.usecase.GetCurrentUser
+import kotlinx.coroutines.flow.firstOrNull
+import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.ProfileContentUseCases
+import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleResult
+import org.codingforanimals.veganuniverse.commons.recipe.domain.repository.RecipeRepository
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.ReauthenticationUseCases
 
 private const val TAG = "RecipeDetailsUseCases"
 
 class RecipeDetailsUseCases(
-    private val getCurrentUser: GetCurrentUser,
+    val reportRecipe: ReportRecipe,
+    val editRecipe: EditRecipe,
+    private val flowOnCurrentUser: FlowOnCurrentUser,
     private val recipeRepository: RecipeRepository,
     private val profileRecipeUseCases: ProfileContentUseCases,
 ) {
@@ -24,7 +27,7 @@ class RecipeDetailsUseCases(
     }
 
     suspend fun toggleLike(recipeId: String, currentValue: Boolean): ToggleResult {
-        getCurrentUser() ?: return ToggleResult.GuestUser(currentValue)
+        flowOnCurrentUser().firstOrNull() ?: return ToggleResult.GuestUser(currentValue)
         runCatching {
             recipeRepository.increaseOrDecreaseLike(recipeId, !currentValue)
         }.onFailure {
@@ -42,3 +45,4 @@ class RecipeDetailsUseCases(
         return profileRecipeUseCases.toggleBookmark(recipeId, currentValue)
     }
 }
+

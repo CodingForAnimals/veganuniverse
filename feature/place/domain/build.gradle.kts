@@ -10,12 +10,14 @@ android {
 }
 
 dependencies {
-    implementation(project(":commons:place:domain"))
+    implementation(project(":commons:network"))
+    implementation(project(":commons-place:domain"))
     implementation(project(":commons:user:domain"))
-    implementation(project(":commons:profile:domain"))
-    api(project(":commons:profile:shared"))
+    implementation(project(":commons-profile:domain"))
+    implementation(project(":services:google-places"))
+    implementation(project(":commons:navigation"))
+    api(project(":commons-profile:shared"))
 
-    implementation(project(":services:google:places"))
     implementation(libs.androidx.paging)
 
     testImplementation("junit:junit:4.13.2")

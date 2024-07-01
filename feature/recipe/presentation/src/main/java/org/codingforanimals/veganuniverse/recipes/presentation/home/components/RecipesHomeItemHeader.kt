@@ -12,11 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import org.codingforanimals.veganuniverse.ui.Spacing_01
-import org.codingforanimals.veganuniverse.ui.Spacing_02
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.icon.Icon
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_01
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.icon.Icon
 
 @Composable
 internal fun RecipesHomeItemHeader(

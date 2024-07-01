@@ -10,5 +10,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:auth"))
+    implementation(project(":commons:user:domain"))
 }

@@ -1,8 +1,8 @@
 package org.codingforanimals.veganuniverse.product.presentation.browsing.mapper
 
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
-import org.codingforanimals.veganuniverse.product.presentation.toUI
-import org.codingforanimals.veganuniverse.product.model.Product as ProductDomainModel
+import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.product.shared.model.Product as ProductDomainModel
 
 internal fun ProductDomainModel.toView(): Product {
     return Product(

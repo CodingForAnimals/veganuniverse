@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +27,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -60,34 +61,38 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.product.model.ProductCategory
-import org.codingforanimals.veganuniverse.product.model.ProductSorter
-import org.codingforanimals.veganuniverse.product.model.ProductType
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.product.presentation.label
+import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductSorter
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
+import org.codingforanimals.veganuniverse.commons.ui.R.drawable.ic_search
+import org.codingforanimals.veganuniverse.commons.ui.R.string.filter_by
+import org.codingforanimals.veganuniverse.commons.ui.components.SelectableChip
+import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
+import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialog
+import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.codingforanimals.veganuniverse.product.presentation.R
-import org.codingforanimals.veganuniverse.product.presentation.components.ProductRow
-import org.codingforanimals.veganuniverse.product.presentation.components.ProductSuggestionDialog
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.Action
-import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.SideEffect
+import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.NavigationEffect
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.UiState
-import org.codingforanimals.veganuniverse.product.presentation.label
+import org.codingforanimals.veganuniverse.product.presentation.components.ProductRow
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
-import org.codingforanimals.veganuniverse.product.presentation.toUI
-import org.codingforanimals.veganuniverse.ui.R.drawable.ic_search
-import org.codingforanimals.veganuniverse.ui.Spacing_02
-import org.codingforanimals.veganuniverse.ui.Spacing_03
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_05
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.components.SelectableChip
-import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.ui.error.ErrorView
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ProductListScreen(
+fun ProductBrowsingScreen(
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit,
     navigateToAuthScreen: () -> Unit,
@@ -96,23 +101,48 @@ fun ProductListScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val products = viewModel.products.collectAsLazyPagingItems()
 
-    ProductListScreen(
+    val snackbarHostState = remember { SnackbarHostState() }
+    ProductBrowsingScreen(
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
         uiState = uiState,
         products = products,
         onAction = viewModel::onAction,
     )
 
-    HandleSideEffects(
-        sideEffects = viewModel.sideEffects,
+    viewModel.showReportDialog?.let {
+        ReportContentDialog(
+            onResult = viewModel::onReportResult
+        )
+    }
+
+    viewModel.showSuggestionDialog?.let {
+        EditContentDialog(
+            onResult = viewModel::onEditResult
+        )
+    }
+
+
+    if (viewModel.showUnverifiedEmailDialog) {
+        UnverifiedEmailDialog(onResult = viewModel::onUnverifiedEmailResult)
+    }
+
+    HandleNavigationEffects(
+        navigationEffects = viewModel.navigationEffects,
         navigateUp = navigateUp,
         navigateToAuthScreen = navigateToAuthScreen,
+    )
+
+    HandleSnackbarEffects(
+        snackbarEffects = viewModel.snackbarEffects,
+        snackbarHostState = snackbarHostState,
     )
 }
 
 @Composable
-private fun ProductListScreen(
+private fun ProductBrowsingScreen(
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState,
     uiState: UiState,
     products: LazyPagingItems<Product>,
     onAction: (Action) -> Unit,
@@ -141,6 +171,7 @@ private fun ProductListScreen(
 
     Scaffold(
         modifier = modifier,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
                 VUTopAppBar(
@@ -212,18 +243,14 @@ private fun ProductListScreen(
                                 product = product,
                                 onImageClick = { product.imageUrl?.let { showImageDialog(it) } },
                                 onEditClick = {
-                                    onAction(
-                                        Action.ProductSuggestionDialogAction.OpenEdit(
-                                            product
-                                        )
-                                    )
+                                    product.id?.let {
+                                        onAction(Action.OpenSuggestDialog(it))
+                                    }
                                 },
                                 onReportClick = {
-                                    onAction(
-                                        Action.ProductSuggestionDialogAction.OpenReport(
-                                            product
-                                        )
-                                    )
+                                    product.id?.let {
+                                        onAction(Action.OpenReportDialog(it))
+                                    }
                                 },
                             )
                         }
@@ -277,7 +304,7 @@ private fun ProductListScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalArrangement = Arrangement.spacedBy(Spacing_02),
                     ) {
-                        ProductSorter.values().forEach { sorter ->
+                        ProductSorter.entries.forEach { sorter ->
                             val label = remember { sorter.label }
                             SelectableChip(
                                 label = stringResource(label),
@@ -290,7 +317,7 @@ private fun ProductListScreen(
                     HorizontalDivider(modifier = Modifier.padding(vertical = Spacing_04))
 
                     Text(
-                        text = stringResource(org.codingforanimals.veganuniverse.ui.R.string.filter_by),
+                        text = stringResource(filter_by),
                         style = MaterialTheme.typography.titleLarge,
                     )
 
@@ -391,31 +418,23 @@ private fun ProductListScreen(
             )
         }
     }
-
-    uiState.productSuggestionType?.let { productActionDialogType ->
-        ProductSuggestionDialog(
-            type = productActionDialogType,
-            dismissDialog = { _, _, _ -> onAction(Action.ProductSuggestionDialogAction.Close) },
-            navigateToAuthScreen = { onAction(Action.RelayAction.NavigateToAuthScreen) },
-        )
-    }
 }
 
 
 @Composable
-private fun HandleSideEffects(
-    sideEffects: Flow<SideEffect>,
+private fun HandleNavigationEffects(
+    navigationEffects: Flow<NavigationEffect>,
     navigateUp: () -> Unit,
     navigateToAuthScreen: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        sideEffects.onEach { sideEffect ->
+        navigationEffects.onEach { sideEffect ->
             when (sideEffect) {
-                SideEffect.NavigateUp -> {
+                NavigationEffect.NavigateUp -> {
                     navigateUp()
                 }
 
-                SideEffect.NavigateToAuthScreen -> navigateToAuthScreen()
+                NavigationEffect.NavigateToAuthScreen -> navigateToAuthScreen()
             }
         }.collect()
     }

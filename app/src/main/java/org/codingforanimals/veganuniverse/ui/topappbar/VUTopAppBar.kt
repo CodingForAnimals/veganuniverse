@@ -13,16 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.components.VUMediumTopAppBar
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.components.VUMediumTopAppBar
 
 @Composable
 internal fun VUTopAppBar(
     modifier: Modifier = Modifier,
     topLevelDestination: TopLevelDestination?,
     onBackClick: () -> Unit = {},
-    actions: List<TopBarAction> = emptyList(),
-    onActionClick: (TopBarAction) -> Unit = {},
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
 ) {
     AnimatedVisibility(visible = topLevelDestination != null) {
@@ -30,17 +28,6 @@ internal fun VUTopAppBar(
             modifier = modifier,
             title = topLevelDestination?.titleRes?.let { stringResource(it) } ?: "",
             onBackClick = if (topLevelDestination == TopLevelDestination.PRODUCTS) null else onBackClick,
-            actions = {
-                actions.forEach { action ->
-                    IconButton(onClick = { onActionClick(action) }) {
-                        VUIcon(
-                            modifier = Modifier.size(20.dp),
-                            icon = action.icon,
-                            contentDescription = action.contentDescription,
-                        )
-                    }
-                }
-            },
             colors = colors,
         )
     }

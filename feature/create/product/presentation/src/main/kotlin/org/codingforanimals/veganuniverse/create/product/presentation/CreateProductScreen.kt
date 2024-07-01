@@ -25,6 +25,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,27 +52,29 @@ import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.veganuniverse.commons.create.presentation.CreateContentHero
+import org.codingforanimals.veganuniverse.commons.create.presentation.HeroAnchorDefaults
+import org.codingforanimals.veganuniverse.commons.create.presentation.ImagePicker
+import org.codingforanimals.veganuniverse.commons.create.presentation.R.string.publish
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductViewModel.Action
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductViewModel.SideEffect
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductViewModel.UiState
-import org.codingforanimals.veganuniverse.create.ui.CreateContentHero
-import org.codingforanimals.veganuniverse.create.ui.HeroAnchorDefaults
-import org.codingforanimals.veganuniverse.create.ui.ImagePicker
-import org.codingforanimals.veganuniverse.create.ui.R.string.submit_button_label
-import org.codingforanimals.veganuniverse.product.model.ProductCategory
-import org.codingforanimals.veganuniverse.product.model.ProductType
-import org.codingforanimals.veganuniverse.product.presentation.toUI
-import org.codingforanimals.veganuniverse.ui.Spacing_03
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
-import org.codingforanimals.veganuniverse.ui.components.VUNormalTextField
-import org.codingforanimals.veganuniverse.ui.components.VURadioButton
-import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.ui.dialog.NoActionDialog
-import org.codingforanimals.veganuniverse.ui.utils.rememberImageCropperLauncherForActivityResult
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
+import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
+import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
+import org.codingforanimals.veganuniverse.commons.ui.components.VUNormalTextField
+import org.codingforanimals.veganuniverse.commons.ui.components.VURadioButton
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBackground
+import org.codingforanimals.veganuniverse.commons.ui.dialog.NoActionDialog
+import org.codingforanimals.veganuniverse.commons.ui.utils.rememberImageCropperLauncherForActivityResult
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -85,22 +90,19 @@ fun CreateProductScreen(
         onCropSuccess = { viewModel.onAction(Action.ImagePicker.Success(it)) },
     )
 
-    HandleSideEffects(
-        sideEffects = viewModel.sideEffects,
-        navigateUp = navigateUp,
-        imagePicker = imagePicker,
-        navigateToThankYouScreen = navigateToThankYouScreen,
-        navigateToAuthenticationScreen = navigateToAuthenticationScreen,
-    )
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Column {
-        VUTopAppBar(
-            title = stringResource(R.string.create_product_top_app_bar_title),
-            onBackClick = { viewModel.onAction(Action.OnBackClick) }
-        )
-
-
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
+            VUTopAppBar(
+                title = stringResource(R.string.create_product_top_app_bar_title),
+                onBackClick = { viewModel.onAction(Action.OnBackClick) }
+            )
+        }
+    ) { paddingValues ->
         CreateProductScreen(
+            modifier = Modifier.padding(paddingValues),
             uiState = uiState,
             onAction = viewModel::onAction,
         )
@@ -116,15 +118,33 @@ fun CreateProductScreen(
             onDismissRequest = { viewModel.onAction(Action.DismissDialog) }
         )
     }
+
+    if (viewModel.showUnverifiedEmailDialog) {
+        UnverifiedEmailDialog(onResult = viewModel::onUnverifiedEmailResult)
+    }
+
+    HandleSideEffects(
+        sideEffects = viewModel.sideEffects,
+        navigateUp = navigateUp,
+        imagePicker = imagePicker,
+        navigateToThankYouScreen = navigateToThankYouScreen,
+        navigateToAuthenticationScreen = navigateToAuthenticationScreen,
+    )
+
+    HandleSnackbarEffects(
+        snackbarEffects = viewModel.snackbarEffects,
+        snackbarHostState = snackbarHostState,
+    )
 }
 
 @Composable
 private fun CreateProductScreen(
+    modifier: Modifier = Modifier,
     uiState: UiState,
     onAction: (Action) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Spacing_06),
         contentPadding = PaddingValues(bottom = Spacing_06)
     ) {
@@ -228,7 +248,7 @@ private fun CreateProductScreen(
                 } else {
                     RadioButtonDefaults.colors()
                 }
-                ProductType.values().forEach { type ->
+                ProductType.entries.forEach { type ->
                     val typeUI = remember { type.toUI() }
                     VURadioButton(
                         modifier = Modifier.fillMaxWidth(),
@@ -275,13 +295,12 @@ private fun CreateProductScreen(
                             val border = if (uiState.productCategoryField.category == category) {
                                 BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
                             } else {
-                                null
+                                BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                             }
                             Card(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .aspectRatio(1f)
-                                    .shadow(10.dp, shape = CardDefaults.shape),
+                                    .aspectRatio(1f),
                                 onClick = { onAction(Action.OnProductCategorySelected(category)) },
                                 border = border
                             ) {
@@ -320,7 +339,7 @@ private fun CreateProductScreen(
                     .padding(horizontal = Spacing_06),
                 onClick = { onAction(Action.OnSubmitClick) },
                 content = {
-                    Text(text = stringResource(submit_button_label))
+                    Text(text = stringResource(publish))
                 },
             )
         }

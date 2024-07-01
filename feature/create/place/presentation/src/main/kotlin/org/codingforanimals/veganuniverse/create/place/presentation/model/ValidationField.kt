@@ -4,11 +4,10 @@ import androidx.compose.runtime.Composable
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
-import org.codingforanimals.veganuniverse.common.utils.areNotBlank
-import org.codingforanimals.veganuniverse.place.model.PlaceTag
-import org.codingforanimals.veganuniverse.place.model.PlaceType
-import org.codingforanimals.veganuniverse.places.ui.PlaceMarker
-import org.codingforanimals.veganuniverse.ui.viewmodel.ValidationField
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.PlaceMarker
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.ValidationField
 
 data class LocationField(
     val latLng: LatLng? = null,
@@ -71,4 +70,13 @@ data class SelectedTagsField(
     fun contains(tag: PlaceTag): Boolean {
         return tags.contains(tag)
     }
+}
+
+private fun areNotBlank(vararg strings: String?): Boolean {
+    for (string in strings) {
+        if (string?.isBlank() == true) {
+            return false
+        }
+    }
+    return true
 }

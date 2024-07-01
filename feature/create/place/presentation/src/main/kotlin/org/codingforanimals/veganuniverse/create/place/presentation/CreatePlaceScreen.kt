@@ -10,7 +10,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,12 +25,16 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,22 +59,25 @@ import org.codingforanimals.veganuniverse.create.place.presentation.entity.Creat
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem.SelectIcon
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem.SelectTags
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem.SubmitButton
-import org.codingforanimals.veganuniverse.create.ui.ImagePicker
-import org.codingforanimals.veganuniverse.place.model.PlaceTag
-import org.codingforanimals.veganuniverse.place.model.toUI
-import org.codingforanimals.veganuniverse.ui.Spacing_02
-import org.codingforanimals.veganuniverse.ui.Spacing_03
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_05
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.ui.components.SelectableChip
-import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
-import org.codingforanimals.veganuniverse.ui.components.VUNormalTextField
-import org.codingforanimals.veganuniverse.ui.components.VUTextField
-import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.ui.utils.rememberImageCropperLauncherForActivityResult
+import org.codingforanimals.veganuniverse.commons.create.presentation.ImagePicker
+import org.codingforanimals.veganuniverse.commons.create.presentation.R.string.publish
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.ui.components.SelectableChip
+import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
+import org.codingforanimals.veganuniverse.commons.ui.components.VUNormalTextField
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTextField
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBackground
+import org.codingforanimals.veganuniverse.commons.ui.utils.rememberImageCropperLauncherForActivityResult
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.koin.androidx.compose.koinViewModel
 import java.util.concurrent.CancellationException
 
@@ -88,11 +94,50 @@ fun CreatePlaceScreen(
         onResult = { viewModel.onAction(Action.OnPlaceSelected(it)) },
     )
 
-    val imagePicker = rememberImageCropperLauncherForActivityResult(onCropSuccess = {
-        viewModel.onAction(
-            Action.OnFormChange(imageUri = it)
+    val imagePicker = rememberImageCropperLauncherForActivityResult(
+        onCropSuccess = {
+            viewModel.onAction(
+                Action.OnFormChange(imageUri = it)
+            )
+        }
+    )
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(snackbarHostState)},
+        topBar = {
+            VUTopAppBar(
+                title = stringResource(R.string.create_place),
+                onBackClick = { viewModel.onAction(Action.OnBackClick) }
+            )
+        }) { paddingValues ->
+        CreatePlaceScreen(
+            modifier = Modifier.padding(paddingValues),
+            uiState = viewModel.uiState,
+            onAction = viewModel::onAction,
         )
-    })
+
+        VUCircularProgressIndicator(visible = viewModel.uiState.isLoading)
+    }
+
+    viewModel.uiState.errorDialog?.let { errorData ->
+        AlertDialog(
+            onDismissRequest = { viewModel.onAction(Action.OnErrorDialogDismissRequest) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.onAction(Action.OnErrorDialogDismissRequest) }) {
+                    Text(text = stringResource(R.string.ok))
+                }
+            },
+            title = { Text(text = stringResource(id = errorData.title)) },
+            text = { Text(text = stringResource(id = errorData.title)) },
+        )
+    }
+
+    if (viewModel.showUnverifiedEmailDialog) {
+        UnverifiedEmailDialog(onResult = viewModel::onUnverifiedEmailResult)
+    }
 
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,
@@ -104,41 +149,20 @@ fun CreatePlaceScreen(
         navigateUp = navigateUp,
     )
 
-    Column(modifier = Modifier.fillMaxSize()) {
-
-        VUTopAppBar(
-            title = stringResource(R.string.create_place),
-            onBackClick = { viewModel.onAction(Action.OnBackClick) }
-        )
-        CreatePlaceScreen(
-            uiState = viewModel.uiState,
-            onAction = viewModel::onAction,
-        )
-
-        viewModel.uiState.errorDialog?.let { errorData ->
-            AlertDialog(
-                onDismissRequest = { viewModel.onAction(Action.OnErrorDialogDismissRequest) },
-                confirmButton = {
-                    TextButton(onClick = { viewModel.onAction(Action.OnErrorDialogDismissRequest) }) {
-                        Text(text = stringResource(R.string.ok))
-                    }
-                },
-                title = { Text(text = stringResource(id = errorData.title)) },
-                text = { Text(text = stringResource(id = errorData.title)) },
-            )
-        }
-
-        VUCircularProgressIndicator(visible = viewModel.uiState.isLoading)
-    }
+    HandleSnackbarEffects(
+        snackbarEffects = viewModel.snackbarEffects,
+        snackbarHostState = snackbarHostState,
+    )
 }
 
 @Composable
 private fun CreatePlaceScreen(
+    modifier: Modifier = Modifier,
     uiState: UiState,
     onAction: (Action) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Spacing_05),
         contentPadding = PaddingValues(bottom = Spacing_06),
     ) {
@@ -221,7 +245,7 @@ private fun CreatePlaceScreen(
                                 .padding(start = Spacing_06, end = Spacing_06, top = Spacing_03),
                             horizontalArrangement = Arrangement.spacedBy(Spacing_04),
                         ) {
-                            for (tag in PlaceTag.values()) {
+                            for (tag in PlaceTag.entries) {
                                 key(tag.name) {
                                     val tagUI = tag.toUI()
                                     val selected = uiState.selectedTagsField.contains(tag)
@@ -242,7 +266,7 @@ private fun CreatePlaceScreen(
                             .wrapContentSize(Alignment.CenterEnd)
                             .padding(horizontal = Spacing_06),
                         onClick = { onAction(Action.OnSubmitClick) },
-                        content = { Text(text = stringResource(R.string.submit_button_label)) },
+                        content = { Text(text = stringResource(publish)) },
                     )
                 }
             },

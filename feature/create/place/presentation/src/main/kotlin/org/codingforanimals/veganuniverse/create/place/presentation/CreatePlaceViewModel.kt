@@ -22,6 +22,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
+import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
 import org.codingforanimals.veganuniverse.create.place.domain.model.PlaceForm
 import org.codingforanimals.veganuniverse.create.place.domain.usecase.SubmitPlace
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem
@@ -38,20 +40,24 @@ import org.codingforanimals.veganuniverse.create.place.presentation.model.TypeFi
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetAutoCompleteIntentUseCase
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetCreatePlaceScreenContent
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetPlaceDataUseCase
-import org.codingforanimals.veganuniverse.place.model.AddressComponents
-import org.codingforanimals.veganuniverse.place.model.OpeningHours
-import org.codingforanimals.veganuniverse.place.model.OpeningHoursUI
-import org.codingforanimals.veganuniverse.place.model.PlaceTag
-import org.codingforanimals.veganuniverse.place.model.PlaceType
-import org.codingforanimals.veganuniverse.ui.calendar.DayOfWeek
-import org.codingforanimals.veganuniverse.ui.viewmodel.PictureField
-import org.codingforanimals.veganuniverse.ui.viewmodel.StringField
+import org.codingforanimals.veganuniverse.commons.place.domain.model.DayOfWeek
+import org.codingforanimals.veganuniverse.commons.place.shared.model.AddressComponents
+import org.codingforanimals.veganuniverse.commons.place.shared.model.OpeningHours
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.PictureField
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.StringField
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 
 class CreatePlaceViewModel(
     getCreatePlaceScreenContent: GetCreatePlaceScreenContent,
     private val getPlaceDataUseCase: GetPlaceDataUseCase,
     private val getAutoCompleteIntentUseCase: GetAutoCompleteIntentUseCase,
     private val submitPlace: SubmitPlace,
+    private val deeplinkNavigator: DeeplinkNavigator
 ) : ViewModel() {
 
     var uiState by mutableStateOf(UiState(content = getCreatePlaceScreenContent()))
@@ -59,6 +65,12 @@ class CreatePlaceViewModel(
 
     private val sideEffectChannel: Channel<SideEffect> = Channel()
     val sideEffects: Flow<SideEffect> = sideEffectChannel.receiveAsFlow()
+
+    private val snackbarEffectsChannel = Channel<Snackbar>()
+    val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
+
+    var showUnverifiedEmailDialog by mutableStateOf(false)
+        private set
 
     fun onAction(action: Action) {
         when (action) {
@@ -78,6 +90,28 @@ class CreatePlaceViewModel(
             Action.OnBackClick -> {
                 viewModelScope.launch {
                     sideEffectChannel.send(SideEffect.NavigateUp)
+                }
+            }
+        }
+    }
+
+    fun onUnverifiedEmailResult(result: UnverifiedEmailResult) {
+        showUnverifiedEmailDialog = false
+        when (result) {
+            UnverifiedEmailResult.Dismissed -> Unit
+            UnverifiedEmailResult.UnexpectedError -> {
+                viewModelScope.launch {
+                    snackbarEffectsChannel.send(
+                        Snackbar(message = verification_email_not_sent)
+                    )
+                }
+            }
+
+            UnverifiedEmailResult.VerificationEmailSent -> {
+                viewModelScope.launch {
+                    snackbarEffectsChannel.send(
+                        Snackbar(message = verification_email_sent)
+                    )
                 }
             }
         }
@@ -203,16 +237,12 @@ class CreatePlaceViewModel(
                     }
                 }
 
-                SubmitPlace.Result.NoInternet -> {
-                    uiState = uiState.copy(errorDialog = CreatePlaceErrorDialog.NoInternet)
-                }
-
                 SubmitPlace.Result.UnexpectedError -> {
                     uiState = uiState.copy(errorDialog = CreatePlaceErrorDialog.UnknownErrorDialog)
                 }
 
                 SubmitPlace.Result.UnverifiedEmail -> {
-                    uiState = uiState.copy(errorDialog = CreatePlaceErrorDialog.UnverifiedEmail)
+                    showUnverifiedEmailDialog = true
                 }
 
                 is SubmitPlace.Result.AlreadyExists -> {
@@ -223,6 +253,10 @@ class CreatePlaceViewModel(
                     viewModelScope.launch {
                         sideEffectChannel.send(SideEffect.NavigateToThankYouScreen)
                     }
+                }
+
+                SubmitPlace.Result.UserMustReauthenticate -> {
+                    deeplinkNavigator.navigate(Deeplink.Reauthentication)
                 }
             }
         }
@@ -291,8 +325,8 @@ class CreatePlaceViewModel(
     private fun openTimePickerOnSelectedPeriod(action: Action.EditPeriodButtonClick) {
         val day = uiState.openingHoursField.sortedOpeningHours.first { it.dayOfWeek == action.day }
         val period = when (action.periodType) {
-            PeriodType.MAIN -> day.mainPeriod ?: return
-            PeriodType.SECONDARY -> day.secondaryPeriod ?: return
+            PeriodType.MAIN -> day.mainPeriod
+            PeriodType.SECONDARY -> day.secondaryPeriod
         }
         val (hours, minutes) = when (action.periodEnd) {
             PeriodEnd.FROM -> Pair(period.openingHour, period.openingMinute)

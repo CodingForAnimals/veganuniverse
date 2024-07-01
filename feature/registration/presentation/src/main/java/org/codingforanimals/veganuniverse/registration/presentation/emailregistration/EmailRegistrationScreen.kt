@@ -31,20 +31,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.veganuniverse.core.common.R.string.back
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationViewModel.Action
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationViewModel.UiState
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.usecase.GetEmailRegistrationScreenContent
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.viewmodel.EmailRegistrationScreenItem
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.Spacing_07
-import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
-import org.codingforanimals.veganuniverse.ui.components.VUTextField
-import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTextField
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBackground
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -107,6 +107,7 @@ private fun EmailRegistrationScreen(
                     text = stringResource(R.string.register_screen_title),
                     style = MaterialTheme.typography.titleLarge
                 )
+
                 EmailRegistrationScreenItem.EmailInputField -> VUTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = emailField.value,
@@ -120,6 +121,7 @@ private fun EmailRegistrationScreen(
                     ),
                     maxLines = 1,
                 )
+
                 EmailRegistrationScreenItem.UsernameInputField -> VUTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = usernameField.value,
@@ -132,6 +134,7 @@ private fun EmailRegistrationScreen(
                     ),
                     maxLines = 1,
                 )
+
                 EmailRegistrationScreenItem.PasswordInputField -> VUTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = passwordField.value,
@@ -147,6 +150,7 @@ private fun EmailRegistrationScreen(
                     ),
                     maxLines = 1,
                 )
+
                 EmailRegistrationScreenItem.ConfirmPasswordInputField -> VUTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = confirmPasswordField.value,
@@ -165,6 +169,7 @@ private fun EmailRegistrationScreen(
                     ),
                     maxLines = 1,
                 )
+
                 EmailRegistrationScreenItem.EmailRegistrationButton -> Button(
                     modifier = Modifier
                         .fillMaxWidth()

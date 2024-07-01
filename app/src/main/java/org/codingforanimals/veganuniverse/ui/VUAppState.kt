@@ -10,16 +10,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import org.codingforanimals.veganuniverse.create.graph.CreateDestination
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.navigation.rememberVUNavController
-import org.codingforanimals.veganuniverse.places.presentation.navigation.PlaceDestination
+import org.codingforanimals.veganuniverse.place.presentation.navigation.PlaceDestination
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
-import org.codingforanimals.veganuniverse.settings.presentation.navigation.SettingsDestination
-import org.codingforanimals.veganuniverse.ui.topappbar.TopBarAction
 
 @Composable
 internal fun rememberVUAppState(
-    navController: NavHostController = rememberVUNavController(),
+    navController: NavHostController,
 ): VUAppState {
     return remember(navController) {
         VUAppState(
@@ -32,11 +30,6 @@ internal fun rememberVUAppState(
 class VUAppState(
     val navController: NavHostController,
 ) {
-
-    val topBarActions: List<TopBarAction> = listOf(
-        TopBarAction.SettingsTopBarAction,
-    )
-
     val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
@@ -59,21 +52,11 @@ class VUAppState(
                 saveState = true
             }
         }
-//        when (destination) {
-//            TopLevelDestination.PRODUCTS -> navigateBackHomeToProducts()
-//            else -> navController.navigate(destination.route)
-//        }
     }
 
     fun navigateBackHomeToProducts() {
         navController.navigate(ProductDestination.Home.route) {
             popUpTo(ProductDestination.Home.route) { inclusive = true }
-        }
-    }
-
-    fun onActionClick(action: TopBarAction) {
-        when (action) {
-            TopBarAction.SettingsTopBarAction -> navController.navigate(SettingsDestination.route)
         }
     }
 }
