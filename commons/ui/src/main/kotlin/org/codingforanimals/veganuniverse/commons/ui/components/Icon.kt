@@ -73,6 +73,39 @@ fun VUIcon(
 }
 
 @Composable
+fun VuIcon(
+    modifier: Modifier = Modifier,
+    icon: Icon,
+    contentDescription: String? = null,
+) {
+    when (icon) {
+        is Icon.ImageVectorIcon -> {
+            Icon(
+                modifier = modifier,
+                imageVector = icon.imageVector,
+                contentDescription = contentDescription,
+            )
+        }
+
+        is Icon.DrawableResourceIcon -> {
+            Icon(
+                modifier = modifier,
+                painter = painterResource(icon.id),
+                contentDescription = contentDescription,
+            )
+        }
+
+        is Icon.ImageDrawableResourceIcon -> {
+            Image(
+                modifier = modifier.size(VUIconDefaults.defaultIconSize),
+                painter = painterResource(icon.id),
+                contentDescription = contentDescription,
+            )
+        }
+    }
+}
+
+@Composable
 fun VUIcon(
     modifier: Modifier = Modifier,
     icon: Icon,

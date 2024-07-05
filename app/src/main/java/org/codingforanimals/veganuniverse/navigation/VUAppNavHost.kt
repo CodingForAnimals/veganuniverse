@@ -15,6 +15,7 @@ import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.create.graph.CreateDestination
 import org.codingforanimals.veganuniverse.create.graph.createGraph
 import org.codingforanimals.veganuniverse.place.presentation.navigation.PlaceDestination
+import org.codingforanimals.veganuniverse.place.presentation.navigation.navigateToPlaceListing
 import org.codingforanimals.veganuniverse.place.presentation.navigation.placesGraph
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 import org.codingforanimals.veganuniverse.product.presentation.navigation.productGraph
@@ -48,9 +49,11 @@ internal fun VUAppNavHost(
             navigateToRegister = {
                 navController.navigateToAuthPromptWithOriginDestination(ProfileDestination.Home)
             },
+            navigateToPlaceListing = { listingType ->
+                navController.navigateToPlaceListing(listingType)
+            }
 //            navigateToRecipe = { navController.navigate("${RecipesDestination.Details.route}/$it") },
 //            navigateToPlace = { navController.navigate("${PlaceDestination.Details.route}/$it") },
-            navController = navController,
         )
         productGraph(
             navController = navController,
@@ -69,7 +72,7 @@ internal fun VUAppNavHost(
             navigateToAuthenticateScreen = {
                 navController.navigateToAuthPromptWithOriginDestination(PlaceDestination.Details)
             },
-            navigatoToReauthenticateScreen = {
+            navigateToReauthenticateScreen = {
                 navController.navigate(RegistrationDestination.EmailReauthentication.route)
             }
         )

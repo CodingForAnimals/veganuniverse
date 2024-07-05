@@ -18,8 +18,8 @@ enum class TopLevelDestination(
 ) {
     PRODUCTS(
         route = ProductDestination.Home.route,
-        unselectedIcon = VUIcons.Leaf,
-        selectedIcon = VUIcons.Leaf,
+        unselectedIcon = VUIcons.VeganLogo,
+        selectedIcon = VUIcons.VeganLogo,
         iconTextId = R.string.nav_label_is_vegan,
         titleRes = R.string.nav_label_is_vegan,
     ),

@@ -13,7 +13,7 @@ import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
 internal class PlaceEntityMapperImpl(
     private val publicImageApi: PublicImageApi,
 ) : PlaceEntityMapper {
-    override suspend fun mapPlace(entity: PlaceFirestoreEntity): Place {
+    override fun mapPlace(entity: PlaceFirestoreEntity): Place {
         return with(entity) {
             Place(
                 geoHash = geoHash,
@@ -39,7 +39,7 @@ internal class PlaceEntityMapperImpl(
         }
     }
 
-    override suspend fun mapCard(
+    override fun mapCard(
         geoHash: String,
         location: GeoLocation,
         entity: PlaceCardDatabaseEntity,

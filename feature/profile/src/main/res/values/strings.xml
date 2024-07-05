@@ -2,6 +2,15 @@
 <resources>
     <string name="profie_screen_unauthenticated_user_title">¡Bienvenido a tu Universo Vegano!</string>
     <string name="profie_screen_unauthenticated_user_subtitle">Aún no has creado tu usuario</string>
-    <string name="profie_screen_unauthenticated_user_text">Para sumar contenido en el Universo Vegano neceistás estar registrado. Podés iniciar sesión o crear un usuario nuevo</string>
+    <string name="profie_screen_unauthenticated_user_text">Para sumar contenido en el Universo Vegano y acceder a todas las funcionalidades neceistás estar registrado. Podés iniciar sesión o crear un usuario nuevo</string>
     <string name="access">Ingresar</string>
+    <string name="your_bookmarks">Tus guardados</string>
+    <string name="your_contributions">Tus contribuciones</string>
+    <string name="log_out">Cerrar sesión</string>
+    <string name="made_by">Hecho por</string>
+    <string name="coding_for_animals">Coding for Animals</string>
+    <string name="products">Productos</string>
+    <string name="places">Lugares</string>
+    <string name="recipes">Recetas</string>
+    <string name="bookmarked_places">Lugares guardados</string>
 </resources>

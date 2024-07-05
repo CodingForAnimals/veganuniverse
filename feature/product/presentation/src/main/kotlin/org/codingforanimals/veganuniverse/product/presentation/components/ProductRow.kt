@@ -40,7 +40,6 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 
-
 @Composable
 fun ProductRow(
     product: Product,

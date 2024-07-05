@@ -7,8 +7,8 @@ import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceCard
 
 internal interface PlaceEntityMapper {
-    suspend fun mapPlace(entity: PlaceFirestoreEntity): Place
-    suspend fun mapCard(
+    fun mapPlace(entity: PlaceFirestoreEntity): Place
+    fun mapCard(
         geoHash: String,
         location: GeoLocation,
         entity: PlaceCardDatabaseEntity,

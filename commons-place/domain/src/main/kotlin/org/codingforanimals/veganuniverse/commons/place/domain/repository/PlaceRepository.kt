@@ -1,12 +1,15 @@
 package org.codingforanimals.veganuniverse.commons.place.domain.repository
 
 import android.os.Parcelable
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 import org.codingforanimals.veganuniverse.commons.place.shared.model.GeoLocationQueryParams
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceCard
 
 interface PlaceRepository {
     suspend fun getById(id: String): Place?
+    fun queryPlacesPagingDataByIds(ids: List<String>): Flow<PagingData<Place>>
     suspend fun getByIdList(ids: List<String>): List<Place>
     suspend fun getByLatLng(latitude: Double, longitude: Double): Place?
     suspend fun queryCardsByGeoLocation(params: GeoLocationQueryParams): List<PlaceCard>

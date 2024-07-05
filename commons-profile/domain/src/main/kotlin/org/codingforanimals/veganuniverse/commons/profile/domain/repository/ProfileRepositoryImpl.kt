@@ -27,6 +27,10 @@ internal class ProfileRepositoryImpl(
         }.getOrElse { false }
     }
 
+    override suspend fun clearProfile() {
+        profileLocalDataSource.clearAllProfileContent()
+    }
+
     override suspend fun getProfile(): Profile {
         return profileLocalDataSource.getAllProfileContent().toDomainModel()
     }

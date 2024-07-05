@@ -38,4 +38,7 @@
     <string name="discard">Descartar</string>
     <string name="about_this_place">Sobre este lugar</string>
     <string name="address">Dirección</string>
+    <string name="contributed_places">Lugares contribuidos</string>
+    <string name="bookmarked_places">Lugares guardados</string>
+    <string name="empty_places_message">¡No has guardado ningún lugar todavía! Podés tener acá una lista de tus lugares favoritos.</string>
 </resources>

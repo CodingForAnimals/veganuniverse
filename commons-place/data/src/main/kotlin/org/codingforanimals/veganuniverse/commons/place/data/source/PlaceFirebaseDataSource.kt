@@ -2,6 +2,10 @@ package org.codingforanimals.veganuniverse.commons.place.data.source
 
 import android.os.Parcelable
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
@@ -13,22 +17,27 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.commons.network.mapFirestoreExceptions
-import org.codingforanimals.veganuniverse.firebase.storage.model.ResizeResolution
-import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureUseCase
 import org.codingforanimals.veganuniverse.commons.place.data.mapper.PlaceEntityMapper
 import org.codingforanimals.veganuniverse.commons.place.data.model.PlaceCardDatabaseEntity
 import org.codingforanimals.veganuniverse.commons.place.data.model.PlaceFirestoreEntity
+import org.codingforanimals.veganuniverse.commons.place.data.paging.PlaceListingPagingSource
 import org.codingforanimals.veganuniverse.commons.place.shared.model.GeoLocationQueryParams
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceCard
+import org.codingforanimals.veganuniverse.firebase.storage.model.ResizeResolution
+import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureUseCase
 
 internal class PlaceFirebaseDataSource(
     private val geoFireReference: DatabaseReference,
@@ -44,6 +53,30 @@ internal class PlaceFirebaseDataSource(
         return placesCollection.document(id).get().await()
             .toObject(PlaceFirestoreEntity::class.java)
             ?.let { mapper.mapPlace(it) }
+    }
+
+    override fun queryPlacesPagingDataByIds(ids: List<String>): Flow<PagingData<Place>> {
+        suspend fun query(ids: List<String>): List<PlaceFirestoreEntity> = coroutineScope {
+            val placeDeferredList = mutableListOf<Deferred<PlaceFirestoreEntity?>>()
+            ids.forEach { placeId ->
+                val deferred = async {
+                    placesCollection.document(placeId).get().await()
+                        .toObject(PlaceFirestoreEntity::class.java)
+                }
+                placeDeferredList.add(deferred)
+            }
+            return@coroutineScope placeDeferredList.awaitAll().filterNotNull()
+        }
+        return Pager(
+            config = PagingConfig(pageSize = 2),
+            pagingSourceFactory = {
+                PlaceListingPagingSource(
+                    ids = ids,
+                    pageSize = 2,
+                    query = ::query,
+                )
+            }
+        ).flow.mapNotNull { it.map { mapper.mapPlace(it) } }
     }
 
     override suspend fun getByLatLng(latitude: Double, longitude: Double): Place? {
