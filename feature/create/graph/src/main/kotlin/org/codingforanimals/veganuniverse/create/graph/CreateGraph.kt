@@ -3,12 +3,12 @@ package org.codingforanimals.veganuniverse.create.graph
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.create.home.persentation.CreateHomeScreen
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceScreen
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductScreen
 import org.codingforanimals.veganuniverse.create.recipe.CreateRecipeScreen
 import org.codingforanimals.veganuniverse.create.thank_you.presentation.ThankYouScreen
-import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 
 sealed class CreateDestination(route: String) : Destination(route) {
     data object Home : CreateDestination("create_home_screen")

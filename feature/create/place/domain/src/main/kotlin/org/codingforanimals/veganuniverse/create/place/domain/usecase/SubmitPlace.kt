@@ -6,11 +6,13 @@ import org.codingforanimals.veganuniverse.commons.network.PermissionDeniedExcept
 import org.codingforanimals.veganuniverse.create.place.domain.model.PlaceForm
 import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceRepository
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
+import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.ProfileContentUseCases
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 
 class SubmitPlace(
     private val placeRepository: PlaceRepository,
     private val flowOnCurrentUser: FlowOnCurrentUser,
+    private val profilePlaceUseCases: ProfileContentUseCases,
 ) {
     suspend operator fun invoke(placeForm: PlaceForm): Result {
         return try {
@@ -27,6 +29,7 @@ class SubmitPlace(
 
             val formAsModel = placeForm.toModel(user.id, user.name)
             val placeId = placeRepository.insertPlace(formAsModel, placeForm.imageModel)
+            profilePlaceUseCases.addContribution(placeId)
             Result.Success(placeId)
         } catch (e: PermissionDeniedException) {
             Result.UserMustReauthenticate

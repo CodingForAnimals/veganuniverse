@@ -16,19 +16,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import org.codingforanimals.veganuniverse.commons.ui.R.string.bookmark_action
+import org.codingforanimals.veganuniverse.commons.ui.R.string.delete
+import org.codingforanimals.veganuniverse.commons.ui.R.string.edit
+import org.codingforanimals.veganuniverse.commons.ui.R.string.report
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unbookmark_action
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.recipes.presentation.R
 
 @Composable
 internal fun RecipeDetailsTopAppBar(
     recipeState: RecipeDetailsViewModel.RecipeState,
+    isOwner: Boolean?,
     isLiked: Boolean,
     onLikeClick: () -> Unit,
     isBookmarked: Boolean,
     onBookmarkClick: () -> Unit,
     onBackClick: () -> Unit,
     onEditClick: () -> Unit,
-    onReportClick: () -> Unit
+    onReportClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
     MediumTopAppBar(
         navigationIcon = {
@@ -51,7 +58,7 @@ internal fun RecipeDetailsTopAppBar(
                 content = {
                     when (it) {
                         is RecipeDetailsViewModel.RecipeState.Success -> {
-                            Text(text = it.recipeView.title)
+                            Text(text = it.recipeView.name)
                         }
 
                         else -> Unit
@@ -67,12 +74,14 @@ internal fun RecipeDetailsTopAppBar(
                     when (it) {
                         is RecipeDetailsViewModel.RecipeState.Success -> {
                             Actions(
+                                isOwner = isOwner,
                                 isLiked = isLiked,
                                 onLikeClick = onLikeClick,
                                 isBookmarked = isBookmarked,
                                 onBookmarkClick = onBookmarkClick,
                                 onEditClick = onEditClick,
                                 onReportClick = onReportClick,
+                                onDeleteClick = onDeleteClick,
                             )
                         }
 
@@ -86,12 +95,14 @@ internal fun RecipeDetailsTopAppBar(
 
 @Composable
 private fun Actions(
+    isOwner: Boolean?,
     isLiked: Boolean,
     onLikeClick: () -> Unit,
     isBookmarked: Boolean,
     onBookmarkClick: () -> Unit,
     onEditClick: () -> Unit,
     onReportClick: () -> Unit,
+    onDeleteClick: () -> Unit,
 ) {
     Row {
         IconButton(onClick = onLikeClick) {
@@ -115,11 +126,13 @@ private fun Actions(
                 targetState = isBookmarked,
                 label = "bookmark_cross_fade",
                 content = { bookmarked ->
-                    val icon = VUIcons.BookmarkFilled.takeIf { bookmarked } ?: VUIcons.Bookmark
+                    val (icon, contentDescription) = Pair(VUIcons.BookmarkFilled, unbookmark_action)
+                        .takeIf { bookmarked }
+                        ?: Pair(VUIcons.Bookmark, bookmark_action)
                     Icon(
                         modifier = Modifier.size(24.dp),
                         painter = painterResource(icon.id),
-                        contentDescription = null,
+                        contentDescription = stringResource(id = contentDescription),
                     )
                 }
             )
@@ -128,15 +141,27 @@ private fun Actions(
             Icon(
                 modifier = Modifier.size(24.dp),
                 painter = painterResource(VUIcons.Edit.id),
-                contentDescription = null,
+                contentDescription = stringResource(id = edit),
             )
         }
-        IconButton(onClick = onReportClick) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(VUIcons.Report.id),
-                contentDescription = null,
-            )
+        isOwner?.let {
+            if (isOwner) {
+                IconButton(onClick = onDeleteClick) {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(VUIcons.Delete.id),
+                        contentDescription = stringResource(id = delete),
+                    )
+                }
+            } else {
+                IconButton(onClick = onReportClick) {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(VUIcons.Report.id),
+                        contentDescription = stringResource(id = report),
+                    )
+                }
+            }
         }
     }
 }

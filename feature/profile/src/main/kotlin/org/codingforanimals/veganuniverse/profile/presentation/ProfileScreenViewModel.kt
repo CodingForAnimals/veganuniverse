@@ -40,9 +40,24 @@ internal class ProfileScreenViewModel(
 
     fun onAction(action: Action) {
         when (action) {
+            Action.BookmarksClick.Recipes -> {
+                viewModelScope.launch {
+                    navigationEffectsChannel.send(NavigationEffect.RecipeListing(ListingType.BOOKMARKS))
+                }
+            }
+            Action.ContributionsClick.Recipes -> {
+                viewModelScope.launch {
+                    navigationEffectsChannel.send(NavigationEffect.RecipeListing(ListingType.CONTRIBUTIONS))
+                }
+            }
             Action.BookmarksClick.Places -> {
                 viewModelScope.launch {
-                        navigationEffectsChannel.send(NavigationEffect.PlaceListing(ListingType.BOOKMARKS))
+                    navigationEffectsChannel.send(NavigationEffect.PlaceListing(ListingType.BOOKMARKS))
+                }
+            }
+            Action.ContributionsClick.Places -> {
+                viewModelScope.launch {
+                    navigationEffectsChannel.send(NavigationEffect.PlaceListing(ListingType.CONTRIBUTIONS))
                 }
             }
             Action.OnLogoutClick -> logout()
@@ -72,5 +87,6 @@ internal class ProfileScreenViewModel(
 
     sealed class NavigationEffect {
         data class PlaceListing(val listingType: ListingType) : NavigationEffect()
+        data class RecipeListing(val listingType: ListingType) : NavigationEffect()
     }
 }

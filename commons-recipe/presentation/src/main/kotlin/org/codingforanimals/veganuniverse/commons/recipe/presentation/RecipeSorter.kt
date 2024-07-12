@@ -10,5 +10,6 @@ fun RecipeSorter.toUI(): RecipeSorterUI {
     return when (this) {
         RecipeSorter.DATE -> RecipeSorterUI(label = R.string.most_recent, icon = VUIcons.Clock)
         RecipeSorter.LIKES -> RecipeSorterUI(label = R.string.likes_amount, icon = VUIcons.Favorite)
+        RecipeSorter.NAME -> RecipeSorterUI(label = R.string.by_title, icon = VUIcons.Community)
     }
 }

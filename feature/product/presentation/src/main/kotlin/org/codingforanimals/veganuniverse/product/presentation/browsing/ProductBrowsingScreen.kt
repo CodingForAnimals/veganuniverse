@@ -2,7 +2,6 @@
 
 package org.codingforanimals.veganuniverse.product.presentation.browsing
 
-import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -66,6 +66,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
 import org.codingforanimals.veganuniverse.commons.product.presentation.label
 import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
@@ -74,11 +75,10 @@ import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductTy
 import org.codingforanimals.veganuniverse.commons.ui.R.drawable.ic_search
 import org.codingforanimals.veganuniverse.commons.ui.R.string.filter_by
 import org.codingforanimals.veganuniverse.commons.ui.components.SelectableChip
-import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialog
+import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
@@ -87,50 +87,34 @@ import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.Action
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.NavigationEffect
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.UiState
-import org.codingforanimals.veganuniverse.product.presentation.components.ProductRow
+import org.codingforanimals.veganuniverse.product.presentation.components.ProductCard
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ProductBrowsingScreen(
+internal fun ProductBrowsingScreen(
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit,
     navigateToAuthScreen: () -> Unit,
-    viewModel: ProductBrowsingViewModel = koinViewModel(),
+    navigateToProductDetail: (String) -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val viewModel: ProductBrowsingViewModel = koinViewModel()
     val products = viewModel.products.collectAsLazyPagingItems()
 
     val snackbarHostState = remember { SnackbarHostState() }
     ProductBrowsingScreen(
         modifier = modifier,
         snackbarHostState = snackbarHostState,
-        uiState = uiState,
+        uiState = viewModel.uiState,
         products = products,
         onAction = viewModel::onAction,
     )
-
-    viewModel.showReportDialog?.let {
-        ReportContentDialog(
-            onResult = viewModel::onReportResult
-        )
-    }
-
-    viewModel.showSuggestionDialog?.let {
-        EditContentDialog(
-            onResult = viewModel::onEditResult
-        )
-    }
-
-
-    if (viewModel.showUnverifiedEmailDialog) {
-        UnverifiedEmailDialog(onResult = viewModel::onUnverifiedEmailResult)
-    }
 
     HandleNavigationEffects(
         navigationEffects = viewModel.navigationEffects,
         navigateUp = navigateUp,
         navigateToAuthScreen = navigateToAuthScreen,
+        navigateToProductDetail = navigateToProductDetail,
     )
 
     HandleSnackbarEffects(
@@ -162,12 +146,7 @@ private fun ProductBrowsingScreen(
         }
     }
 
-    var imageDialogUrl by rememberSaveable { mutableStateOf("") }
-    var imageDialogVisible by rememberSaveable { mutableStateOf(false) }
-    fun showImageDialog(url: String) {
-        imageDialogUrl = url
-        imageDialogVisible = true
-    }
+    var imageDialogUrl: String? by rememberSaveable { mutableStateOf(null) }
 
     Scaffold(
         modifier = modifier,
@@ -227,7 +206,7 @@ private fun ProductBrowsingScreen(
     ) { paddingValues ->
         Crossfade(
             modifier = Modifier.padding(paddingValues),
-            targetState = products.itemCount == 0 && products.loadState.refresh !is LoadState.Loading,
+            targetState = products.itemCount == 0 && products.loadState.refresh !is LoadState.Loading && products.loadState.append !is LoadState.Loading,
             label = "products_empty_state_cross_fade",
         ) { isEmpty ->
             if (isEmpty) {
@@ -235,24 +214,30 @@ private fun ProductBrowsingScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(Spacing_05),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    contentPadding = PaddingValues(
+                        start = Spacing_05,
+                        end = Spacing_05,
+                        top = Spacing_05,
+                        bottom = Spacing_08,
+                    )
                 ) {
                     items(products.itemCount) { index ->
                         val product = products[index] ?: return@items
                         key(product.id) {
-                            ProductRow(
+                            ProductCard(
                                 product = product,
-                                onImageClick = { product.imageUrl?.let { showImageDialog(it) } },
-                                onEditClick = {
-                                    product.id?.let {
-                                        onAction(Action.OpenSuggestDialog(it))
-                                    }
-                                },
-                                onReportClick = {
-                                    product.id?.let {
-                                        onAction(Action.OpenReportDialog(it))
-                                    }
-                                },
+                                onClick = { product.id?.let { onAction(Action.OnProductClick(it)) } },
+                                onImageClick = { imageDialogUrl = product.imageUrl },
                             )
+                        }
+                    }
+
+                    products.loadState.apply {
+                        when {
+                            refresh is LoadState.Loading -> item { CircularProgressIndicator() }
+                            append is LoadState.Loading -> item { CircularProgressIndicator() }
                         }
                     }
                 }
@@ -260,9 +245,9 @@ private fun ProductBrowsingScreen(
         }
     }
 
-    if (imageDialogVisible) {
+    if (imageDialogUrl != null) {
         Dialog(
-            onDismissRequest = { imageDialogVisible = false },
+            onDismissRequest = { imageDialogUrl = null },
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
             AsyncImage(
@@ -329,7 +314,7 @@ private fun ProductBrowsingScreen(
                         verticalArrangement = Arrangement.spacedBy(Spacing_02),
                         maxItemsInEachRow = 2,
                     ) {
-                        ProductType.values().forEach {
+                        ProductType.entries.forEach {
                             key(it.name.hashCode()) {
                                 val typeUI = remember { it.toUI() }
                                 SelectableChip(
@@ -351,7 +336,7 @@ private fun ProductBrowsingScreen(
                         verticalArrangement = Arrangement.spacedBy(Spacing_02),
                         maxItemsInEachRow = 2,
                     ) {
-                        ProductCategory.values().forEach {
+                        ProductCategory.entries.forEach {
                             key(it.name.hashCode()) {
                                 val categoryUI = remember { it.toUI() }
                                 SelectableChip(
@@ -402,22 +387,6 @@ private fun ProductBrowsingScreen(
             }
         }
     }
-
-    products.loadState.apply {
-        when {
-            refresh is LoadState.Loading -> VUCircularProgressIndicator()
-            refresh is LoadState.Error -> Log.e(
-                "ProductListScreen",
-                "Error refreshing items ${(refresh as? LoadState.Error)?.error}",
-            )
-
-            append is LoadState.Loading -> VUCircularProgressIndicator()
-            append is LoadState.Error -> Log.e(
-                "ProductListScreen",
-                "Error appending items ${(append as? LoadState.Error)?.error}",
-            )
-        }
-    }
 }
 
 
@@ -426,6 +395,7 @@ private fun HandleNavigationEffects(
     navigationEffects: Flow<NavigationEffect>,
     navigateUp: () -> Unit,
     navigateToAuthScreen: () -> Unit,
+    navigateToProductDetail: (String) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         navigationEffects.onEach { sideEffect ->
@@ -435,6 +405,9 @@ private fun HandleNavigationEffects(
                 }
 
                 NavigationEffect.NavigateToAuthScreen -> navigateToAuthScreen()
+                is NavigationEffect.NavigateToProductDetails -> {
+                    navigateToProductDetail(sideEffect.id)
+                }
             }
         }.collect()
     }

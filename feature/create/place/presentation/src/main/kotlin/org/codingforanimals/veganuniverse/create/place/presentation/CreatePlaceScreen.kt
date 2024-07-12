@@ -46,6 +46,26 @@ import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.veganuniverse.commons.create.presentation.ImagePicker
+import org.codingforanimals.veganuniverse.commons.create.presentation.R.string.publish
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
+import org.codingforanimals.veganuniverse.commons.ui.components.SelectableChip
+import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
+import org.codingforanimals.veganuniverse.commons.ui.components.VUNormalTextField
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTextField
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBackground
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
+import org.codingforanimals.veganuniverse.commons.ui.utils.rememberImageCropperLauncherForActivityResult
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceViewModel.Action
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceViewModel.SideEffect
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceViewModel.UiState
@@ -59,25 +79,6 @@ import org.codingforanimals.veganuniverse.create.place.presentation.entity.Creat
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem.SelectIcon
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem.SelectTags
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem.SubmitButton
-import org.codingforanimals.veganuniverse.commons.create.presentation.ImagePicker
-import org.codingforanimals.veganuniverse.commons.create.presentation.R.string.publish
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
-import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
-import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
-import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.commons.ui.components.SelectableChip
-import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
-import org.codingforanimals.veganuniverse.commons.ui.components.VUNormalTextField
-import org.codingforanimals.veganuniverse.commons.ui.components.VUTextField
-import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.commons.ui.utils.rememberImageCropperLauncherForActivityResult
-import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.koin.androidx.compose.koinViewModel
 import java.util.concurrent.CancellationException
 
@@ -106,7 +107,7 @@ fun CreatePlaceScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(snackbarHostState)},
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             VUTopAppBar(
                 title = stringResource(R.string.create_place),
@@ -135,8 +136,37 @@ fun CreatePlaceScreen(
         )
     }
 
-    if (viewModel.showUnverifiedEmailDialog) {
-        UnverifiedEmailDialog(onResult = viewModel::onUnverifiedEmailResult)
+    when (val dialog = viewModel.dialog) {
+        is CreatePlaceViewModel.Dialog.PlaceOwnershipNotice -> {
+            AlertDialog(
+                onDismissRequest = { viewModel.onAction(Action.DismissDialog) },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            viewModel.onAction(
+                                Action.OnPlaceOwnershipNoticePublishClick(dialog.form)
+                            )
+                        },
+                        content = {
+                            Text(text = stringResource(id = publish))
+                        }
+                    )
+                },
+                dismissButton = {
+                    TextButton(onClick = { viewModel.onAction(Action.DismissDialog) }) {
+                        Text(text = stringResource(id = back))
+                    }
+                },
+                title = { Text(text = stringResource(id = R.string.place_ownership_dialog_title)) },
+                text = { Text(text = stringResource(id = R.string.place_ownership_dialog_text)) }
+            )
+        }
+
+        CreatePlaceViewModel.Dialog.UnverifiedEmail -> {
+            UnverifiedEmailDialog(onResult = viewModel::onUnverifiedEmailResult)
+        }
+
+        null -> Unit
     }
 
     HandleSideEffects(

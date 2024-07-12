@@ -151,7 +151,7 @@ private fun MostLikedRecipeCard(
                                 start = Spacing_05,
                                 end = Spacing_05,
                             ),
-                        text = recipe.title,
+                        text = recipe.name,
                         minLines = 2,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,

@@ -28,4 +28,6 @@
     <string name="no_internet_message">Necesitas conexión a internet para realizar esta acción!</string>
     <string name="email_not_yet_verified">Tu correo electrónico no ha sido verificado todavía. Por favor revisa tu correo</string>
     <string name="closed">Cerrado</string>
+    <string name="place_ownership_dialog_title">Aviso de propiedad</string>
+    <string name="place_ownership_dialog_text">Una vez contribuido, contrario a otro contenido como Recetas, este lugar será propiedad de la comunidad y no podrás editarlo o eliminarlo como quieras. Tendrás que hacerlo a través de sugerencias.</string>
 </resources>

@@ -8,10 +8,10 @@ import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeQuer
 
 interface RecipeRepository {
     suspend fun getRecipeById(id: String): Recipe?
-    suspend fun getRecipesByIdList(ids: List<String>): List<Recipe>
+    suspend fun queryRecipesById(ids: List<String>): Flow<PagingData<Recipe>>
     fun queryRecipesPagingData(params: RecipeQueryParams): Flow<PagingData<Recipe>>
     suspend fun queryRecipes(params: RecipeQueryParams): List<Recipe>
-    suspend fun deleteRecipeById(id: String): Boolean
+    suspend fun deleteRecipeById(id: String)
     suspend fun insertRecipe(recipe: Recipe, imageModel: Parcelable): Recipe?
     suspend fun increaseOrDecreaseLike(recipeId: String, shouldIncrease: Boolean)
     suspend fun reportRecipe(recipeId: String, userId: String)

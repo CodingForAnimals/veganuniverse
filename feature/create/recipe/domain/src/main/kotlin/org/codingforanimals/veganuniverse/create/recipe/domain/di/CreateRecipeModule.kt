@@ -18,7 +18,7 @@ val createRecipeDomainModule = module {
     factory {
         SubmitRecipe(
             recipeRepository = get(),
-            profileContentUseCases = get(named(PROFILE_RECIPE_USE_CASES)),
+            profileRecipeUseCases = get(named(PROFILE_RECIPE_USE_CASES)),
             flowOnCurrentUser = get(),
         )
     }

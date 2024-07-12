@@ -16,7 +16,7 @@ val createProductDomainModule = module {
     factory {
         SubmitProduct(
             productRepository = get(),
-            profileContentUseCases = get(named(PROFILE_PRODUCT_USE_CASES)),
+            profileProductUseCases = get(named(PROFILE_PRODUCT_USE_CASES)),
             flowOnCurrentUser = get(),
         )
     }

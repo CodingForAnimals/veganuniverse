@@ -14,5 +14,5 @@ data class Product(
     val userId: String?,
     val username: String?,
     val imageUrl: String?,
-    val creationDate: Date?,
+    val createdAt: Date?,
 )

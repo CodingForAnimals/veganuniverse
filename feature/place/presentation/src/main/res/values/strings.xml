@@ -40,5 +40,6 @@
     <string name="address">Dirección</string>
     <string name="contributed_places">Lugares contribuidos</string>
     <string name="bookmarked_places">Lugares guardados</string>
-    <string name="empty_places_message">¡No has guardado ningún lugar todavía! Podés tener acá una lista de tus lugares favoritos.</string>
+    <string name="empty_bookmarked_places_message">¡No has guardado ningún lugar todavía! Podés tener acá una lista de tus lugares favoritos.</string>
+    <string name="empty_contributed_places_message">¡No has contribuido ningún lugar todavía! Todos los que vayas agregando los podrás ver y editar desde este acceso rápido.</string>
 </resources>

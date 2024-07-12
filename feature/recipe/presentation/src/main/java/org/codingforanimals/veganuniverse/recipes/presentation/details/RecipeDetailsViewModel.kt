@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -31,6 +32,7 @@ import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_m
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
@@ -47,6 +49,7 @@ internal class RecipeDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     private val useCases: RecipeDetailsUseCases,
     private val deeplinkNavigator: DeeplinkNavigator,
+    private val flowOnCurrentUser: FlowOnCurrentUser,
 ) : ViewModel() {
 
     private val snackbarEffectsChannel = Channel<Snackbar>()
@@ -57,8 +60,13 @@ internal class RecipeDetailsViewModel(
 
     private val recipeId = savedStateHandle.get<String>(RECIPE_ID)
 
+    var isOwner: Boolean? by mutableStateOf(null)
+        private set
+
     val recipeState: StateFlow<RecipeState> = flow<RecipeState> {
         val recipe = useCases.getRecipe(recipeId!!)?.toView()!!
+        val userId = flowOnCurrentUser().firstOrNull()?.id
+        isOwner = recipe.userId == userId
         emit(RecipeState.Success(recipe))
     }.catch {
         Log.e(TAG, it.stackTraceToString())
@@ -79,7 +87,7 @@ internal class RecipeDetailsViewModel(
             likeEnabled.value = false
             send(!currentState)
             val result = useCases.toggleLike(recipeId, currentState)
-            handleToggleResult(result, ::toggleLike)
+            handleToggleResult(result)
             send(result.newValue)
             likeEnabled.value = true
         }
@@ -99,7 +107,7 @@ internal class RecipeDetailsViewModel(
             bookmarkEnabled.value = false
             send(!currentState)
             val result = useCases.toggleBookmark(recipeId, currentState)
-            handleToggleResult(result, ::toggleBookmark)
+            handleToggleResult(result)
             send(result.newValue)
             bookmarkEnabled.value = true
         }
@@ -117,6 +125,7 @@ internal class RecipeDetailsViewModel(
         data class Image(val url: String) : Dialog()
         data object Report : Dialog()
         data object Edit : Dialog()
+        data object Delete : Dialog()
     }
 
     fun onAction(action: Action) {
@@ -133,7 +142,7 @@ internal class RecipeDetailsViewModel(
                 }
             }
 
-            Action.OnImageDialogDismissRequest -> {
+            Action.OnDialogDismissRequest -> {
                 dialog = null
             }
 
@@ -166,6 +175,11 @@ internal class RecipeDetailsViewModel(
             is Action.OnReportResult -> onReportResult(action.result)
             is Action.OnEditResult -> onEditResult(action.result)
             is Action.OnUnverifiedEmailResult -> onUnverifiedEmailResult(action.result)
+            Action.OnDeleteClick -> {
+                dialog = Dialog.Delete
+            }
+
+            Action.OnConfirmDelete -> deleteRecipe()
         }
     }
 
@@ -265,7 +279,6 @@ internal class RecipeDetailsViewModel(
 
     private suspend fun handleToggleResult(
         result: ToggleResult,
-        retryAction: suspend () -> Unit,
     ) {
         when (result) {
             is ToggleResult.Success -> Unit
@@ -277,12 +290,19 @@ internal class RecipeDetailsViewModel(
                 snackbarEffectsChannel.send(
                     Snackbar(
                         message = unexpected_error_message_try_again,
-                        actionLabel = R.string.try_again,
-                        action = {
-                            viewModelScope.launch { retryAction() }
-                        }
                     )
                 )
+            }
+        }
+    }
+
+    private fun deleteRecipe() {
+        recipeId ?: return
+        viewModelScope.launch {
+            if (useCases.deleteRecipe(recipeId).isSuccess) {
+                navigationEffectsChannel.send(NavigationEffect.NavigateUp)
+            } else {
+                snackbarEffectsChannel.send(Snackbar(R.string.delete_recipe_error_message))
             }
         }
     }
@@ -292,7 +312,7 @@ internal class RecipeDetailsViewModel(
             id = id ?: return null,
             userId = userId,
             username = username,
-            title = title,
+            name = name,
             description = description,
             likes = likes,
             createdAt = createdAt,
@@ -315,8 +335,10 @@ internal class RecipeDetailsViewModel(
         data object OnBackClick : Action()
         data object OnEditClick : Action()
         data object OnReportClick : Action()
+        data object OnDeleteClick : Action()
+        data object OnConfirmDelete : Action()
         data class OnImageClick(val url: String?) : Action()
-        data object OnImageDialogDismissRequest : Action()
+        data object OnDialogDismissRequest : Action()
         data object OnLikeClick : Action()
         data object OnBookmarkClick : Action()
         data object OnErrorDialogDismissRequest : Action()

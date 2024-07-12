@@ -43,7 +43,6 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_09
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.fullStreetAddress
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
@@ -230,9 +229,9 @@ private fun PlaceDetails(
         modifier = Modifier.verticalScroll(rememberScrollState()),
     ) {
         ContentDetailsHero(
+            url = place.imageUrl,
             icon = place.type?.toUI()?.icon ?: VUIcons.Store,
             onImageClick = { showImageDialog = true },
-            url = place.imageUrl,
         )
 
         Column(

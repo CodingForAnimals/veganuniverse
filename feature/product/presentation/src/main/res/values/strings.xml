@@ -23,4 +23,7 @@
     <string name="product_report_error">¡Oops! Ocurrió un error inesperado. No pudimos reportar el producto. Podés volver a intentarlo.</string>
     <string name="product_edit_error">¡Oops! Ocurrió un error inesperado. No pudimos enviar tu sugerencia del producto. Podés volver a intentarlo.</string>
     <string name="product_edit_success">¡Sugerencia enviada! Lo estamos revisando, gracias.</string>
+    <string name="product_image">Imagen del producto</string>
+    <string name="comment">Comentario</string>
+    <string name="category">Categoría</string>
 </resources>

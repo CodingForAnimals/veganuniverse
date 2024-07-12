@@ -164,10 +164,10 @@ private fun CreateRecipeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = Spacing_06),
-                value = uiState.titleField.value,
-                onValueChange = { onAction(Action.OnTextChange.Title(it)) },
+                value = uiState.nameField.value,
+                onValueChange = { onAction(Action.OnTextChange.Name(it)) },
                 label = stringResource(R.string.title),
-                isError = uiState.isValidating && !uiState.titleField.isValid,
+                isError = uiState.isValidating && !uiState.nameField.isValid,
                 maxChars = 64,
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.Sentences,

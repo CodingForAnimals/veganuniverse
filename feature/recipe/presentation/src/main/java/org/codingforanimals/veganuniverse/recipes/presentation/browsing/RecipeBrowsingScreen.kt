@@ -2,6 +2,7 @@
 
 package org.codingforanimals.veganuniverse.recipes.presentation.browsing
 
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -11,15 +12,13 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -46,38 +45,37 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.ui.R.drawable.ic_search
-import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
-import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
-import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
-import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
-import org.codingforanimals.veganuniverse.recipes.presentation.R
-import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.Action
-import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.SideEffect
-import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.UiState
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
+import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
+import org.codingforanimals.veganuniverse.commons.ui.R.drawable.ic_search
 import org.codingforanimals.veganuniverse.commons.ui.components.SelectableChip
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.recipes.presentation.R
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.Action
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.SideEffect
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.UiState
+import org.codingforanimals.veganuniverse.recipes.presentation.shared.RecipeCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -89,6 +87,7 @@ internal fun RecipeBrowsingScreen(
 ) {
 
     val recipes = viewModel.recipes.collectAsLazyPagingItems()
+    Log.e("pepe", "R ${recipes.itemCount}")
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     RecipeBrowsingScreen(
@@ -197,47 +196,27 @@ private fun RecipeBrowsingScreen(
                         .animateContentSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(Spacing_04),
-                    contentPadding = PaddingValues(Spacing_05)
+                    contentPadding = PaddingValues(
+                        top = Spacing_05,
+                        start = Spacing_05,
+                        end = Spacing_05,
+                        bottom = Spacing_08,
+                    )
                 ) {
                     items(recipes.itemCount) { index ->
                         val recipe = recipes[index] ?: return@items
                         val id = recipe.id ?: return@items
                         key(id) {
-                            Card(
-                                onClick = { onAction(Action.OnRecipeClick(recipe)) },
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.White,
-                                )
-                            ) {
-                                AsyncImage(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .aspectRatio(1f)
-                                        .padding(bottom = Spacing_04),
-                                    model = recipe.imageUrl,
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Crop,
-                                )
-                                Text(
-                                    modifier = Modifier.padding(horizontal = Spacing_04),
-                                    text = recipe.title,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    maxLines = 2,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
-                                Text(
-                                    modifier = Modifier.padding(
-                                        start = Spacing_04,
-                                        end = Spacing_04,
-                                        bottom = Spacing_04,
-                                        top = Spacing_02,
-                                    ),
-                                    text = recipe.description,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    maxLines = 3,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
-                            }
+                            RecipeCard(
+                                recipe = recipe,
+                                onClick = { onAction(Action.OnRecipeClick(recipe)) }
+                            )
+                        }
+                    }
+                    recipes.loadState.apply {
+                        when {
+                            refresh is LoadState.Loading -> item { CircularProgressIndicator() }
+                            append is LoadState.Loading -> item { CircularProgressIndicator() }
                         }
                     }
                 }

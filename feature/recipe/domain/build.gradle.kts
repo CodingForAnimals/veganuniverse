@@ -12,5 +12,6 @@ dependencies {
     implementation(project(":commons-recipe:domain"))
     implementation(project(":commons-profile:domain"))
     implementation(project(":commons:network"))
+    implementation(libs.androidx.paging)
     api(project(":commons-profile:shared"))
 }

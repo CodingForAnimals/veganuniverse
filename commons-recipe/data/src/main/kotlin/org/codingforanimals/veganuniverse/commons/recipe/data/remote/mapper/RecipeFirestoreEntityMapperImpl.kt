@@ -15,7 +15,7 @@ internal class RecipeFirestoreEntityMapperImpl(
                 id = id,
                 userId = userId,
                 username = username,
-                title = title.orEmpty(),
+                name = name.orEmpty(),
                 description = description.orEmpty(),
                 likes = likes,
                 createdAt = createdAt?.toDate(),

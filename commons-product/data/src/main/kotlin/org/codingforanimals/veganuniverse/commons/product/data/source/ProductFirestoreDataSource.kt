@@ -15,6 +15,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import org.codingforanimals.veganuniverse.commons.data.utils.DataUtils
 import org.codingforanimals.veganuniverse.commons.network.mapFirestoreExceptions
 import org.codingforanimals.veganuniverse.commons.product.data.model.ProductFirestoreEntity
 import org.codingforanimals.veganuniverse.commons.product.data.model.ProductFirestoreEntityMapper
@@ -158,7 +159,7 @@ internal class ProductFirestoreDataSource(
             nameLowercase = name.lowercase(),
             brand = brand,
             brandLowercase = brand.lowercase(),
-            keywords = createKeywords(name, brand),
+            keywords = DataUtils.createKeywords(name, brand),
             comment = comment,
             type = type.name,
             category = category.name,
@@ -166,29 +167,6 @@ internal class ProductFirestoreDataSource(
             validated = false,
             createdAt = null,
         )
-    }
-
-    private fun createKeywords(vararg searchableFields: String): List<String> {
-        val keywords = mutableListOf<String>()
-        fun addToKeywordsIfLongEnough(string: String, index: Int) {
-            if (index >= 2) {
-                keywords.add(string.substring(0, index + 1).lowercase())
-            }
-        }
-        searchableFields.forEach { string ->
-
-            string.forEachIndexed { index, _ ->
-                addToKeywordsIfLongEnough(string, index)
-            }
-            string.split(" ").takeIf { it.size > 1 }?.forEachIndexed { index, word ->
-                if (index >= 1) {
-                    word.forEachIndexed { wordIndex, _ ->
-                        addToKeywordsIfLongEnough(word, wordIndex)
-                    }
-                }
-            }
-        }
-        return keywords
     }
 
     companion object {

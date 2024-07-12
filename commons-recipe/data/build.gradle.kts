@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":services:firebase-storage"))
     implementation(project(":commons-recipe:shared"))
     implementation(project(":commons:network"))
+    implementation(project(":commons:data"))
     implementation(libs.google.gson)
     implementation(libs.androidx.paging)
     bomImplementation(

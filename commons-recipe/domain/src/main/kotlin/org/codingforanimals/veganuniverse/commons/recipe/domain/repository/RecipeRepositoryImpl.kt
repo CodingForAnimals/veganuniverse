@@ -14,8 +14,8 @@ internal class RecipeRepositoryImpl(
         return remoteDataSource.getRecipeById(id)
     }
 
-    override suspend fun getRecipesByIdList(ids: List<String>): List<Recipe> {
-        return ids.mapNotNull { getRecipeById(it) }
+    override suspend fun queryRecipesById(ids: List<String>): Flow<PagingData<Recipe>> {
+        return remoteDataSource.queryRecipesPagingDataByIds(ids)
     }
 
     override fun queryRecipesPagingData(params: RecipeQueryParams): Flow<PagingData<Recipe>> {
@@ -26,8 +26,8 @@ internal class RecipeRepositoryImpl(
         return remoteDataSource.getRecipeByQueryParams(params)
     }
 
-    override suspend fun deleteRecipeById(id: String): Boolean {
-        return remoteDataSource.deleteRecipeById(id)
+    override suspend fun deleteRecipeById(id: String) {
+        remoteDataSource.deleteRecipeById(id)
     }
 
     override suspend fun insertRecipe(recipe: Recipe, imageModel: Parcelable): Recipe? {

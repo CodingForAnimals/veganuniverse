@@ -5,7 +5,7 @@ import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 
 data class RecipeForm(
     val imageModel: Parcelable,
-    val title: String,
+    val name: String,
     val description: String,
     val tags: List<RecipeTag>,
     val ingredients: List<String>,

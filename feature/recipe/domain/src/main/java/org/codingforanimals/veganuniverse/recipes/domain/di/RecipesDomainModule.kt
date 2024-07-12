@@ -4,6 +4,7 @@ import org.codingforanimals.veganuniverse.commons.profile.domain.di.PROFILE_RECI
 import org.codingforanimals.veganuniverse.recipes.domain.usecase.RecipeDetailsUseCases
 import org.codingforanimals.veganuniverse.commons.user.domain.di.userCommonDomainModule
 import org.codingforanimals.veganuniverse.recipes.domain.usecase.EditRecipe
+import org.codingforanimals.veganuniverse.recipes.domain.usecase.QueryRecipesById
 import org.codingforanimals.veganuniverse.recipes.domain.usecase.ReportRecipe
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
@@ -16,6 +17,7 @@ val recipesDomainModule = module {
 
     factoryOf(::ReportRecipe)
     factoryOf(::EditRecipe)
+    factoryOf(::QueryRecipesById)
 
     factory {
         RecipeDetailsUseCases(

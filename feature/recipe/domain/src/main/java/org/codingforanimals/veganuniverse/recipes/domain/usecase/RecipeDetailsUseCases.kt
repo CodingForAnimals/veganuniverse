@@ -7,7 +7,6 @@ import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleRes
 import org.codingforanimals.veganuniverse.commons.recipe.domain.repository.RecipeRepository
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
-import org.codingforanimals.veganuniverse.commons.user.domain.usecase.ReauthenticationUseCases
 
 private const val TAG = "RecipeDetailsUseCases"
 
@@ -43,6 +42,13 @@ class RecipeDetailsUseCases(
 
     suspend fun toggleBookmark(recipeId: String, currentValue: Boolean): ToggleResult {
         return profileRecipeUseCases.toggleBookmark(recipeId, currentValue)
+    }
+
+    suspend fun deleteRecipe(recipeId: String): Result<Unit> {
+        return runCatching {
+            recipeRepository.deleteRecipeById(recipeId)
+            profileRecipeUseCases.removeContribution(recipeId)
+        }
     }
 }
 

@@ -14,6 +14,8 @@ android {
 dependencies {
     implementation(project(":feature:recipe:domain"))
     implementation(project(":commons-recipe:domain"))
+    implementation(project(":commons-profile:domain"))
+    implementation(project(":commons:user:domain"))
     implementation(project(":commons-recipe:presentation"))
     implementation(project(":commons:user:presentation"))
     implementation(project(":commons:navigation"))

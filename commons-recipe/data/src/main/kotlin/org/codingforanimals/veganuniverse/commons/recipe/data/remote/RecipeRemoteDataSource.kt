@@ -8,7 +8,7 @@ import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeQuer
 
 interface RecipeRemoteDataSource {
     suspend fun getRecipeById(id: String): Recipe?
-    suspend fun getRecipesByIdList(ids: List<String>): List<Recipe>
+    suspend fun queryRecipesPagingDataByIds(ids: List<String>): Flow<PagingData<Recipe>>
     fun queryRecipesPagingData(params: RecipeQueryParams): Flow<PagingData<Recipe>>
     suspend fun getRecipeByQueryParams(params: RecipeQueryParams): List<Recipe>
     suspend fun insertRecipe(recipe: Recipe, model: Parcelable): Recipe?

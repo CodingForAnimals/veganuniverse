@@ -14,7 +14,7 @@ private const val TAG = "SubmitProduct"
 
 class SubmitProduct(
     private val productRepository: ProductRepository,
-    private val profileContentUseCases: ProfileContentUseCases,
+    private val profileProductUseCases: ProfileContentUseCases,
     private val flowOnCurrentUser: FlowOnCurrentUser,
 ) {
     suspend operator fun invoke(productForm: ProductForm): Result {
@@ -42,7 +42,7 @@ class SubmitProduct(
 
             val productFormAsModel = productForm.toModel(user.id, user.name)
             val newId = productRepository.insertProduct(productFormAsModel, productForm.imageModel)
-            profileContentUseCases.addContribution(newId)
+            profileProductUseCases.addContribution(newId)
             Result.Success(newId)
         } catch (e: PermissionDeniedException) {
             Result.UserMustReauthenticate

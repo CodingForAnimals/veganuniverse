@@ -27,9 +27,15 @@ internal class PlaceListingViewModel(
 ) : ViewModel() {
     private val listingType = savedStateHandle.get<String>(LISTING_TYPE)
 
-    val title = when (ListingType.fromString(listingType)) {
+    val title: Int? = when (ListingType.fromString(listingType)) {
         ListingType.CONTRIBUTIONS -> R.string.contributed_places
         ListingType.BOOKMARKS -> R.string.bookmarked_places
+        null -> null
+    }
+
+    val emptyResultsTextRes: Int? = when (ListingType.fromString(listingType)) {
+        ListingType.CONTRIBUTIONS -> R.string.empty_contributed_places_message
+        ListingType.BOOKMARKS -> R.string.empty_bookmarked_places_message
         null -> null
     }
 

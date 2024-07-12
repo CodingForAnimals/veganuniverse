@@ -7,7 +7,7 @@ data class RecipeView(
     val id: String,
     val userId: String?,
     val username: String?,
-    val title: String,
+    val name: String,
     val description: String,
     val likes: Int,
     val createdAt: Date?,

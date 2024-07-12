@@ -106,7 +106,7 @@ private fun LatestRecipesFlowRow(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(Spacing_04),
-                        text = recipe.title,
+                        text = recipe.name,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center,

@@ -19,7 +19,7 @@ internal class ProfileProductUseCases(
 
     override suspend fun isLiked(contentId: String): Boolean = false
     override suspend fun toggleLike(contentId: String, currentValue: Boolean): ToggleResult {
-        TODO("Not yet implemented")
+        return ToggleResult.UnexpectedError(false)
     }
 
     override suspend fun isBookmarked(contentId: String): Boolean {
@@ -28,7 +28,24 @@ internal class ProfileProductUseCases(
     }
 
     override suspend fun toggleBookmark(contentId: String, currentValue: Boolean): ToggleResult {
-        TODO("Not yet implemented")
+        val actionValue =
+            if (currentValue) ProfileEditActionValue.REMOVE else ProfileEditActionValue.ADD
+        val args = ProfileEditArguments(
+            userId = flowOnCurrentUser().firstOrNull()?.id
+                ?: return ToggleResult.GuestUser(currentValue),
+            contentId = contentId,
+            profileEditContentType = ProfileEditContentType.PRODUCT,
+            profileEditActionType = ProfileEditActionType.BOOKMARK,
+            profileEditActionValue = actionValue,
+        )
+        return runCatching {
+            profileRepository.editProfile(args)
+            ToggleResult.Success(newValue = !currentValue)
+        }.getOrElse {
+            Log.e(TAG, it.stackTraceToString())
+            ToggleResult.UnexpectedError(currentValue)
+        }
+
     }
 
     override suspend fun isContributed(contentId: String): Boolean {
