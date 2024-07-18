@@ -5,7 +5,6 @@ gradle/
 local.properties
 gradlew
 gradlew.bat
-*.pro
 
 #for firebase emulator configuration
 /.firebaserc
@@ -23,7 +22,6 @@ gradlew.bat
 **/build
 
 functions/
-**/*/res/values/secrets.xml
 /database-debug.log
 /launch-emulators.cmd
 /storage.rules
