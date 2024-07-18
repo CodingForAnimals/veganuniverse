@@ -13,6 +13,7 @@ fun NavGraphBuilder.profileGraph(
     navigateToRegister: () -> Unit,
     navigateToPlaceListing: (String) -> Unit,
     navigateToRecipeListing: (String) -> Unit,
+    navigateToProductListing: (String) -> Unit,
 ) {
     composable(
         route = ProfileDestination.Home.route
@@ -21,6 +22,7 @@ fun NavGraphBuilder.profileGraph(
             navigateToAuthenticationPrompt = navigateToRegister,
             navigateToPlaceListing = navigateToPlaceListing,
             navigateToRecipeListing = navigateToRecipeListing,
+            navigateToProductListing = navigateToProductListing,
         )
     }
 }

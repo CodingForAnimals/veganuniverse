@@ -2,7 +2,6 @@
 
 package org.codingforanimals.veganuniverse.recipes.presentation.browsing
 
-import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -87,7 +86,6 @@ internal fun RecipeBrowsingScreen(
 ) {
 
     val recipes = viewModel.recipes.collectAsLazyPagingItems()
-    Log.e("pepe", "R ${recipes.itemCount}")
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     RecipeBrowsingScreen(
@@ -132,7 +130,6 @@ private fun RecipeBrowsingScreen(
         topBar = {
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
                 VUTopAppBar(
-                    title = stringResource(uiState.topBarLabel),
                     onBackClick = { onAction(Action.OnBackClick) },
                 )
                 Row(

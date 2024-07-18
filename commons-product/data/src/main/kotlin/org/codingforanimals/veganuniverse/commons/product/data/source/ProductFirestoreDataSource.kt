@@ -9,12 +9,14 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import org.codingforanimals.veganuniverse.commons.data.paging.ContentListingPagingSource
 import org.codingforanimals.veganuniverse.commons.data.utils.DataUtils
 import org.codingforanimals.veganuniverse.commons.network.mapFirestoreExceptions
 import org.codingforanimals.veganuniverse.commons.product.data.model.ProductFirestoreEntity
@@ -83,14 +85,40 @@ internal class ProductFirestoreDataSource(
     }
 
     override fun queryProductsPagingDataFlow(params: ProductQueryParams): Flow<PagingData<Product>> {
-        val query = params.getQuery()
-        val pagingSource = ProductPagingSource(query)
         return Pager(
             config = PagingConfig(
                 pageSize = params.pageSize,
                 maxSize = params.maxSize,
             ),
-            pagingSourceFactory = { pagingSource },
+            pagingSourceFactory = { ProductPagingSource(params.getQuery()) },
+        ).flow.map { pagingData ->
+            pagingData.map { entity ->
+                firestoreEntityMapper.mapToModel(entity)
+            }
+        }
+    }
+
+    override fun queryProductsById(ids: List<String>): Flow<PagingData<Product>> {
+        suspend fun query(ids: List<String>): List<ProductFirestoreEntity> = coroutineScope {
+            val deferredList = mutableListOf<Deferred<ProductFirestoreEntity?>>()
+            ids.forEach { id ->
+                val deferred = async {
+                    references.items.document(id)
+                        .get().await().toObject(ProductFirestoreEntity::class.java)
+                }
+                deferredList.add(deferred)
+            }
+            deferredList.awaitAll().filterNotNull()
+        }
+        return Pager(
+            config = PagingConfig(pageSize = 2),
+            pagingSourceFactory = {
+                ContentListingPagingSource(
+                    ids = ids,
+                    pageSize = 2,
+                    query = ::query,
+                )
+            }
         ).flow.map { pagingData ->
             pagingData.map { entity ->
                 firestoreEntityMapper.mapToModel(entity)

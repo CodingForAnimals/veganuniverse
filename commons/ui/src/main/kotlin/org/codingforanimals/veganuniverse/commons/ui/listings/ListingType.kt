@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.commons.profile.domain.model
+package org.codingforanimals.veganuniverse.commons.ui.listings
 
 import android.util.Log
 
@@ -12,7 +12,7 @@ enum class ListingType {
             return runCatching {
                 value?.let { ListingType.valueOf(it) }
             }.onFailure {
-                Log.e(TAG, it.stackTraceToString())
+                Log.i(TAG, it.message ?: it.stackTraceToString())
             }.getOrNull()
         }
     }

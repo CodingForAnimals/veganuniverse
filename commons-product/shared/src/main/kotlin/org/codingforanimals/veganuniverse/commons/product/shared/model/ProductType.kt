@@ -1,6 +1,7 @@
 package org.codingforanimals.veganuniverse.commons.product.shared.model
 
 import android.util.Log
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory.Companion
 
 enum class ProductType {
     VEGAN,
@@ -14,7 +15,7 @@ enum class ProductType {
             return runCatching {
                 value?.let { ProductType.valueOf(it) }
             }.onFailure {
-                Log.e(TAG, it.stackTraceToString())
+                Log.i(TAG, it.message ?: it.stackTraceToString())
             }.getOrNull()
         }
     }

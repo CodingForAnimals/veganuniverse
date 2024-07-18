@@ -1,10 +1,14 @@
 package org.codingforanimals.veganuniverse.navigation
 
+import android.util.Log
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.create.graph.CreateDestination
@@ -38,6 +42,9 @@ internal fun VUAppNavHost(
             },
             navigateToRecipeListing = { listingType ->
                 navController.navigateToRecipeListing(listingType)
+            },
+            navigateToProductListing = { listingType ->
+                navController.navigate(ProductDestination.Listing(listingType))
             }
         )
         productGraph(

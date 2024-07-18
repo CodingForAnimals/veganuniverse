@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -46,17 +45,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -77,12 +71,9 @@ import org.codingforanimals.veganuniverse.commons.ui.R.string.filter_by
 import org.codingforanimals.veganuniverse.commons.ui.components.SelectableChip
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
-import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialog
-import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
-import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.Action
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.NavigationEffect
@@ -146,15 +137,13 @@ private fun ProductBrowsingScreen(
         }
     }
 
-    var imageDialogUrl: String? by rememberSaveable { mutableStateOf(null) }
-
     Scaffold(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
                 VUTopAppBar(
-                    title = stringResource(uiState.topBarLabel),
+                    title = {},
                     onBackClick = { onAction(Action.OnBackClick) },
                 )
                 Row(
@@ -229,7 +218,6 @@ private fun ProductBrowsingScreen(
                             ProductCard(
                                 product = product,
                                 onClick = { product.id?.let { onAction(Action.OnProductClick(it)) } },
-                                onImageClick = { imageDialogUrl = product.imageUrl },
                             )
                         }
                     }
@@ -242,22 +230,6 @@ private fun ProductBrowsingScreen(
                     }
                 }
             }
-        }
-    }
-
-    if (imageDialogUrl != null) {
-        Dialog(
-            onDismissRequest = { imageDialogUrl = null },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
-        ) {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .aspectRatio(1f),
-                model = imageDialogUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-            )
         }
     }
 

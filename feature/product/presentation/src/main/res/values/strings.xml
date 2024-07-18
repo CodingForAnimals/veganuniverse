@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="categories_header_message">Buscá por nombre y/o categoría para encontrar rápidamente si un producto, ingrediente o aditivo es:</string>
+    <string name="categories_header_message">Productos</string>
     <string name="categories">Categorías</string>
     <string name="show_more">Ver más</string>
+    <string name="show_all">Ver todos</string>
     <string name="go_to_add_product">Ir a agregar producto</string>
     <string name="add_product_suggestion">Si no encontrás un producto, ¡podés agregarlo!</string>
-    <string name="all_products">Últimos agregados</string>
+    <string name="all_products">Todos los productos</string>
     <string name="product_list_default_title">Todos los productos</string>
     <string name="search_product">Buscar producto</string>
     <string name="no_image">Sin imagen</string>
@@ -26,4 +27,9 @@
     <string name="product_image">Imagen del producto</string>
     <string name="comment">Comentario</string>
     <string name="category">Categoría</string>
+    <string name="contributed_products">Productos contribuidos</string>
+    <string name="bookmarked_products">Productos guardados</string>
+    <string name="empty_bookmarked_products_message">¡No has guardado ningún producto todavía! Podés tener acá una lista de tus productos favoritos.</string>
+    <string name="empty_contributed_products_message">¡No has contribuido ningún producto todavía! Todos los que vayas agregando los podrás ver y editar desde este acceso rápido.</string>
+    <string name="name_and_brand">Nombre y marca</string>
 </resources>

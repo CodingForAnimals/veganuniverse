@@ -51,8 +51,9 @@ private fun RecipesHomeScreen(
         modifier = Modifier
             .fillMaxSize(),
         contentPadding = PaddingValues(
-            vertical = Spacing_06,
-            horizontal = Spacing_05,
+            bottom = Spacing_06,
+            start = Spacing_05,
+            end = Spacing_05,
         ),
         verticalArrangement = Arrangement.spacedBy(Spacing_06)
     ) {

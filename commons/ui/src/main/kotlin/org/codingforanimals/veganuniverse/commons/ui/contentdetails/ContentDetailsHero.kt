@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.Success
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.icon.Icon
 
@@ -28,7 +29,7 @@ fun ContentDetailsHero(
     url: String?,
     icon: Icon,
     onImageClick: () -> Unit,
-    colors: ContentDetailsHeroColors = ContentDetailsHeroColors.primaryColors(),
+    colors: ContentDetailsHeroColors = ContentDetailsHeroDefaults.primaryColors(),
 ) {
     Box {
         val heroImageModifier = Modifier
@@ -70,7 +71,7 @@ fun ContentDetailsHero(
                             )
                             drawCircle(
                                 radius = 20.dp.toPx(),
-                                color = colors.typeIconBorder,
+                                color = colors.iconContainerBorder,
                                 style = Stroke(3.dp.toPx())
                             )
                         },
@@ -79,7 +80,7 @@ fun ContentDetailsHero(
                         modifier = Modifier.align(Alignment.Center),
                         icon = icon,
                         contentDescription = "",
-                        tint = colors.typeIconTint,
+                        tint = colors.iconTint,
                     )
                 }
             }
@@ -87,51 +88,43 @@ fun ContentDetailsHero(
     }
 }
 
+object ContentDetailsHeroDefaults {
+    @Composable
+    fun primaryColors() = ContentDetailsHeroColors(
+        divider = MaterialTheme.colorScheme.primary,
+        iconContainer = MaterialTheme.colorScheme.primary,
+        iconTint = MaterialTheme.colorScheme.surfaceVariant,
+        iconContainerBorder = MaterialTheme.colorScheme.surfaceVariant,
+    )
+
+    @Composable
+    fun secondaryColors() = ContentDetailsHeroColors(
+        divider = MaterialTheme.colorScheme.secondaryContainer,
+        iconContainer = MaterialTheme.colorScheme.secondaryContainer,
+        iconTint = MaterialTheme.colorScheme.surfaceVariant,
+        iconContainerBorder = MaterialTheme.colorScheme.secondaryContainer,
+    )
+
+    @Composable
+    fun errorColors() = ContentDetailsHeroColors(
+        divider = MaterialTheme.colorScheme.error,
+        iconContainer = MaterialTheme.colorScheme.surfaceVariant,
+        iconTint = MaterialTheme.colorScheme.error,
+        iconContainerBorder = MaterialTheme.colorScheme.error,
+    )
+
+    @Composable
+    fun successColors() = ContentDetailsHeroColors(
+        divider = Success,
+        iconContainer = Color.White,
+        iconTint = Success,
+        iconContainerBorder = Success,
+    )
+}
+
 data class ContentDetailsHeroColors(
-    val contentColor: Color,
-    val imageBackground: Color,
     val divider: Color,
     val iconContainer: Color,
-    val typeIconTint: Color,
-    val typeIconBorder: Color,
-    val galleryIconTint: Color,
-    val galleryTextColor: Color,
-) {
-    companion object ItemDetailHeroDefaults {
-        @Composable
-        fun primaryColors() = ContentDetailsHeroColors(
-            contentColor = MaterialTheme.colorScheme.primary,
-            imageBackground = MaterialTheme.colorScheme.surfaceVariant,
-            divider = MaterialTheme.colorScheme.primary,
-            iconContainer = MaterialTheme.colorScheme.primary,
-            typeIconTint = MaterialTheme.colorScheme.surfaceVariant,
-            typeIconBorder = MaterialTheme.colorScheme.surfaceVariant,
-            galleryIconTint = MaterialTheme.colorScheme.primaryContainer,
-            galleryTextColor = MaterialTheme.colorScheme.primaryContainer,
-        )
-
-        @Composable
-        fun secondaryColors() = ContentDetailsHeroColors(
-            contentColor = MaterialTheme.colorScheme.primary,
-            imageBackground = MaterialTheme.colorScheme.surfaceVariant,
-            divider = MaterialTheme.colorScheme.secondaryContainer,
-            iconContainer = MaterialTheme.colorScheme.secondaryContainer,
-            typeIconTint = MaterialTheme.colorScheme.surfaceVariant,
-            typeIconBorder = MaterialTheme.colorScheme.secondaryContainer,
-            galleryIconTint = MaterialTheme.colorScheme.primaryContainer,
-            galleryTextColor = MaterialTheme.colorScheme.primaryContainer,
-        )
-
-        @Composable
-        fun errorColors() = ContentDetailsHeroColors(
-            contentColor = MaterialTheme.colorScheme.error,
-            imageBackground = MaterialTheme.colorScheme.surfaceVariant,
-            divider = MaterialTheme.colorScheme.error,
-            iconContainer = MaterialTheme.colorScheme.error,
-            typeIconTint = MaterialTheme.colorScheme.surfaceVariant,
-            typeIconBorder = MaterialTheme.colorScheme.secondaryContainer,
-            galleryIconTint = MaterialTheme.colorScheme.error,
-            galleryTextColor = MaterialTheme.colorScheme.error,
-        )
-    }
-}
+    val iconContainerBorder: Color,
+    val iconTint: Color,
+)

@@ -11,18 +11,12 @@ class EditRecipe(
     private val recipeRepository: RecipeRepository,
 ) {
     suspend operator fun invoke(recipeId: String, edition: String): Result {
-        val user = flowOnCurrentUser(true).firstOrNull()
+        val user = flowOnCurrentUser().firstOrNull()
             ?: return Result.UnauthenticatedUser
-
-        if (!user.isEmailVerified) {
-            return Result.UnverifiedEmail
-        }
 
         return try {
             recipeRepository.editRecipe(recipeId, user.id, edition)
             Result.Success
-        } catch (e: PermissionDeniedException) {
-            Result.UserMustReauthenticate
         } catch (e: Throwable) {
             Log.e(TAG, e.stackTraceToString())
             Result.UnexpectedError
@@ -31,8 +25,6 @@ class EditRecipe(
 
     sealed class Result {
         data object UnauthenticatedUser : Result()
-        data object UnverifiedEmail : Result()
-        data object UserMustReauthenticate : Result()
         data object UnexpectedError : Result()
         data object Success : Result()
     }

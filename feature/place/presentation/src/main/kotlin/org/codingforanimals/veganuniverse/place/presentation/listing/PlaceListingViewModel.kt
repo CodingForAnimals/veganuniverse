@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.administrativeArea
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
-import org.codingforanimals.veganuniverse.commons.profile.domain.model.ListingType
+import org.codingforanimals.veganuniverse.commons.ui.listings.ListingType
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.GetProfile
 import org.codingforanimals.veganuniverse.place.listing.usecase.QueryPlacesByIds
 import org.codingforanimals.veganuniverse.place.presentation.R

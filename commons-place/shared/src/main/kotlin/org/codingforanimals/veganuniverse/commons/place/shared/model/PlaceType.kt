@@ -15,7 +15,7 @@ enum class PlaceType {
             return runCatching {
                 value?.let { PlaceType.valueOf(it) }
             }.onFailure {
-                Log.e(TAG, it.stackTraceToString())
+                Log.i(TAG, it.message ?: it.stackTraceToString())
             }.getOrNull()
         }
     }

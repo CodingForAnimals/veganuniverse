@@ -28,23 +28,20 @@ import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.shared.RecipeCard
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun RecipeListingScreen(
-    listingType: String?,
     navigateUp: () -> Unit,
     navigateToRecipeDetails: (String) -> Unit,
 ) {
-    val viewModel: RecipeListingViewModel = koinViewModel(
-        parameters = { parametersOf(listingType) }
-    )
+    val viewModel: RecipeListingViewModel = koinViewModel()
 
     val recipes = viewModel.recipes.collectAsLazyPagingItems()
 
     Scaffold(
         topBar = {
-            MediumTopAppBar(title = { viewModel.title?.let { Text(text = stringResource(id = it)) } },
+            MediumTopAppBar(
+                title = { viewModel.title?.let { Text(text = stringResource(id = it)) } },
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(
@@ -91,6 +88,4 @@ internal fun RecipeListingScreen(
             }
         }
     }
-
 }
-

@@ -21,6 +21,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -60,6 +62,7 @@ import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentD
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.details.ContentDetailItem
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
 import org.codingforanimals.veganuniverse.commons.ui.utils.DateUtils
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
@@ -79,12 +82,13 @@ internal fun RecipeDetailsScreen(
     val recipeState: RecipeDetailsViewModel.RecipeState by viewModel.recipeState.collectAsStateWithLifecycle()
     val isLiked: Boolean by viewModel.isLiked.collectAsStateWithLifecycle()
     val isBookmarked: Boolean by viewModel.isBookmarked.collectAsStateWithLifecycle()
-
+    val snackbarHostState = remember { SnackbarHostState() }
     RecipeDetailsScreen(
         recipeState = recipeState,
         isOwner = viewModel.isOwner,
         isLiked = isLiked,
         isBookmarked = isBookmarked,
+        snackbarHostState = snackbarHostState,
         onAction = viewModel::onAction,
     )
 
@@ -95,6 +99,11 @@ internal fun RecipeDetailsScreen(
         onUnverifiedEmailResult = { viewModel.onAction(Action.OnUnverifiedEmailResult(it)) },
         onDialogDismissRequest = { viewModel.onAction(Action.OnDialogDismissRequest) },
         onConfirmDelete = { viewModel.onAction(Action.OnConfirmDelete) }
+    )
+
+    HandleSnackbarEffects(
+        snackbarEffects = viewModel.snackbarEffects,
+        snackbarHostState = snackbarHostState,
     )
 
     HandleNavigationEffects(
@@ -110,9 +119,11 @@ internal fun RecipeDetailsScreen(
     isOwner: Boolean?,
     isLiked: Boolean,
     isBookmarked: Boolean,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onAction: (Action) -> Unit = {},
 ) {
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             RecipeDetailsTopAppBar(
                 recipeState = recipeState,
