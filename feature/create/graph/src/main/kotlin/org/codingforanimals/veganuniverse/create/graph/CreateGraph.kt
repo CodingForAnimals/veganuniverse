@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.create.home.persentation.CreateHomeScreen
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceScreen
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductScreen
@@ -20,16 +21,16 @@ sealed class CreateDestination(route: String) : Destination(route) {
 
 fun NavGraphBuilder.createGraph(
     navController: NavController,
-    navigateToAuthenticationScreen: (CreateDestination) -> Unit,
+    navigateToAuthenticationScreen: () -> Unit,
 ) {
     composable(
         route = CreateDestination.Home.route,
     ) {
         CreateHomeScreen(
-            navigateToAuthenticationScreen = { navigateToAuthenticationScreen(CreateDestination.Home) },
-            navigateToCreatePlaceScreen = { navController.navigate(CreateDestination.Place.route) },
-            navigateToCreateRecipeScreen = { navController.navigate(CreateDestination.Recipe.route) },
-            navigateToCreateProductScreen = { navController.navigate(CreateDestination.Product.route) },
+            navigateToAuthenticationScreen = navigateToAuthenticationScreen,
+            navigateToCreatePlaceScreen = { navController.navigate(CreateDestination.Place) },
+            navigateToCreateRecipeScreen = { navController.navigate(CreateDestination.Recipe) },
+            navigateToCreateProductScreen = { navController.navigate(CreateDestination.Product) },
         )
     }
 
@@ -37,8 +38,8 @@ fun NavGraphBuilder.createGraph(
         route = CreateDestination.Place.route,
     ) {
         CreatePlaceScreen(
-            navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou.route) },
-            navigateToAuthenticationScreen = { navigateToAuthenticationScreen(CreateDestination.Place) },
+            navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou) },
+            navigateToAuthenticationScreen = navigateToAuthenticationScreen,
             navigateUp = navController::navigateUp,
         )
     }
@@ -47,8 +48,8 @@ fun NavGraphBuilder.createGraph(
         route = CreateDestination.Recipe.route,
     ) {
         CreateRecipeScreen(
-            navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou.route) },
-            navigateToAuthenticationScreen = { navigateToAuthenticationScreen(CreateDestination.Recipe) },
+            navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou) },
+            navigateToAuthenticationScreen = navigateToAuthenticationScreen,
             navigateUp = navController::navigateUp,
         )
     }
@@ -58,8 +59,8 @@ fun NavGraphBuilder.createGraph(
     ) {
         CreateProductScreen(
             navigateUp = navController::navigateUp,
-            navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou.route) },
-            navigateToAuthenticationScreen = { navigateToAuthenticationScreen(CreateDestination.Product) },
+            navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou) },
+            navigateToAuthenticationScreen = navigateToAuthenticationScreen,
         )
     }
 

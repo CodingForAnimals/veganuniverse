@@ -48,7 +48,8 @@ internal class FirebaseAuthenticator(
     }
 
     override suspend fun emailAuthentication(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password).await().user!!
+        val a = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+        Log.e("pepe",a.user!!.toString())
     }
 
     override suspend fun emailReauthentication(email: String, password: String) {

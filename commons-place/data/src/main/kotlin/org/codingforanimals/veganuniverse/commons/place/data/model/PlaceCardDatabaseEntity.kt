@@ -30,6 +30,11 @@ internal data class PlaceCardDatabaseEntity(
     @get:PropertyName(IMAGE_ID)
     @set:PropertyName(IMAGE_ID)
     var imageId: String? = null,
+
+    @get:PropertyName(VALIDATED)
+    @set:PropertyName(VALIDATED)
+    var validated: Boolean = false
+
 ) {
     private companion object {
         const val NAME = "n"
@@ -39,5 +44,6 @@ internal data class PlaceCardDatabaseEntity(
         const val TYPE = "ty"
         const val TAGS = "ta"
         const val IMAGE_ID = "i"
+        const val VALIDATED = "v"
     }
 }

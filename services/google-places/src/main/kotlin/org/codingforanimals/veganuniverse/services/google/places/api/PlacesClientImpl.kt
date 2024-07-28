@@ -10,6 +10,8 @@ import com.google.android.libraries.places.api.model.RectangularBounds
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.commons.place.shared.model.AddressComponents
 import org.codingforanimals.veganuniverse.commons.place.shared.model.OpeningHours
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Period
@@ -33,7 +35,7 @@ class PlacesClientImpl(
                     val bitmap = place.photoMetadatas?.firstOrNull()?.let { photoMetadata ->
                         val photoRequest = FetchPhotoRequest.builder(photoMetadata).build()
                         val task = googlePlacesClient.fetchPhoto(photoRequest)
-                        Tasks.await(task)
+                        withContext(Dispatchers.IO) { Tasks.await(task) }
                     }?.bitmap
 
                     PlaceAutocompleteResult.Establishment(
@@ -96,7 +98,7 @@ class PlacesClientImpl(
             val streetName = firstOrNull { it.types.contains(STREET_NAME) }?.name ?: ""
             val streetNumber = firstOrNull { it.types.contains(STREET_NUMBER) }?.name ?: ""
             val streetAddress = if (streetName.isBlank() && streetNumber.isBlank()) {
-                emptyString
+                EMPTY_STRING
             } else {
                 "$streetName $streetNumber"
             }
@@ -158,7 +160,7 @@ class PlacesClientImpl(
             }
         }
 
-        DayOfWeek.values().forEach { day ->
+        DayOfWeek.entries.forEach { day ->
             if (googlePeriods[day] == null) {
                 val closedDay = OpeningHours(
                     dayOfWeek = day.name,
@@ -170,7 +172,7 @@ class PlacesClientImpl(
     }
 
     companion object {
-        private const val emptyString = ""
+        private const val EMPTY_STRING = ""
         private const val STREET_NAME = "route"
         private const val STREET_NUMBER = "street_number"
 

@@ -2,13 +2,16 @@ package org.codingforanimals.veganuniverse.create.place.presentation.usecase
 
 import android.content.Intent
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.create.place.presentation.model.GetPlaceDataStatus
+import org.codingforanimals.veganuniverse.services.google.places.api.PlacesClient
 import org.codingforanimals.veganuniverse.services.google.places.model.PlaceAutocompleteResult
 
 class GetPlaceDataUseCase(
-    private val placesClient: org.codingforanimals.veganuniverse.services.google.places.api.PlacesClient,
+    private val placesClient: PlacesClient,
 ) {
 
     operator fun invoke(intent: Intent): Flow<GetPlaceDataStatus> = flow {

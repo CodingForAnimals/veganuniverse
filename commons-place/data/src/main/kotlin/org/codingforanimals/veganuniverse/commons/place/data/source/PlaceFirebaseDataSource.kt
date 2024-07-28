@@ -11,6 +11,7 @@ import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQueryEventListener
 import com.google.android.gms.tasks.TaskCompletionSource
+import com.google.android.play.integrity.internal.f
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -123,6 +124,7 @@ internal class PlaceFirebaseDataSource(
                 val geoHash = entry.value.await().key ?: return@mapNotNull null
                 val entity = entry.value.await().getValue(PlaceCardDatabaseEntity::class.java)
                     ?: return@mapNotNull null
+                if (!entity.validated) return@mapNotNull null
                 val location = entry.key
                 mapper.mapCard(
                     geoHash = geoHash,

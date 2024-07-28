@@ -252,7 +252,8 @@ private fun PlaceDetails(
                 ContentDetailItem(
                     title = stringResource(id = R.string.address),
                     subtitle = address,
-                    icon = VUIcons.Location.id
+                    icon = VUIcons.Location.id,
+                    iconTint = MaterialTheme.colorScheme.onSurface
                 )
             }
 

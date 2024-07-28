@@ -22,10 +22,11 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
 
 @Composable
 fun ContentDetailItem(
-    modifier: Modifier = Modifier,
     title: String,
     subtitle: String,
     icon: Int,
+    modifier: Modifier = Modifier,
+    iconTint: Color = Color.Unspecified,
 ) {
     Column(modifier) {
         Row(
@@ -36,7 +37,7 @@ fun ContentDetailItem(
                 modifier = Modifier.size(24.dp),
                 painter = painterResource(id = icon),
                 contentDescription = null,
-                tint = Color.Unspecified
+                tint = iconTint
             )
             Text(
                 modifier = Modifier.weight(1f),

@@ -23,8 +23,9 @@
 -keepattributes Signature
 -keep class com.google.android.gms.internal.** { *; }
 
--keep class org.codingforanimals.veganuniverse.places.services.firebase.entity.** { *; }
--keep class org.codingforanimals.veganuniverse.recipes.services.firebase.entity.** { *; }
+# Vegan Universe classes and packages
+-keep class org.codingforanimals.veganuniverse.**.data.model.** { *; }
+-keep class org.codingforanimals.veganuniverse.commons.place.shared.model.** { *; }
 
 # Firebase
 -keep class com.firebase.** { *; }
