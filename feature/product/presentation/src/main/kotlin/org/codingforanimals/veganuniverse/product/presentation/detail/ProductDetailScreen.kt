@@ -2,6 +2,7 @@
 
 package org.codingforanimals.veganuniverse.product.presentation.detail
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -69,30 +70,14 @@ internal fun ProductDetailScreen(
     val state by viewModel.product.collectAsStateWithLifecycle()
     val isBookmarked by viewModel.isBookmarked.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    when (val currentState = state) {
-        ProductDetailViewModel.State.Error -> {
-            AlertDialog(
-                onDismissRequest = navigateUp,
-                confirmButton = {
-                    TextButton(
-                        onClick = navigateUp,
-                        content = { Text(text = stringResource(id = back)) }
-                    )
-                }
-            )
-        }
 
-        ProductDetailViewModel.State.Loading -> Unit
-        is ProductDetailViewModel.State.Success -> {
-            ProductDetailScreen(
-                product = currentState.product,
-                navigateUp = navigateUp,
-                snackbarHostState = snackbarHostState,
-                isBookmarked = isBookmarked,
-                onAction = viewModel::onAction,
-            )
-        }
-    }
+    ProductDetailScreen(
+        state = state,
+        snackbarHostState = snackbarHostState,
+        isBookmarked = isBookmarked,
+        navigateUp = navigateUp,
+        onAction = viewModel::onAction,
+    )
 
     ProductDetailDialog(
         dialog = viewModel.dialog,
@@ -117,18 +102,17 @@ internal fun ProductDetailScreen(
 
 @Composable
 private fun ProductDetailScreen(
-    product: Product,
+    state: ProductDetailViewModel.State,
+    snackbarHostState: SnackbarHostState,
     isBookmarked: Boolean,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    navigateUp: () -> Unit = {},
-    onAction: (Action) -> Unit = {},
+    navigateUp: () -> Unit,
+    onAction: (Action) -> Unit,
 ) {
-    var imageDialogUrl: String? by remember { mutableStateOf(null) }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             ProductDetailTopBar(
-                title = stringResource(id = product.type.label),
+                state = state,
                 isBookmarked = isBookmarked,
                 navigateUp = navigateUp,
                 onBookmarkClick = { onAction(Action.OnBookmarkClick) },
@@ -137,69 +121,99 @@ private fun ProductDetailScreen(
             )
         }
     ) { paddingValues ->
+        Crossfade(
+            modifier = Modifier.padding(paddingValues),
+            targetState = state,
+            label = "product_detail_cross_fade",
+        ) {
+            when (val currentState = it) {
+                ProductDetailViewModel.State.Error -> {
+                    AlertDialog(
+                        onDismissRequest = navigateUp,
+                        confirmButton = {
+                            TextButton(
+                                onClick = navigateUp,
+                                content = { Text(text = stringResource(id = back)) }
+                            )
+                        }
+                    )
+                }
+
+                ProductDetailViewModel.State.Loading -> Unit
+                is ProductDetailViewModel.State.Success -> {
+                    ProductDetailScreen(
+                        product = currentState.product,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProductDetailScreen(product: Product) {
+    var imageDialogUrl: String? by remember { mutableStateOf(null) }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        ContentDetailsHero(
+            url = product.imageUrl,
+            icon = product.type.icon,
+            onImageClick = { imageDialogUrl = product.imageUrl },
+            colors = when (product.type.type) {
+                ProductType.VEGAN -> ContentDetailsHeroDefaults.successColors()
+                ProductType.NOT_VEGAN -> ContentDetailsHeroDefaults.errorColors()
+                ProductType.DOUBTFUL -> ContentDetailsHeroDefaults.successColors().copy(
+                    divider = Doubtful,
+                    iconContainerBorder = Doubtful,
+                )
+            }
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
+                .padding(Spacing_05)
         ) {
-            ContentDetailsHero(
-                url = product.imageUrl,
-                icon = product.type.icon,
-                onImageClick = { imageDialogUrl = product.imageUrl },
-                colors = when (product.type.type) {
-                    ProductType.VEGAN -> ContentDetailsHeroDefaults.successColors()
-                    ProductType.NOT_VEGAN -> ContentDetailsHeroDefaults.errorColors()
-                    ProductType.DOUBTFUL -> ContentDetailsHeroDefaults.successColors().copy(
-                        divider = Doubtful,
-                        iconContainerBorder = Doubtful,
-                    )
-                }
+            ContentDetailItem(
+                title = product.name,
+                subtitle = product.brand,
+                icon = product.type.icon.id
             )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(Spacing_05)
-            ) {
-                ContentDetailItem(
-                    title = product.name,
-                    subtitle = product.brand,
-                    icon = product.type.icon.id
-                )
+            Text(
+                modifier = Modifier.padding(top = Spacing_05),
+                text = stringResource(id = product.type.description),
+            )
 
-                Text(
-                    modifier = Modifier.padding(top = Spacing_05),
-                    text = stringResource(id = product.type.description),
-                )
-
-                product.comment?.let { comment ->
-                    ContentDetailItem(
-                        modifier = Modifier.padding(top = Spacing_05),
-                        title = stringResource(id = R.string.comment),
-                        subtitle = comment,
-                        icon = VUIcons.Community.id,
-                    )
-                }
-
+            product.comment?.let { comment ->
                 ContentDetailItem(
                     modifier = Modifier.padding(top = Spacing_05),
-                    title = stringResource(id = R.string.category),
-                    subtitle = stringResource(id = product.category.label),
-                    icon = VUIcons.Comment.id,
+                    title = stringResource(id = R.string.comment),
+                    subtitle = comment,
+                    icon = VUIcons.Community.id,
                 )
+            }
 
-                product.username?.let {
-                    val timeAgo =
-                        product.createdAt?.time?.let { ", ${DateUtils.getTimeAgo(it)}" }
-                    val subtitle = remember { "$it$timeAgo" }
-                    ContentDetailItem(
-                        modifier = Modifier.padding(top = Spacing_05),
-                        title = stringResource(id = contributed_by),
-                        subtitle = subtitle,
-                        icon = VUIcons.Create.id
-                    )
-                }
+            ContentDetailItem(
+                modifier = Modifier.padding(top = Spacing_05),
+                title = stringResource(id = R.string.category),
+                subtitle = stringResource(id = product.category.label),
+                icon = VUIcons.Comment.id,
+            )
+
+            product.username?.let {
+                val timeAgo =
+                    product.createdAt?.time?.let { ", ${DateUtils.getTimeAgo(it)}" }
+                val subtitle = remember { "$it$timeAgo" }
+                ContentDetailItem(
+                    modifier = Modifier.padding(top = Spacing_05),
+                    title = stringResource(id = contributed_by),
+                    subtitle = subtitle,
+                    icon = VUIcons.Create.id
+                )
             }
         }
     }
@@ -264,7 +278,6 @@ private fun PreviewVeganProductDetailScreen() {
     VeganUniverseTheme {
         ProductDetailScreen(
             product = productPreview,
-            isBookmarked = false,
         )
     }
 }
@@ -276,7 +289,6 @@ private fun PreviewNotVeganProductDetailScreen() {
         val product = productPreview.copy(type = ProductType.NOT_VEGAN.toUI())
         ProductDetailScreen(
             product = product,
-            isBookmarked = false,
         )
     }
 }
@@ -288,7 +300,6 @@ private fun PreviewDoubtfulVeganProductDetailScreen() {
         val product = productPreview.copy(type = ProductType.DOUBTFUL.toUI())
         ProductDetailScreen(
             product = product,
-            isBookmarked = false,
         )
     }
 }

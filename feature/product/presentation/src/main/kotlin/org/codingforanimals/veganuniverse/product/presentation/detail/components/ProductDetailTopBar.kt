@@ -10,6 +10,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,16 +21,24 @@ import org.codingforanimals.veganuniverse.commons.ui.R.string.edit
 import org.codingforanimals.veganuniverse.commons.ui.R.string.report
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unbookmark_action
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.product.presentation.detail.ProductDetailViewModel
 
 @Composable
 internal fun ProductDetailTopBar(
-    title: String,
+    state: ProductDetailViewModel.State,
     isBookmarked: Boolean,
     navigateUp: () -> Unit = {},
     onBookmarkClick: () -> Unit = {},
     onEditClick: () -> Unit = {},
     onReportClick: () -> Unit = {},
 ) {
+    val title = remember(state) {
+        when (state) {
+            ProductDetailViewModel.State.Error -> ""
+            ProductDetailViewModel.State.Loading -> ""
+            is ProductDetailViewModel.State.Success -> state.product.name
+        }
+    }
     MediumTopAppBar(
         title = { Text(text = title) },
         navigationIcon = {

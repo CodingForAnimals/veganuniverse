@@ -19,7 +19,15 @@
           "client_type": 1,
           "android_info": {
             "package_name": "org.codingforanimals.veganuniverse",
-            "certificate_hash": "9dcb2bb3dddac0647018a591dac5b8e5386b3330"
+            "certificate_hash": "f6666bab5143396a9103da9ee145519854b3aeaf"
+          }
+        },
+        {
+          "client_id": "740657750829-u1ns21p9vtn3uksq8id68ds669s3e5pf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.codingforanimals.veganuniverse",
+            "certificate_hash": "8badb94dde2a737eda82a866f47a2431f6fde6f4"
           }
         },
         {

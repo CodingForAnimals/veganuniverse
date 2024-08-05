@@ -267,8 +267,8 @@ private fun PlaceDetails(
             StaticMap(
                 modifier = Modifier.padding(
                     top = Spacing_04,
-                    start = Spacing_07,
-                    end = Spacing_07,
+                    start = Spacing_05,
+                    end = Spacing_05,
                 ),
                 marker = marker,
                 cameraPositionState = cameraPositionState,

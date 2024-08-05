@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductSorter
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
-import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
+import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
@@ -25,8 +25,8 @@ import org.codingforanimals.veganuniverse.product.domain.usecase.EditProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.GetLatestProducts
 import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
 import org.codingforanimals.veganuniverse.product.presentation.R
-import org.codingforanimals.veganuniverse.product.presentation.model.toView
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
+import org.codingforanimals.veganuniverse.product.presentation.model.toView
 
 internal class ProductHomeViewModel(
     val getLatestProducts: GetLatestProducts,
@@ -74,15 +74,10 @@ internal class ProductHomeViewModel(
                 navigateToProductBrowsing(sorter = ProductSorter.DATE)
             }
 
-            Action.OnCreateProductClick -> {
-                viewModelScope.launch {
-                    navigationEffectsChannel.send(NavigationEffect.NavigateToCreateProduct)
-                }
-            }
-
             is Action.OpenReportDialog -> {
                 showReportDialog = action.productId
             }
+
             is Action.OpenSuggestDialog -> {
                 showSuggestionDialog = action.productId
             }
@@ -100,6 +95,7 @@ internal class ProductHomeViewModel(
                     type = action.type
                 )
             }
+
             Action.OnShowAllClick -> {
                 navigateToProductBrowsing()
             }
@@ -222,7 +218,6 @@ internal class ProductHomeViewModel(
     sealed class Action {
         data class OnProductCategorySelected(val category: ProductCategory) : Action()
         data object OnMostRecentShowMoreClick : Action()
-        data object OnCreateProductClick : Action()
         data object OnShowAllClick : Action()
 
         data class OpenReportDialog(val productId: String) : Action()
@@ -239,8 +234,6 @@ internal class ProductHomeViewModel(
         ) : NavigationEffect()
 
         data class NavigateToProductDetail(val id: String) : NavigationEffect()
-
-        data object NavigateToCreateProduct : NavigationEffect()
         data object NavigateToAuthentication : NavigationEffect()
     }
 

@@ -154,14 +154,12 @@ internal class ProductBrowsingViewModel(
                 typeNavArg: String?,
                 sorterNavArg: String?,
             ): UiState {
-                return categoryNavArg?.let {
-                    UiState(
-                        category = ProductCategory.fromString(it),
-                        type = typeNavArg?.let { ProductType.fromString(it) },
-                        sorter = sorterNavArg?.let { ProductSorter.fromString(it) }
-                            ?: ProductSorter.NAME,
-                    )
-                } ?: UiState()
+                return UiState(
+                    category = ProductCategory.fromString(categoryNavArg),
+                    type = typeNavArg?.let { ProductType.fromString(it) },
+                    sorter = sorterNavArg?.let { ProductSorter.fromString(it) }
+                        ?: ProductSorter.NAME,
+                )
             }
         }
     }

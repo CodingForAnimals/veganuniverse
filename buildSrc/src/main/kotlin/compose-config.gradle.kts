@@ -8,10 +8,11 @@ configure<BaseExtension> {
     dependencies {
         add("implementation", project(":commons:ui"))
         add("implementation", project(":commons:designsystem"))
-        val bom = platform("androidx.compose:compose-bom:${versions.composeBom}")
+        val bom = platform("androidx.compose:compose-bom:${libs.androidx.composeBom}")
         add("implementation", bom)
-        implementation(libs.compose)
         debugImplementation(libs.composeDebug)
+        implementation(libs.androidx.compose)
+        implementation(libs.coil)
 
         implementation(libs.placeholder)
 
