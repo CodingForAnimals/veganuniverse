@@ -28,7 +28,6 @@ dependencies {
 
     implementation(libs.permissionsCompose)
 
-    implementation(Google.PLACEHOLDER)
     implementation(Other.IMAGE_CROPPER)
     implementation(Other.SHIMMER)
 

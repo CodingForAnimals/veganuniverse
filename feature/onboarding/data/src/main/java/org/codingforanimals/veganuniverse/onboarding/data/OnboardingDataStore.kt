@@ -15,16 +15,16 @@ internal class OnboardingDataStore(
     private val dataStore: DataStore<Preferences>,
 ) : OnboardingLocalStorage {
 
-    private val userHasSeenOnboardingKey = booleanPreferencesKey(USER_HAS_SEEN_ONBOARDING)
+    private val wasOnboardingDismissed = booleanPreferencesKey(USER_HAS_SEEN_ONBOARDING)
 
-    override suspend fun setOnboardingAsDismissed() {
+    override suspend fun setWasOnboardingDismissed(value: Boolean) {
         dataStore.edit { preferences ->
-            preferences[userHasSeenOnboardingKey] = true
+            preferences[wasOnboardingDismissed] = value
         }
     }
 
-    override suspend fun wasOnboardingDismissed(): Flow<Boolean> {
-        return dataStore.data.map { it[userHasSeenOnboardingKey] ?: false }
+    override fun wasOnboardingDismissed(): Flow<Boolean> {
+        return dataStore.data.map { it[wasOnboardingDismissed] ?: false }
     }
 
     companion object {

@@ -21,7 +21,7 @@ include(
 
 include(
     ":feature:onboarding:data",
-    ":feature:onboarding:model",
+    ":feature:onboarding:domain",
     ":feature:onboarding:presentation"
 )
 

@@ -18,7 +18,7 @@ internal class FlowOnCurrentUserImpl(
             currentUserRepository.flowOnCurrentUser()
         } else {
             currentUserRepository.flowOnCurrentUser().transform { user ->
-                if (user?.isEmailVerified == true) {
+                if (user?.isVerified == true) {
                     emit(user)
                 } else {
                     currentUserRepository.reloadUser()

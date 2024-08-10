@@ -22,14 +22,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
 @Composable
-fun RowScope.CreateContentSelectionCard(
+fun CreateContentSelectionCard(
     title: String,
     image: Int,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = Modifier
-            .weight(1f)
+        modifier = modifier
             .height(285.dp),
         onClick = onClick,
     ) {

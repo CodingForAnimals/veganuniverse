@@ -3,6 +3,7 @@
     <string name="report_content_message">
         Gracias por reportar contenido que encuentres sospechoso.
     </string>
+    <string name="ok">Entendido</string>
     <string name="report">Reportar</string>
     <string name="report_content">Reportar contenido</string>
     <string name="send_suggestion">Enviar sugerencia</string>

@@ -16,7 +16,7 @@ class SubmitRecipe(
 ) {
     suspend operator fun invoke(recipeForm: RecipeForm): Result {
         val user = flowOnCurrentUser(true).firstOrNull() ?: return Result.GuestUser
-        if (!user.isEmailVerified) {
+        if (!user.isVerified) {
             return Result.UnverifiedEmail
         }
 

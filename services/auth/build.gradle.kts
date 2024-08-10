@@ -14,5 +14,5 @@ dependencies {
         Firebase.BOM,
         listOf(Firebase.AUTH, Firebase.STORAGE, Firebase.REALTIME_DATABASE, Firebase.FIRESTORE)
     )
-    implementation(Google.AUTH)
+    implementation(libs.google.auth)
 }

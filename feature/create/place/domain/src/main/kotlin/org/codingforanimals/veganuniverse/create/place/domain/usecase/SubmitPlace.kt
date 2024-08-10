@@ -17,7 +17,7 @@ class SubmitPlace(
     suspend operator fun invoke(placeForm: PlaceForm): Result {
         return try {
             val user = flowOnCurrentUser(true).firstOrNull() ?: return Result.GuestUser
-            if (!user.isEmailVerified) {
+            if (!user.isVerified) {
                 return Result.UnverifiedEmail
             }
 

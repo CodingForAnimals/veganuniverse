@@ -14,7 +14,7 @@ class EditPlace(
             val user = flowOnCurrentUser(true).firstOrNull()
                 ?: return@runCatching Result.UnauthenticatedUser
 
-            if (!user.isEmailVerified) {
+            if (!user.isVerified) {
                 return@runCatching Result.UnverifiedEmail
             }
 

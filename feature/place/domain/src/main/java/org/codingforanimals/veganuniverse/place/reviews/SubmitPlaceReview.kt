@@ -14,7 +14,7 @@ class SubmitPlaceReview(
     suspend operator fun invoke(placeId: String, placeReview: PlaceReview): Result {
         val user = flowOnCurrentUser(true).firstOrNull() ?: return Result.UnauthenticatedUser
         return try {
-            if (!user.isEmailVerified) {
+            if (!user.isVerified) {
                 return Result.UnverifiedEmail
             }
             val review = placeReview.copy(
@@ -24,7 +24,7 @@ class SubmitPlaceReview(
             placeReviewRepository.insertReview(placeId, review)
             Result.Success
         } catch (e: PermissionDeniedException) {
-            return if (user.isEmailVerified) {
+            return if (user.isVerified) {
                 Result.UserMustReauthenticate
             } else {
                 Result.UnverifiedEmail

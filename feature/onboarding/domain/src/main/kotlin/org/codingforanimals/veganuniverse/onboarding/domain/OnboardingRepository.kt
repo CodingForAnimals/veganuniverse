@@ -1,8 +1,8 @@
-package org.codingforanimals.veganuniverse.onboarding.data
+package org.codingforanimals.veganuniverse.onboarding.domain
 
 import kotlinx.coroutines.flow.Flow
 
-interface OnboardingLocalStorage {
+interface OnboardingRepository {
     fun wasOnboardingDismissed(): Flow<Boolean>
     suspend fun setWasOnboardingDismissed(value: Boolean)
 }

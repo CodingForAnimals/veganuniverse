@@ -11,7 +11,7 @@ class EditProduct(
 ) {
     suspend operator fun invoke(productId: String, suggestion: String): Result {
         val user = flowOnCurrentUser(true).firstOrNull() ?: return Result.UnauthenticatedUser
-        if (!user.isEmailVerified) {
+        if (!user.isVerified) {
             return Result.UnverifiedEmail
         }
         return runCatching {

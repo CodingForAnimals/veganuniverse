@@ -51,13 +51,12 @@ import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseThem
 import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.R.string.contributed_by
+import org.codingforanimals.veganuniverse.commons.ui.R.string.ok
 import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHero
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.FeatureItemScreenTagsFlowRow
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.TagItem
-import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialog
-import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.details.ContentDetailItem
@@ -94,7 +93,6 @@ internal fun RecipeDetailsScreen(
 
     HandleDialog(
         dialog = viewModel.dialog,
-        onEditResult = { viewModel.onAction(Action.OnEditResult(it)) },
         onReportResult = { viewModel.onAction(Action.OnReportResult(it)) },
         onUnverifiedEmailResult = { viewModel.onAction(Action.OnUnverifiedEmailResult(it)) },
         onDialogDismissRequest = { viewModel.onAction(Action.OnDialogDismissRequest) },
@@ -308,7 +306,6 @@ private fun HandleNavigationEffects(
 @Composable
 private fun HandleDialog(
     dialog: RecipeDetailsViewModel.Dialog?,
-    onEditResult: (EditContentDialogResult) -> Unit,
     onReportResult: (ReportContentDialogResult) -> Unit,
     onUnverifiedEmailResult: (UnverifiedEmailResult) -> Unit,
     onDialogDismissRequest: () -> Unit,
@@ -317,7 +314,20 @@ private fun HandleDialog(
     dialog?.let {
         when (dialog) {
             RecipeDetailsViewModel.Dialog.Edit -> {
-                EditContentDialog(onResult = onEditResult)
+                AlertDialog(
+                    onDismissRequest = onDialogDismissRequest,
+                    confirmButton = {
+                        TextButton(onClick = onDialogDismissRequest) {
+                            Text(text = stringResource(id = ok))
+                        }
+                    },
+                    title = {
+                        Text(text = stringResource(id = R.string.upcoming_feature_edit_recipe_title))
+                    },
+                    text = {
+                        Text(text = stringResource(id = R.string.upcoming_feature_edit_recipe_message))
+                    }
+                )
             }
 
             RecipeDetailsViewModel.Dialog.Report -> {
@@ -356,8 +366,8 @@ private fun HandleDialog(
                             Text(text = stringResource(id = R.string.back))
                         }
                     },
-                    title = { Text(text = stringResource(id = R.string.delete_recipe_dialog_title))},
-                    text = { Text(text = stringResource(id = R.string.delete_recipe_dialog_text))}
+                    title = { Text(text = stringResource(id = R.string.delete_recipe_dialog_title)) },
+                    text = { Text(text = stringResource(id = R.string.delete_recipe_dialog_text)) }
                 )
             }
         }

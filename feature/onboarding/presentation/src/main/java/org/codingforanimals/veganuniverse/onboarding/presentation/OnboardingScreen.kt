@@ -32,7 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,34 +41,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingViewModel.Action.OnUserDismissOnboardingScreen
-import org.koin.androidx.compose.koinViewModel
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 
 @Composable
 fun OnboardingScreen(
-    onDismiss: () -> Unit,
-    viewModel: OnboardingViewModel = koinViewModel(),
-) {
-    HandleSideEffects(
-        effectsFlow = viewModel.sideEffect,
-        onDismiss = onDismiss,
-    )
-
-    OnboardingScreen(
-        onAction = viewModel::onAction,
-    )
-}
-
-@Composable
-private fun OnboardingScreen(
-    onAction: (OnboardingViewModel.Action) -> Unit,
+    onDismiss: () -> Unit = {},
 ) {
     BackgroundImage()
     Box {
@@ -80,7 +62,8 @@ private fun OnboardingScreen(
         NavigationButtons(
             info = onboardingInfo,
             pagerState = pagerState,
-            onDismiss = { onAction(OnUserDismissOnboardingScreen) })
+            onDismiss = onDismiss
+        )
     }
 }
 
@@ -163,7 +146,9 @@ private fun BoxScope.NavigationButtons(
 ) {
     val coroutineScope = rememberCoroutineScope()
     Column(
-        modifier = Modifier.align(Alignment.BottomCenter),
+        modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .padding(bottom = Spacing_05),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -243,16 +228,10 @@ private fun Indicator(isSelected: Boolean) {
     )
 }
 
+@Preview
 @Composable
-private fun HandleSideEffects(
-    effectsFlow: Flow<OnboardingViewModel.SideEffect>,
-    onDismiss: () -> Unit,
-) {
-    LaunchedEffect(Unit) {
-        effectsFlow.onEach { effect ->
-            when (effect) {
-                OnboardingViewModel.SideEffect.DismissOnboardingScreen -> onDismiss()
-            }
-        }.collect()
+private fun PreviewOnboardingScreen() {
+    VeganUniverseTheme {
+        OnboardingScreen()
     }
 }

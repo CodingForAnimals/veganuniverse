@@ -35,4 +35,6 @@
     <string name="bookmarked_recipes">Recetas guardadas</string>
     <string name="empty_bookmarked_recipes_message">¡No has guardado ninguna receta todavía! Podés tener acá una lista de tus recetas favoritas.</string>
     <string name="empty_contributed_recipes_message">¡No has contribuido ninguna receta todavía! Todas los que vayas agregando los podrás ver y editar desde este acceso rápido.</string>
+    <string name="upcoming_feature_edit_recipe_message">Estamos trabajando para que muy pronto puedas editar tus recetas, ¡Gracias!</string>
+    <string name="upcoming_feature_edit_recipe_title">Editar receta (Muy pronto)</string>
 </resources>

@@ -11,7 +11,7 @@ class ReportProduct(
 ) {
     suspend operator fun invoke(productId: String): Result {
         val user = flowOnCurrentUser(true).firstOrNull() ?: return Result.UnauthenticatedUser
-        if (!user.isEmailVerified) {
+        if (!user.isVerified) {
             return Result.UnverifiedEmail
         }
         return runCatching {

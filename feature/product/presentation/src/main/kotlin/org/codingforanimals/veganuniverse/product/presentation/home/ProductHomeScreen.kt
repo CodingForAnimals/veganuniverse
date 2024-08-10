@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
@@ -85,7 +86,7 @@ private fun ProductHomeScreen(
     ) {
         Column(
             modifier = Modifier.padding(
-                bottom = Spacing_05,
+                bottom = Spacing_06,
                 start = Spacing_05,
                 end = Spacing_05,
             ),
@@ -105,7 +106,6 @@ private fun ProductHomeScreen(
                 onShowMoreClick = { onAction(Action.OnMostRecentShowMoreClick) },
                 onItemClick = { onAction(Action.OnProductCategorySelected(it)) },
             )
-            HorizontalDivider(modifier = Modifier.padding(top = Spacing_03))
         }
     }
 }

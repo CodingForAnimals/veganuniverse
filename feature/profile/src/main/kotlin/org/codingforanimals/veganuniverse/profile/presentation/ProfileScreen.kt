@@ -82,6 +82,7 @@ fun ProfileScreen(
                 is NavigationEffect.PlaceListing -> {
                     navigateToPlaceListing(effect.listingType.name)
                 }
+
                 is NavigationEffect.RecipeListing -> {
                     navigateToRecipeListing(effect.listingType.name)
                 }
@@ -175,7 +176,7 @@ private fun ProfileContentScreen(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = Spacing_05),
+            .padding(horizontal = Spacing_05, vertical = Spacing_06),
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(Spacing_03),
@@ -185,18 +186,18 @@ private fun ProfileContentScreen(
                 text = user.name,
                 style = MaterialTheme.typography.headlineMedium,
             )
-            if (user.isEmailVerified) {
+            if (user.isVerified) {
                 Box(
                     modifier = Modifier
-                        .size(28.dp)
+                        .size(24.dp)
                         .border(
-                            width = 3.dp,
+                            width = 2.dp,
                             color = MaterialTheme.colorScheme.primary,
                             shape = CircleShape,
                         )
                 ) {
                     Icon(
-                        modifier = Modifier.align(Alignment.Center),
+                        modifier = Modifier.size(22.dp).align(Alignment.Center),
                         painter = painterResource(VUIcons.Check.id),
                         contentDescription = null,
                     )
