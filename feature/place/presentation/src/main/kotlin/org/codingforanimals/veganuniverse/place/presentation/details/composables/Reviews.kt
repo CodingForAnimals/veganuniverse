@@ -53,6 +53,7 @@ import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBac
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.commons.user.domain.model.User
 import org.codingforanimals.veganuniverse.commons.ui.utils.DateUtils
+import kotlin.math.roundToInt
 
 @Composable
 internal fun Reviews(
@@ -62,6 +63,7 @@ internal fun Reviews(
     newReviewState: NewReviewState,
     user: User?,
     onAction: (Action) -> Unit,
+    rating: Double?,
 ) {
     when (otherReviewsState) {
         is OtherReviewsState.UnexpectedError ->
@@ -83,6 +85,7 @@ internal fun Reviews(
                 newReviewState = newReviewState,
                 user = user,
                 onAction = onAction,
+                rating = rating,
             )
     }
 }
@@ -95,6 +98,7 @@ private fun ReviewsSuccessContent(
     newReviewState: NewReviewState,
     user: User?,
     onAction: (Action) -> Unit,
+    rating: Double?,
 ) {
     Column(modifier) {
         AnimatedVisibility(
@@ -139,6 +143,7 @@ private fun ReviewsSuccessContent(
                 )
             }
         }
+        rating?.let { RatingBar(rating = it.roundToInt()) }
         ReviewList(
             modifier = Modifier.padding(top = Spacing_04),
             userReview = userReview,

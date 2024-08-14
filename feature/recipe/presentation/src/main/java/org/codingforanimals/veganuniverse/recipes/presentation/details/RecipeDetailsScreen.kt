@@ -226,7 +226,7 @@ private fun RecipeContent(
                 ContentDetailItem(
                     title = stringResource(id = contributed_by),
                     subtitle = contributedBy,
-                    icon = VUIcons.Create.id,
+                    icon = VUIcons.Profile.id,
                 )
             }
 

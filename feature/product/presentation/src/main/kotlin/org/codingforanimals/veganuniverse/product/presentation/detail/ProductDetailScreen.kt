@@ -3,6 +3,7 @@
 package org.codingforanimals.veganuniverse.product.presentation.detail
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,6 +36,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.commons.designsystem.Doubtful
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
@@ -175,22 +177,21 @@ private fun ProductDetailScreen(product: Product) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(Spacing_05)
+                .padding(Spacing_05),
+            verticalArrangement = Arrangement.spacedBy(Spacing_06)
         ) {
             ContentDetailItem(
                 title = product.name,
                 subtitle = product.brand,
-                icon = product.type.icon.id
             )
-
-            Text(
-                modifier = Modifier.padding(top = Spacing_05),
-                text = stringResource(id = product.type.description),
+            ContentDetailItem(
+                title = stringResource(product.type.label),
+                subtitle = stringResource(product.type.description),
+                icon = product.type.icon.id,
             )
 
             product.comment?.let { comment ->
                 ContentDetailItem(
-                    modifier = Modifier.padding(top = Spacing_05),
                     title = stringResource(id = R.string.comment),
                     subtitle = comment,
                     icon = VUIcons.Community.id,
@@ -212,7 +213,7 @@ private fun ProductDetailScreen(product: Product) {
                     modifier = Modifier.padding(top = Spacing_05),
                     title = stringResource(id = contributed_by),
                     subtitle = subtitle,
-                    icon = VUIcons.Create.id
+                    icon = VUIcons.Profile.id
                 )
             }
         }

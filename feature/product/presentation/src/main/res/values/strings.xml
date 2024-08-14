@@ -31,5 +31,6 @@
     <string name="bookmarked_products">Productos guardados</string>
     <string name="empty_bookmarked_products_message">¡No has guardado ningún producto todavía! Podés tener acá una lista de tus productos favoritos.</string>
     <string name="empty_contributed_products_message">¡No has contribuido ningún producto todavía! Todos los que vayas agregando los podrás ver y editar desde este acceso rápido.</string>
-    <string name="name_and_brand">Nombre y marca</string>
+    <string name="product">Producto</string>
+    <string name="brand">Marca</string>
 </resources>
