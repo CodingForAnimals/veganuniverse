@@ -180,7 +180,6 @@ internal class ProductBrowsingViewModel(
 
     sealed class NavigationEffect {
         data object NavigateUp : NavigationEffect()
-        data object NavigateToAuthScreen : NavigationEffect()
         data class NavigateToProductDetails(val id: String) : NavigationEffect()
     }
 }

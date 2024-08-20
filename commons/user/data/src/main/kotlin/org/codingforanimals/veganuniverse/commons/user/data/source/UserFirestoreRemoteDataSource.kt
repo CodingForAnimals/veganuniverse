@@ -2,17 +2,21 @@ package org.codingforanimals.veganuniverse.commons.user.data.source
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth.IdTokenListener
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.commons.user.data.model.User
+import org.codingforanimals.veganuniverse.services.auth.Authenticator
 
 private const val TAG = "UserInfoFirestoreDataSo"
 
 internal class UserFirestoreRemoteDataSource(
     firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
+    private val authenticator: Authenticator,
 ) : UserRemoteDataSource {
+
     private val usersCollection = firestore.collection(USERS_COLLECTION)
 
     override suspend fun createUser(email: String, name: String): User {
@@ -37,11 +41,7 @@ internal class UserFirestoreRemoteDataSource(
     override suspend fun getCurrentUser(): User? {
         return runCatching {
             val currentUser = auth.currentUser ?: return null
-            val userDTO = getUserFromFirestore(currentUser.uid)
-            val isVerified = currentUser.isEmailVerified || currentUser.providerId == GoogleAuthProvider.PROVIDER_ID
-            userDTO?.copy(
-                isVerified = isVerified,
-            )
+            getUserFromFirestore(currentUser.uid)
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
         }.getOrNull()
@@ -63,8 +63,13 @@ internal class UserFirestoreRemoteDataSource(
         currentUser.sendEmailVerification().await()
     }
 
+    override suspend fun isEmailVerified(): Boolean {
+        return authenticator.isUserVerified()
+    }
+
     companion object {
         private const val USERS_COLLECTION = "users"
         private const val USER_ID = "userId"
+
     }
 }

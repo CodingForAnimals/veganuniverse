@@ -63,8 +63,6 @@ import org.codingforanimals.veganuniverse.commons.ui.details.ContentDetailItem
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
 import org.codingforanimals.veganuniverse.commons.ui.utils.DateUtils
-import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
-import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsViewModel.NavigationEffect
@@ -74,8 +72,7 @@ import java.util.Date
 
 @Composable
 internal fun RecipeDetailsScreen(
-    onBackClick: () -> Unit,
-    navigateToAuthenticateScreen: () -> Unit,
+    navigateUp: () -> Unit,
 ) {
     val viewModel: RecipeDetailsViewModel = koinViewModel()
     val recipeState: RecipeDetailsViewModel.RecipeState by viewModel.recipeState.collectAsStateWithLifecycle()
@@ -94,7 +91,6 @@ internal fun RecipeDetailsScreen(
     HandleDialog(
         dialog = viewModel.dialog,
         onReportResult = { viewModel.onAction(Action.OnReportResult(it)) },
-        onUnverifiedEmailResult = { viewModel.onAction(Action.OnUnverifiedEmailResult(it)) },
         onDialogDismissRequest = { viewModel.onAction(Action.OnDialogDismissRequest) },
         onConfirmDelete = { viewModel.onAction(Action.OnConfirmDelete) }
     )
@@ -106,8 +102,7 @@ internal fun RecipeDetailsScreen(
 
     HandleNavigationEffects(
         navigationEffects = viewModel.navigationEffects,
-        navigateUp = onBackClick,
-        navigateToAuthenticateScreen = navigateToAuthenticateScreen,
+        navigateUp = navigateUp,
     )
 }
 
@@ -291,13 +286,11 @@ private fun RecipeContent(
 private fun HandleNavigationEffects(
     navigationEffects: Flow<NavigationEffect>,
     navigateUp: () -> Unit,
-    navigateToAuthenticateScreen: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         navigationEffects.onEach { sideEffect ->
             when (sideEffect) {
                 NavigationEffect.NavigateUp -> navigateUp()
-                NavigationEffect.NavigateToAuthenticateScreen -> navigateToAuthenticateScreen()
             }
         }.collect()
     }
@@ -307,7 +300,6 @@ private fun HandleNavigationEffects(
 private fun HandleDialog(
     dialog: RecipeDetailsViewModel.Dialog?,
     onReportResult: (ReportContentDialogResult) -> Unit,
-    onUnverifiedEmailResult: (UnverifiedEmailResult) -> Unit,
     onDialogDismissRequest: () -> Unit,
     onConfirmDelete: () -> Unit,
 ) {
@@ -347,10 +339,6 @@ private fun HandleDialog(
                         contentDescription = stringResource(R.string.recipe_image_description),
                     )
                 }
-            }
-
-            RecipeDetailsViewModel.Dialog.UnverifiedEmail -> {
-                UnverifiedEmailDialog(onResult = onUnverifiedEmailResult)
             }
 
             RecipeDetailsViewModel.Dialog.Delete -> {

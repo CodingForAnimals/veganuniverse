@@ -1,6 +1,5 @@
 package org.codingforanimals.veganuniverse.product.presentation.navigation
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -45,19 +44,14 @@ sealed class ProductDestination(route: String) : Destination(route) {
 
 fun NavGraphBuilder.productGraph(
     navController: NavController,
-    navigateToAuthenticateScreen: () -> Unit,
-    navigateToAuthScreen: (ProductDestination) -> Unit,
-    snackbarHostState: SnackbarHostState,
 ) {
     composable(
         route = ProductDestination.Home.route,
     ) {
         ProductHomeScreen(
-            snackbarHostState = snackbarHostState,
             navigateToCategoryListScreen = { category, type, sorter ->
                 navController.navigate(ProductDestination.Browsing(category, type, sorter))
             },
-            navigateToAuthScreen = { navigateToAuthScreen(ProductDestination.Home) },
             navigateToProductDetail = { id ->
                 navController.navigate(ProductDestination.Detail(id))
             },
@@ -84,7 +78,6 @@ fun NavGraphBuilder.productGraph(
         ) {
             ProductBrowsingScreen(
                 navigateUp = navController::navigateUp,
-                navigateToAuthScreen = navigateToAuthenticateScreen,
                 navigateToProductDetail = {
                     navController.navigate(ProductDestination.Detail(it))
                 }
@@ -103,7 +96,6 @@ fun NavGraphBuilder.productGraph(
         ) {
             ProductDetailScreen(
                 navigateUp = navController::popBackStack,
-                navigateToAuthenticateScreen = navigateToAuthenticateScreen,
             )
         }
     }

@@ -30,7 +30,7 @@ internal class RecipeRepositoryImpl(
         remoteDataSource.deleteRecipeById(id)
     }
 
-    override suspend fun insertRecipe(recipe: Recipe, imageModel: Parcelable): Recipe? {
+    override suspend fun insertRecipe(recipe: Recipe, imageModel: Parcelable): Recipe {
         return remoteDataSource.insertRecipe(recipe, imageModel)
     }
 

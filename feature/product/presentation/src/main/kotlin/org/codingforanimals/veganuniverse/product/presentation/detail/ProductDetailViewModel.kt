@@ -23,6 +23,7 @@ import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_m
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOnlyUserAction
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
@@ -30,8 +31,8 @@ import org.codingforanimals.veganuniverse.product.domain.usecase.EditProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.GetProductDetail
 import org.codingforanimals.veganuniverse.product.domain.usecase.ProductBookmarkUseCases
 import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
-import org.codingforanimals.veganuniverse.product.presentation.model.toView
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
+import org.codingforanimals.veganuniverse.product.presentation.model.toView
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 
 internal class ProductDetailViewModel(
@@ -40,11 +41,9 @@ internal class ProductDetailViewModel(
     private val bookmarkUseCases: ProductBookmarkUseCases,
     private val reportProduct: ReportProduct,
     private val editProduct: EditProduct,
+    private val verifiedOnlyUserAction: VerifiedOnlyUserAction,
 ) : ViewModel() {
     private val id = savedStateHandle.get<String>(ProductDestination.Detail.ID_ARG)
-
-    private val navigationEffectsChannel = Channel<NavigationEffect>()
-    val navigationEffects = navigationEffectsChannel.receiveAsFlow()
 
     private val snackbarEffectsChannel = Channel<Snackbar>()
     val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
@@ -79,7 +78,7 @@ internal class ProductDetailViewModel(
         }
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.WhileSubscribed(1_000),
         initialValue = false,
     )
 
@@ -88,17 +87,27 @@ internal class ProductDetailViewModel(
             Action.OnBookmarkClick -> {
                 if (bookmarkActionEnabled) {
                     viewModelScope.launch {
-                        bookmarkActionChannel.send(isBookmarked.value)
+                        verifiedOnlyUserAction {
+                            bookmarkActionChannel.send(isBookmarked.value)
+                        }
                     }
                 }
             }
 
             Action.OnReportClick -> {
-                dialog = Dialog.Report
+                viewModelScope.launch {
+                    verifiedOnlyUserAction {
+                        dialog = Dialog.Report
+                    }
+                }
             }
 
             Action.OnSuggestClick -> {
-                dialog = Dialog.Suggestion
+                viewModelScope.launch {
+                    verifiedOnlyUserAction {
+                        dialog = Dialog.Suggestion
+                    }
+                }
             }
 
             Action.OnDismissDialog -> {
@@ -109,12 +118,6 @@ internal class ProductDetailViewModel(
 
     private fun handleBookmarkResult(result: ToggleResult) {
         when (result) {
-            is ToggleResult.GuestUser -> {
-                viewModelScope.launch {
-                    navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticationScreen)
-                }
-            }
-
             is ToggleResult.UnexpectedError -> {
                 viewModelScope.launch {
                     snackbarEffectsChannel.send(Snackbar(unexpected_error_message_try_again))
@@ -132,22 +135,10 @@ internal class ProductDetailViewModel(
             ReportContentDialogResult.SendReport -> {
                 id ?: return
                 viewModelScope.launch {
-                    when (reportProduct(id)) {
-                        ReportProduct.Result.Success -> {
-                            snackbarEffectsChannel.send(Snackbar(report_success))
-                        }
-
-                        ReportProduct.Result.UnauthenticatedUser -> {
-                            navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticationScreen)
-                        }
-
-                        ReportProduct.Result.UnexpectedError -> {
-                            snackbarEffectsChannel.send(Snackbar(report_error))
-                        }
-
-                        ReportProduct.Result.UnverifiedEmail -> {
-                            dialog = Dialog.UnverifiedEmail
-                        }
+                    if (reportProduct(id).isSuccess) {
+                        snackbarEffectsChannel.send(Snackbar(report_success))
+                    } else {
+                        snackbarEffectsChannel.send(Snackbar(report_error))
                     }
                 }
             }
@@ -161,22 +152,10 @@ internal class ProductDetailViewModel(
             is EditContentDialogResult.SendEdit -> {
                 id ?: return
                 viewModelScope.launch {
-                    when (editProduct(id, result.edition)) {
-                        EditProduct.Result.Success -> {
-                            snackbarEffectsChannel.send(Snackbar(edit_success))
-                        }
-
-                        EditProduct.Result.UnauthenticatedUser -> {
-                            navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticationScreen)
-                        }
-
-                        EditProduct.Result.UnexpectedError -> {
-                            snackbarEffectsChannel.send(Snackbar(edit_error))
-                        }
-
-                        EditProduct.Result.UnverifiedEmail -> {
-                            dialog = Dialog.UnverifiedEmail
-                        }
+                    if (editProduct(id, result.edition).isSuccess) {
+                        snackbarEffectsChannel.send(Snackbar(edit_success))
+                    } else {
+                        snackbarEffectsChannel.send(Snackbar(edit_error))
                     }
                 }
             }
@@ -212,10 +191,6 @@ internal class ProductDetailViewModel(
         data object OnSuggestClick : Action()
         data object OnReportClick : Action()
         data object OnDismissDialog : Action()
-    }
-
-    sealed class NavigationEffect {
-        data object NavigateToAuthenticationScreen : NavigationEffect()
     }
 
     sealed class Dialog {

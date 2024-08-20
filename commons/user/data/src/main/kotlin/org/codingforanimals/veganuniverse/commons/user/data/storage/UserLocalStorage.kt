@@ -6,5 +6,7 @@ import org.codingforanimals.veganuniverse.commons.user.data.model.User
 interface UserLocalStorage {
     fun flowOnCurrentUser(): Flow<User?>
     suspend fun setCurrentUser(user: User)
-    suspend fun clearCurrentUser()
+    suspend fun clear()
+    suspend fun setIsVerified(value: Boolean)
+    fun flowOnIsVerified(): Flow<Boolean?>
 }

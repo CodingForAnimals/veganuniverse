@@ -4,30 +4,38 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
-import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationScreen
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.EmailSignInScreen
+import org.codingforanimals.veganuniverse.registration.presentation.emailvalidation.ValidateEmailPromptScreen
+import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.AuthPrompt
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailRegistration
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailSignIn
-import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.Prompt
+import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.ValidateEmailPrompt
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreen
-import org.codingforanimals.veganuniverse.registration.presentation.reauthentication.EmailReauthenticationScreen
+import org.codingforanimals.veganuniverse.registration.presentation.reauthentication.EmailValidatedScreen
 
 sealed class RegistrationDestination(route: String) : Destination(route) {
-    data object Prompt : RegistrationDestination("registration_prompt")
-    data object EmailRegistration : RegistrationDestination("registration_email_sign_up")
-    data object EmailSignIn : RegistrationDestination("registration_email_sign_in")
-    data object EmailReauthentication :
-        RegistrationDestination("registration_email_reauthentication")
+    data object AuthPrompt : RegistrationDestination("authentication_prompt")
+    data object EmailRegistration : RegistrationDestination("email_sign_up")
+    data object ValidateEmailPrompt : RegistrationDestination("validate_email_prompt")
+    data object EmailSignIn : RegistrationDestination("email_sign_in")
+    data object EmailValidated : RegistrationDestination("email_validated")
 }
 
 fun NavGraphBuilder.registrationGraph(
     navController: NavController,
 ) {
+
     composable(
-        route = Prompt.route,
+        route = AuthPrompt.route,
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = DeepLink.AuthPrompt.deeplink
+            }
+        ),
         content = {
             PromptScreen(
                 navigateUp = navController::navigateUp,
@@ -45,21 +53,7 @@ fun NavGraphBuilder.registrationGraph(
                 navigateUp = navController::navigateUp,
                 navigateToEmailValidationScreen = {
                     navController.popBackStack(
-                        route = Prompt.route,
-                        inclusive = true
-                    )
-                },
-            )
-        },
-    )
-
-    composable(
-        route = EmailSignIn.route,
-        content = {
-            EmailSignInScreen(
-                navigateToOriginDestination = {
-                    navController.popBackStack(
-                        route = Prompt.route,
+                        route = AuthPrompt.route,
                         inclusive = true
                     )
                 }
@@ -68,136 +62,55 @@ fun NavGraphBuilder.registrationGraph(
     )
 
     composable(
-        route = RegistrationDestination.EmailReauthentication.route,
+        route = ValidateEmailPrompt.route,
         deepLinks = listOf(
             navDeepLink {
-                uriPattern = Deeplink.Reauthentication.deeplink
+                uriPattern = DeepLink.ValidateEmailPrompt.deeplink
+            }
+        ),
+        content = {
+            ValidateEmailPromptScreen(
+                navigateToEmailSignIn = {
+                    navController.navigate(EmailSignIn.route) {
+                        popUpTo(ValidateEmailPrompt.route) {
+                            inclusive = true
+                        }
+                    }
+                },
+                navigateUp = navController::navigateUp
+            )
+        },
+    )
+
+    composable(
+        route = EmailSignIn.route,
+        content = {
+            EmailSignInScreen(
+                navigateUp = navController::navigateUp,
+                navigateToOriginDestination = {
+                    val navigatedBackToPrompt = navController.popBackStack(
+                        route = AuthPrompt.route,
+                        inclusive = true
+                    )
+                    if (!navigatedBackToPrompt) {
+                        navController.navigateUp()
+                    }
+                }
+            )
+        },
+    )
+
+    composable(
+        route = RegistrationDestination.EmailValidated.route,
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = DeepLink.Reauthentication.deeplink
             }
         )
     ) {
-        EmailReauthenticationScreen(
+        EmailValidatedScreen(
             navigateUp = navController::navigateUp,
+            navigateToEmailSignIn = { navController.navigate(EmailSignIn) },
         )
     }
 }
-
-
-/**
- * package org.codingforanimals.veganuniverse.registration.presentation.navigation
- *
- * import android.content.Intent
- * import androidx.navigation.NavBackStackEntry
- * import androidx.navigation.NavController
- * import androidx.navigation.NavGraphBuilder
- * import androidx.navigation.NavType
- * import androidx.navigation.compose.composable
- * import androidx.navigation.navArgument
- * import androidx.navigation.navDeepLink
- * import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
- * import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
- * import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationScreen
- * import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.EmailSignInScreen
- * import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailRegistration
- * import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailSignIn
- * import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.Prompt
- * import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreen
- * import org.codingforanimals.veganuniverse.registration.presentation.reauthentication.EmailReauthenticationScreen
- *
- * sealed class RegistrationDestination(route: String) : Destination(route) {
- *     data object Prompt : RegistrationDestination("registration_prompt")
- *     data object EmailRegistration : RegistrationDestination("registration_email_sign_up")
- *     data object EmailSignIn : RegistrationDestination("registration_email_sign_in")
- *     data object EmailReauthentication :
- *         RegistrationDestination("registration_email_reauthentication")
- * }
- *
- * private const val ORIGIN_DESTINATION = "origin_destination_argument"
- * private val NavBackStackEntry.originDestination: String?
- *     get() = arguments?.getString(ORIGIN_DESTINATION)
- *
- * private fun NavController.navigateToOriginDestination(
- *     backStackEntry: NavBackStackEntry,
- *     defaultOriginNavigationRoute: String,
- * ) {
- *     val origin = backStackEntry.originDestination?.let { origin ->
- *         backQueue
- *             .map { queueEntry -> queueEntry.destination.route }
- *             .firstOrNull { route -> route?.contains(origin) == true }
- *     }
- *     popBackStack(route = origin ?: defaultOriginNavigationRoute, inclusive = false)
- * }
- *
- * fun NavGraphBuilder.registrationGraph(
- *     navController: NavController,
- *     defaultOriginNavigationRoute: String,
- * ) {
- *     composable(
- *         route = "${Prompt.route}/{$ORIGIN_DESTINATION}",
- *         arguments = listOf(
- *             navArgument(ORIGIN_DESTINATION) {
- *                 type = NavType.StringType
- *             },
- *         ),
- *         content = { backStackEntry ->
- *             val origin = backStackEntry.originDestination ?: defaultOriginNavigationRoute
- *             PromptScreen(
- *                 navigateUp = navController::navigateUp,
- *                 navigateToEmailRegistration = { navController.navigate("${EmailRegistration.route}/$origin") },
- *                 navigateToEmailSignIn = { navController.navigate("${EmailSignIn.route}/$origin") },
- *                 navigateToOriginDestination = {
- *                     navController.navigateToOriginDestination(
- *                         backStackEntry,
- *                         defaultOriginNavigationRoute
- *                     )
- *                 }
- *             )
- *         },
- *     )
- *
- *     composable(
- *         route = "${EmailRegistration.route}/{$ORIGIN_DESTINATION}",
- *         content = { backStackEntry ->
- *             EmailRegistrationScreen(
- *                 navigateUp = navController::navigateUp,
- *                 navigateToEmailValidationScreen = {
- *                     navController.popBackStack(
- *                         route = Prompt.route,
- *                         inclusive = true
- *                     )
- * //                    navController.navigateToOriginDestination(
- * //                        backStackEntry,
- * //                        defaultOriginNavigationRoute
- * //                    )
- *                 },
- *             )
- *         },
- *     )
- *
- *     composable(
- *         route = "${EmailSignIn.route}/{$ORIGIN_DESTINATION}",
- *         content = { backStackEntry ->
- *             EmailSignInScreen(
- *                 navigateToOriginDestination = {
- *                     navController.navigateToOriginDestination(
- *                         backStackEntry,
- *                         defaultOriginNavigationRoute
- *                     )
- *                 }
- *             )
- *         },
- *     )
- *
- *     composable(
- *         route = RegistrationDestination.EmailReauthentication.route,
- *         deepLinks = listOf(
- *             navDeepLink {
- *                 uriPattern = Deeplink.Reauthentication.deeplink
- *             }
- *         )
- *     ) {
- *         EmailReauthenticationScreen(
- *             navigateUp = navController::navigateUp,
- *         )
- *     }
- * }
- */

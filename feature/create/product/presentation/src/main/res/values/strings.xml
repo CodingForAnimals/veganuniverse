@@ -8,4 +8,5 @@
     <string name="product_type">Tipo de producto</string>
     <string name="product_category">Selecciona una categoría</string>
     <string name="product_already_exists">Ya existe un producto con ese nombre</string>
+    <string name="create_product_error">¡Oops! Ocurrió un error inesperado y no pudimos crear tu producto. Podés volver a intentarlo.</string>
 </resources>

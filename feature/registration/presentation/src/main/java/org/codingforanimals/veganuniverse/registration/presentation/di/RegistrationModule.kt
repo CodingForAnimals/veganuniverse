@@ -4,6 +4,7 @@ import org.codingforanimals.veganuniverse.registration.presentation.emailregistr
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.di.signInModule
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.di.promptModule
 import org.codingforanimals.veganuniverse.commons.user.domain.di.userCommonDomainModule
+import org.codingforanimals.veganuniverse.registration.presentation.emailvalidation.di.emailValidationModule
 import org.codingforanimals.veganuniverse.registration.presentation.reauthentication.reauthenticationModule
 import org.koin.dsl.module
 
@@ -14,5 +15,6 @@ val registrationModule = module {
         signInModule,
         userCommonDomainModule,
         reauthenticationModule,
+        emailValidationModule
     )
 }

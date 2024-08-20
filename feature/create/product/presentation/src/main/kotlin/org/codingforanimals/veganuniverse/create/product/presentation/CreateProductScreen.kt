@@ -80,12 +80,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CreateProductScreen(
     navigateUp: () -> Unit,
-    navigateToThankYouScreen: () -> Unit,
-    navigateToAuthenticationScreen: () -> Unit,
     viewModel: CreateProductViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     val imagePicker = rememberImageCropperLauncherForActivityResult(
         onCropSuccess = { viewModel.onAction(Action.ImagePicker.Success(it)) },
     )
@@ -103,14 +99,14 @@ fun CreateProductScreen(
     ) { paddingValues ->
         CreateProductScreen(
             modifier = Modifier.padding(paddingValues),
-            uiState = uiState,
+            uiState = viewModel.uiState,
             onAction = viewModel::onAction,
         )
     }
 
-    VUCircularProgressIndicator(visible = uiState.loading)
+    VUCircularProgressIndicator(visible = viewModel.uiState.loading)
 
-    uiState.dialog?.let { dialog ->
+    viewModel.uiState.dialog?.let { dialog ->
         NoActionDialog(
             title = dialog.title,
             message = dialog.message,
@@ -127,8 +123,6 @@ fun CreateProductScreen(
         sideEffects = viewModel.sideEffects,
         navigateUp = navigateUp,
         imagePicker = imagePicker,
-        navigateToThankYouScreen = navigateToThankYouScreen,
-        navigateToAuthenticationScreen = navigateToAuthenticationScreen,
     )
 
     HandleSnackbarEffects(
@@ -351,8 +345,6 @@ fun HandleSideEffects(
     sideEffects: Flow<SideEffect>,
     navigateUp: () -> Unit,
     imagePicker: ActivityResultLauncher<PickVisualMediaRequest>,
-    navigateToThankYouScreen: () -> Unit,
-    navigateToAuthenticationScreen: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         sideEffects.onEach { sideEffect ->
@@ -361,9 +353,6 @@ fun HandleSideEffects(
                 SideEffect.OpenImageSelector -> {
                     imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }
-
-                SideEffect.NavigateToThankYouScreen -> navigateToThankYouScreen()
-                SideEffect.NavigateToAuthenticateScreen -> navigateToAuthenticationScreen()
             }
         }.collect()
     }

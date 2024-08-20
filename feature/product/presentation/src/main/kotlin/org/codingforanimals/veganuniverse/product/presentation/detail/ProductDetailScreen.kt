@@ -19,7 +19,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,8 +31,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.commons.designsystem.Doubtful
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
@@ -57,7 +54,6 @@ import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEm
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.detail.ProductDetailViewModel.Action
-import org.codingforanimals.veganuniverse.product.presentation.detail.ProductDetailViewModel.NavigationEffect
 import org.codingforanimals.veganuniverse.product.presentation.detail.components.ProductDetailTopBar
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
 import org.koin.androidx.compose.koinViewModel
@@ -66,7 +62,6 @@ import java.util.Date
 @Composable
 internal fun ProductDetailScreen(
     navigateUp: () -> Unit,
-    navigateToAuthenticateScreen: () -> Unit,
 ) {
     val viewModel: ProductDetailViewModel = koinViewModel()
     val state by viewModel.product.collectAsStateWithLifecycle()
@@ -93,13 +88,6 @@ internal fun ProductDetailScreen(
         snackbarHostState = snackbarHostState,
     )
 
-    LaunchedEffect(Unit) {
-        viewModel.navigationEffects.onEach { effect ->
-            when (effect) {
-                NavigationEffect.NavigateToAuthenticationScreen -> navigateToAuthenticateScreen()
-            }
-        }.collect()
-    }
 }
 
 @Composable

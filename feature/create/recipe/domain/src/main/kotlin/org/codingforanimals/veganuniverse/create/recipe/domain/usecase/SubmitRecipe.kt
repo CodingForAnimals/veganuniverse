@@ -1,8 +1,6 @@
 package org.codingforanimals.veganuniverse.create.recipe.domain.usecase
 
-import android.util.Log
-import kotlinx.coroutines.flow.firstOrNull
-import org.codingforanimals.veganuniverse.commons.network.PermissionDeniedException
+import kotlinx.coroutines.flow.first
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.ProfileContentUseCases
 import org.codingforanimals.veganuniverse.commons.recipe.domain.repository.RecipeRepository
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
@@ -14,26 +12,14 @@ class SubmitRecipe(
     private val profileRecipeUseCases: ProfileContentUseCases,
     private val flowOnCurrentUser: FlowOnCurrentUser,
 ) {
-    suspend operator fun invoke(recipeForm: RecipeForm): Result {
-        val user = flowOnCurrentUser(true).firstOrNull() ?: return Result.GuestUser
-        if (!user.isVerified) {
-            return Result.UnverifiedEmail
+    suspend operator fun invoke(recipeForm: RecipeForm): Result<Unit> = runCatching {
+        val user = checkNotNull(flowOnCurrentUser().first()) {
+            "User must be logged in to submit a recipe"
         }
 
         val recipeFormAsModel = recipeForm.toModel(user.id, user.name)
-        return try {
-            val recipe = recipeRepository.insertRecipe(recipeFormAsModel, recipeForm.imageModel)
-                ?.also { finalRecipe ->
-                    finalRecipe.id?.let { profileRecipeUseCases.addContribution(it) }
-                }
-            return recipe?.let {
-                Result.Success(it)
-            } ?: Result.UnexpectedError
-        } catch (e: PermissionDeniedException) {
-            Result.UserMustReauthenticate
-        } catch (e: Throwable) {
-            Log.e(TAG, e.stackTraceToString())
-            Result.UnexpectedError
+        recipeRepository.insertRecipe(recipeFormAsModel, recipeForm.imageModel).also {
+            profileRecipeUseCases.addContribution(it.id!!)
         }
     }
 
@@ -54,17 +40,5 @@ class SubmitRecipe(
             imageUrl = null,
             validated = false,
         )
-    }
-
-    sealed class Result {
-        data object GuestUser : Result()
-        data object UnexpectedError : Result()
-        data object UserMustReauthenticate : Result()
-        data object UnverifiedEmail : Result()
-        data class Success(val recipe: Recipe) : Result()
-    }
-
-    companion object {
-        private const val TAG = "SubmitRecipe"
     }
 }

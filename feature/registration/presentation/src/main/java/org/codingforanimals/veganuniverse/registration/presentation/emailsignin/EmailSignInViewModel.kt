@@ -10,17 +10,19 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.DownloadAndStoreProfile
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.areFieldsValid
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.AuthenticationUseCases
 import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.usecase.GetEmailSignInScreenContent
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.EmailField
 import org.codingforanimals.veganuniverse.registration.presentation.viewmodel.PasswordField
-import org.codingforanimals.veganuniverse.commons.ui.viewmodel.areFieldsValid
-import org.codingforanimals.veganuniverse.commons.user.domain.usecase.AuthenticationUseCases
 
 class EmailSignInViewModel(
     getEmailSignInScreenContent: GetEmailSignInScreenContent,
     private val authenticationUseCases: AuthenticationUseCases,
+    private val downloadAndStoreProfile: DownloadAndStoreProfile,
 ) : ViewModel() {
 
     val content = getEmailSignInScreenContent()
@@ -59,11 +61,13 @@ class EmailSignInViewModel(
                 email = uiState.emailField.value,
                 password = uiState.passwordField.value,
             )
-            uiState = uiState.copy(loading = false)
             if (result.isSuccess) {
+                uiState = uiState.copy(loading = false)
+                downloadAndStoreProfile()
                 _sideEffects.send(SideEffect.NavigateToOriginDestination)
             } else {
                 uiState = uiState.copy(
+                    loading = false,
                     errorDialog = ErrorDialog(
                         title = unexpected_error,
                         message = R.string.email_login_error,

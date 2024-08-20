@@ -49,6 +49,7 @@ import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgre
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.dialog.NoActionDialog
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.registration.presentation.components.SecondaryAuthOptionDivider
 import org.koin.androidx.compose.koinViewModel
 
 private const val TAG = "PromptScreen"
@@ -142,35 +143,10 @@ private fun PromptScreen(
                         Text(text = stringResource(R.string.sign_in_button_label))
                     }
 
-                    RegistrationScreenItem.ProvidersDivider -> ProvidersDivider()
+                    RegistrationScreenItem.ProvidersDivider -> SecondaryAuthOptionDivider()
                     RegistrationScreenItem.Providers -> GoogleProviderButton(onAction)
                 }
             },
-        )
-    }
-}
-
-@Composable
-fun ProvidersDivider() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = Spacing_08, bottom = Spacing_04),
-        horizontalArrangement = Arrangement.spacedBy(Spacing_06),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Spacer(
-            Modifier
-                .height(1.dp)
-                .background(MaterialTheme.colorScheme.onSurfaceVariant)
-                .weight(1f)
-        )
-        Text(text = "ó bien")
-        Spacer(
-            Modifier
-                .height(1.dp)
-                .background(MaterialTheme.colorScheme.onSurfaceVariant)
-                .weight(1f)
         )
     }
 }

@@ -8,6 +8,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":services:auth"))
     bomImplementation(
         bom = libs.firebase.bom,
         dependencies = listOf(

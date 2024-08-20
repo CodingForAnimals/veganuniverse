@@ -64,8 +64,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CreateRecipeScreen(
-    navigateToThankYouScreen: () -> Unit,
-    navigateToAuthenticationScreen: () -> Unit,
     navigateUp: () -> Unit,
 ) {
     val viewModel: CreateRecipeViewModel = koinViewModel()
@@ -110,8 +108,6 @@ fun CreateRecipeScreen(
     HandleSideEffects(
         sideEffect = viewModel.sideEffect,
         imagePicker = imagePicker,
-        navigateToThankYouScreen = navigateToThankYouScreen,
-        navigateToAuthenticationScreen = navigateToAuthenticationScreen,
         navigateUp = navigateUp,
     )
 
@@ -303,8 +299,6 @@ private fun CreateRecipeScreen(
 private fun HandleSideEffects(
     sideEffect: Flow<SideEffect>,
     imagePicker: ActivityResultLauncher<PickVisualMediaRequest>,
-    navigateToThankYouScreen: () -> Unit,
-    navigateToAuthenticationScreen: () -> Unit,
     navigateUp: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -312,14 +306,6 @@ private fun HandleSideEffects(
             when (sideEffect) {
                 SideEffect.OpenImageSelector -> {
                     imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                }
-
-                SideEffect.NavigateToAuthenticationScreen -> {
-                    navigateToAuthenticationScreen()
-                }
-
-                SideEffect.NavigateToThankYouScreen -> {
-                    navigateToThankYouScreen()
                 }
 
                 SideEffect.NavigateUp -> navigateUp()

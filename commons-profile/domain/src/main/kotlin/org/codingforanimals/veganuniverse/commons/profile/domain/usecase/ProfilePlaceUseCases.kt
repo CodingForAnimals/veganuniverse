@@ -27,7 +27,7 @@ internal class ProfilePlaceUseCases(
         val actionValue =
             if (currentValue) ProfileEditActionValue.REMOVE else ProfileEditActionValue.ADD
         val args = ProfileEditArguments(
-            userId = flowOnCurrentUser().firstOrNull()?.id ?: return ToggleResult.GuestUser(currentValue),
+            userId = flowOnCurrentUser().firstOrNull()?.id ?: return ToggleResult.UnexpectedError(currentValue),
             contentId = contentId,
             profileEditContentType = ProfileEditContentType.PLACE,
             profileEditActionType = ProfileEditActionType.BOOKMARK,

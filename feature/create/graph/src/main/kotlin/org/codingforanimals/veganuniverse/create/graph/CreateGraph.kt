@@ -3,8 +3,9 @@ package org.codingforanimals.veganuniverse.create.graph
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
-import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.create.home.persentation.CreateHomeScreen
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceScreen
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductScreen
@@ -21,51 +22,59 @@ sealed class CreateDestination(route: String) : Destination(route) {
 
 fun NavGraphBuilder.createGraph(
     navController: NavController,
-    navigateToAuthenticationScreen: () -> Unit,
 ) {
     composable(
         route = CreateDestination.Home.route,
     ) {
-        CreateHomeScreen(
-            navigateToAuthenticationScreen = navigateToAuthenticationScreen,
-            navigateToCreatePlaceScreen = { navController.navigate(CreateDestination.Place) },
-            navigateToCreateRecipeScreen = { navController.navigate(CreateDestination.Recipe) },
-            navigateToCreateProductScreen = { navController.navigate(CreateDestination.Product) },
-        )
+        CreateHomeScreen()
     }
 
     composable(
         route = CreateDestination.Place.route,
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = DeepLink.CreatePlace.deeplink
+            }
+        )
     ) {
         CreatePlaceScreen(
-            navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou) },
-            navigateToAuthenticationScreen = navigateToAuthenticationScreen,
             navigateUp = navController::navigateUp,
         )
     }
 
     composable(
         route = CreateDestination.Recipe.route,
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = DeepLink.CreateRecipe.deeplink
+            }
+        )
     ) {
         CreateRecipeScreen(
-            navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou) },
-            navigateToAuthenticationScreen = navigateToAuthenticationScreen,
             navigateUp = navController::navigateUp,
         )
     }
 
     composable(
         route = CreateDestination.Product.route,
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = DeepLink.CreateProduct.deeplink
+            }
+        )
     ) {
         CreateProductScreen(
             navigateUp = navController::navigateUp,
-            navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou) },
-            navigateToAuthenticationScreen = navigateToAuthenticationScreen,
         )
     }
 
     composable(
         route = CreateDestination.ThankYou.route,
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = DeepLink.ThankYou.deeplink
+            }
+        )
     ) {
         ThankYouScreen(
             navigateToCreateScreen = {

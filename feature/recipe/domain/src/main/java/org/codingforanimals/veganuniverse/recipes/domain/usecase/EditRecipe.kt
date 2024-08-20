@@ -2,7 +2,6 @@ package org.codingforanimals.veganuniverse.recipes.domain.usecase
 
 import android.util.Log
 import kotlinx.coroutines.flow.firstOrNull
-import org.codingforanimals.veganuniverse.commons.network.PermissionDeniedException
 import org.codingforanimals.veganuniverse.commons.recipe.domain.repository.RecipeRepository
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 

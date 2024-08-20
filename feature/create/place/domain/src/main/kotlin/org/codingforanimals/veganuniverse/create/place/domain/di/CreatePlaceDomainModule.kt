@@ -4,7 +4,6 @@ import org.codingforanimals.veganuniverse.create.place.domain.usecase.SubmitPlac
 import org.codingforanimals.veganuniverse.commons.place.domain.di.placeDomainModule
 import org.codingforanimals.veganuniverse.commons.profile.domain.di.PROFILE_PLACE_USE_CASES
 import org.codingforanimals.veganuniverse.commons.user.domain.di.userCommonDomainModule
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -18,7 +17,7 @@ val createPlaceDomainModule = module {
         SubmitPlace(
             placeRepository = get(),
             flowOnCurrentUser = get(),
-            profilePlaceUseCases = get(named(PROFILE_PLACE_USE_CASES))
+            profilePlaceUseCases = get(named(PROFILE_PLACE_USE_CASES)),
         )
     }
 }

@@ -1,6 +1,5 @@
 package org.codingforanimals.veganuniverse.navigation
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,16 +19,30 @@ import org.codingforanimals.veganuniverse.registration.presentation.navigation.r
 @Composable
 internal fun VUAppNavHost(
     navController: NavHostController,
-    snackbarHostState: SnackbarHostState,
     startDestination: Destination = ProductDestination.Home,
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination.route,
     ) {
+        registrationGraph(
+            navController = navController
+        )
+        productGraph(
+            navController = navController,
+        )
+        placesGraph(
+            navController = navController
+        )
+        createGraph(
+            navController = navController
+        )
+        recipesGraph(
+            navController = navController
+        )
         profileGraph(
             navigateToRegister = {
-                navController.navigate(RegistrationDestination.Prompt)
+                navController.navigate(RegistrationDestination.AuthPrompt)
             },
             navigateToPlaceListing = { listingType ->
                 navController.navigateToPlaceListing(listingType)
@@ -39,40 +52,6 @@ internal fun VUAppNavHost(
             },
             navigateToProductListing = { listingType ->
                 navController.navigate(ProductDestination.Listing(listingType))
-            }
-        )
-        productGraph(
-            navController = navController,
-            navigateToAuthenticateScreen = {
-                navController.navigate(RegistrationDestination.Prompt)
-            },
-            navigateToAuthScreen = {
-                navController.navigate(RegistrationDestination.Prompt)
-            },
-            snackbarHostState = snackbarHostState
-        )
-        registrationGraph(
-            navController = navController
-        )
-        placesGraph(
-            navController = navController,
-            navigateToAuthenticateScreen = {
-                navController.navigate(RegistrationDestination.Prompt)
-            },
-            navigateToReauthenticateScreen = {
-                navController.navigate(RegistrationDestination.EmailReauthentication)
-            }
-        )
-        createGraph(
-            navController = navController,
-            navigateToAuthenticationScreen = {
-                navController.navigate(RegistrationDestination.Prompt)
-            }
-        )
-        recipesGraph(
-            navController = navController,
-            navigateToAuthenticateScreen = {
-                navController.navigate(RegistrationDestination.Prompt)
             }
         )
     }

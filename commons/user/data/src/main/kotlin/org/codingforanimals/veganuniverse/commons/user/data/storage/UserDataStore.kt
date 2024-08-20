@@ -8,6 +8,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import org.codingforanimals.veganuniverse.commons.user.data.model.User
 
@@ -27,13 +29,11 @@ internal class UserDataStore(
             val id = preferences[idKey] ?: return@transform emit(null)
             val email = preferences[emailKey] ?: return@transform emit(null)
             val name = preferences[nameKey] ?: return@transform emit(null)
-            val isVerified = preferences[isVerifiedKey] ?: false
             emit(
                 User(
                     userId = id,
                     email = email,
                     name = name,
-                    isVerified = isVerified,
                 )
             )
         }
@@ -44,14 +44,25 @@ internal class UserDataStore(
             preferences[idKey] = user.userId
             preferences[emailKey] = user.email
             preferences[nameKey] = user.name
-            preferences[isVerifiedKey] = user.isVerified
         }
     }
 
-    override suspend fun clearCurrentUser() {
+    override suspend fun clear() {
         dataStore.edit { preferences ->
             preferences.clear()
         }
+    }
+
+    override suspend fun setIsVerified(value: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[isVerifiedKey] = value
+        }
+    }
+
+    override fun flowOnIsVerified(): Flow<Boolean?> {
+        return dataStore.data.map { preferences ->
+            preferences[isVerifiedKey]
+        }.distinctUntilChanged()
     }
 
     companion object {

@@ -16,8 +16,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
-import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
 import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleResult
@@ -31,25 +29,22 @@ import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDia
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOnlyUserAction
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
-import org.codingforanimals.veganuniverse.place.details.EditPlace
 import org.codingforanimals.veganuniverse.place.details.GetPlaceDetails
-import org.codingforanimals.veganuniverse.place.details.ReportPlace
 import org.codingforanimals.veganuniverse.place.presentation.R
 import org.codingforanimals.veganuniverse.place.presentation.details.usecase.PlaceDetailsUseCases
 import org.codingforanimals.veganuniverse.place.presentation.navigation.selected_place_id
 import org.codingforanimals.veganuniverse.place.reviews.DeletePlaceReview
-import org.codingforanimals.veganuniverse.place.reviews.ReportPlaceReview
-import org.codingforanimals.veganuniverse.place.reviews.SubmitPlaceReview
 import kotlin.math.roundToInt
 
 internal class PlaceDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     flowOnCurrentUser: FlowOnCurrentUser,
     private val useCases: PlaceDetailsUseCases,
-    private val deeplinkNavigator: DeeplinkNavigator,
+    private val verifiedOnlyUserAction: VerifiedOnlyUserAction,
 ) : ViewModel() {
 
     private val navigationEffectsChannel: Channel<NavigationEffect> = Channel()
@@ -128,9 +123,11 @@ internal class PlaceDetailsViewModel(
         toggleBookmarkActionChannel.receiveAsFlow().collectLatest { currentValue ->
             toggleBookmarkEnabled = false
             send(!currentValue)
+
             val result = useCases.togglePlaceBookmark(placeGeoHashNavArg, currentValue)
             handleToggleResultSideEffects(result)
             send(result.newValue)
+
             toggleBookmarkEnabled = true
         }
     }.stateIn(
@@ -144,10 +141,6 @@ internal class PlaceDetailsViewModel(
     ) {
         when (result) {
             is ToggleResult.Success -> Unit
-            is ToggleResult.GuestUser -> {
-                navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
-            }
-
             is ToggleResult.UnexpectedError -> {
                 snackbarEffectsChannel.send(
                     Snackbar(
@@ -173,11 +166,19 @@ internal class PlaceDetailsViewModel(
             }
 
             Action.OnReportPlaceClick -> {
-                alertDialog = AlertDialog.ReportPlace
+                viewModelScope.launch {
+                    verifiedOnlyUserAction {
+                        alertDialog = AlertDialog.ReportPlace
+                    }
+                }
             }
 
             Action.OnEditPlaceClick -> {
-                alertDialog = AlertDialog.EditPlace
+                viewModelScope.launch {
+                    verifiedOnlyUserAction {
+                        alertDialog = AlertDialog.EditPlace
+                    }
+                }
             }
 
             is Action.NewReview -> handleNewReviewAction(action)
@@ -245,22 +246,10 @@ internal class PlaceDetailsViewModel(
                     val reportResult = useCases.reportPlace(placeGeoHashNavArg)
                     alertDialogLoading = false
                     alertDialog = null
-                    when (reportResult) {
-                        ReportPlace.Result.Success -> {
-                            snackbarEffectsChannel.send(Snackbar(report_success))
-                        }
-
-                        ReportPlace.Result.UnauthenticatedUser -> {
-                            navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
-                        }
-
-                        ReportPlace.Result.UnexpectedError -> {
-                            snackbarEffectsChannel.send(Snackbar(unexpected_error_message))
-                        }
-
-                        ReportPlace.Result.UnverifiedEmail -> {
-                            alertDialog = AlertDialog.UnverifiedEmail
-                        }
+                    if (reportResult.isSuccess) {
+                        snackbarEffectsChannel.send(Snackbar(report_success))
+                    } else {
+                        snackbarEffectsChannel.send(Snackbar(unexpected_error_message))
                     }
                 }
             }
@@ -280,22 +269,11 @@ internal class PlaceDetailsViewModel(
                     val editResult = useCases.editPlace(placeGeoHashNavArg, result.edition)
                     alertDialogLoading = false
                     alertDialog = null
-                    when (editResult) {
-                        EditPlace.Result.Success -> {
-                            snackbarEffectsChannel.send(Snackbar(edit_success))
-                        }
 
-                        EditPlace.Result.UnauthenticatedUser -> {
-                            navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
-                        }
-
-                        EditPlace.Result.UnexpectedError -> {
-                            snackbarEffectsChannel.send(Snackbar(edit_error))
-                        }
-
-                        EditPlace.Result.UnverifiedEmail -> {
-                            alertDialog = AlertDialog.UnverifiedEmail
-                        }
+                    if (editResult.isSuccess) {
+                        snackbarEffectsChannel.send(Snackbar(edit_success))
+                    } else {
+                        snackbarEffectsChannel.send(Snackbar(edit_error))
                     }
                 }
             }
@@ -305,7 +283,9 @@ internal class PlaceDetailsViewModel(
     private fun toggleBookmark() {
         if (!toggleBookmarkEnabled) return
         viewModelScope.launch {
-            toggleBookmarkActionChannel.send(isBookmarked.value)
+            verifiedOnlyUserAction {
+                toggleBookmarkActionChannel.send(isBookmarked.value)
+            }
         }
     }
 
@@ -342,18 +322,10 @@ internal class PlaceDetailsViewModel(
                 placeGeoHashNavArg ?: return
                 alertDialogLoading = true
                 viewModelScope.launch {
-                    when (useCases.reportPlaceReview(placeGeoHashNavArg, action.reviewId)) {
-                        ReportPlaceReview.Result.UnauthenticatedUser -> {
-                            navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
-                        }
-
-                        ReportPlaceReview.Result.UnexpectedError -> {
-                            snackbarEffectsChannel.send(Snackbar(unexpected_error))
-                        }
-
-                        ReportPlaceReview.Result.Success -> {
-                            snackbarEffectsChannel.send(Snackbar(R.string.report_review_success))
-                        }
+                    if (useCases.reportPlaceReview(placeGeoHashNavArg, action.reviewId).isSuccess) {
+                        snackbarEffectsChannel.send(Snackbar(R.string.report_review_success))
+                    } else {
+                        snackbarEffectsChannel.send(Snackbar(unexpected_error))
                     }
                     alertDialogLoading = false
                     alertDialog = null
@@ -361,7 +333,11 @@ internal class PlaceDetailsViewModel(
             }
 
             is Action.Reviews.ReportReview.ReportIconClick -> {
-                alertDialog = AlertDialog.ReportReview(action.reviewId)
+                viewModelScope.launch {
+                    verifiedOnlyUserAction {
+                        alertDialog = AlertDialog.ReportReview(action.reviewId)
+                    }
+                }
             }
         }
     }
@@ -369,15 +345,13 @@ internal class PlaceDetailsViewModel(
     private fun handleNewReviewAction(action: Action.NewReview) {
         when (action) {
             is Action.NewReview.OnRatingChange -> {
-                if (user.value == null) {
-                    viewModelScope.launch {
-                        navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
+                viewModelScope.launch {
+                    verifiedOnlyUserAction {
+                        newReviewState = newReviewState.copy(
+                            rating = action.rating,
+                            visible = true,
+                        )
                     }
-                } else {
-                    newReviewState = newReviewState.copy(
-                        rating = action.rating,
-                        visible = true,
-                    )
                 }
             }
 
@@ -423,30 +397,14 @@ internal class PlaceDetailsViewModel(
         )
         viewModelScope.launch {
             newReviewState = newReviewState.copy(loading = true)
-            val result = useCases.submitPlaceReview(placeGeoHashNavArg, placeReview)
-            newReviewState = newReviewState.copy(loading = false)
-            when (result) {
-                SubmitPlaceReview.Result.UnexpectedError -> {
-                    snackbarEffectsChannel.send(Snackbar(R.string.submit_review_unexpected_error))
-                }
-
-                SubmitPlaceReview.Result.Success -> {
-                    newReviewState = newReviewState.copy(visible = false)
-                    refreshUserReviewActionChannel.send(Unit)
-                    snackbarEffectsChannel.send(Snackbar(R.string.submit_review_success))
-                }
-
-                SubmitPlaceReview.Result.UnauthenticatedUser -> {
-                    navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
-                }
-
-                SubmitPlaceReview.Result.UnverifiedEmail -> {
-                    alertDialog = AlertDialog.UnverifiedEmail
-                }
-
-                SubmitPlaceReview.Result.UserMustReauthenticate -> {
-                    deeplinkNavigator.navigate(Deeplink.Reauthentication)
-                }
+            if (useCases.submitPlaceReview(placeGeoHashNavArg, placeReview).isSuccess) {
+                newReviewState = newReviewState.copy(visible = false)
+                refreshUserReviewActionChannel.send(Unit)
+                snackbarEffectsChannel.send(Snackbar(R.string.submit_review_success))
+            } else {
+                snackbarEffectsChannel.send(Snackbar(R.string.submit_review_unexpected_error))
+            }.also {
+                newReviewState = newReviewState.copy(loading = false)
             }
         }
     }
@@ -514,8 +472,6 @@ internal class PlaceDetailsViewModel(
     }
 
     sealed class NavigationEffect {
-        data object NavigateToAuthenticateScreen : NavigationEffect()
-        data object NavigateToReauthenticateScreen : NavigationEffect()
         data object NavigateUp : NavigationEffect()
         data class NavigateToReviewsScreen(
             val id: String,

@@ -8,6 +8,6 @@ internal fun UserDTO.toDomainModel(): User {
         id = userId,
         name = name,
         email = email,
-        isVerified = isVerified,
     )
 }
+

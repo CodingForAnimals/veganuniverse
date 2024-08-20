@@ -19,12 +19,17 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOnlyUserAction
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 import org.codingforanimals.veganuniverse.place.presentation.R
+import org.codingforanimals.veganuniverse.place.presentation.navigation.selected_place_id
 import org.codingforanimals.veganuniverse.place.reviews.DeletePlaceReview
 import org.codingforanimals.veganuniverse.place.reviews.GetCurrentUserPlaceReview
 import org.codingforanimals.veganuniverse.place.reviews.GetLatestPlaceReviewsPagingFlow
 import org.codingforanimals.veganuniverse.place.reviews.ReportPlaceReview
-import org.codingforanimals.veganuniverse.place.presentation.navigation.selected_place_id
 
 internal class PlaceReviewsViewModel(
     savedStateHandle: SavedStateHandle,
@@ -32,12 +37,13 @@ internal class PlaceReviewsViewModel(
     getCurrentUserPlaceReview: GetCurrentUserPlaceReview,
     private val reportPlaceReview: ReportPlaceReview,
     private val deletePlaceReview: DeletePlaceReview,
+    private val verifiedUserOnlyUserAction: VerifiedOnlyUserAction,
 ) : ViewModel() {
 
     private val placeIdNavArg: String? = savedStateHandle[selected_place_id]
 
-    private val sideEffectsChannel = Channel<SideEffect>()
-    val sideEffects = sideEffectsChannel.receiveAsFlow()
+    private val snackbarEffectChannel = Channel<Snackbar>()
+    val snackbarEffects = snackbarEffectChannel.receiveAsFlow()
 
     val reviews: Flow<PagingData<PlaceReview>> =
         getLatestPlaceReviewsPagingFlow(placeIdNavArg.orEmpty())
@@ -96,11 +102,11 @@ internal class PlaceReviewsViewModel(
                     when (deletePlaceReview(placeIdNavArg, action.reviewId)) {
                         DeletePlaceReview.Result.Success -> {
                             userReviewSearchActionChannel.send(Unit)
-                            sideEffectsChannel.send(SideEffect.ShowSnackbar.Success(R.string.delete_review_success))
+                            snackbarEffectChannel.send(Snackbar(R.string.delete_review_success))
                         }
 
                         DeletePlaceReview.Result.UnexpectedError -> {
-                            sideEffectsChannel.send(SideEffect.ShowSnackbar.Error)
+                            snackbarEffectChannel.send(Snackbar(unexpected_error))
                         }
                     }
                     alertDialogLoading = false
@@ -113,7 +119,11 @@ internal class PlaceReviewsViewModel(
     private fun handleReportReviewAction(action: Action.ReportReview) {
         when (action) {
             is Action.ReportReview.ReportIconClick -> {
-                reviewAlertDialog = ReviewAlertDialog.Report(action.reviewId)
+                viewModelScope.launch {
+                    verifiedUserOnlyUserAction {
+                    reviewAlertDialog = ReviewAlertDialog.Report(action.reviewId)
+                }
+                    }
             }
 
             Action.ReportReview.OnDismissRequest -> {
@@ -124,21 +134,14 @@ internal class PlaceReviewsViewModel(
                 placeIdNavArg ?: return
                 alertDialogLoading = true
                 viewModelScope.launch {
-                    when (reportPlaceReview(placeIdNavArg, action.reviewId)) {
-                        ReportPlaceReview.Result.UnauthenticatedUser -> {
-                            sideEffectsChannel.send(SideEffect.NavigateToAuthenticationScreen)
-                        }
-
-                        ReportPlaceReview.Result.UnexpectedError -> {
-                            sideEffectsChannel.send(SideEffect.ShowSnackbar.Error)
-                        }
-
-                        ReportPlaceReview.Result.Success -> {
-                            sideEffectsChannel.send(SideEffect.ShowSnackbar.Success(R.string.report_review_success))
-                        }
+                    if (reportPlaceReview(placeIdNavArg, action.reviewId).isSuccess) {
+                        snackbarEffectChannel.send(Snackbar(R.string.report_review_success))
+                    } else {
+                        snackbarEffectChannel.send(Snackbar(unexpected_error))
+                    }.also {
+                        alertDialogLoading = false
+                        reviewAlertDialog = null
                     }
-                    alertDialogLoading = false
-                    reviewAlertDialog = null
                 }
             }
         }
@@ -155,14 +158,6 @@ internal class PlaceReviewsViewModel(
             data object OnDismissRequest : ReportReview()
             data class ReportIconClick(val reviewId: String) : ReportReview()
             data class ReportConfirmButtonClick(val reviewId: String) : ReportReview()
-        }
-    }
-
-    sealed class SideEffect {
-        data object NavigateToAuthenticationScreen : SideEffect()
-        sealed class ShowSnackbar : SideEffect() {
-            data object Error : ShowSnackbar()
-            data class Success(val message: Int) : ShowSnackbar()
         }
     }
 

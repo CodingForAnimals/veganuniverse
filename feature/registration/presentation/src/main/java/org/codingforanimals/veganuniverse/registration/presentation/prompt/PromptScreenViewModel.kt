@@ -12,6 +12,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.DownloadAndStoreProfile
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
 import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationViewModel
@@ -22,6 +23,7 @@ import org.codingforanimals.veganuniverse.commons.user.domain.usecase.Authentica
 class PromptScreenViewModel(
     getPromptScreenContent: GetPromptScreenContentUseCase,
     private val authenticationUseCases: AuthenticationUseCases,
+    private val downloadAndStoreProfile: DownloadAndStoreProfile,
 ) : ViewModel() {
 
     private val _sideEffects: Channel<SideEffect> = Channel()
@@ -75,13 +77,15 @@ class PromptScreenViewModel(
         viewModelScope.launch {
             uiState = uiState.copy(loading = true)
             val result = authenticationUseCases.authenticateWithGmail(intent)
-            uiState = uiState.copy(loading = false)
             if (result.isSuccess) {
+                downloadAndStoreProfile()
+                uiState = uiState.copy(loading = false)
                 viewModelScope.launch {
                     _sideEffects.send(SideEffect.NavigateToOriginDestination)
                 }
             } else {
                 uiState = uiState.copy(
+                    loading = false,
                     errorDialog = EmailRegistrationViewModel.ErrorDialog(
                         title = unexpected_error,
                         message = R.string.gmail_auth_error,

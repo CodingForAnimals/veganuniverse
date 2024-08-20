@@ -40,4 +40,10 @@
     <string name="continue_label">Continuar</string>
     <string name="reauthentication_failed">No hemos podido continuar. Verifica que tengas conexión a internet y que la contraseña sea correcta.</string>
     <string name="back">Volver</string>
+    <string name="validate_email_screen_title">Revisa tu casilla</string>
+    <string name="validate_email_screen_message">¡Te enviamos un email para que puedas verificar tu correo! Luego podrás iniciar sesión y acceder a todas nuestras funcionalidades.</string>
+    <string name="reenviar_correo">Reenviar correo</string>
+    <string name="continue_as_guest">Continuar como invitado</string>
+    <string name="validate_email_screen_action">¡Ya validé mi correo!</string>
+    <string name="sign_in_again">Iniciar sesión nuevamente</string>
 </resources>

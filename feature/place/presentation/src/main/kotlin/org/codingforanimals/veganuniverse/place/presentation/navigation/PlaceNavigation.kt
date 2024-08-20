@@ -25,8 +25,6 @@ internal const val selected_place_rating = "selected_place_rating_argument"
 
 fun NavGraphBuilder.placesGraph(
     navController: NavController,
-    navigateToAuthenticateScreen: () -> Unit,
-    navigateToReauthenticateScreen: () -> Unit,
 ) {
     composable(
         route = PlaceDestination.Home.route,
@@ -48,11 +46,9 @@ fun NavGraphBuilder.placesGraph(
     ) {
         PlaceDetailsScreen(
             navigateUp = navController::navigateUp,
-            navigateToAuthenticateScreen = navigateToAuthenticateScreen,
             navigateToReviewsScreen = { id, name, rating, userId ->
                 navController.navigate("${PlaceDestination.Reviews.route}/$id/$name/$rating")
             },
-            navigatoToReauthenticateScreen = navigateToReauthenticateScreen,
         )
     }
 
@@ -68,7 +64,6 @@ fun NavGraphBuilder.placesGraph(
             navigateUp = navController::navigateUp,
             placeName = it.arguments?.getString(selected_place_name),
             rating = it.arguments?.getString(selected_place_rating)?.toInt(),
-            navigateToAuthenticationScreen = navigateToAuthenticateScreen,
         )
     }
 
