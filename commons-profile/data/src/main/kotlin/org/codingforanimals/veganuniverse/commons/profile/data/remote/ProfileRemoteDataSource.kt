@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.commons.profile.data.remote
 
+import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileDTO
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditArguments
 
 interface ProfileRemoteDataSource {

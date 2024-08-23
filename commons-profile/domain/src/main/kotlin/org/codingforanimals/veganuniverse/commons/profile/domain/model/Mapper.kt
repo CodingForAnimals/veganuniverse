@@ -2,7 +2,7 @@ package org.codingforanimals.veganuniverse.commons.profile.domain.model
 
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionType
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditContentType
-import org.codingforanimals.veganuniverse.commons.profile.data.remote.ProfileDTO
+import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileDTO
 import org.codingforanimals.veganuniverse.commons.profile.data.storage.ProfileContent
 
 internal fun ProfileDTO.toProfileContent(): List<ProfileContent> {

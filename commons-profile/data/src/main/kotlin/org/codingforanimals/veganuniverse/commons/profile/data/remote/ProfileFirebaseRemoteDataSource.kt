@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.commons.profile.data.remote
 
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.tasks.await
+import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileDTO
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionType
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionValue
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditArguments
