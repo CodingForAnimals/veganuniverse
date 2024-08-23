@@ -4,7 +4,7 @@ object versions {
     const val core = "1.9.21"
     const val lifecycle = "2.5.1"
     const val coroutines = "1.6.4"
-    const val composeBom = "2023.10.01"
+    const val composeBom = "2024.02.00"
     const val compose = "1.3.1"
     const val composeCompiler = "1.5.7"
     const val accompanist = "0.25.1"
@@ -76,8 +76,8 @@ object Module {
         const val GRAPH = ":feature:product:graph"
         const val FIREBASE = ":services:firebase:product"
         object Categories {
-            const val DOMAIN = ":feature:product:categories:domain"
-            const val PRESENTATION = ":feature:product:categories:presentation"
+            const val DOMAIN = ":feature:product:home:domain"
+            const val PRESENTATION = ":feature:product:home:presentation"
         }
 
         object List {

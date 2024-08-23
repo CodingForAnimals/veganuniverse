@@ -1,8 +1,9 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.carouselcard
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
@@ -40,13 +43,13 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.core.ui.R.drawable.img_cat_error
 import org.codingforanimals.veganuniverse.recipes.entity.Recipe
-import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.cardShapeAndShadow
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.cardWidth
 import org.codingforanimals.veganuniverse.recipes.presentation.home.carousel.carouselcard.RecipeCarouselAsyncCardsViewModel.Action
 import org.codingforanimals.veganuniverse.ui.Spacing_02
 import org.codingforanimals.veganuniverse.ui.Spacing_03
 import org.codingforanimals.veganuniverse.ui.Spacing_04
 import org.codingforanimals.veganuniverse.ui.Spacing_05
+import org.codingforanimals.veganuniverse.ui.cards.VUCardDefaults
 import org.codingforanimals.veganuniverse.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.utils.toDp
@@ -120,77 +123,80 @@ private fun RecipeCarouselAsyncCards(
                 Row(horizontalArrangement = Arrangement.spacedBy(Spacing_04)) {
                     currentState.recipes.forEach { recipe ->
                         key(recipe.id) {
-                            Box(
+                            Card(
                                 modifier = modifier
                                     .width(cardWidth().toDp())
-                                    .aspectRatio(0.7f)
-                                    .cardShapeAndShadow()
-                                    .clickable { onAction(Action.OnRecipeClick(recipe.id)) },
+                                    .aspectRatio(0.7f),
+                                onClick = { onAction(Action.OnRecipeClick(recipe.id)) },
+                                elevation = VUCardDefaults.elevatedCardElevation(),
                             ) {
-                                AsyncImage(
-                                    model = recipe.imageRef,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(Color.DarkGray),
-                                    contentScale = ContentScale.Crop,
-                                    contentDescription = ""
-                                )
-                                Column(
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .fillMaxWidth()
-                                ) {
-                                    Spacer(
+                                Box {
+                                    AsyncImage(
+                                        model = recipe.imageRef,
                                         modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(50.dp)
+                                            .fillMaxSize()
+                                            .background(Color.DarkGray),
+                                        contentScale = ContentScale.Crop,
+                                        contentDescription = ""
                                     )
                                     Column(
                                         modifier = Modifier
+                                            .align(Alignment.Center)
                                             .fillMaxWidth()
-                                            .background(Color.White)
                                     ) {
-                                        Text(
+                                        Spacer(
                                             modifier = Modifier
-                                                .wrapContentHeight()
                                                 .fillMaxWidth()
-                                                .padding(
-                                                    top = Spacing_05,
-                                                    start = Spacing_05,
-                                                    end = Spacing_05,
-                                                ),
-                                            text = recipe.title,
-                                            minLines = 2,
-                                            maxLines = 2,
-                                            overflow = TextOverflow.Ellipsis,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.SemiBold,
-                                            textAlign = TextAlign.Start,
+                                                .height(50.dp)
                                         )
-                                        Row(
+                                        Column(
                                             modifier = Modifier
-                                                .align(Alignment.End)
-                                                .padding(
-                                                    start = Spacing_05,
-                                                    end = Spacing_05,
-                                                    bottom = Spacing_03,
-                                                ),
-                                            horizontalArrangement = Arrangement.spacedBy(Spacing_03),
+                                                .fillMaxWidth()
+                                                .background(Color.White)
                                         ) {
-                                            VUIcon(
-                                                modifier = Modifier.size(16.dp),
-                                                icon = VUIcons.FavoriteFilled,
-                                                contentDescription = "",
-                                                tint = MaterialTheme.colorScheme.outline,
-                                            )
                                             Text(
-                                                text = "${recipe.likes}",
-                                                color = MaterialTheme.colorScheme.outline
+                                                modifier = Modifier
+                                                    .wrapContentHeight()
+                                                    .fillMaxWidth()
+                                                    .padding(
+                                                        top = Spacing_05,
+                                                        start = Spacing_05,
+                                                        end = Spacing_05,
+                                                    ),
+                                                text = recipe.title,
+                                                minLines = 2,
+                                                maxLines = 2,
+                                                overflow = TextOverflow.Ellipsis,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = FontWeight.SemiBold,
+                                                textAlign = TextAlign.Start,
                                             )
+                                            Row(
+                                                modifier = Modifier
+                                                    .align(Alignment.End)
+                                                    .padding(
+                                                        start = Spacing_05,
+                                                        end = Spacing_05,
+                                                        bottom = Spacing_03,
+                                                    ),
+                                                horizontalArrangement = Arrangement.spacedBy(
+                                                    Spacing_03
+                                                ),
+                                            ) {
+                                                VUIcon(
+                                                    modifier = Modifier.size(16.dp),
+                                                    icon = VUIcons.FavoriteFilled,
+                                                    contentDescription = "",
+                                                    tint = MaterialTheme.colorScheme.outline,
+                                                )
+                                                Text(
+                                                    text = "${recipe.likes}",
+                                                    color = MaterialTheme.colorScheme.outline
+                                                )
+                                            }
                                         }
                                     }
                                 }
-
                             }
                         }
                     }

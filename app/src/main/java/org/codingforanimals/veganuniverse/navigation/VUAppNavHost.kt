@@ -16,8 +16,8 @@ import org.codingforanimals.veganuniverse.create.graph.createGraph
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
 import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.places.presentation.navigation.placesGraph
-import org.codingforanimals.veganuniverse.product.graph.ProductDestination
-import org.codingforanimals.veganuniverse.product.graph.productGraph
+import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
+import org.codingforanimals.veganuniverse.product.presentation.navigation.productGraph
 import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.profile.profileGraph
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
@@ -41,7 +41,7 @@ internal fun rememberVUNavController(): NavHostController {
 internal fun VUAppNavHost(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    startDestination: Destination = ProductDestination.Categories,
+    startDestination: Destination = ProductDestination.Home,
 ) {
     NavHost(
         navController = navController,
@@ -49,7 +49,7 @@ internal fun VUAppNavHost(
     ) {
         profileGraph(
             navigateToRegister = {
-                navController.navigate("${RegistrationDestination.Prompt.route}/${ProfileDestination.Home.route}")
+                navController.navigateToAuthPromptWithOriginDestination(ProfileDestination.Home)
             },
             navigateToRecipe = { navController.navigate("${RecipesDestination.Details.route}/$it") },
             navigateToPlace = { navController.navigate("${PlacesDestination.Details.route}/$it") },
@@ -57,10 +57,15 @@ internal fun VUAppNavHost(
         )
         productGraph(
             navController = navController,
+            navigateToCreateProductScreen = { navController.navigate(CreateDestination.Product.route) },
+            snackbarHostState = snackbarHostState,
+            navigateToAuthScreen = {
+                navController.navigateToAuthPromptWithOriginDestination(it)
+            }
         )
         registrationGraph(
             navController = navController,
-            defaultOriginNavigationRoute = ProductDestination.Categories.route
+            defaultOriginNavigationRoute = ProductDestination.Home.route
         )
         notificationsGraph(
             onBackClick = navController::navigateUp,
@@ -106,8 +111,8 @@ class VUNavHostController(context: Context) : NavHostController(context) {
             RecipesDestination.Home.route,
             ProfileDestination.Home.route,
             -> {
-                navigate(ProductDestination.Categories.route) {
-                    popUpTo(ProductDestination.Categories.route) { inclusive = true }
+                navigate(ProductDestination.Home.route) {
+                    popUpTo(ProductDestination.Home.route) { inclusive = true }
                 }
                 true
             }

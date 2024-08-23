@@ -52,7 +52,7 @@ dependencies {
     implementation(project(":feature:onboarding:presentation"))
     implementation(project(Module.Profile.GRAPH))
     implementation(project(Module.Create.GRAPH))
-    implementation(project(Module.Product.GRAPH))
+    implementation(project(":feature:product:presentation"))
     implementation(project(":feature:community:presentation"))
     implementation(project(":feature:featuredtopic:presentation"))
     implementation(project(Module.Recipes.PRESENTATION))

@@ -70,6 +70,7 @@ fun SelectableChip(
             labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
         ),
         border = AssistChipDefaults.assistChipBorder(
+            enabled = true,
             borderColor = borderColor.value
         )
     )
@@ -115,7 +116,10 @@ fun VUTag(
             disabledContainerColor = colors.containerColor,
             disabledLabelColor = colors.labelColor,
         ),
-        border = SuggestionChipDefaults.suggestionChipBorder(disabledBorderColor = colors.borderColor)
+        border = SuggestionChipDefaults.suggestionChipBorder(
+            enabled = true,
+            disabledBorderColor = colors.borderColor
+        )
     )
 }
 

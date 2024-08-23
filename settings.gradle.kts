@@ -89,17 +89,10 @@ include(
     ":feature:create:product:presentation"
 )
 
-include(":feature:product:graph")
-
 include(
-    ":feature:product:categories:domain",
-    ":feature:product:categories:presentation",
-)
-
-include(
-    ":feature:product:list:data",
-    ":feature:product:list:domain",
-    ":feature:product:list:presentation"
+    ":feature:product:data",
+    ":feature:product:domain",
+    ":feature:product:presentation"
 )
 
 include(
