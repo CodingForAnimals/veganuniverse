@@ -12,14 +12,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
 import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
-import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_title
-import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message
-import org.codingforanimals.veganuniverse.create.recipe.domain.model.RecipeForm
-import org.codingforanimals.veganuniverse.create.recipe.domain.usecase.SubmitRecipe
-import org.codingforanimals.veganuniverse.create.recipe.model.StringListField
-import org.codingforanimals.veganuniverse.create.recipe.model.TagsField
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.ui.viewmodel.PictureField
@@ -28,6 +22,11 @@ import org.codingforanimals.veganuniverse.commons.ui.viewmodel.areFieldsValid
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
+import org.codingforanimals.veganuniverse.create.recipe.domain.model.RecipeForm
+import org.codingforanimals.veganuniverse.create.recipe.domain.usecase.SubmitRecipe
+import org.codingforanimals.veganuniverse.create.recipe.model.StringListField
+import org.codingforanimals.veganuniverse.create.recipe.model.TagsField
+import org.codingforanimals.veganuniverse.create.recipe.presentation.R
 
 internal class CreateRecipeViewModel(
     private val submitRecipe: SubmitRecipe,
@@ -170,38 +169,14 @@ internal class CreateRecipeViewModel(
 
             uiState = uiState.copy(loading = true)
 
-            when (submitRecipe(recipeForm)) {
-                SubmitRecipe.Result.GuestUser -> {
+            submitRecipe(recipeForm)
+                .onSuccess {
                     uiState = uiState.copy(loading = false)
-                    sideEffectChannel.send(SideEffect.NavigateToAuthenticationScreen)
+                    deeplinkNavigator.navigate(DeepLink.ThankYou)
                 }
-
-                is SubmitRecipe.Result.Success -> {
-                    uiState = uiState.copy(loading = false)
-                    sideEffectChannel.send(SideEffect.NavigateToThankYouScreen)
+                .onFailure {
+                    snackbarEffectsChannel.send(Snackbar(R.string.create_recipe_error))
                 }
-
-                SubmitRecipe.Result.UnexpectedError -> {
-                    uiState = uiState.copy(
-                        loading = false,
-                        dialog = Dialog(
-                            title = unexpected_error_title,
-                            message = unexpected_error_message,
-                        )
-                    )
-                }
-
-                SubmitRecipe.Result.UnverifiedEmail -> {
-                    uiState = uiState.copy(
-                        loading = false,
-                        showVerifyEmailPrompt = true,
-                    )
-                }
-
-                SubmitRecipe.Result.UserMustReauthenticate -> {
-                    deeplinkNavigator.navigate(Deeplink.Reauthentication)
-                }
-            }
         }
     }
 
@@ -293,8 +268,6 @@ internal class CreateRecipeViewModel(
 
     sealed class SideEffect {
         data object OpenImageSelector : SideEffect()
-        data object NavigateToAuthenticationScreen : SideEffect()
-        data object NavigateToThankYouScreen : SideEffect()
         data object NavigateUp : SideEffect()
     }
 }

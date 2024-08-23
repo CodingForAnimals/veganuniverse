@@ -15,6 +15,7 @@ val userCommonDataModule = module {
         UserFirestoreRemoteDataSource(
             firestore = FirebaseFirestore.getInstance(),
             auth = FirebaseAuth.getInstance(),
+            authenticator = get(),
         )
     }
 

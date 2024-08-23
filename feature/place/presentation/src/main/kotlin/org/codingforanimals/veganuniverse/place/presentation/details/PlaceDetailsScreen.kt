@@ -42,7 +42,6 @@ import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_09
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.fullStreetAddress
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
@@ -78,9 +77,7 @@ import org.koin.androidx.compose.koinViewModel
 internal fun PlaceDetailsScreen(
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit,
-    navigateToAuthenticateScreen: () -> Unit,
     navigateToReviewsScreen: (String, String, Int, String?) -> Unit,
-    navigatoToReauthenticateScreen: () -> Unit,
 ) {
     val viewModel: PlaceDetailsViewModel = koinViewModel()
     val placeState by viewModel.placeState.collectAsStateWithLifecycle()
@@ -110,10 +107,8 @@ internal fun PlaceDetailsScreen(
 
     HandleNavigationEffects(
         navigationEffects = viewModel.navigationEffects,
-        navigateToAuthenticateScreen = navigateToAuthenticateScreen,
         navigateUp = navigateUp,
         navigateToReviewsScreen = navigateToReviewsScreen,
-        navigatoToReauthenticateScreen = navigatoToReauthenticateScreen,
     )
 
     HandleSnackbarEffects(
@@ -400,18 +395,12 @@ private fun HandleAlertDialog(
 @Composable
 private fun HandleNavigationEffects(
     navigationEffects: Flow<PlaceDetailsViewModel.NavigationEffect>,
-    navigateToAuthenticateScreen: () -> Unit,
     navigateUp: () -> Unit,
     navigateToReviewsScreen: (String, String, Int, String?) -> Unit,
-    navigatoToReauthenticateScreen: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         navigationEffects.onEach { sideEffect ->
             when (sideEffect) {
-                is PlaceDetailsViewModel.NavigationEffect.NavigateToAuthenticateScreen -> {
-                    navigateToAuthenticateScreen()
-                }
-
                 is PlaceDetailsViewModel.NavigationEffect.NavigateToReviewsScreen -> {
                     navigateToReviewsScreen(
                         sideEffect.id,
@@ -422,7 +411,6 @@ private fun HandleNavigationEffects(
                 }
 
                 PlaceDetailsViewModel.NavigationEffect.NavigateUp -> navigateUp()
-                PlaceDetailsViewModel.NavigationEffect.NavigateToReauthenticateScreen -> navigatoToReauthenticateScreen()
             }
         }.collect()
     }

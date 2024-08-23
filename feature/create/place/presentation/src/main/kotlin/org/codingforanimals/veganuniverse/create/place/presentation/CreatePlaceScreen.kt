@@ -84,8 +84,6 @@ import java.util.concurrent.CancellationException
 
 @Composable
 fun CreatePlaceScreen(
-    navigateToThankYouScreen: () -> Unit,
-    navigateToAuthenticationScreen: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: CreatePlaceViewModel = koinViewModel(),
 ) {
@@ -171,11 +169,9 @@ fun CreatePlaceScreen(
 
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,
-        navigateToThankYouScreen = navigateToThankYouScreen,
         imagePicker = imagePicker,
         addressPicker = placesApiLauncher,
         cameraPositionState = viewModel.uiState.cameraPositionState,
-        navigateToAuthenticationScreen = navigateToAuthenticationScreen,
         navigateUp = navigateUp,
     )
 
@@ -307,20 +303,14 @@ private fun CreatePlaceScreen(
 @Composable
 private fun HandleSideEffects(
     sideEffects: Flow<SideEffect>,
-    navigateToThankYouScreen: () -> Unit,
     imagePicker: ActivityResultLauncher<PickVisualMediaRequest>,
     addressPicker: ActivityResultLauncher<Intent>,
     cameraPositionState: CameraPositionState,
-    navigateToAuthenticationScreen: () -> Unit,
     navigateUp: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         sideEffects.onEach { effect ->
             when (effect) {
-                SideEffect.NavigateToThankYouScreen -> {
-                    navigateToThankYouScreen()
-                }
-
                 SideEffect.OpenImageSelector -> {
                     imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }
@@ -335,14 +325,6 @@ private fun HandleSideEffects(
                     } catch (e: CancellationException) {
                         Log.d("PlacesHomeScreen.kt", e.stackTraceToString())
                     }
-                }
-
-                SideEffect.NavigateToAuthenticateScreen -> {
-                    navigateToAuthenticationScreen()
-                }
-
-                SideEffect.ShowVerifyEmailPrompt -> {
-
                 }
 
                 SideEffect.NavigateUp -> navigateUp()

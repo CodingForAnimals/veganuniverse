@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.androidx.paging)
     implementation(libs.androidx.paging_compose)
     implementation(project(":commons:user:domain"))
+    implementation(project(":commons:navigation"))
     implementation(project(":commons:user:presentation"))
     implementation(project(":commons-product:shared"))
     implementation(project(":commons-profile:shared"))

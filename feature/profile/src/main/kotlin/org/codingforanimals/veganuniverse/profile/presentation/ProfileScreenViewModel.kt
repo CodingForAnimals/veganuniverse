@@ -13,9 +13,11 @@ import org.codingforanimals.veganuniverse.commons.ui.listings.ListingType
 import org.codingforanimals.veganuniverse.commons.user.domain.model.User
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.AuthenticationUseCases
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.IsUserVerified
 
 internal class ProfileScreenViewModel(
     flowOnCurrentUser: FlowOnCurrentUser,
+    isUserVerified: IsUserVerified,
     private val authenticationUseCases: AuthenticationUseCases,
 ) : ViewModel() {
 
@@ -24,7 +26,7 @@ internal class ProfileScreenViewModel(
 
     val profileState: StateFlow<ProfileState> = flowOnCurrentUser().map { user ->
         user?.let {
-            ProfileState.ProfileContent(user)
+            ProfileState.ProfileContent(user, isUserVerified())
         } ?: ProfileState.AuthenticatePrompt
     }.stateIn(
         scope = viewModelScope,
@@ -35,7 +37,7 @@ internal class ProfileScreenViewModel(
     sealed class ProfileState {
         data object Loading : ProfileState()
         data object AuthenticatePrompt : ProfileState()
-        data class ProfileContent(val user: User) : ProfileState()
+        data class ProfileContent(val user: User, val isVerified: Boolean) : ProfileState()
     }
 
     fun onAction(action: Action) {

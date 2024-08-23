@@ -19,7 +19,7 @@ class AuthenticationUseCases(
     ): Result<Unit> {
         return runCatching {
             authenticator.emailAuthentication(email, password)
-            currentUserRepository.reloadUser()
+            currentUserRepository.getAndStoreUser()
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
         }
@@ -42,7 +42,7 @@ class AuthenticationUseCases(
         return runCatching {
             when (val response = authenticator.gmailAuthentication(intent)) {
                 GmailAuthResult.Success -> {
-                    currentUserRepository.reloadUser()
+                    currentUserRepository.getAndStoreUser()
                 }
                 is GmailAuthResult.NewUser -> {
                     currentUserRepository.createUser(response.email, response.name)
@@ -58,7 +58,7 @@ class AuthenticationUseCases(
     suspend fun logout(): Result<Unit> {
         return runCatching {
             authenticator.logout()
-            currentUserRepository.clearUser()
+            currentUserRepository.clearUserLocalStorage()
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
         }

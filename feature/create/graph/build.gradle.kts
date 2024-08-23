@@ -10,6 +10,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":commons:navigation"))
     implementation(project(":feature:create:home:presentation"))
     implementation(project(":feature:create:place:presentation"))
     implementation(project(":feature:create:recipe:presentation"))

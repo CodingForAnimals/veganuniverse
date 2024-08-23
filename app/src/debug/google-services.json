@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "381536040984-brpu9fu5nos0ugc1jj6oldk0i5q7jrsd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.codingforanimals.veganuniverse",
+            "certificate_hash": "a5d4e9044bcc96e262ea3f9a12bad84e645b8ff6"
+          }
+        },
+        {
           "client_id": "381536040984-lsa3iuh30oim6q4rhu8ou0gj4mvockpg.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -28,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "381536040984-2huuir4med38qgrvdj0enh1d1kkmikjh.apps.googleusercontent.com",
+              "client_id": "381536040984-lsa3iuh30oim6q4rhu8ou0gj4mvockpg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,10 +1,7 @@
-@file:OptIn(ExperimentalLayoutApi::class)
-
 package org.codingforanimals.veganuniverse.create.home.persentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,10 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.create.home.persentation.CreateHomeViewModel.Action
@@ -25,28 +20,12 @@ import org.codingforanimals.veganuniverse.create.home.presentation.R
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun CreateHomeScreen(
-    navigateToAuthenticationScreen: () -> Unit,
-    navigateToCreatePlaceScreen: () -> Unit,
-    navigateToCreateRecipeScreen: () -> Unit,
-    navigateToCreateProductScreen: () -> Unit,
-    viewModel: CreateHomeViewModel = koinViewModel(),
-) {
+fun CreateHomeScreen() {
 
-    val user by viewModel.user.collectAsStateWithLifecycle()
+    val viewModel: CreateHomeViewModel = koinViewModel()
 
     CreateHomeScreen(
-        onAction = { action ->
-            if (user == null) {
-                navigateToAuthenticationScreen()
-            } else {
-                when (action) {
-                    Action.OnCreatePlaceClick -> navigateToCreatePlaceScreen()
-                    Action.OnCreateProductClick -> navigateToCreateProductScreen()
-                    Action.OnCreateRecipeClick -> navigateToCreateRecipeScreen()
-                }
-            }
-        },
+        onAction = viewModel::onAction,
     )
 }
 

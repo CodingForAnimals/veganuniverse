@@ -11,7 +11,7 @@ interface RecipeRemoteDataSource {
     suspend fun queryRecipesPagingDataByIds(ids: List<String>): Flow<PagingData<Recipe>>
     fun queryRecipesPagingData(params: RecipeQueryParams): Flow<PagingData<Recipe>>
     suspend fun getRecipeByQueryParams(params: RecipeQueryParams): List<Recipe>
-    suspend fun insertRecipe(recipe: Recipe, model: Parcelable): Recipe?
+    suspend fun insertRecipe(recipe: Recipe, model: Parcelable): Recipe
     suspend fun deleteRecipeById(id: String): Boolean
     suspend fun increaseOrDecreaseLike(recipeId: String, shouldIncrease: Boolean)
     suspend fun reportRecipe(recipeId: String, userId: String)

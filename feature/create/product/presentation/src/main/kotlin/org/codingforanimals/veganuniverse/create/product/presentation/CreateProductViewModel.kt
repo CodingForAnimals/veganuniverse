@@ -8,29 +8,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
 import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
-import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_title
-import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message
-import org.codingforanimals.veganuniverse.create.product.domain.model.ProductForm
-import org.codingforanimals.veganuniverse.create.product.domain.usecase.SubmitProduct
-import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductCategoryField
-import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductTypeField
+import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
-import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
-import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_title
 import org.codingforanimals.veganuniverse.commons.ui.dialog.Dialog
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.ui.viewmodel.PictureField
 import org.codingforanimals.veganuniverse.commons.ui.viewmodel.StringField
 import org.codingforanimals.veganuniverse.commons.ui.viewmodel.areFieldsValid
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
+import org.codingforanimals.veganuniverse.create.product.domain.model.ProductForm
+import org.codingforanimals.veganuniverse.create.product.domain.usecase.SubmitProduct
+import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductCategoryField
+import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductTypeField
 
 class CreateProductViewModel(
     private val submitProduct: SubmitProduct,
@@ -45,8 +42,8 @@ class CreateProductViewModel(
     private val snackbarEffectsChannel = Channel<Snackbar>()
     val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
 
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState = _uiState.asStateFlow()
+    var uiState by mutableStateOf(UiState())
+        private set
 
     var showUnverifiedEmailDialog: Boolean by mutableStateOf(false)
         private set
@@ -101,34 +98,34 @@ class CreateProductViewModel(
             }
 
             is Action.ImagePicker.Success -> {
-                _uiState.value = uiState.value.copy(pictureField = PictureField(model = action.uri))
+                uiState = uiState.copy(pictureField = PictureField(model = action.uri))
             }
         }
     }
 
     private fun updateTextForm(action: Action.OnTextChange) {
-        _uiState.value = when (action) {
-            is Action.OnTextChange.Name -> uiState.value.copy(nameField = StringField(action.text))
-            is Action.OnTextChange.Brand -> uiState.value.copy(brandField = StringField(action.text))
-            is Action.OnTextChange.Comments -> uiState.value.copy(commentsField = StringField(action.text))
+        uiState = when (action) {
+            is Action.OnTextChange.Name -> uiState.copy(nameField = StringField(action.text))
+            is Action.OnTextChange.Brand -> uiState.copy(brandField = StringField(action.text))
+            is Action.OnTextChange.Comments -> uiState.copy(commentsField = StringField(action.text))
         }
     }
 
     private fun handleProductTypeSelect(action: Action.OnProductTypeSelected) {
-        _uiState.value = uiState.value.copy(productTypeField = ProductTypeField(action.type))
+        uiState = uiState.copy(productTypeField = ProductTypeField(action.type))
     }
 
     private fun handleProductCategorySelect(action: Action.OnProductCategorySelected) {
-        _uiState.value =
-            uiState.value.copy(productCategoryField = ProductCategoryField(action.category))
+        uiState =
+            uiState.copy(productCategoryField = ProductCategoryField(action.category))
     }
 
     private fun attemptSubmitProduct() {
-        if (!uiState.value.isFormValid()) {
+        if (!uiState.isFormValid()) {
             return showFormAsInvalid()
         }
 
-        with(uiState.value) {
+        with(uiState) {
             val category = productCategoryField.category ?: return@with showFormAsInvalid()
             val type = productTypeField.type ?: return@with showFormAsInvalid()
             val imageModel = pictureField.model ?: return@with showFormAsInvalid()
@@ -141,55 +138,38 @@ class CreateProductViewModel(
                 imageModel = imageModel,
             )
             viewModelScope.launch {
-                _uiState.value = uiState.value.copy(loading = true)
-                val result = submitProduct(productForm)
-                _uiState.value = uiState.value.copy(loading = false)
-                when (result) {
-                    SubmitProduct.Result.GuestUser -> {
-                        sideEffectsChannel.send(SideEffect.NavigateToAuthenticateScreen)
+                uiState = uiState.copy(loading = true)
+                submitProduct(productForm)
+                    .onSuccess {
+                        uiState = uiState.copy(loading = false)
+                        deeplinkNavigator.navigate(DeepLink.ThankYou)
                     }
+                    .onFailure { exception ->
+                        when (exception) {
+                            is SubmitProduct.ProductConflictException -> {
+                                uiState = uiState.copy(
+                                    dialog = Dialog(
+                                        title = unexpected_error_title,
+                                        message = R.string.product_already_exists
+                                    )
+                                )
+                            }
 
-                    SubmitProduct.Result.UnexpectedError -> {
-                        _uiState.value = uiState.value.copy(
-                            dialog = Dialog(
-                                title = unexpected_error_title,
-                                message = unexpected_error_message,
-                            )
-                        )
+                            else -> {
+                                snackbarEffectsChannel.send(Snackbar(R.string.create_product_error))
+                            }
+                        }
                     }
-
-                    SubmitProduct.Result.UnverifiedEmail -> {
-                        showUnverifiedEmailDialog = true
-                    }
-
-                    is SubmitProduct.Result.AlreadyExists -> {
-                        _uiState.value = uiState.value.copy(
-                            dialog = Dialog(
-                                title = unexpected_error_title,
-                                message = R.string.product_already_exists
-                            )
-                        )
-
-                    }
-
-                    is SubmitProduct.Result.Success -> {
-                        sideEffectsChannel.send(SideEffect.NavigateToThankYouScreen)
-                    }
-
-                    SubmitProduct.Result.UserMustReauthenticate -> {
-                        deeplinkNavigator.navigate(Deeplink.Reauthentication)
-                    }
-                }
             }
         }
     }
 
     private fun showFormAsInvalid() {
-        _uiState.value = uiState.value.copy(loading = false, isValidating = true)
+        uiState = uiState.copy(loading = false, isValidating = true)
     }
 
     private fun dismissDialog() {
-        _uiState.value = uiState.value.copy(dialog = null)
+        uiState = uiState.copy(dialog = null)
     }
 
     data class UiState(
@@ -235,8 +215,5 @@ class CreateProductViewModel(
     sealed class SideEffect {
         data object NavigateUp : SideEffect()
         data object OpenImageSelector : SideEffect()
-        data object NavigateToAuthenticateScreen : SideEffect()
-        data object NavigateToThankYouScreen : SideEffect()
-
     }
 }

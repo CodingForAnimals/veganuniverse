@@ -1,8 +1,6 @@
 package org.codingforanimals.veganuniverse.create.product.domain.usecase
 
-import android.util.Log
-import kotlinx.coroutines.flow.firstOrNull
-import org.codingforanimals.veganuniverse.commons.network.PermissionDeniedException
+import kotlinx.coroutines.flow.first
 import org.codingforanimals.veganuniverse.create.product.domain.model.ProductForm
 import org.codingforanimals.veganuniverse.commons.product.domain.repository.ProductRepository
 import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
@@ -10,46 +8,35 @@ import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductQu
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.ProfileContentUseCases
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 
-private const val TAG = "SubmitProduct"
-
 class SubmitProduct(
     private val productRepository: ProductRepository,
     private val profileProductUseCases: ProfileContentUseCases,
     private val flowOnCurrentUser: FlowOnCurrentUser,
 ) {
-    suspend operator fun invoke(productForm: ProductForm): Result {
-            val user = flowOnCurrentUser(true).firstOrNull() ?: return Result.GuestUser
-            if (!user.isVerified) {
-                return Result.UnverifiedEmail
-            }
-
-        return try {
-            val existingProductId = productRepository.queryProducts(
-                params = ProductQueryParams.Builder()
-                    .withMaxSize(1)
-                    .withPageSize(1)
-                    .validated(true)
-                    .withExactSearch(
-                        name = productForm.name,
-                        brand = productForm.brand,
-                    )
-                    .build()
-            ).firstOrNull()?.id
-
-            if (existingProductId != null) {
-                return Result.AlreadyExists(existingProductId)
-            }
-
-            val productFormAsModel = productForm.toModel(user.id, user.name)
-            val newId = productRepository.insertProduct(productFormAsModel, productForm.imageModel)
-            profileProductUseCases.addContribution(newId)
-            Result.Success(newId)
-        } catch (e: PermissionDeniedException) {
-            Result.UserMustReauthenticate
-        } catch (e: Throwable) {
-            Log.e(TAG, e.stackTraceToString())
-            Result.UnexpectedError
+    suspend operator fun invoke(productForm: ProductForm): Result<Unit> = runCatching {
+        val user = checkNotNull(flowOnCurrentUser().first()){
+            "User must be logged in to submit a product"
         }
+
+        val existingProductId = productRepository.queryProducts(
+            params = ProductQueryParams.Builder()
+                .withMaxSize(1)
+                .withPageSize(1)
+                .validated(true)
+                .withExactSearch(
+                    name = productForm.name,
+                    brand = productForm.brand,
+                )
+                .build()
+        ).firstOrNull()?.id
+
+        if (existingProductId != null) {
+            throw ProductConflictException("A product with the same name and brand already exists")
+        }
+
+        val productFormAsModel = productForm.toModel(user.id, user.name)
+        val newId = productRepository.insertProduct(productFormAsModel, productForm.imageModel)
+        profileProductUseCases.addContribution(newId)
     }
 
     private fun ProductForm.toModel(userId: String, username: String): Product {
@@ -68,12 +55,5 @@ class SubmitProduct(
         )
     }
 
-    sealed class Result {
-        data object GuestUser : Result()
-        data object UnexpectedError : Result()
-        data object UnverifiedEmail : Result()
-        data object UserMustReauthenticate : Result()
-        data class AlreadyExists(val productId: String) : Result()
-        data class Success(val productId: String) : Result()
-    }
+    class ProductConflictException(message: String) : Exception(message)
 }

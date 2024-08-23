@@ -5,6 +5,7 @@ package org.codingforanimals.veganuniverse.create.place.presentation
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
@@ -22,8 +23,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
 import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
+import org.codingforanimals.veganuniverse.commons.place.domain.model.DayOfWeek
+import org.codingforanimals.veganuniverse.commons.place.shared.model.AddressComponents
+import org.codingforanimals.veganuniverse.commons.place.shared.model.OpeningHours
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.PictureField
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.StringField
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
+import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 import org.codingforanimals.veganuniverse.create.place.domain.model.PlaceForm
 import org.codingforanimals.veganuniverse.create.place.domain.usecase.SubmitPlace
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem
@@ -40,24 +52,13 @@ import org.codingforanimals.veganuniverse.create.place.presentation.model.TypeFi
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetAutoCompleteIntentUseCase
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetCreatePlaceScreenContent
 import org.codingforanimals.veganuniverse.create.place.presentation.usecase.GetPlaceDataUseCase
-import org.codingforanimals.veganuniverse.commons.place.domain.model.DayOfWeek
-import org.codingforanimals.veganuniverse.commons.place.shared.model.AddressComponents
-import org.codingforanimals.veganuniverse.commons.place.shared.model.OpeningHours
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
-import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
-import org.codingforanimals.veganuniverse.commons.ui.viewmodel.PictureField
-import org.codingforanimals.veganuniverse.commons.ui.viewmodel.StringField
-import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
-import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
-import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 
 class CreatePlaceViewModel(
     getCreatePlaceScreenContent: GetCreatePlaceScreenContent,
     private val getPlaceDataUseCase: GetPlaceDataUseCase,
     private val getAutoCompleteIntentUseCase: GetAutoCompleteIntentUseCase,
     private val submitPlace: SubmitPlace,
-    private val deeplinkNavigator: DeeplinkNavigator
+    private val deeplinkNavigator: DeeplinkNavigator,
 ) : ViewModel() {
 
     var uiState by mutableStateOf(UiState(content = getCreatePlaceScreenContent()))
@@ -237,37 +238,28 @@ class CreatePlaceViewModel(
         dialog = null
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true)
-            val result = submitPlace(placeForm)
-            uiState = uiState.copy(isLoading = false)
-            when (result) {
-                SubmitPlace.Result.GuestUser -> {
-                    viewModelScope.launch {
-                        sideEffectChannel.send(SideEffect.NavigateToAuthenticateScreen)
+            submitPlace(placeForm)
+                .onSuccess {
+                    deeplinkNavigator.navigate(DeepLink.ThankYou)
+                }
+                .onFailure { exception ->
+                    Log.e("CreatePlace", exception.stackTraceToString())
+                    uiState = when (exception) {
+                        is SubmitPlace.PlaceConflictException -> {
+                            uiState.copy(
+                                isLoading = false,
+                                errorDialog = CreatePlaceErrorDialog.PlaceAlreadyExists
+                            )
+                        }
+
+                        else -> {
+                            uiState.copy(
+                                isLoading = false,
+                                errorDialog = CreatePlaceErrorDialog.UnknownErrorDialog
+                            )
+                        }
                     }
                 }
-
-                SubmitPlace.Result.UnexpectedError -> {
-                    uiState = uiState.copy(errorDialog = CreatePlaceErrorDialog.UnknownErrorDialog)
-                }
-
-                SubmitPlace.Result.UnverifiedEmail -> {
-                    dialog = Dialog.UnverifiedEmail
-                }
-
-                is SubmitPlace.Result.AlreadyExists -> {
-                    uiState = uiState.copy(errorDialog = CreatePlaceErrorDialog.PlaceAlreadyExists)
-                }
-
-                is SubmitPlace.Result.Success -> {
-                    viewModelScope.launch {
-                        sideEffectChannel.send(SideEffect.NavigateToThankYouScreen)
-                    }
-                }
-
-                SubmitPlace.Result.UserMustReauthenticate -> {
-                    deeplinkNavigator.navigate(Deeplink.Reauthentication)
-                }
-            }
         }
     }
 
@@ -478,9 +470,6 @@ class CreatePlaceViewModel(
     }
 
     sealed class SideEffect {
-        data object ShowVerifyEmailPrompt : SideEffect()
-        data object NavigateToAuthenticateScreen : SideEffect()
-        data object NavigateToThankYouScreen : SideEffect()
         data object OpenImageSelector : SideEffect()
         data object NavigateUp : SideEffect()
 

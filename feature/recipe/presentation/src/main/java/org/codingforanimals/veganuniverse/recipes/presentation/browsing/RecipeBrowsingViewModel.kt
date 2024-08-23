@@ -81,15 +81,13 @@ internal class RecipeBrowsingViewModel(
             Action.OnClearFiltersClick -> {
                 val defaultFilterTag = null
                 val defaultSorter = RecipeSorter.DATE
-                if (defaultFilterTag == uiState.filterTag && defaultSorter == uiState.sorter) {
-                    uiState = uiState.copy(
-                        recipes = emptyList(),
-                        filterTag = defaultFilterTag,
-                        sorter = defaultSorter,
-                    )
-                    viewModelScope.launch {
-                        searchRecipes()
-                    }
+                uiState = uiState.copy(
+                    recipes = emptyList(),
+                    filterTag = defaultFilterTag,
+                    sorter = defaultSorter,
+                )
+                viewModelScope.launch {
+                    searchRecipes()
                 }
             }
 

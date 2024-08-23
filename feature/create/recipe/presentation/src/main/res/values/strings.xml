@@ -20,4 +20,5 @@
     <string name="servings">Porciones</string>
     <string name="prep_time">Tiempo de elaboración</string>
     <string name="tags">Etiquetas</string>
+    <string name="create_recipe_error">¡Oops! Ocurrió un error inesperado y no pudimos crear tu receta. Podés volver a intentarlo.</string>
 </resources>

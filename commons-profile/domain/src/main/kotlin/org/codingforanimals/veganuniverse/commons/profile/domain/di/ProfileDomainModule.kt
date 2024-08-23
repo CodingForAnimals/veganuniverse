@@ -3,6 +3,7 @@ package org.codingforanimals.veganuniverse.commons.profile.domain.di
 import org.codingforanimals.veganuniverse.commons.profile.data.di.profileDataModule
 import org.codingforanimals.veganuniverse.commons.profile.domain.repository.ProfileRepository
 import org.codingforanimals.veganuniverse.commons.profile.domain.repository.ProfileRepositoryImpl
+import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.DownloadAndStoreProfile
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.GetProfile
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.ProfileContentUseCases
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.ProfilePlaceUseCases
@@ -19,6 +20,8 @@ val profileDomainModule = module {
     )
 
     factoryOf(::ProfileRepositoryImpl) bind ProfileRepository::class
+
+    factoryOf(::DownloadAndStoreProfile)
 
     factory<ProfileContentUseCases>(named(PROFILE_PLACE_USE_CASES)) {
         ProfilePlaceUseCases(get(), get())

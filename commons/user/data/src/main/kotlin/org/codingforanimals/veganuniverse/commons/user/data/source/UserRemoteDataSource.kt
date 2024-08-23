@@ -8,4 +8,5 @@ interface UserRemoteDataSource {
     suspend fun getCurrentUser(): User?
     suspend fun reloadUser()
     suspend fun sendVerificationEmail()
+    suspend fun isEmailVerified(): Boolean
 }

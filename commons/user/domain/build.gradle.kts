@@ -9,5 +9,6 @@ android {
 
 dependencies {
     implementation(project(":commons:user:data"))
+    implementation(project(":commons:navigation"))
     implementation(project(":services:auth"))
 }

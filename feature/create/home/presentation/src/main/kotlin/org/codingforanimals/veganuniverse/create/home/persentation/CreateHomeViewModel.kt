@@ -2,19 +2,29 @@ package org.codingforanimals.veganuniverse.create.home.persentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
-import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
+import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
+import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOnlyUserAction
 
 class CreateHomeViewModel(
-    flowOnCurrentUser: FlowOnCurrentUser,
+    private val verifiedOnlyUserAction: VerifiedOnlyUserAction,
+    private val deeplinkNavigator: DeeplinkNavigator,
 ) : ViewModel() {
 
-    val user = flowOnCurrentUser().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null,
-    )
+    fun onAction(action: Action) {
+        viewModelScope.launch {
+            verifiedOnlyUserAction {
+                when (action) {
+                    Action.OnCreatePlaceClick -> DeepLink.CreatePlace
+                    Action.OnCreateProductClick -> DeepLink.CreateProduct
+                    Action.OnCreateRecipeClick -> DeepLink.CreateRecipe
+                }.let { deeplink ->
+                    deeplinkNavigator.navigate(deeplink)
+                }
+            }
+        }
+    }
 
     sealed class Action {
         data object OnCreatePlaceClick : Action()

@@ -13,8 +13,8 @@ android {
 
     defaultConfig {
         applicationId = "org.codingforanimals.veganuniverse"
-        versionCode = 8
-        versionName = "0.0.1-alpha8"
+        versionCode = 9
+        versionName = "0.0.1-alpha9"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -63,6 +63,8 @@ dependencies {
     implementation(project(":feature:registration:presentation"))
     implementation(project(":services:location"))
     implementation(project(":commons:navigation"))
+
+    implementation(libs.firebase.auth)
 
     implementation("androidx.core:core-splashscreen:${versions.splashScreen}")
 

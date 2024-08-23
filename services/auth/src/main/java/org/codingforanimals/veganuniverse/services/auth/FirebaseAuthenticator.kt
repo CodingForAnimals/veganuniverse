@@ -1,13 +1,12 @@
 package org.codingforanimals.veganuniverse.services.auth
 
-import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
 
@@ -41,20 +40,8 @@ internal class FirebaseAuthenticator(
         }
     }
 
-    override suspend fun gmailReauthentication(context: Context) {
-        val account = GoogleSignIn.getLastSignedInAccount(context)!!
-        val credentials = GoogleAuthProvider.getCredential(account.idToken, null)
-        firebaseAuth.currentUser!!.reauthenticate(credentials).await()
-    }
-
     override suspend fun emailAuthentication(email: String, password: String) {
-        val a = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-        Log.e("pepe",a.user!!.toString())
-    }
-
-    override suspend fun emailReauthentication(email: String, password: String) {
-        val credentials = EmailAuthProvider.getCredential(email, password)
-        firebaseAuth.currentUser?.reauthenticate(credentials)!!.await()
+        firebaseAuth.signInWithEmailAndPassword(email, password).await()
     }
 
     override suspend fun emailRegistration(email: String, password: String) {
@@ -69,12 +56,38 @@ internal class FirebaseAuthenticator(
         firebaseAuth.signOut()
     }
 
+    override suspend fun isUserVerified(): Boolean {
+        var user = checkNotNull(firebaseAuth.currentUser) {
+            "Unauthenticated user"
+        }
+        var isEmailVerified = user.isEmailVerified
+        var isProvidedByGoogle = user.isProvidedByGoogle
+
+        if (isEmailVerified || isProvidedByGoogle) {
+            return true
+        } else {
+            user.reload().await()
+
+            user = checkNotNull(firebaseAuth.currentUser) {
+                "Attempted to reload user and is unauthenticated"
+            }
+
+            isEmailVerified = user.isEmailVerified
+            isProvidedByGoogle = user.isProvidedByGoogle
+
+            return isEmailVerified || isProvidedByGoogle
+        }
+    }
+
     private val FirebaseAuth.userIsProvidedByGoogle
         get() = currentUser?.providerData?.map { it.providerId }
             ?.contains(GoogleAuthProvider.PROVIDER_ID) == true
 
+    private val FirebaseUser.isProvidedByGoogle: Boolean
+        get() = providerData.map { it.providerId }.contains(GoogleAuthProvider.PROVIDER_ID)
+
     companion object {
         private const val TAG = "FirebaseAuthenticator"
-        private const val defaultUserName ="Usuario de Universo Vegano"
+        private const val defaultUserName = "Usuario de Universo Vegano"
     }
 }

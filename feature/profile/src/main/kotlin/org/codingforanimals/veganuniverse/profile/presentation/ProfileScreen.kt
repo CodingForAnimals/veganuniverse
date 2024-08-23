@@ -118,6 +118,7 @@ private fun ProfileScreen(
                 ProfileContentScreen(
                     modifier = Modifier.fillMaxSize(),
                     user = state.user,
+                    isVerified = state.isVerified,
                     onAction = onAction,
                 )
             }
@@ -169,6 +170,7 @@ private fun AuthenticatePromptScreen(
 @Composable
 private fun ProfileContentScreen(
     user: User,
+    isVerified: Boolean,
     modifier: Modifier = Modifier,
     onAction: (Action) -> Unit = {},
 ) {
@@ -186,7 +188,7 @@ private fun ProfileContentScreen(
                 text = user.name,
                 style = MaterialTheme.typography.headlineMedium,
             )
-            if (user.isVerified) {
+            if (isVerified) {
                 Box(
                     modifier = Modifier
                         .size(24.dp)
@@ -197,7 +199,9 @@ private fun ProfileContentScreen(
                         )
                 ) {
                     Icon(
-                        modifier = Modifier.size(22.dp).align(Alignment.Center),
+                        modifier = Modifier
+                            .size(22.dp)
+                            .align(Alignment.Center),
                         painter = painterResource(VUIcons.Check.id),
                         contentDescription = null,
                     )
@@ -368,7 +372,8 @@ private fun PreviewProfileContentScreen() {
         ) {
             ProfileContentScreen(
                 modifier = Modifier.padding(it),
-                user = User(id = "123", "El Pepe Argento", "elpepe@gmail.com", true),
+                user = User(id = "123", "El Pepe Argento", "elpepe@gmail.com"),
+                isVerified = true,
             )
         }
     }

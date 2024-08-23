@@ -10,7 +10,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -20,13 +19,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.commons.data.paging.ContentListingPagingSource
-import org.codingforanimals.veganuniverse.commons.network.mapFirestoreExceptions
+import org.codingforanimals.veganuniverse.commons.recipe.data.mapper.RecipeFirestoreEntityMapper
+import org.codingforanimals.veganuniverse.commons.recipe.data.mapper.toNewFirestoreEntity
+import org.codingforanimals.veganuniverse.commons.recipe.data.model.RecipeFirestoreEntity
 import org.codingforanimals.veganuniverse.commons.recipe.data.model.getSortingDirection
 import org.codingforanimals.veganuniverse.commons.recipe.data.model.getSortingField
 import org.codingforanimals.veganuniverse.commons.recipe.data.paging.RecipePagingSource
-import org.codingforanimals.veganuniverse.commons.recipe.data.model.RecipeFirestoreEntity
-import org.codingforanimals.veganuniverse.commons.recipe.data.mapper.RecipeFirestoreEntityMapper
-import org.codingforanimals.veganuniverse.commons.recipe.data.mapper.toNewFirestoreEntity
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeQueryParams
 import org.codingforanimals.veganuniverse.firebase.storage.model.ResizeResolution
@@ -115,23 +113,19 @@ internal class RecipeFirestoreDataSource(
         return query
     }
 
-    override suspend fun insertRecipe(recipe: Recipe, model: Parcelable): Recipe? {
-        return try {
-            val pictureId = uploadPictureUseCase(
-                fileFolderPath = BASE_RECIPE_PICTURE_PATH,
-                model = model,
-            )
-            val resizedPictureId = pictureId + ResizeResolution.MEDIUM.suffix
+    override suspend fun insertRecipe(recipe: Recipe, model: Parcelable): Recipe {
+        val pictureId = uploadPictureUseCase(
+            fileFolderPath = BASE_RECIPE_PICTURE_PATH,
+            model = model,
+        )
+        val resizedPictureId = pictureId + ResizeResolution.MEDIUM.suffix
 
-            val entity = recipe.toNewFirestoreEntity(resizedPictureId)
-            val docRef = recipeCollection.document()
-            val docId = docRef.id
-            docRef.set(entity).await()
-            val newEntity = entity.copy(id = docId)
-            firestoreEntityMapper.mapToDataModel(newEntity)
-        } catch (e: FirebaseFirestoreException) {
-            throw mapFirestoreExceptions(e)
-        }
+        val entity = recipe.toNewFirestoreEntity(resizedPictureId)
+        val docRef = recipeCollection.document()
+        val docId = docRef.id
+        docRef.set(entity).await()
+        val newEntity = entity.copy(id = docId)
+        return firestoreEntityMapper.mapToDataModel(newEntity)
     }
 
     override suspend fun deleteRecipeById(id: String): Boolean {

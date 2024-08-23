@@ -86,7 +86,6 @@ import org.koin.androidx.compose.koinViewModel
 internal fun ProductBrowsingScreen(
     modifier: Modifier = Modifier,
     navigateUp: () -> Unit,
-    navigateToAuthScreen: () -> Unit,
     navigateToProductDetail: (String) -> Unit,
 ) {
     val viewModel: ProductBrowsingViewModel = koinViewModel()
@@ -104,7 +103,6 @@ internal fun ProductBrowsingScreen(
     HandleNavigationEffects(
         navigationEffects = viewModel.navigationEffects,
         navigateUp = navigateUp,
-        navigateToAuthScreen = navigateToAuthScreen,
         navigateToProductDetail = navigateToProductDetail,
     )
 
@@ -366,7 +364,6 @@ private fun ProductBrowsingScreen(
 private fun HandleNavigationEffects(
     navigationEffects: Flow<NavigationEffect>,
     navigateUp: () -> Unit,
-    navigateToAuthScreen: () -> Unit,
     navigateToProductDetail: (String) -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -376,7 +373,6 @@ private fun HandleNavigationEffects(
                     navigateUp()
                 }
 
-                NavigationEffect.NavigateToAuthScreen -> navigateToAuthScreen()
                 is NavigationEffect.NavigateToProductDetails -> {
                     navigateToProductDetail(sideEffect.id)
                 }

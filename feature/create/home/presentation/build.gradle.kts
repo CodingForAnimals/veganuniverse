@@ -11,4 +11,5 @@ android {
 
 dependencies {
     implementation(project(":commons:user:domain"))
+    implementation(project(":commons:navigation"))
 }

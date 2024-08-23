@@ -26,7 +26,7 @@ class RecipeDetailsUseCases(
     }
 
     suspend fun toggleLike(recipeId: String, currentValue: Boolean): ToggleResult {
-        flowOnCurrentUser().firstOrNull() ?: return ToggleResult.GuestUser(currentValue)
+        flowOnCurrentUser().firstOrNull() ?: return ToggleResult.UnexpectedError(currentValue)
         runCatching {
             recipeRepository.increaseOrDecreaseLike(recipeId, !currentValue)
         }.onFailure {

@@ -32,7 +32,7 @@ internal class ProfileProductUseCases(
             if (currentValue) ProfileEditActionValue.REMOVE else ProfileEditActionValue.ADD
         val args = ProfileEditArguments(
             userId = flowOnCurrentUser().firstOrNull()?.id
-                ?: return ToggleResult.GuestUser(currentValue),
+                ?: return ToggleResult.UnexpectedError(currentValue),
             contentId = contentId,
             profileEditContentType = ProfileEditContentType.PRODUCT,
             profileEditActionType = ProfileEditActionType.BOOKMARK,

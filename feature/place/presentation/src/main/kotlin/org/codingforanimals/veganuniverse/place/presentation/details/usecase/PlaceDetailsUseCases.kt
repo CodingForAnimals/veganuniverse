@@ -1,6 +1,5 @@
 package org.codingforanimals.veganuniverse.place.presentation.details.usecase
 
-import org.codingforanimals.veganuniverse.commons.user.domain.usecase.ReauthenticationUseCases
 import org.codingforanimals.veganuniverse.place.details.EditPlace
 import org.codingforanimals.veganuniverse.place.details.GetPlaceDetails
 import org.codingforanimals.veganuniverse.place.details.IsPlaceBookmarked
@@ -21,7 +20,6 @@ data class PlaceDetailsUseCases(
     val submitPlaceReview: SubmitPlaceReview,
     val togglePlaceBookmark: TogglePlaceBookmark,
     val isPlaceBookmarked: IsPlaceBookmarked,
-    val reauthenticationUseCases: ReauthenticationUseCases,
     val reportPlace: ReportPlace,
     val editPlace: EditPlace,
 )
