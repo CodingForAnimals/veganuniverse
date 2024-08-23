@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -24,8 +25,8 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
 fun ContentDetailItem(
     title: String,
     subtitle: String,
-    icon: Int,
     modifier: Modifier = Modifier,
+    icon: Int? = null,
     iconTint: Color = Color.Unspecified,
 ) {
     Column(modifier) {
@@ -33,12 +34,14 @@ fun ContentDetailItem(
             horizontalArrangement = Arrangement.spacedBy(Spacing_04),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(id = icon),
-                contentDescription = null,
-                tint = iconTint
-            )
+            icon?.let {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(id = icon),
+                    contentDescription = null,
+                    tint = iconTint
+                )
+            }
             Text(
                 modifier = Modifier.weight(1f),
                 text = title,
@@ -47,11 +50,18 @@ fun ContentDetailItem(
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Text(
-            modifier = Modifier.padding(start = Spacing_07),
-            text = subtitle,
-            style = MaterialTheme.typography.bodyLarge,
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(Spacing_04),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            icon?.let {
+                Spacer(modifier = Modifier.size(24.dp))
+            }
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
     }
 }
 

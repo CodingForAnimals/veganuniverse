@@ -290,6 +290,7 @@ private fun PlaceDetails(
                 newReviewState = newReviewState,
                 user = user,
                 onAction = onAction,
+                rating = place.rating,
             )
         }
     }
