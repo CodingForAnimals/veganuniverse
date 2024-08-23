@@ -15,11 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceViewModel
 import org.codingforanimals.veganuniverse.create.place.presentation.R
 import org.codingforanimals.veganuniverse.create.place.presentation.model.TypeField
-import org.codingforanimals.veganuniverse.place.model.PlaceType
-import org.codingforanimals.veganuniverse.place.model.toUI
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.Spacing_07
-import org.codingforanimals.veganuniverse.ui.components.VURadioButton
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
+import org.codingforanimals.veganuniverse.commons.ui.components.VURadioButton
 
 @Composable
 internal fun IconSelector(

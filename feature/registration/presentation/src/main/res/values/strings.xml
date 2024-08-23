@@ -34,4 +34,10 @@
     <string name="email_sign_in_topbar_text">Inicia sesión</string>
     <string name="email_sign_in_title">¡Qué bueno verte otra vez!</string>
     <string name="email_sign_in_button_label">Iniciar sesi</string>
+    <string name="gmail_auth_error">Ha ocurrido un error al querer identificarte con tu usuario de Gmail. Podés volver a intentar o crear un usuario con email y contraseña.</string>
+    <string name="email_login_error">No pudimos iniciar sesión con este correo y contraseña.</string>
+    <string name="email_registration_error">No pudimos crear un usuario con este email y contraseña</string>
+    <string name="continue_label">Continuar</string>
+    <string name="reauthentication_failed">No hemos podido continuar. Verifica que tengas conexión a internet y que la contraseña sea correcta.</string>
+    <string name="back">Volver</string>
 </resources>

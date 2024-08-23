@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package org.codingforanimals.veganuniverse.ui
 
@@ -18,14 +18,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import org.codingforanimals.veganuniverse.navigation.VUAppNavHost
-import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
+import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.ui.navbar.VUBottomNavBar
 import org.codingforanimals.veganuniverse.ui.topappbar.VUTopAppBar
 
 @Composable
 internal fun VUApp(
-    appState: VUAppState = rememberVUAppState(),
+    navController: NavHostController,
+    appState: VUAppState = rememberVUAppState(navController),
 ) {
     VeganUniverseBackground {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -53,8 +56,6 @@ internal fun VUApp(
                 VUTopAppBar(
                     topLevelDestination = topLevelDestination,
                     onBackClick = appState::navigateBackHomeToProducts,
-                    actions = appState.topBarActions,
-                    onActionClick = appState::onActionClick
                 )
 
                 VUAppNavHost(

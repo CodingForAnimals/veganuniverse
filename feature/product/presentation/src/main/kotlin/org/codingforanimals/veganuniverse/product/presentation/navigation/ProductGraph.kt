@@ -7,11 +7,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import org.codingforanimals.veganuniverse.product.presentation.browsing.CATEGORY_ARG
-import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductListScreen
+import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingScreen
 import org.codingforanimals.veganuniverse.product.presentation.browsing.SORTER_ARG
 import org.codingforanimals.veganuniverse.product.presentation.browsing.TYPE_ARG
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeScreen
-import org.codingforanimals.veganuniverse.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 
 sealed class ProductDestination(route: String) : Destination(route) {
     data object Home : ProductDestination("product_home_route")
@@ -54,7 +54,7 @@ fun NavGraphBuilder.productGraph(
             }
         )
     ) {
-        ProductListScreen(
+        ProductBrowsingScreen(
             navigateUp = navController::navigateUp,
             navigateToAuthScreen = { navigateToAuthScreen(ProductDestination.List) }
         )

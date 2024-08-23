@@ -8,7 +8,7 @@ import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceS
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductScreen
 import org.codingforanimals.veganuniverse.create.recipe.CreateRecipeScreen
 import org.codingforanimals.veganuniverse.create.thank_you.presentation.ThankYouScreen
-import org.codingforanimals.veganuniverse.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 
 sealed class CreateDestination(route: String) : Destination(route) {
     data object Home : CreateDestination("create_home_screen")

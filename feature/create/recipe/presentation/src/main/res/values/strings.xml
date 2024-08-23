@@ -11,4 +11,13 @@
     <string name="create_recipe_add_step">Agregar paso</string>
     <string name="create_recipe_remove_step">Eliminar este paso</string>
     <string name="create_recipe">Aportar receta</string>
+    <string name="ingredients">Ingredientes</string>
+    <string name="ingredient">Ingrediente</string>
+    <string name="steps">Pasos</string>
+    <string name="step">Paso</string>
+    <string name="title">Título</string>
+    <string name="description">Descripción</string>
+    <string name="servings">Porciones</string>
+    <string name="prep_time">Tiempo de elaboración</string>
+    <string name="tags">Etiquetas</string>
 </resources>

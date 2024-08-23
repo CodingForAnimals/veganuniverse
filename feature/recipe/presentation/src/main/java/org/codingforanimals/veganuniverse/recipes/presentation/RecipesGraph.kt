@@ -1,19 +1,18 @@
 package org.codingforanimals.veganuniverse.recipes.presentation
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
-import org.codingforanimals.veganuniverse.recipe.model.RecipeSorter
-import org.codingforanimals.veganuniverse.recipe.model.RecipeTag
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.report.RecipeReportDialog
-import org.codingforanimals.veganuniverse.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 
 sealed class RecipesDestination(route: String) : Destination(route) {
     data object Home : RecipesDestination("feature_recipes_home")
@@ -23,7 +22,6 @@ sealed class RecipesDestination(route: String) : Destination(route) {
 
 fun NavGraphBuilder.recipesGraph(
     navController: NavController,
-    snackbarHostState: SnackbarHostState,
     navigateToAuthenticateScreen: () -> Unit,
 ) {
     composable(
@@ -62,7 +60,6 @@ fun NavGraphBuilder.recipesGraph(
     ) {
         RecipeDetailsScreen(
             onBackClick = navController::navigateUp,
-            snackbarHostState = snackbarHostState,
             navigateToAuthenticateScreen = navigateToAuthenticateScreen,
         )
     }

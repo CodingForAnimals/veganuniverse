@@ -27,12 +27,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.codingforanimals.veganuniverse.core.ui.R
-import org.codingforanimals.veganuniverse.recipe.model.RecipeTag
-import org.codingforanimals.veganuniverse.recipe.presentation.toUI
-import org.codingforanimals.veganuniverse.ui.Spacing_03
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_06
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
+import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.recipes.presentation.R
 
 @Composable
 internal fun AllRecipeTags(

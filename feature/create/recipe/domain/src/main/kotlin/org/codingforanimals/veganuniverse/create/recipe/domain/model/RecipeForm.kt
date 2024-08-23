@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.create.recipe.domain.model
 
 import android.os.Parcelable
-import org.codingforanimals.veganuniverse.recipe.model.RecipeTag
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 
 data class RecipeForm(
     val imageModel: Parcelable,

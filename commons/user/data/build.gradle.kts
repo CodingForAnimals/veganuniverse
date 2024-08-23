@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "org.codingforanimals.veganuniverse.user.data"
+    namespace = "org.codingforanimals.veganuniverse.commons.user.data"
 }
 
 dependencies {

@@ -36,19 +36,19 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.veganuniverse.core.common.R.string.back
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreenViewModel.Action
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewmodel.AuthProvider
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewmodel.RegistrationScreenItem
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.Spacing_08
-import org.codingforanimals.veganuniverse.ui.Spacing_09
-import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.dialog.NoActionDialog
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_09
+import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.dialog.NoActionDialog
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.koin.androidx.compose.koinViewModel
 
 private const val TAG = "PromptScreen"

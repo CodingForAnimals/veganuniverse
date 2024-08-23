@@ -10,18 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.create.home.persentation.CreateHomeViewModel.Action
-import org.codingforanimals.veganuniverse.create.home.persentation.CreateHomeViewModel.SideEffect
 import org.codingforanimals.veganuniverse.create.home.persentation.components.CreateContentSelectionCard
 import org.codingforanimals.veganuniverse.create.home.presentation.R
-import org.codingforanimals.veganuniverse.ui.Spacing_06
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -33,16 +30,19 @@ fun CreateHomeScreen(
     viewModel: CreateHomeViewModel = koinViewModel(),
 ) {
 
-    CreateHomeScreen(
-        onAction = viewModel::onAction,
-    )
+    val user by viewModel.user.collectAsStateWithLifecycle()
 
-    HandleSideEffects(
-        sideEffects = viewModel.sideEffects,
-        navigateToAuthenticationScreen = navigateToAuthenticationScreen,
-        navigateToCreatePlaceScreen = navigateToCreatePlaceScreen,
-        navigateToCreateRecipeScreen = navigateToCreateRecipeScreen,
-        navigateToCreateProductScreen = navigateToCreateProductScreen,
+    CreateHomeScreen(
+        onAction = { action ->
+            if (user == null) {
+                navigateToAuthenticationScreen()
+            }
+            when (action) {
+                Action.OnCreatePlaceClick -> navigateToCreatePlaceScreen()
+                Action.OnCreateProductClick -> navigateToCreateProductScreen()
+                Action.OnCreateRecipeClick -> navigateToCreateRecipeScreen()
+            }
+        },
     )
 }
 
@@ -82,25 +82,5 @@ private fun CreateHomeScreen(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun HandleSideEffects(
-    sideEffects: Flow<SideEffect>,
-    navigateToAuthenticationScreen: () -> Unit,
-    navigateToCreatePlaceScreen: () -> Unit,
-    navigateToCreateRecipeScreen: () -> Unit,
-    navigateToCreateProductScreen: () -> Unit,
-) {
-    LaunchedEffect(Unit) {
-        sideEffects.onEach { sideEffect ->
-            when (sideEffect) {
-                SideEffect.NavigateToAuthenticateScreen -> navigateToAuthenticationScreen()
-                SideEffect.NavigateToCreatePlace -> navigateToCreatePlaceScreen()
-                SideEffect.NavigateToCreateProduct -> navigateToCreateProductScreen()
-                SideEffect.NavigateToCreateRecipe -> navigateToCreateRecipeScreen()
-            }
-        }.collect()
     }
 }

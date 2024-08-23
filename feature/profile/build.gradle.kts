@@ -11,12 +11,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    implementation(project(":core:auth"))
-    implementation(project(":entity:places"))
-    implementation(project(":entity:recipes"))
-    implementation(project(":feature:profile:home:presentation"))
-    implementation(project(":feature:profile:itemlist:presentation"))
+    implementation(project(":commons:user:domain"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

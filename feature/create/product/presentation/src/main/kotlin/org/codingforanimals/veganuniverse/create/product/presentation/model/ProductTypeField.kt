@@ -1,8 +1,8 @@
 package org.codingforanimals.veganuniverse.create.product.presentation.model
 
-import org.codingforanimals.veganuniverse.product.model.ProductCategory
-import org.codingforanimals.veganuniverse.product.model.ProductType
-import org.codingforanimals.veganuniverse.ui.viewmodel.ValidationField
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
+import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
+import org.codingforanimals.veganuniverse.commons.ui.viewmodel.ValidationField
 
 data class ProductTypeField(
     val type: ProductType? = null,

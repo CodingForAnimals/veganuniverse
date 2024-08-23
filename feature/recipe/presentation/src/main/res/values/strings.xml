@@ -6,8 +6,8 @@
     <string name="recipes_carousel_title_most_liked">Directo al corazón</string>
     <string name="recipe_image_description">Imagen de la receta</string>
     <string name="back">Volver</string>
+    <string name="all_tags">Todas las etiquetas</string>
     <string name="oops_something_went_wrong">¡Oops, ha ocurrido un error!</string>
-    <string name="snackbar_unexpected_error_message">¡Oops, ha ocurrido un error! Lo sentimos, puedes volver a intentarlo.</string>
     <string name="try_again">Reintentar</string>
     <string name="sorry_can_not_find_recipe_details">Lo sentimos, no hemos podido encontrar los detalles de esta receta.</string>
     <string name="latest_recipes">Últimas recetas</string>
@@ -18,4 +18,14 @@
     <string name="sort_by">Ordenar por</string>
     <string name="clear_filters">Limpiar filtros</string>
     <string name="apply_filters">Aplicar filtros</string>
+    <string name="description">Descripción</string>
+    <string name="tags">Etiquetas</string>
+    <string name="servings">Porciones</string>
+    <string name="prep_time">Tiempo de elaboración</string>
+    <string name="ingredients">Ingredientes</string>
+    <string name="ingredient">Ingrediente</string>
+    <string name="step_by_step">Paso a paso</string>
+    <string name="step">Paso</string>
+    <string name="recipe_details_description_title">Sobre esta receta</string>
+    <string name="contributed_by">Contribuida por</string>
 </resources>

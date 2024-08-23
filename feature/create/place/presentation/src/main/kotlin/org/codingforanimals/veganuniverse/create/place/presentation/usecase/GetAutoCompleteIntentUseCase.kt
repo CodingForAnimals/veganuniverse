@@ -5,8 +5,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.SphericalUtil
 import kotlin.math.sqrt
-import org.codingforanimals.veganuniverse.core.location.UserLocationManager
-import org.codingforanimals.veganuniverse.core.location.model.LocationResponse
+import org.codingforanimals.veganuniverse.services.location.UserLocationManager
+import org.codingforanimals.veganuniverse.services.location.model.LocationResponse
 import org.codingforanimals.veganuniverse.services.google.places.api.AutocompleteIntentParams
 import org.codingforanimals.veganuniverse.services.google.places.api.PlacesClient
 

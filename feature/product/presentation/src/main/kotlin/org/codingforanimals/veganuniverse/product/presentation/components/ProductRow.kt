@@ -34,11 +34,11 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
-import org.codingforanimals.veganuniverse.ui.R.drawable.ic_chevron_down
-import org.codingforanimals.veganuniverse.ui.Spacing_02
-import org.codingforanimals.veganuniverse.ui.Spacing_05
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.R.drawable.ic_chevron_down
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 
 
 @Composable

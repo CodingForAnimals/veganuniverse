@@ -1,7 +1,7 @@
 package org.codingforanimals.veganuniverse.product.presentation.model
 
-import org.codingforanimals.veganuniverse.product.presentation.ProductCategoryUI
-import org.codingforanimals.veganuniverse.product.presentation.ProductTypeUI
+import org.codingforanimals.veganuniverse.commons.product.presentation.ProductCategoryUI
+import org.codingforanimals.veganuniverse.commons.product.presentation.ProductTypeUI
 import java.util.Date
 
 data class Product(

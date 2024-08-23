@@ -10,17 +10,14 @@ android {
 }
 
 dependencies {
-    implementation(project(":commons:place:shared"))
-    implementation(project(":commons:place:presentation"))
-    implementation(project(":core:common"))
-    implementation(project(":core:location"))
-    implementation(project(":core:auth"))
+    implementation(project(":commons:user:presentation"))
+    implementation(project(":commons-create:presentation"))
+    implementation(project(":commons-place:shared"))
+    implementation(project(":commons:navigation"))
+    implementation(project(":commons-place:presentation"))
     implementation(project(":feature:create:place:domain"))
-    implementation(project(":entity:places"))
-    implementation(project(":ui:places"))
-    implementation(project(":ui"))
-    implementation(project(":ui:create"))
-    implementation(project(":services:google:places"))
+    implementation(project(":services:google-places"))
+    implementation(project(":services:location"))
     implementation(Google.MAPS)
 
 }

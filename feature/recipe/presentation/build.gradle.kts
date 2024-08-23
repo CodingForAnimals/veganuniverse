@@ -13,10 +13,10 @@ android {
 
 dependencies {
     implementation(project(":feature:recipe:domain"))
-    implementation(project(":commons:recipe:domain"))
-    implementation(project(":commons:recipe:presentation"))
-    implementation(project(":core:common"))
-    implementation(project(":core:auth"))
+    implementation(project(":commons-recipe:domain"))
+    implementation(project(":commons-recipe:presentation"))
+    implementation(project(":commons:user:presentation"))
+    implementation(project(":commons:navigation"))
     implementation(libs.androidx.paging_compose)
 
     testImplementation("junit:junit:4.13.2")

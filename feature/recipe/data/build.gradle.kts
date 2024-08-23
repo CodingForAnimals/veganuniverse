@@ -9,19 +9,17 @@ android {
 }
 
 dependencies {
-    implementation(project(":commons:firebase:storage"))
+    implementation(project(":services:firebase-storage"))
     implementation(libs.androidx.paging)
     implementation(libs.androidx.datastore)
 
     bomImplementation(
-        Firebase.BOM,
+        libs.firebase.bom,
         listOf(
-            Firebase.FIRESTORE,
-            Firebase.ANALYTICS,
-            Firebase.AUTH,
-            Firebase.STORAGE,
+            libs.firebase.firestore,
+            libs.firebase.analytics,
+            libs.firebase.auth,
+            libs.firebase.storage
         )
     )
-    implementation(project(":core:auth"))
-    implementation(project(":services:firebase"))
 }

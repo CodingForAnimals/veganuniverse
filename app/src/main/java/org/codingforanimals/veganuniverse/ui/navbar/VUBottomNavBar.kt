@@ -7,9 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
-import org.codingforanimals.veganuniverse.ui.components.BottomNavBar
-import org.codingforanimals.veganuniverse.ui.components.BottomNavBarItem
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.components.BottomNavBar
+import org.codingforanimals.veganuniverse.commons.ui.components.BottomNavBarItem
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 
 
 @Composable

@@ -12,15 +12,16 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
+import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationViewModel
-import org.codingforanimals.veganuniverse.registration.presentation.model.RegistrationStatus
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.usecase.GetPromptScreenContentUseCase
-import org.codingforanimals.veganuniverse.registration.presentation.prompt.usecase.GmailAuthenticationUseCase
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewmodel.AuthProvider
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.AuthenticationUseCases
 
 class PromptScreenViewModel(
     getPromptScreenContent: GetPromptScreenContentUseCase,
-    private val gmailAuthenticationUseCase: GmailAuthenticationUseCase,
+    private val authenticationUseCases: AuthenticationUseCases,
 ) : ViewModel() {
 
     private val _sideEffects: Channel<SideEffect> = Channel()
@@ -57,7 +58,7 @@ class PromptScreenViewModel(
         when (provider) {
             AuthProvider.Gmail -> {
                 val effect =
-                    SideEffect.LaunchProviderActivity(gmailAuthenticationUseCase.intent)
+                    SideEffect.LaunchProviderActivity(authenticationUseCases.googleSignInIntent)
                 viewModelScope.launch { _sideEffects.send(effect) }
             }
         }
@@ -72,29 +73,20 @@ class PromptScreenViewModel(
 
     private fun authenticateWithGmail(intent: Intent) {
         viewModelScope.launch {
-            gmailAuthenticationUseCase(intent).collect { status ->
-                when (status) {
-                    RegistrationStatus.Loading -> {
-                        uiState = uiState.copy(loading = true)
-                    }
-
-                    RegistrationStatus.Success -> {
-                        uiState = uiState.copy(loading = false)
-                        viewModelScope.launch {
-                            _sideEffects.send(SideEffect.NavigateToOriginDestination)
-                        }
-                    }
-
-                    is RegistrationStatus.Exception -> {
-                        uiState = uiState.copy(
-                            loading = false,
-                            errorDialog = EmailRegistrationViewModel.ErrorDialog(
-                                title = status.title,
-                                message = status.message,
-                            )
-                        )
-                    }
+            uiState = uiState.copy(loading = true)
+            val result = authenticationUseCases.authenticateWithGmail(intent)
+            uiState = uiState.copy(loading = false)
+            if (result.isSuccess) {
+                viewModelScope.launch {
+                    _sideEffects.send(SideEffect.NavigateToOriginDestination)
                 }
+            } else {
+                uiState = uiState.copy(
+                    errorDialog = EmailRegistrationViewModel.ErrorDialog(
+                        title = unexpected_error,
+                        message = R.string.gmail_auth_error,
+                    )
+                )
             }
         }
     }

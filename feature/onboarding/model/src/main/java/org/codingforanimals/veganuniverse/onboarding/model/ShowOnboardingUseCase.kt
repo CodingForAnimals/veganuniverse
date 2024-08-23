@@ -1,11 +1,9 @@
 package org.codingforanimals.veganuniverse.onboarding.model
 
-import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
-import org.codingforanimals.veganuniverse.onboarding.data.OnboardingDataStoreManager
+import org.codingforanimals.veganuniverse.onboarding.data.OnboardingLocalStorage
 
 class ShowOnboardingUseCase(
-    private val onboardingDataStoreManager: OnboardingDataStoreManager,
-    private val dispatcherProvider: CoroutineDispatcherProvider,
+    private val onboardingLocalStorage: OnboardingLocalStorage,
 ) {
     suspend operator fun invoke(): Boolean {
         return false

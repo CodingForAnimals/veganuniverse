@@ -1,23 +1,29 @@
 package org.codingforanimals.veganuniverse.registration.presentation.navigation
 
+import android.content.Intent
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
+import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationScreen
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.EmailSignInScreen
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailRegistration
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailSignIn
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.Prompt
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreen
-import org.codingforanimals.veganuniverse.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.registration.presentation.reauthentication.EmailReauthenticationScreen
 
 sealed class RegistrationDestination(route: String) : Destination(route) {
     data object Prompt : RegistrationDestination("registration_prompt")
     data object EmailRegistration : RegistrationDestination("registration_email_sign_up")
     data object EmailSignIn : RegistrationDestination("registration_email_sign_in")
+    data object EmailReauthentication :
+        RegistrationDestination("registration_email_reauthentication")
 }
 
 private const val ORIGIN_DESTINATION = "origin_destination_argument"
@@ -91,4 +97,17 @@ fun NavGraphBuilder.registrationGraph(
             )
         },
     )
+
+    composable(
+        route = RegistrationDestination.EmailReauthentication.route,
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = Deeplink.Reauthentication.deeplink
+            }
+        )
+    ) {
+        EmailReauthenticationScreen(
+            navigateUp = navController::navigateUp,
+        )
+    }
 }

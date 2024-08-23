@@ -10,14 +10,12 @@ android {
 }
 
 dependencies {
-    implementation(project(":commons:recipe:shared"))
-    implementation(project(":commons:recipe:presentation"))
-    implementation(project(":core:common"))
-    implementation(project(":core:auth"))
+    implementation(project(":commons:user:presentation"))
+    implementation(project(":commons-create:presentation"))
+    implementation(project(":commons-recipe:shared"))
+    implementation(project(":commons:navigation"))
+    implementation(project(":commons:network"))
+    implementation(project(":commons-recipe:presentation"))
     implementation(project(":feature:create:recipe:domain"))
-    implementation(project(":ui:recipes"))
-    implementation(project(":ui"))
-    implementation(project(":entity:recipes"))
-    implementation(project(":ui:create"))
 
 }

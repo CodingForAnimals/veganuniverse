@@ -11,10 +11,19 @@ import org.codingforanimals.veganuniverse.place.reviews.GetLatestPlaceReviewsPag
 import org.codingforanimals.veganuniverse.place.reviews.ReportPlaceReview
 import org.codingforanimals.veganuniverse.place.reviews.SubmitPlaceReview
 import org.codingforanimals.veganuniverse.place.details.TogglePlaceBookmark
+import org.codingforanimals.veganuniverse.place.reviews.GetCurrentUserPlaceReview
+import org.codingforanimals.veganuniverse.commons.profile.domain.di.PROFILE_PLACE_USE_CASES
+import org.codingforanimals.veganuniverse.commons.profile.domain.di.profileDomainModule
+import org.codingforanimals.veganuniverse.place.details.EditPlace
+import org.codingforanimals.veganuniverse.place.details.ReportPlace
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val placeFeatureDomainModule = module {
+    includes(
+        profileDomainModule,
+    )
     factoryOf(::GetPlaceAutocompleteIntent)
     factoryOf(::GetPlaceDetails)
     factoryOf(::GetPlaceLocationData)
@@ -24,6 +33,17 @@ val placeFeatureDomainModule = module {
     factoryOf(::ReportPlaceReview)
     factoryOf(::DeletePlaceReview)
     factoryOf(::SubmitPlaceReview)
-    factoryOf(::TogglePlaceBookmark)
-    factoryOf(::IsPlaceBookmarked)
+    factoryOf(::GetCurrentUserPlaceReview)
+    factoryOf(::ReportPlace)
+    factoryOf(::EditPlace)
+    factory {
+        TogglePlaceBookmark(
+            profilePlaceUseCases = get(named(PROFILE_PLACE_USE_CASES))
+        )
+    }
+    factory {
+        IsPlaceBookmarked(
+            profilePlaceUseCases = get(named(PROFILE_PLACE_USE_CASES))
+        )
+    }
 }

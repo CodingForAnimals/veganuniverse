@@ -10,6 +10,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:datastore"))
-
+    implementation(libs.androidx.datastore)
+    implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
 }

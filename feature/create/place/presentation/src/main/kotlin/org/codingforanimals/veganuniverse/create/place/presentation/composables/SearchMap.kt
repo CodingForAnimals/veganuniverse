@@ -25,21 +25,21 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import org.codingforanimals.veganuniverse.commons.create.presentation.CreateContentHero
+import org.codingforanimals.veganuniverse.commons.create.presentation.HeroAnchorDefaults
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceViewModel.Action
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceViewModel.UiState
 import org.codingforanimals.veganuniverse.create.place.presentation.R
 import org.codingforanimals.veganuniverse.create.place.presentation.model.AddressField
 import org.codingforanimals.veganuniverse.create.place.presentation.model.LocationField
 import org.codingforanimals.veganuniverse.create.place.presentation.model.TypeField
-import org.codingforanimals.veganuniverse.create.ui.CreateContentHero
-import org.codingforanimals.veganuniverse.create.ui.HeroAnchorDefaults
-import org.codingforanimals.veganuniverse.ui.Spacing_03
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.components.VUTextField
-import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.components.VUTextField
+import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBackground
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 
 @Composable
 internal fun SearchMap(

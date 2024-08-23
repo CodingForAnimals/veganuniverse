@@ -29,8 +29,13 @@
     <string name="opening_hours">Horario de atención</string>
     <string name="place_reviews_topbar_title">Reseñas de %1$s</string>
     <string name="report_review_success">La reseña ha sido reportada con éxito.</string>
-    <string name="unexpected_error">¡Oops! Ha ocurrido un error inesperado</string>
     <string name="delete_review_success">Tu reseña ha sido eliminada.</string>
     <string name="submit_review_success">Tu receta se envió exitósamente</string>
     <string name="try_again">Reintentar</string>
+    <string name="submit_review_unexpected_error">¡Oops! Ocurrió un error inesperado y no pudimos compartir tu reseña. Podés volver a intentarlo.</string>
+    <string name="servings">Porciones</string>
+    <string name="discard_review_confirm">¿Quieres descartar esta reseña?</string>
+    <string name="discard">Descartar</string>
+    <string name="about_this_place">Sobre este lugar</string>
+    <string name="address">Dirección</string>
 </resources>

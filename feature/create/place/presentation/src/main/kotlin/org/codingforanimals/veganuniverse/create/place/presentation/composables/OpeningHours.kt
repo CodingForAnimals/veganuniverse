@@ -33,22 +33,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
-import org.codingforanimals.veganuniverse.core.common.R.string.back
-import org.codingforanimals.veganuniverse.core.common.R.string.closed
-import org.codingforanimals.veganuniverse.core.common.R.string.edit
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceViewModel.Action
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceViewModel.OpeningHoursTimePickerState
 import org.codingforanimals.veganuniverse.create.place.presentation.R
 import org.codingforanimals.veganuniverse.create.place.presentation.model.OpeningHoursField
 import org.codingforanimals.veganuniverse.create.place.presentation.model.PeriodEnd
 import org.codingforanimals.veganuniverse.create.place.presentation.model.PeriodType
-import org.codingforanimals.veganuniverse.place.model.displayPeriod
-import org.codingforanimals.veganuniverse.place.model.fromDisplayPeriod
-import org.codingforanimals.veganuniverse.place.model.toDisplayPeriod
-import org.codingforanimals.veganuniverse.ui.Spacing_04
-import org.codingforanimals.veganuniverse.ui.Spacing_06
-import org.codingforanimals.veganuniverse.ui.components.VUIcon
-import org.codingforanimals.veganuniverse.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.displayPeriod
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.fromDisplayPeriod
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.toDisplayPeriod
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.label
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 
 @Composable
 internal fun OpeningHours(
@@ -72,7 +71,7 @@ internal fun OpeningHours(
             )
             TextButton(
                 onClick = { onAction(Action.OnOpeningHoursEditButtonClick) },
-                content = { Text(text = stringResource(edit)) },
+                content = { Text(text = stringResource(R.string.edit)) },
             )
             Spacer(modifier = Modifier.weight(1f))
             VUIcon(
@@ -96,7 +95,7 @@ internal fun OpeningHours(
                             Text(
                                 modifier = Modifier.weight(1f),
                                 textAlign = TextAlign.Center,
-                                text = stringResource(openingHour.dayStringRes),
+                                text = stringResource(openingHour.dayOfWeek.label),
                             )
                             Crossfade(
                                 modifier = Modifier.weight(1f),
@@ -106,7 +105,7 @@ internal fun OpeningHours(
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
                                         textAlign = TextAlign.Center,
-                                        text = stringResource(id = closed)
+                                        text = stringResource(id = R.string.closed)
                                     )
                                 } else {
                                     Column(
@@ -190,7 +189,7 @@ private fun EditOpeningHoursDialog(
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Text(
                                             textAlign = TextAlign.Center,
-                                            text = stringResource(period.dayStringRes),
+                                            text = stringResource(period.dayOfWeek.label),
                                         )
                                         Spacer(modifier = Modifier.weight(1f))
                                         Switch(
@@ -207,7 +206,7 @@ private fun EditOpeningHoursDialog(
                                         if (isClosed) {
                                             Text(
                                                 modifier = Modifier.padding(start = Spacing_04),
-                                                text = stringResource(closed)
+                                                text = stringResource(R.string.closed)
                                             )
                                         } else {
                                             Column {

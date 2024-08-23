@@ -1,21 +1,22 @@
 package org.codingforanimals.veganuniverse.place.reviews
 
 import android.util.Log
-import org.codingforanimals.veganuniverse.place.domain.repository.PlaceReviewRepository
-import org.codingforanimals.veganuniverse.user.domain.usecase.GetCurrentUser
+import kotlinx.coroutines.flow.firstOrNull
+import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceReviewRepository
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 
 private const val TAG = "ReportPlaceReview"
 
 class ReportPlaceReview(
     private val placeReviewRepository: PlaceReviewRepository,
-    private val getCurrentUser: GetCurrentUser,
+    private val flowOnCurrentUser: FlowOnCurrentUser,
 ) {
     suspend operator fun invoke(
         placeId: String,
         reviewId: String,
     ): Result {
         return runCatching {
-            val userId = getCurrentUser()?.id ?: return@runCatching Result.UnauthenticatedUser
+            val userId = flowOnCurrentUser().firstOrNull()?.id ?: return@runCatching Result.UnauthenticatedUser
             placeReviewRepository.reportReview(
                 placeId = placeId,
                 reviewId = reviewId,

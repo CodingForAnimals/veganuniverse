@@ -2,7 +2,6 @@ package org.codingforanimals.veganuniverse.recipes.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -11,13 +10,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.recipe.domain.repository.RecipeRepository
-import org.codingforanimals.veganuniverse.recipe.model.Recipe
-import org.codingforanimals.veganuniverse.recipe.model.RecipeQueryParams
-import org.codingforanimals.veganuniverse.recipe.model.RecipeSorter
-import org.codingforanimals.veganuniverse.recipe.model.RecipeTag
+import org.codingforanimals.veganuniverse.commons.recipe.domain.repository.RecipeRepository
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeQueryParams
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipeBrowsingNavArgs
-import org.codingforanimals.veganuniverse.ui.grid.ContainerLayoutType
 
 internal class RecipesHomeViewModel(
     private val recipeRepository: RecipeRepository,

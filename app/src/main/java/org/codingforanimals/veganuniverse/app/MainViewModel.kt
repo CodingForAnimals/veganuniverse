@@ -6,15 +6,19 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.core.location.UserLocationManager
+import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
+import org.codingforanimals.veganuniverse.commons.profile.domain.repository.ProfileRepository
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingPresenter
-import org.codingforanimals.veganuniverse.profile.domain.repository.ProfileRepository
+import org.codingforanimals.veganuniverse.services.location.UserLocationManager
 
 class MainViewModel(
     private val onboardingPresenter: OnboardingPresenter,
     private val userLocationManager: UserLocationManager,
     private val profileRepository: ProfileRepository,
+    deeplinkNavigator: DeeplinkNavigator,
 ) : ViewModel() {
+
+    val deeplinkFlow = deeplinkNavigator.deeplinkFlow
 
     private val _uiState: MutableStateFlow<LaunchState> = MutableStateFlow(LaunchState.Loading)
     val uiState: StateFlow<LaunchState> = _uiState

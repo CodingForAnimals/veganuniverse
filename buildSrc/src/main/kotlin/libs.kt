@@ -78,6 +78,7 @@ object libs {
         const val storage = "com.google.firebase:firebase-storage-ktx"
         const val database = "com.google.firebase:firebase-database-ktx"
         const val geofire = "com.firebase:geofire-android:3.2.0"
+        const val analytics = "com.google.firebase:firebase-analytics-ktx"
 
     }
 
@@ -85,6 +86,9 @@ object libs {
         const val datastore = "androidx.datastore:datastore-preferences:${versions.datastore}"
         const val paging = "androidx.paging:paging-runtime-ktx:${versions.paging}"
         const val paging_compose = "androidx.paging:paging-compose:${versions.paging_compose}"
+        const val room = "androidx.room:room-runtime:${versions.room}"
+        const val roomKtx = "androidx.room:room-ktx:${versions.room}"
+        const val roomRuntimeCompiler = "androidx.room:room-compiler:${versions.room}"
     }
 
     val android = listOf(
@@ -124,13 +128,6 @@ object libs {
 
     const val coroutines =
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
-
-    val room = listOf(
-        "androidx.room:room-ktx:${versions.room}",
-        "androidx.room:room-runtime:${versions.room}",
-    )
-    const val roomCompiler =
-        "androidx.room:room-compiler:${versions.room}"
 
     val unitTests = listOf(
         "junit:junit:4.13.2",

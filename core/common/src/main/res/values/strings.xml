@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="filter">Filtrar</string>
-    <string name="sort">Ordenar</string>
-    <string name="closed">Cerrado</string>
-    <string name="edit">Editar</string>
-    <string name="back">Volver</string>
-    <string name="update">Actualizar</string>
-</resources>
