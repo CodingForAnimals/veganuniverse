@@ -14,6 +14,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.services.location.model.LocationResponse
 
 private const val TAG = "UserLocationManagerImpl"
@@ -36,7 +37,9 @@ internal class UserLocationManagerImpl(
         _userLocation.value = LocationResponse.LocationLoading
         fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
             .addOnSuccessListener { location -> handleSuccess(location) }
-            .addOnFailureListener { exception -> handleException(exception) }
+            .addOnFailureListener { exception ->
+                handleException(exception)
+            }
     }
 
     override fun requestUserEnableLocationService() = callbackFlow {
@@ -46,6 +49,9 @@ internal class UserLocationManagerImpl(
         client.checkLocationSettings(request).addOnFailureListener {
             when (it) {
                 is ResolvableApiException -> trySend(it.resolution)
+                else -> {
+                    Analytics.logNonFatalException(it)
+                }
             }
         }
         awaitClose()
@@ -62,6 +68,7 @@ internal class UserLocationManagerImpl(
 
     private fun handleException(exception: Throwable) {
         Log.e(TAG, exception.stackTraceToString())
+        Analytics.logNonFatalException(exception)
         val userLocationErrorResponse = when (exception) {
             is SecurityException -> {
                 LocationResponse.PermissionsNotGranted

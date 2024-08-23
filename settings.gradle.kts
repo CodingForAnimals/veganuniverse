@@ -71,7 +71,10 @@ include(
 )
 
 include(
-    ":commons-profile:shared",
+    ":commons:analytics"
+)
+
+include(
     ":commons-profile:data",
     ":commons-profile:domain",
 )
@@ -100,7 +103,6 @@ include(
 include(
     ":commons:ui",
     ":commons:designsystem",
-    ":commons:network",
     ":commons:navigation",
     ":commons:data",
 )

@@ -8,6 +8,7 @@ internal data class PlaceReviewFirestoreEntity(
     @DocumentId val id: String? = null,
     val userId: String? = null,
     val username: String? = null,
+    val placeName: String? = null,
     val rating: Int? = null,
     val title: String? = null,
     val description: String? = null,

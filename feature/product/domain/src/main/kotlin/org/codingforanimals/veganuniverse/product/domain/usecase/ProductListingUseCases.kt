@@ -11,11 +11,11 @@ class ProductListingUseCases(
     private val productRepository: ProductRepository,
 ) {
     suspend fun getBookmarksIds(): List<String> {
-        return getProfile().bookmarks.products
+        return getProfile()?.bookmarks?.products.orEmpty()
     }
 
     suspend fun getContributionsIds(): List<String> {
-        return getProfile().contributions.products
+        return getProfile()?.contributions?.products.orEmpty()
     }
 
     fun queryProductsByIds(ids: List<String>): Flow<PagingData<Product>> {

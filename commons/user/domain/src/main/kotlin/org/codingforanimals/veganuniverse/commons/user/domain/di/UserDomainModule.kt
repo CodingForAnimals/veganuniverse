@@ -13,6 +13,7 @@ import org.codingforanimals.veganuniverse.commons.user.domain.usecase.IsUserVeri
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.IsUserVerifiedImpl
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.SendVerificationEmail
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.SendVerificationEmailImpl
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.EvaluateUserEmailVerificationState
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOnlyUserAction
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOnlyUserActionImpl
 import org.codingforanimals.veganuniverse.services.auth.di.authServiceModule
@@ -33,4 +34,5 @@ val userCommonDomainModule = module {
     factoryOf(::AuthenticationUseCases)
     factoryOf(::GetUserVerificationState)
     factoryOf(::VerifiedOnlyUserActionImpl) bind VerifiedOnlyUserAction::class
+    factoryOf(::EvaluateUserEmailVerificationState)
 }

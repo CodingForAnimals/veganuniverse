@@ -5,7 +5,7 @@ import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEdit
 interface ProfileLocalDataSource {
     suspend fun getAllProfileContent(): List<ProfileContent>
     suspend fun getProfileContent(editArguments: ProfileEditArguments): ProfileContent?
-    suspend fun insertProfileContent(vararg profileContent: ProfileContent): Boolean
-    suspend fun deleteProfileContent(editArguments: ProfileEditArguments): Boolean
+    suspend fun insertProfileContent(vararg profileContent: ProfileContent)
+    suspend fun deleteProfileContent(editArguments: ProfileEditArguments)
     suspend fun clearAllProfileContent()
 }

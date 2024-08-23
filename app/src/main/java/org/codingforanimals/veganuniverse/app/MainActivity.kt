@@ -3,7 +3,6 @@ package org.codingforanimals.veganuniverse.app
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,11 +14,13 @@ import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.navigation.model.DeepLinkNavigationOptions
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingScreen
 import org.codingforanimals.veganuniverse.ui.VUApp
 import org.koin.android.ext.android.inject
@@ -65,12 +66,22 @@ class MainActivity : ComponentActivity() {
                 }
 
                 LaunchedEffect(Unit) {
-                    mainViewModel.deeplinkFlow.collectLatest { deeplink ->
-                        navController.navigate(deeplink)
+                    Firebase
+                    mainViewModel.deeplinkFlow.collectLatest { deeplinkNavigation ->
+                        navController.navigate(
+                            deepLink = deeplinkNavigation.uri,
+                            navOptions = deeplinkNavigation.options?.toNavOptions(),
+                        )
                     }
                 }
             }
         }
+    }
+
+    private fun DeepLinkNavigationOptions.toNavOptions(): NavOptions {
+        var options = NavOptions.Builder()
+        popUpTo?.let { options = options.setPopUpTo(it, inclusive) }
+        return options.build()
     }
 
     override fun onResume() {

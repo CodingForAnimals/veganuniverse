@@ -39,6 +39,7 @@ internal class ProfileFirebaseRemoteDataSource(
             ProfileEditContentType.PLACE -> PLACES_PATH
             ProfileEditContentType.PRODUCT -> PRODUCTS_PATH
             ProfileEditContentType.RECIPE -> RECIPES_PATH
+            ProfileEditContentType.PLACE_REVIEW -> PLACES_REVIEW_PATH
         }
     }
 
@@ -54,6 +55,7 @@ internal class ProfileFirebaseRemoteDataSource(
         private const val BOOKMARKS_PATH = "bookmarks"
         private const val CONTRIBUTIONS_PATH = "contributions"
         private const val PLACES_PATH = "places"
+        private const val PLACES_REVIEW_PATH = "places_reviews"
         private const val RECIPES_PATH = "recipes"
         private const val PRODUCTS_PATH = "products"
     }

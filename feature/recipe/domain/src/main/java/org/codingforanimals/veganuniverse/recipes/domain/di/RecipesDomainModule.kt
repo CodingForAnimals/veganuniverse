@@ -22,8 +22,6 @@ val recipesDomainModule = module {
     factory {
         RecipeDetailsUseCases(
             reportRecipe = get(),
-            editRecipe = get(),
-            flowOnCurrentUser = get(),
             recipeRepository = get(),
             profileRecipeUseCases = get(named(PROFILE_RECIPE_USE_CASES))
         )

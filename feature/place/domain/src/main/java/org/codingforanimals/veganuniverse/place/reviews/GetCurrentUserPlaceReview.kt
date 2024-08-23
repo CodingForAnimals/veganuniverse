@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.place.reviews
 
 import android.util.Log
 import kotlinx.coroutines.flow.firstOrNull
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceReviewRepository
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReviewQueryParams
@@ -21,7 +22,10 @@ class GetCurrentUserPlaceReview(
                 .withUserFilter(PlaceReviewUserFilter.FilterByUser(userId))
                 .build()
             placeReviewRepository.queryPlaceReviews(params).firstOrNull()
-        }.onFailure { Log.e(TAG, it.stackTraceToString()) }
+        }.onFailure {
+            Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
+        }
     }
 
     companion object {

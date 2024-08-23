@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductSorter
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
@@ -30,6 +31,7 @@ internal class ProductHomeViewModel(
             LatestProductsState.Success(latestProducts)
         }.getOrElse {
             Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
             LatestProductsState.Error
         }
         emit(result)

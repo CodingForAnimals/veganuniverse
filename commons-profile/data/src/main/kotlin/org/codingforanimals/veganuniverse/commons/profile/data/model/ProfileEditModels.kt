@@ -5,7 +5,7 @@ enum class ProfileEditActionValue {
 }
 
 enum class ProfileEditContentType {
-    RECIPE, PLACE, PRODUCT,
+    RECIPE, PLACE, PRODUCT, PLACE_REVIEW,
 }
 
 enum class ProfileEditActionType {

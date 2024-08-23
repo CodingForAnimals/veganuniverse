@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.commons.user.domain.usecase
 
 import android.content.Intent
 import android.util.Log
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.user.domain.repository.CurrentUserRepository
 import org.codingforanimals.veganuniverse.services.auth.Authenticator
 import org.codingforanimals.veganuniverse.services.auth.GmailAuthResult
@@ -22,6 +23,7 @@ class AuthenticationUseCases(
             currentUserRepository.getAndStoreUser()
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
         }
     }
 
@@ -35,6 +37,7 @@ class AuthenticationUseCases(
             currentUserRepository.createUser(email, name)
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
         }
     }
 
@@ -47,11 +50,10 @@ class AuthenticationUseCases(
                 is GmailAuthResult.NewUser -> {
                     currentUserRepository.createUser(response.email, response.name)
                 }
-
-                is GmailAuthResult.Error -> throw Exception(response.throwable)
             }
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
         }
     }
 
@@ -61,6 +63,7 @@ class AuthenticationUseCases(
             currentUserRepository.clearUserLocalStorage()
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
         }
     }
 

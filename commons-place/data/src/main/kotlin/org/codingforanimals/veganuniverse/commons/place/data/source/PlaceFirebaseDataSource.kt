@@ -11,25 +11,21 @@ import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQueryEventListener
 import com.google.android.gms.tasks.TaskCompletionSource
-import com.google.android.play.integrity.internal.f
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
-import org.codingforanimals.veganuniverse.commons.network.mapFirestoreExceptions
 import org.codingforanimals.veganuniverse.commons.place.data.mapper.PlaceEntityMapper
 import org.codingforanimals.veganuniverse.commons.place.data.model.PlaceCardDatabaseEntity
 import org.codingforanimals.veganuniverse.commons.place.data.model.PlaceFirestoreEntity
@@ -147,30 +143,26 @@ internal class PlaceFirebaseDataSource(
             GeoFireUtils.getGeoHashForLocation(GeoLocation(place.latitude, place.longitude))
 
         return coroutineScope {
-            try {
-                val cardDeferred =
-                    cardsReference.child(geoHash).setValue(place.toNewCard(resizedPictureId))
-                        .asDeferred()
-                val placeDeferred =
-                    placesCollection.document(geoHash).set(place.toNewPlace(resizedPictureId))
-                        .asDeferred()
-                val geoFireCompletionSource = TaskCompletionSource<Void>()
-                GeoFire(geoFireReference).setLocation(
-                    /* key = */ geoHash,
-                    /* location = */ GeoLocation(place.latitude, place.longitude)
-                )
-                /* completionListener = */ { _, error ->
-                    if (error != null) {
-                        Log.e(TAG, "Error message: ${error.message}. Details: ${error.details}")
-                    }
-                    geoFireCompletionSource.setResult(null)
+            val cardDeferred =
+                cardsReference.child(geoHash).setValue(place.toNewCard(resizedPictureId))
+                    .asDeferred()
+            val placeDeferred =
+                placesCollection.document(geoHash).set(place.toNewPlace(resizedPictureId))
+                    .asDeferred()
+            val geoFireCompletionSource = TaskCompletionSource<Void>()
+            GeoFire(geoFireReference).setLocation(
+                /* key = */ geoHash,
+                /* location = */ GeoLocation(place.latitude, place.longitude)
+            )
+            /* completionListener = */ { _, error ->
+                if (error != null) {
+                    Log.e(TAG, "Error message: ${error.message}. Details: ${error.details}")
                 }
-
-                awaitAll(cardDeferred, placeDeferred, geoFireCompletionSource.task.asDeferred())
-                geoHash
-            } catch (e: FirebaseFirestoreException) {
-                throw mapFirestoreExceptions(e)
+                geoFireCompletionSource.setResult(null)
             }
+
+            awaitAll(cardDeferred, placeDeferred, geoFireCompletionSource.task.asDeferred())
+            geoHash
         }
     }
 

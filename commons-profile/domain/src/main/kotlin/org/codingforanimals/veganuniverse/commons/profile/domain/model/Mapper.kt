@@ -74,24 +74,28 @@ internal fun List<ProfileContent>.toDomainModel(): Profile {
     val contributedPlaces = mutableListOf<String>()
     val bookmarkedProducts = mutableListOf<String>()
     val contributedProducts = mutableListOf<String>()
+    val contributedPlaceReviews = mutableListOf<String>()
     forEach {
         when (it.actionType) {
             ProfileEditActionType.LIKE -> when (it.contentType) {
                 ProfileEditContentType.RECIPE -> likedRecipes
                 ProfileEditContentType.PLACE -> null
                 ProfileEditContentType.PRODUCT -> null
+                ProfileEditContentType.PLACE_REVIEW -> null
             }
 
             ProfileEditActionType.BOOKMARK -> when (it.contentType) {
                 ProfileEditContentType.RECIPE -> bookmarkedRecipes
                 ProfileEditContentType.PLACE -> bookmarkedPlaces
                 ProfileEditContentType.PRODUCT -> bookmarkedProducts
+                ProfileEditContentType.PLACE_REVIEW -> null
             }
 
             ProfileEditActionType.CONTRIBUTION -> when (it.contentType) {
                 ProfileEditContentType.RECIPE -> contributedRecipes
                 ProfileEditContentType.PLACE -> contributedPlaces
                 ProfileEditContentType.PRODUCT -> contributedProducts
+                ProfileEditContentType.PLACE_REVIEW -> contributedPlaceReviews
             }
         }?.add(it.contentId)
     }
@@ -108,6 +112,7 @@ internal fun List<ProfileContent>.toDomainModel(): Profile {
             recipes = contributedRecipes,
             places = contributedPlaces,
             products = contributedProducts,
+            placeReviews = contributedPlaceReviews,
         )
     )
 }

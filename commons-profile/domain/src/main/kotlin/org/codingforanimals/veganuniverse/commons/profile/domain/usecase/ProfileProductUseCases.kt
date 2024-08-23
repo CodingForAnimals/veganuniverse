@@ -1,13 +1,13 @@
 package org.codingforanimals.veganuniverse.commons.profile.domain.usecase
 
 import android.util.Log
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionType
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionValue
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditArguments
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditContentType
 import org.codingforanimals.veganuniverse.commons.profile.domain.repository.ProfileRepository
-import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleResult
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 
 private const val TAG = "ProfileProductUseCases"
@@ -18,62 +18,79 @@ internal class ProfileProductUseCases(
 ) : ProfileContentUseCases {
 
     override suspend fun isLiked(contentId: String): Boolean = false
-    override suspend fun toggleLike(contentId: String, currentValue: Boolean): ToggleResult {
-        return ToggleResult.UnexpectedError(false)
-    }
+    override suspend fun toggleLike(contentId: String, currentValue: Boolean): Result<Boolean> =
+        runCatching { false }
 
-    override suspend fun isBookmarked(contentId: String): Boolean {
+    override suspend fun isBookmarked(contentId: String): Boolean = runCatching {
         val profile = profileRepository.getProfile()
         return profile.bookmarks.products.contains(contentId)
+    }.getOrElse {
+        Log.e(TAG, it.stackTraceToString())
+        Analytics.logNonFatalException(it)
+        false
     }
 
-    override suspend fun toggleBookmark(contentId: String, currentValue: Boolean): ToggleResult {
-        val actionValue =
-            if (currentValue) ProfileEditActionValue.REMOVE else ProfileEditActionValue.ADD
-        val args = ProfileEditArguments(
-            userId = flowOnCurrentUser().firstOrNull()?.id
-                ?: return ToggleResult.UnexpectedError(currentValue),
-            contentId = contentId,
-            profileEditContentType = ProfileEditContentType.PRODUCT,
-            profileEditActionType = ProfileEditActionType.BOOKMARK,
-            profileEditActionValue = actionValue,
-        )
-        return runCatching {
+    override suspend fun toggleBookmark(contentId: String, currentValue: Boolean): Result<Boolean> =
+        runCatching {
+            val user = checkNotNull(flowOnCurrentUser().first()) {
+                "User must be logged in to toggle a product bookmark"
+            }
+            val actionValue =
+                if (currentValue) ProfileEditActionValue.REMOVE else ProfileEditActionValue.ADD
+            val args = ProfileEditArguments(
+                userId = user.id,
+                contentId = contentId,
+                profileEditContentType = ProfileEditContentType.PRODUCT,
+                profileEditActionType = ProfileEditActionType.BOOKMARK,
+                profileEditActionValue = actionValue,
+            )
             profileRepository.editProfile(args)
-            ToggleResult.Success(newValue = !currentValue)
-        }.getOrElse {
+            !currentValue
+        }.onFailure {
             Log.e(TAG, it.stackTraceToString())
-            ToggleResult.UnexpectedError(currentValue)
+            Analytics.logNonFatalException(it)
         }
 
-    }
-
-    override suspend fun isContributed(contentId: String): Boolean {
+    override suspend fun isContributed(contentId: String): Boolean = runCatching {
         val profile = profileRepository.getProfile()
         return profile.contributions.products.contains(contentId)
+    }.getOrElse {
+        Log.e(TAG, it.stackTraceToString())
+        Analytics.logNonFatalException(it)
+        false
     }
 
-    override suspend fun addContribution(contentId: String) {
+    override suspend fun addContribution(contentId: String): Result<Unit> = runCatching {
+        val user = checkNotNull(flowOnCurrentUser().first()) {
+            "User must be logged in to contribute a product"
+        }
         val args = ProfileEditArguments(
-            userId = flowOnCurrentUser().firstOrNull()?.id ?: return,
+            userId = user.id,
             contentId = contentId,
             profileEditContentType = ProfileEditContentType.PRODUCT,
             profileEditActionType = ProfileEditActionType.CONTRIBUTION,
             profileEditActionValue = ProfileEditActionValue.ADD,
         )
-        runCatching { profileRepository.editProfile(args) }
-            .onFailure { Log.e(TAG, it.stackTraceToString()) }
+        profileRepository.editProfile(args)
+    }.onFailure {
+        Log.e(TAG, it.stackTraceToString())
+        Analytics.logNonFatalException(it)
     }
 
-    override suspend fun removeContribution(contentId: String) {
+    override suspend fun removeContribution(contentId: String): Result<Unit> = runCatching {
+        val user = checkNotNull(flowOnCurrentUser().first()) {
+            "User must be logged in to remove a product contribution"
+        }
         val args = ProfileEditArguments(
-            userId = flowOnCurrentUser().firstOrNull()?.id ?: return,
+            userId = user.id,
             contentId = contentId,
             profileEditContentType = ProfileEditContentType.PRODUCT,
             profileEditActionType = ProfileEditActionType.CONTRIBUTION,
             profileEditActionValue = ProfileEditActionValue.REMOVE,
         )
-        runCatching { profileRepository.editProfile(args) }
-            .onFailure { Log.e(TAG, it.stackTraceToString()) }
+        profileRepository.editProfile(args)
+    }.onFailure {
+        Log.e(TAG, it.stackTraceToString())
+        Analytics.logNonFatalException(it)
     }
 }

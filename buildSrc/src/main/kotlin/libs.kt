@@ -71,7 +71,7 @@ object libs {
         const val database = "com.google.firebase:firebase-database-ktx"
         const val geofire = "com.firebase:geofire-android:3.2.0"
         const val analytics = "com.google.firebase:firebase-analytics-ktx"
-
+        const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
     }
 
 

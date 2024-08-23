@@ -22,8 +22,6 @@ import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOnlyUserAction
-import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
-import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 import org.codingforanimals.veganuniverse.place.presentation.R
 import org.codingforanimals.veganuniverse.place.presentation.navigation.selected_place_id
 import org.codingforanimals.veganuniverse.place.reviews.DeletePlaceReview
@@ -99,15 +97,11 @@ internal class PlaceReviewsViewModel(
                 placeIdNavArg ?: return
                 alertDialogLoading = true
                 viewModelScope.launch {
-                    when (deletePlaceReview(placeIdNavArg, action.reviewId)) {
-                        DeletePlaceReview.Result.Success -> {
-                            userReviewSearchActionChannel.send(Unit)
-                            snackbarEffectChannel.send(Snackbar(R.string.delete_review_success))
-                        }
-
-                        DeletePlaceReview.Result.UnexpectedError -> {
-                            snackbarEffectChannel.send(Snackbar(unexpected_error))
-                        }
+                    if (deletePlaceReview(placeIdNavArg, action.reviewId).isSuccess) {
+                        userReviewSearchActionChannel.send(Unit)
+                        snackbarEffectChannel.send(Snackbar(R.string.delete_review_success))
+                    } else {
+                        snackbarEffectChannel.send(Snackbar(unexpected_error))
                     }
                     alertDialogLoading = false
                     reviewAlertDialog = null
@@ -121,9 +115,9 @@ internal class PlaceReviewsViewModel(
             is Action.ReportReview.ReportIconClick -> {
                 viewModelScope.launch {
                     verifiedUserOnlyUserAction {
-                    reviewAlertDialog = ReviewAlertDialog.Report(action.reviewId)
-                }
+                        reviewAlertDialog = ReviewAlertDialog.Report(action.reviewId)
                     }
+                }
             }
 
             Action.ReportReview.OnDismissRequest -> {

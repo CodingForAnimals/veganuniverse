@@ -3,14 +3,12 @@ package org.codingforanimals.veganuniverse.place.di
 import org.codingforanimals.veganuniverse.place.reviews.GetPlaceReviews
 import org.codingforanimals.veganuniverse.place.home.GetPlaceAutocompleteIntent
 import org.codingforanimals.veganuniverse.place.details.GetPlaceDetails
-import org.codingforanimals.veganuniverse.place.details.IsPlaceBookmarked
 import org.codingforanimals.veganuniverse.place.home.GetPlaceLocationData
 import org.codingforanimals.veganuniverse.place.home.GetPlaces
 import org.codingforanimals.veganuniverse.place.reviews.DeletePlaceReview
 import org.codingforanimals.veganuniverse.place.reviews.GetLatestPlaceReviewsPagingFlow
 import org.codingforanimals.veganuniverse.place.reviews.ReportPlaceReview
 import org.codingforanimals.veganuniverse.place.reviews.SubmitPlaceReview
-import org.codingforanimals.veganuniverse.place.details.TogglePlaceBookmark
 import org.codingforanimals.veganuniverse.place.reviews.GetCurrentUserPlaceReview
 import org.codingforanimals.veganuniverse.commons.profile.domain.di.PROFILE_PLACE_USE_CASES
 import org.codingforanimals.veganuniverse.commons.profile.domain.di.profileDomainModule
@@ -38,14 +36,4 @@ val placeFeatureDomainModule = module {
     factoryOf(::ReportPlace)
     factoryOf(::EditPlace)
     factoryOf(::QueryPlacesByIds)
-    factory {
-        TogglePlaceBookmark(
-            profilePlaceUseCases = get(named(PROFILE_PLACE_USE_CASES))
-        )
-    }
-    factory {
-        IsPlaceBookmarked(
-            profilePlaceUseCases = get(named(PROFILE_PLACE_USE_CASES))
-        )
-    }
 }

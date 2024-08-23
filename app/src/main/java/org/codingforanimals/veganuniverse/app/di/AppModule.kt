@@ -1,8 +1,8 @@
 package org.codingforanimals.veganuniverse.app.di
 
 import org.codingforanimals.veganuniverse.app.MainViewModel
-import org.codingforanimals.veganuniverse.app.UserVerificationUseCases
 import org.codingforanimals.veganuniverse.commons.navigation.commonsNavigationModule
+import org.codingforanimals.veganuniverse.commons.user.domain.di.userCommonDomainModule
 import org.codingforanimals.veganuniverse.create.graph.di.createFeatureModule
 import org.codingforanimals.veganuniverse.onboarding.domain.di.onboardingDomainModule
 import org.codingforanimals.veganuniverse.place.presentation.di.placesFeaturePresentationModule
@@ -12,7 +12,6 @@ import org.codingforanimals.veganuniverse.recipes.presentation.recipesPresentati
 import org.codingforanimals.veganuniverse.registration.presentation.di.registrationModule
 import org.codingforanimals.veganuniverse.services.location.di.locationModule
 import org.koin.androidx.viewmodel.dsl.viewModelOf
-import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 internal val appModule = module {
@@ -26,7 +25,7 @@ internal val appModule = module {
         recipesPresentationModule,
         productPresentationModule,
         commonsNavigationModule,
+        userCommonDomainModule,
     )
-    factoryOf(::UserVerificationUseCases)
     viewModelOf(::MainViewModel)
 }

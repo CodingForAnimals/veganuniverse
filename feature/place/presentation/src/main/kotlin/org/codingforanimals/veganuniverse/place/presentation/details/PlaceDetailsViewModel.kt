@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
-import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleResult
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_error
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_success
 import org.codingforanimals.veganuniverse.commons.ui.R.string.report_success
@@ -33,11 +32,9 @@ import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOn
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
-import org.codingforanimals.veganuniverse.place.details.GetPlaceDetails
 import org.codingforanimals.veganuniverse.place.presentation.R
 import org.codingforanimals.veganuniverse.place.presentation.details.usecase.PlaceDetailsUseCases
 import org.codingforanimals.veganuniverse.place.presentation.navigation.selected_place_id
-import org.codingforanimals.veganuniverse.place.reviews.DeletePlaceReview
 import kotlin.math.roundToInt
 
 internal class PlaceDetailsViewModel(
@@ -63,12 +60,9 @@ internal class PlaceDetailsViewModel(
 
     val placeState: StateFlow<PlaceState> = flow {
         val geoHash = placeGeoHashNavArg ?: return@flow emit(PlaceState.UnexpectedError)
-        emit(
-            when (val result = useCases.getPlaceDetails(geoHash)) {
-                is GetPlaceDetails.Result.Success -> PlaceState.Success(result.place)
-                GetPlaceDetails.Result.UnexpectedError -> PlaceState.UnexpectedError
-            }
-        )
+        useCases.getPlaceDetails(geoHash).getOrNull()?.let {
+            emit(PlaceState.Success(it))
+        } ?: emit(PlaceState.UnexpectedError)
     }.stateIn(
         scope = viewModelScope,
         initialValue = PlaceState.Loading,
@@ -118,38 +112,31 @@ internal class PlaceDetailsViewModel(
     private val toggleBookmarkActionChannel: Channel<Boolean> = Channel()
     val isBookmarked: StateFlow<Boolean> = channelFlow {
         placeGeoHashNavArg ?: return@channelFlow
-        send(useCases.isPlaceBookmarked(placeGeoHashNavArg))
+        send(useCases.profilePlaceUseCases.isBookmarked(placeGeoHashNavArg))
 
         toggleBookmarkActionChannel.receiveAsFlow().collectLatest { currentValue ->
             toggleBookmarkEnabled = false
             send(!currentValue)
 
-            val result = useCases.togglePlaceBookmark(placeGeoHashNavArg, currentValue)
-            handleToggleResultSideEffects(result)
-            send(result.newValue)
-
+            val result =
+                useCases.profilePlaceUseCases.toggleBookmark(placeGeoHashNavArg, currentValue)
             toggleBookmarkEnabled = true
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = false,
-    )
 
-    private suspend fun handleToggleResultSideEffects(
-        result: ToggleResult,
-    ) {
-        when (result) {
-            is ToggleResult.Success -> Unit
-            is ToggleResult.UnexpectedError -> {
+            if (!result.isSuccess) {
+                send(currentValue)
                 snackbarEffectsChannel.send(
                     Snackbar(
                         message = unexpected_error_message_try_again,
                     )
                 )
             }
+
         }
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false,
+    )
 
     var alertDialogLoading: Boolean by mutableStateOf(false)
         private set
@@ -299,15 +286,11 @@ internal class PlaceDetailsViewModel(
                 placeGeoHashNavArg ?: return
                 alertDialogLoading = true
                 viewModelScope.launch {
-                    when (useCases.deletePlaceReview(placeGeoHashNavArg, action.reviewId)) {
-                        DeletePlaceReview.Result.UnexpectedError -> {
-                            snackbarEffectsChannel.send(Snackbar(unexpected_error))
-                        }
-
-                        DeletePlaceReview.Result.Success -> {
-                            refreshUserReviewActionChannel.send(Unit)
-                            snackbarEffectsChannel.send(Snackbar(R.string.delete_review_success))
-                        }
+                    if (useCases.deletePlaceReview(placeGeoHashNavArg, action.reviewId).isSuccess) {
+                        snackbarEffectsChannel.send(Snackbar(unexpected_error))
+                    } else {
+                        refreshUserReviewActionChannel.send(Unit)
+                        snackbarEffectsChannel.send(Snackbar(R.string.delete_review_success))
                     }
                     alertDialogLoading = false
                     alertDialog = null
@@ -386,6 +369,7 @@ internal class PlaceDetailsViewModel(
 
     private fun attemptSubmitReview() {
         placeGeoHashNavArg ?: return
+        val placeName = (placeState.value as? PlaceState.Success)?.place?.name ?: return
         val placeReview = PlaceReview(
             id = null,
             userId = null,
@@ -394,6 +378,7 @@ internal class PlaceDetailsViewModel(
             title = newReviewState.title,
             description = newReviewState.description,
             createdAt = null,
+            placeName = placeName,
         )
         viewModelScope.launch {
             newReviewState = newReviewState.copy(loading = true)

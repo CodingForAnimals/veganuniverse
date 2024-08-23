@@ -20,6 +20,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -27,35 +31,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.registration.presentation.R
-import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationViewModel.Action
-import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationViewModel.UiState
-import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.usecase.GetEmailRegistrationScreenContent
-import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.viewmodel.EmailRegistrationScreenItem
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.components.VUTextField
 import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.registration.presentation.R
+import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationViewModel.Action
+import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.EmailRegistrationViewModel.UiState
+import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.usecase.GetEmailRegistrationScreenContent
+import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.viewmodel.EmailRegistrationScreenItem
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun EmailRegistrationScreen(
     navigateUp: () -> Unit,
-    navigateToEmailValidationScreen: () -> Unit,
+    onRegistrationSuccess: () -> Unit,
     viewModel: EmailRegistrationViewModel = koinViewModel(),
 ) {
     HandleSideEffects(
         effectsFlow = viewModel.sideEffects,
-        navigateToEmailValidationScreen = navigateToEmailValidationScreen,
+        navigateToEmailValidationScreen = onRegistrationSuccess,
     )
 
     Column {
@@ -135,40 +140,65 @@ private fun EmailRegistrationScreen(
                     maxLines = 1,
                 )
 
-                EmailRegistrationScreenItem.PasswordInputField -> VUTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = passwordField.value,
-                    onValueChange = { onAction(Action.OnFormChange(password = it)) },
-                    placeholder = stringResource(R.string.password_field_placeholder),
-                    leadingIcon = VUIcons.Lock,
-                    isError = isValidating && !passwordField.isValid,
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        autoCorrect = false,
-                        imeAction = ImeAction.Next,
-                    ),
-                    maxLines = 1,
-                )
+                EmailRegistrationScreenItem.PasswordInputField -> {
+                    var passwordVisible by remember { mutableStateOf(false) }
+                    val trailingIcon = remember(passwordVisible) {
+                        if (passwordVisible) R.drawable.ic_visibility else R.drawable.ic_visibility_off
+                    }
+                    val visualTransformation = remember(passwordVisible) {
+                        if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+                    }
+                    VUTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = passwordField.value,
+                        onValueChange = { onAction(Action.OnFormChange(password = it)) },
+                        placeholder = stringResource(R.string.password_field_placeholder),
+                        leadingIcon = VUIcons.Lock,
+                        isError = isValidating && !passwordField.isValid,
+                        visualTransformation = visualTransformation,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            autoCorrect = false,
+                            imeAction = ImeAction.Next,
+                        ),
+                        maxLines = 1,
+                        trailingIcon = trailingIcon,
+                        onTrailingIconClick = { passwordVisible = !passwordVisible },
+                    )
+                }
 
-                EmailRegistrationScreenItem.ConfirmPasswordInputField -> VUTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = confirmPasswordField.value,
-                    onValueChange = { onAction(Action.OnFormChange(confirmPassword = it)) },
-                    placeholder = stringResource(R.string.password_field_placeholder),
-                    leadingIcon = VUIcons.Lock,
-                    isError = isValidating && !confirmPasswordField.isValid,
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        autoCorrect = false,
-                        imeAction = ImeAction.Done,
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { focusManager.clearFocus() }
-                    ),
-                    maxLines = 1,
-                )
+                EmailRegistrationScreenItem.ConfirmPasswordInputField -> {
+                    var passwordVisible by remember { mutableStateOf(false) }
+                    val trailingIcon = remember(passwordVisible) {
+                        if (passwordVisible) R.drawable.ic_visibility else R.drawable.ic_visibility_off
+                    }
+                    val visualTransformation = remember(passwordVisible) {
+                        if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+                    }
+                    VUTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = confirmPasswordField.value,
+                        onValueChange = { onAction(Action.OnFormChange(confirmPassword = it)) },
+                        placeholder = stringResource(R.string.register_screen_confirm_password_placeholder),
+                        leadingIcon = VUIcons.Lock,
+                        isError = isValidating && !confirmPasswordField.isValid,
+                        visualTransformation = visualTransformation,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            autoCorrect = false,
+                            imeAction = ImeAction.Done,
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                                onAction(Action.OnCreateAccountButtonClick)
+                            }
+                        ),
+                        maxLines = 1,
+                        trailingIcon = trailingIcon,
+                        onTrailingIconClick = { passwordVisible = !passwordVisible },
+                    )
+                }
 
                 EmailRegistrationScreenItem.EmailRegistrationButton -> Button(
                     modifier = Modifier

@@ -1,6 +1,6 @@
 package org.codingforanimals.veganuniverse.commons.profile.domain.repository
 
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionValue
 import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditArguments
 import org.codingforanimals.veganuniverse.commons.profile.data.remote.ProfileRemoteDataSource
@@ -16,15 +16,15 @@ internal class ProfileRepositoryImpl(
     private val profileLocalDataSource: ProfileLocalDataSource,
     private val profileRemoteDataSource: ProfileRemoteDataSource,
 ) : ProfileRepository {
-    override suspend fun downloadAndStoreProfile(): Boolean {
-        return runCatching {
-            val id = flowOnCurrentUser().firstOrNull()?.id ?: return false
-            profileRemoteDataSource.getProfile(id)?.let {
-                profileLocalDataSource.clearAllProfileContent()
-                profileLocalDataSource.insertProfileContent(*it.toProfileContent().toTypedArray())
-            }
-            true
-        }.getOrElse { false }
+
+    override suspend fun downloadAndStoreProfile() {
+        val user = checkNotNull(flowOnCurrentUser().first()) {
+            "User must be logged in to access their profile"
+        }
+        profileRemoteDataSource.getProfile(user.id)?.let {
+            profileLocalDataSource.clearAllProfileContent()
+            profileLocalDataSource.insertProfileContent(*it.toProfileContent().toTypedArray())
+        }
     }
 
     override suspend fun clearProfile() {
@@ -35,14 +35,12 @@ internal class ProfileRepositoryImpl(
         return profileLocalDataSource.getAllProfileContent().toDomainModel()
     }
 
-    override suspend fun editProfile(args: ProfileEditArguments): Boolean {
+    override suspend fun editProfile(args: ProfileEditArguments) {
         profileRemoteDataSource.editProfile(args)
-        return when (args.profileEditActionValue) {
+        when (args.profileEditActionValue) {
             ProfileEditActionValue.ADD -> {
                 if (profileLocalDataSource.getProfileContent(args) == null) {
                     profileLocalDataSource.insertProfileContent(args.toProfileContent())
-                } else {
-                    false
                 }
             }
 

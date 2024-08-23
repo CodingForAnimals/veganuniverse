@@ -20,4 +20,5 @@ data class ProfileContributions(
     val recipes: List<String>,
     val places: List<String>,
     val products: List<String>,
+    val placeReviews: List<String>,
 )

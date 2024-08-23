@@ -1,9 +1,9 @@
 package org.codingforanimals.veganuniverse.commons.navigation
 
 sealed class DeepLink(val value: String) {
-    data object Reauthentication : DeepLink("reauthentication")
     data object AuthPrompt : DeepLink("auth_prompt")
     data object ValidateEmailPrompt : DeepLink("validate_email_prompt")
+    data object EmailValidated : DeepLink("email_validated")
 
     data object CreatePlace : DeepLink("create_place")
     data object CreateProduct : DeepLink("create_product")

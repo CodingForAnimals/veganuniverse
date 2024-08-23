@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleResult
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_error
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_success
 import org.codingforanimals.veganuniverse.commons.ui.R.string.report_error
@@ -72,9 +71,16 @@ internal class ProductDetailViewModel(
             bookmarkActionEnabled = false
             send(!currentValue)
             val result = bookmarkUseCases.toggleBookmark(id, currentValue)
-            send(result.newValue)
-            handleBookmarkResult(result)
             bookmarkActionEnabled = true
+
+            if (!result.isSuccess) {
+                send(currentValue)
+                snackbarEffectsChannel.send(
+                    Snackbar(
+                        message = unexpected_error_message_try_again,
+                    )
+                )
+            }
         }
     }.stateIn(
         scope = viewModelScope,
@@ -113,18 +119,6 @@ internal class ProductDetailViewModel(
             Action.OnDismissDialog -> {
                 dialog = null
             }
-        }
-    }
-
-    private fun handleBookmarkResult(result: ToggleResult) {
-        when (result) {
-            is ToggleResult.UnexpectedError -> {
-                viewModelScope.launch {
-                    snackbarEffectsChannel.send(Snackbar(unexpected_error_message_try_again))
-                }
-            }
-
-            is ToggleResult.Success -> Unit
         }
     }
 

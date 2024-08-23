@@ -6,12 +6,10 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import org.codingforanimals.veganuniverse.commons.network.mapFirestoreExceptions
 import org.codingforanimals.veganuniverse.commons.place.data.model.PlaceReviewFirestoreEntity
 import org.codingforanimals.veganuniverse.commons.place.data.paging.PlaceReviewsPagingSource
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
@@ -29,11 +27,7 @@ internal class PlaceReviewFirestoreDataSource(
         val newDocRef = placesCollection.document(placeId)
             .collection(REVIEWS_COLLECTION)
             .document()
-        try {
-            newDocRef.set(review.toNewFirestoreEntity()).await()
-        } catch (e: FirebaseFirestoreException) {
-            throw mapFirestoreExceptions(e)
-        }
+        newDocRef.set(review.toNewFirestoreEntity()).await()
         return newDocRef.id
     }
 
@@ -98,6 +92,7 @@ internal class PlaceReviewFirestoreDataSource(
             title = title,
             description = description,
             createdAt = createdAt?.toDate(),
+            placeName = placeName,
         )
     }
 
@@ -106,6 +101,7 @@ internal class PlaceReviewFirestoreDataSource(
             id = null,
             userId = userId,
             username = username,
+            placeName = placeName,
             rating = rating,
             title = title,
             description = description,
