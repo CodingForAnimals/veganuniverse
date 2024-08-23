@@ -79,7 +79,6 @@ include(":storage:recipes")
 
 include(":services:firebase:profile")
 
-include(":shared:ui")
 include(":ui:places")
 include("ui:recipes")
 include("ui:create")
@@ -96,3 +95,5 @@ include(":feature:product:categories:presentation")
 
 include(":feature:product:list:domain")
 include(":feature:product:list:presentation")
+
+include(":storage:product")

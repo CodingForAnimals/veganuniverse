@@ -7,6 +7,7 @@ import org.codingforanimals.veganuniverse.core.location.di.locationModule
 import org.codingforanimals.veganuniverse.create.graph.di.createFeatureModule
 import org.codingforanimals.veganuniverse.onboarding.presentation.di.onboardingModule
 import org.codingforanimals.veganuniverse.places.presentation.di.placesFeaturePresentationModule
+import org.codingforanimals.veganuniverse.product.graph.di.productFeatureModule
 import org.codingforanimals.veganuniverse.profile.di.profileFeatureModule
 import org.codingforanimals.veganuniverse.recipes.presentation.recipesPresentationModule
 import org.codingforanimals.veganuniverse.registration.presentation.di.registrationModule
@@ -24,6 +25,7 @@ internal val appModule = module {
         registrationModule,
         profileFeatureModule,
         recipesPresentationModule,
+        productFeatureModule,
     )
     viewModelOf(::MainViewModel)
 }

@@ -11,17 +11,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.NavHost
-import org.codingforanimals.post.presentation.navigation.navigateToPost
-import org.codingforanimals.post.presentation.navigation.postGraph
-import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
-import org.codingforanimals.veganuniverse.community.presentation.navigation.communityGraph
 import org.codingforanimals.veganuniverse.create.graph.CreateDestination
 import org.codingforanimals.veganuniverse.create.graph.createGraph
-import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.featuredTopicGraph
-import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigateToFeaturedTopic
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
 import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.places.presentation.navigation.placesGraph
+import org.codingforanimals.veganuniverse.product.graph.ProductDestination
 import org.codingforanimals.veganuniverse.product.graph.productGraph
 import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.profile.profileGraph
@@ -46,7 +41,7 @@ internal fun rememberVUNavController(): NavHostController {
 internal fun VUAppNavHost(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    startDestination: Destination = CommunityDestination,
+    startDestination: Destination = ProductDestination.Categories,
 ) {
     NavHost(
         navController = navController,
@@ -65,7 +60,7 @@ internal fun VUAppNavHost(
         )
         registrationGraph(
             navController = navController,
-            defaultOriginNavigationRoute = CommunityDestination.route
+            defaultOriginNavigationRoute = ProductDestination.Categories.route
         )
         notificationsGraph(
             onBackClick = navController::navigateUp,
@@ -75,19 +70,6 @@ internal fun VUAppNavHost(
         )
         settingsGraph(
             onBackClick = navController::navigateUp,
-        )
-        communityGraph(
-            navigateToRegister = {
-                navController.navigate("${RegistrationDestination.Prompt.route}/${CommunityDestination.route}")
-            },
-            navigateToFeaturedTopic = navController::navigateToFeaturedTopic,
-            navigateToPost = navController::navigateToPost,
-            nestedGraphs = {
-                featuredTopicGraph(
-                    onBackClick = navController::navigateUp,
-                )
-                postGraph()
-            }
         )
         placesGraph(
             navController = navController,
@@ -116,12 +98,6 @@ private fun NavController.navigateToAuthPromptWithOriginDestination(originDestin
     navigate("${RegistrationDestination.Prompt.route}/${originDestination.route}")
 }
 
-private fun NavController.navigateToCommunityPoppingBackstack() {
-    navigate(CommunityDestination.route) {
-//        popUpTo(RegisterDestination.route) { inclusive = true }
-    }
-}
-
 class VUNavHostController(context: Context) : NavHostController(context) {
     override fun popBackStack(): Boolean {
         return when (currentDestination?.route) {
@@ -130,8 +106,8 @@ class VUNavHostController(context: Context) : NavHostController(context) {
             RecipesDestination.Home.route,
             ProfileDestination.Home.route,
             -> {
-                navigate(CommunityDestination.route) {
-                    popUpTo(CommunityDestination.route) { inclusive = true }
+                navigate(ProductDestination.Categories.route) {
+                    popUpTo(ProductDestination.Categories.route) { inclusive = true }
                 }
                 true
             }

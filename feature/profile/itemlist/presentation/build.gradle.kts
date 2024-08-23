@@ -17,7 +17,6 @@ dependencies {
     implementation(project(Module.Entity.PLACES))
     implementation(project(Module.Entity.RECIPES))
     implementation(project(Module.Places.UI))
-    implementation(project(Module.Shared.UI))
     implementation(project(Module.Services.Firebase.RECIPES))
     implementation(project(Module.Services.Firebase.PLACES))
     implementation(project(Module.Services.Firebase.PROFILE))
