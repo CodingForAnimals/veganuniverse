@@ -2,6 +2,8 @@ package org.codingforanimals.veganuniverse.commons.ui.components
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -10,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.VisualTransformation
 import org.codingforanimals.veganuniverse.commons.ui.icon.Icon
 
@@ -31,6 +34,8 @@ fun VUTextField(
     placeholder: String? = null,
     isError: Boolean = false,
     leadingIcon: Icon? = null,
+    onTrailingIconClick: () -> Unit = {},
+    trailingIcon: Int? = null,
     maxLines: Int = Int.MAX_VALUE,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -52,6 +57,16 @@ fun VUTextField(
                     icon = leadingIcon,
                     contentDescription = ""
                 )
+            }
+        },
+        trailingIcon = trailingIcon?.let {
+            {
+                IconButton(onClick = onTrailingIconClick) {
+                    Icon(
+                        painter = painterResource(id = trailingIcon),
+                        contentDescription = null,
+                    )
+                }
             }
         },
         maxLines = maxLines,

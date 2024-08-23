@@ -1,9 +1,7 @@
 package org.codingforanimals.veganuniverse.commons.place.domain.repository
 
 import androidx.paging.PagingData
-import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.flow.Flow
-import org.codingforanimals.veganuniverse.commons.network.PermissionDeniedException
 import org.codingforanimals.veganuniverse.commons.place.data.source.PlaceReviewRemoteDataSource
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReviewQueryParams

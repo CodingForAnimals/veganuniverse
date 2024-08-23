@@ -28,7 +28,6 @@ sealed class RegistrationDestination(route: String) : Destination(route) {
 fun NavGraphBuilder.registrationGraph(
     navController: NavController,
 ) {
-
     composable(
         route = AuthPrompt.route,
         deepLinks = listOf(
@@ -47,15 +46,34 @@ fun NavGraphBuilder.registrationGraph(
     )
 
     composable(
+        route = EmailSignIn.route,
+        content = {
+            EmailSignInScreen(
+                navigateUp = navController::navigateUp,
+                onSignInSuccess = {
+                    val navigatedBackToAuthPrompt = navController.popBackStack(
+                        route = AuthPrompt.route,
+                        inclusive = true
+                    )
+                    if (!navigatedBackToAuthPrompt) {
+                        navController.navigateUp()
+                    }
+                }
+            )
+        },
+    )
+
+    composable(
         route = EmailRegistration.route,
         content = {
             EmailRegistrationScreen(
                 navigateUp = navController::navigateUp,
-                navigateToEmailValidationScreen = {
-                    navController.popBackStack(
-                        route = AuthPrompt.route,
-                        inclusive = true
-                    )
+                onRegistrationSuccess = {
+                    navController.navigate(ValidateEmailPrompt.route) {
+                        popUpTo(AuthPrompt.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         },
@@ -83,34 +101,22 @@ fun NavGraphBuilder.registrationGraph(
     )
 
     composable(
-        route = EmailSignIn.route,
-        content = {
-            EmailSignInScreen(
-                navigateUp = navController::navigateUp,
-                navigateToOriginDestination = {
-                    val navigatedBackToPrompt = navController.popBackStack(
-                        route = AuthPrompt.route,
-                        inclusive = true
-                    )
-                    if (!navigatedBackToPrompt) {
-                        navController.navigateUp()
-                    }
-                }
-            )
-        },
-    )
-
-    composable(
         route = RegistrationDestination.EmailValidated.route,
         deepLinks = listOf(
             navDeepLink {
-                uriPattern = DeepLink.Reauthentication.deeplink
+                uriPattern = DeepLink.EmailValidated.deeplink
             }
         )
     ) {
         EmailValidatedScreen(
             navigateUp = navController::navigateUp,
-            navigateToEmailSignIn = { navController.navigate(EmailSignIn) },
+            navigateToEmailSignIn = {
+                navController.navigate(EmailSignIn.route) {
+                    popUpTo(RegistrationDestination.EmailValidated.route) {
+                        inclusive = true
+                    }
+                }
+            },
         )
     }
 }

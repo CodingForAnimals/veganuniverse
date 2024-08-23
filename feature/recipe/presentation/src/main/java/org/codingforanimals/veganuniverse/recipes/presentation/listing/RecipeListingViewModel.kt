@@ -33,8 +33,8 @@ internal class RecipeListingViewModel(
     val recipes = flow {
         val ids = with(getProfile()) {
             when (ListingType.fromString(listingType)) {
-                ListingType.CONTRIBUTIONS -> contributions.recipes
-                ListingType.BOOKMARKS -> bookmarks.recipes
+                ListingType.CONTRIBUTIONS -> this?.contributions?.recipes.orEmpty()
+                ListingType.BOOKMARKS -> this?.bookmarks?.recipes.orEmpty()
                 null -> return@flow
             }
         }

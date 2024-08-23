@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.product.domain.usecase
 
 import android.util.Log
 import kotlinx.coroutines.flow.firstOrNull
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.product.domain.repository.ProductRepository
 import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
@@ -21,6 +22,7 @@ class GetProductDetail(
             }
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
         }.getOrNull()
     }
 

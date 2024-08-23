@@ -9,6 +9,5 @@ android {
 
 dependencies {
     implementation(project(":commons-profile:data"))
-    api(project(":commons-profile:shared"))
     implementation(project(":commons:user:domain"))
 }

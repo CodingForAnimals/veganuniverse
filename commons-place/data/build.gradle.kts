@@ -9,7 +9,6 @@ android {
 }
 
 dependencies {
-    api(project(":commons:network"))
     implementation(project(":commons-place:shared"))
     implementation(project(":services:firebase-storage"))
     implementation(libs.androidx.paging)

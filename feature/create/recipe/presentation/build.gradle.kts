@@ -14,7 +14,6 @@ dependencies {
     implementation(project(":commons-create:presentation"))
     implementation(project(":commons-recipe:shared"))
     implementation(project(":commons:navigation"))
-    implementation(project(":commons:network"))
     implementation(project(":commons-recipe:presentation"))
     implementation(project(":feature:create:recipe:domain"))
 

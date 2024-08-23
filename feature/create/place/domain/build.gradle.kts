@@ -13,5 +13,4 @@ dependencies {
     implementation(project(":commons-profile:domain"))
     implementation(project(":commons:user:domain"))
     implementation(project(":commons:navigation"))
-    implementation(project(":commons:network"))
 }

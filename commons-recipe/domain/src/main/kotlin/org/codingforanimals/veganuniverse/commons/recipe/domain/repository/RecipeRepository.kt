@@ -12,7 +12,7 @@ interface RecipeRepository {
     fun queryRecipesPagingData(params: RecipeQueryParams): Flow<PagingData<Recipe>>
     suspend fun queryRecipes(params: RecipeQueryParams): List<Recipe>
     suspend fun deleteRecipeById(id: String)
-    suspend fun insertRecipe(recipe: Recipe, imageModel: Parcelable): Recipe
+    suspend fun insertRecipe(recipe: Recipe, imageModel: Parcelable): String
     suspend fun increaseOrDecreaseLike(recipeId: String, shouldIncrease: Boolean)
     suspend fun reportRecipe(recipeId: String, userId: String)
     suspend fun editRecipe(recipeId: String, userId: String, suggestion: String)

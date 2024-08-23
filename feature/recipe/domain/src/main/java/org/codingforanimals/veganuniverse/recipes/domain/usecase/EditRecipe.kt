@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.recipes.domain.usecase
 
 import android.util.Log
 import kotlinx.coroutines.flow.firstOrNull
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.recipe.domain.repository.RecipeRepository
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 
@@ -18,6 +19,7 @@ class EditRecipe(
             Result.Success
         } catch (e: Throwable) {
             Log.e(TAG, e.stackTraceToString())
+            Analytics.logNonFatalException(e)
             Result.UnexpectedError
         }
     }

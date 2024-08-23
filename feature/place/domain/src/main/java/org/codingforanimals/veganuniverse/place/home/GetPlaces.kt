@@ -1,6 +1,7 @@
 package org.codingforanimals.veganuniverse.place.home
 
 import android.util.Log
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceRepository
 import org.codingforanimals.veganuniverse.commons.place.shared.model.GeoLocationQueryParams
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceCard
@@ -26,6 +27,7 @@ class GetPlaces(
             Result.Success(places)
         }.getOrElse {
             Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
             Result.Error
         }
     }

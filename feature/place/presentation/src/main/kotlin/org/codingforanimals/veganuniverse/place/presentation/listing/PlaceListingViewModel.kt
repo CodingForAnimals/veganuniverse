@@ -42,8 +42,8 @@ internal class PlaceListingViewModel(
     val places = flow {
         val ids = with(getProfile()) {
             when (ListingType.fromString(listingType)) {
-                ListingType.CONTRIBUTIONS -> contributions.places
-                ListingType.BOOKMARKS -> bookmarks.places
+                ListingType.CONTRIBUTIONS -> this?.contributions?.places.orEmpty()
+                ListingType.BOOKMARKS -> this?.bookmarks?.places.orEmpty()
                 null -> return@flow
             }
         }

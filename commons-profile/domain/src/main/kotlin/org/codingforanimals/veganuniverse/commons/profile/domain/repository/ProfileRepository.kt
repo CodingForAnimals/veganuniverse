@@ -4,8 +4,8 @@ import org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEdit
 import org.codingforanimals.veganuniverse.commons.profile.domain.model.Profile
 
 interface ProfileRepository {
-    suspend fun downloadAndStoreProfile(): Boolean
+    suspend fun downloadAndStoreProfile()
     suspend fun clearProfile()
     suspend fun getProfile(): Profile
-    suspend fun editProfile(args: ProfileEditArguments): Boolean
+    suspend fun editProfile(args: ProfileEditArguments)
 }

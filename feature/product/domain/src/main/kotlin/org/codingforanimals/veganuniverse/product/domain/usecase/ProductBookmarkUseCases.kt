@@ -1,7 +1,6 @@
 package org.codingforanimals.veganuniverse.product.domain.usecase
 
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.ProfileContentUseCases
-import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleResult
 
 class ProductBookmarkUseCases(
     private val profileProductUseCases: ProfileContentUseCases
@@ -10,7 +9,7 @@ class ProductBookmarkUseCases(
         return profileProductUseCases.isBookmarked(productId)
     }
 
-    suspend fun toggleBookmark(productId: String, currentValue: Boolean): ToggleResult {
+    suspend fun toggleBookmark(productId: String, currentValue: Boolean): Result<Boolean> {
         return profileProductUseCases.toggleBookmark(productId, currentValue)
     }
 }

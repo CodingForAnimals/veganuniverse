@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth.IdTokenListener
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.user.data.model.User
 import org.codingforanimals.veganuniverse.services.auth.Authenticator
 
@@ -35,6 +36,7 @@ internal class UserFirestoreRemoteDataSource(
             getUserFromFirestore(userId)
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
         }.getOrNull()
     }
 
@@ -44,6 +46,7 @@ internal class UserFirestoreRemoteDataSource(
             getUserFromFirestore(currentUser.uid)
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
         }.getOrNull()
     }
 

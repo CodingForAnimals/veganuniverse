@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleResult
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.commons.ui.R.string.report_success
@@ -28,14 +28,8 @@ import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_m
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
-import org.codingforanimals.veganuniverse.commons.user.domain.usecase.GetUserVerificationState
-import org.codingforanimals.veganuniverse.commons.user.domain.usecase.IsUserVerified
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOnlyUserAction
-import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
-import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
-import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 import org.codingforanimals.veganuniverse.recipes.domain.usecase.RecipeDetailsUseCases
-import org.codingforanimals.veganuniverse.recipes.domain.usecase.ReportRecipe
 import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.RECIPE_ID
 import org.codingforanimals.veganuniverse.recipes.presentation.details.entity.RecipeView
@@ -61,12 +55,14 @@ internal class RecipeDetailsViewModel(
         private set
 
     val recipeState: StateFlow<RecipeState> = flow<RecipeState> {
-        val recipe = useCases.getRecipe(recipeId!!)?.toView()!!
-        val userId = flowOnCurrentUser().firstOrNull()?.id
-        isOwner = recipe.userId == userId
-        emit(RecipeState.Success(recipe))
+        useCases.getRecipe(recipeId!!).getOrNull()?.toView()!!.let { recipe ->
+            val userId = flowOnCurrentUser().firstOrNull()?.id
+            isOwner = recipe.userId == userId
+            emit(RecipeState.Success(recipe))
+        }
     }.catch {
         Log.e(TAG, it.stackTraceToString())
+        Analytics.logNonFatalException(it)
         emit(RecipeState.Error)
     }.stateIn(
         scope = viewModelScope,
@@ -84,9 +80,16 @@ internal class RecipeDetailsViewModel(
             likeEnabled.value = false
             send(!currentState)
             val result = useCases.toggleLike(recipeId, currentState)
-            handleToggleResult(result)
-            send(result.newValue)
             likeEnabled.value = true
+
+            if (!result.isSuccess) {
+                send(currentState)
+                snackbarEffectsChannel.send(
+                    Snackbar(
+                        message = unexpected_error_message_try_again,
+                    )
+                )
+            }
         }
     }.stateIn(
         scope = viewModelScope,
@@ -104,9 +107,15 @@ internal class RecipeDetailsViewModel(
             bookmarkEnabled.value = false
             send(!currentState)
             val result = useCases.toggleBookmark(recipeId, currentState)
-            handleToggleResult(result)
-            send(result.newValue)
             bookmarkEnabled.value = true
+            if (!result.isSuccess) {
+                send(currentState)
+                snackbarEffectsChannel.send(
+                    Snackbar(
+                        message = unexpected_error_message_try_again,
+                    )
+                )
+            }
         }
     }.stateIn(
         scope = viewModelScope,
@@ -218,21 +227,6 @@ internal class RecipeDetailsViewModel(
     private suspend fun toggleBookmark() {
         if (!bookmarkEnabled.value) return
         toggleBookmarkActionChannel.send(isBookmarked.value)
-    }
-
-    private suspend fun handleToggleResult(
-        result: ToggleResult,
-    ) {
-        when (result) {
-            is ToggleResult.Success -> Unit
-            is ToggleResult.UnexpectedError -> {
-                snackbarEffectsChannel.send(
-                    Snackbar(
-                        message = unexpected_error_message_try_again,
-                    )
-                )
-            }
-        }
     }
 
     private fun deleteRecipe() {

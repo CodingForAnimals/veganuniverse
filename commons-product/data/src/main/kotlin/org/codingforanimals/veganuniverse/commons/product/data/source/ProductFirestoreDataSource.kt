@@ -5,10 +5,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -19,7 +17,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.commons.data.paging.ContentListingPagingSource
 import org.codingforanimals.veganuniverse.commons.data.utils.DataUtils
-import org.codingforanimals.veganuniverse.commons.network.mapFirestoreExceptions
 import org.codingforanimals.veganuniverse.commons.product.data.model.ProductFirestoreEntity
 import org.codingforanimals.veganuniverse.commons.product.data.model.ProductFirestoreEntityMapper
 import org.codingforanimals.veganuniverse.commons.product.data.paging.ProductPagingSource
@@ -49,11 +46,7 @@ internal class ProductFirestoreDataSource(
 
         val entity = product.toNewFirestoreEntity(resizedPictureId)
         val docRef = references.items.document()
-        try {
-            docRef.set(entity).await()
-        } catch (e: FirebaseFirestoreException) {
-            throw mapFirestoreExceptions(e)
-        }
+        docRef.set(entity).await()
         return docRef.id
     }
 

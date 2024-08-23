@@ -12,6 +12,7 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.place.shared.model.AddressComponents
 import org.codingforanimals.veganuniverse.commons.place.shared.model.OpeningHours
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Period
@@ -66,6 +67,7 @@ class PlacesClientImpl(
             }
         } catch (e: Throwable) {
             Log.e(TAG, e.stackTraceToString())
+            Analytics.logNonFatalException(e)
             PlaceAutocompleteResult.Error
         }
     }

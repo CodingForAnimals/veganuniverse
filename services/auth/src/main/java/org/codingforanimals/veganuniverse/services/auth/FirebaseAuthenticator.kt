@@ -1,7 +1,6 @@
 package org.codingforanimals.veganuniverse.services.auth
 
 import android.content.Intent
-import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
@@ -22,21 +21,16 @@ internal class FirebaseAuthenticator(
         get() = firebaseAuth.userIsProvidedByGoogle
 
     override suspend fun gmailAuthentication(intent: Intent): GmailAuthResult {
-        return runCatching {
-            val account = GoogleSignIn.getSignedInAccountFromIntent(intent)
-                .getResult(ApiException::class.java)
-            val credentials = GoogleAuthProvider.getCredential(account.idToken, null)
-            val result = firebaseAuth.signInWithCredential(credentials).await()
-            return if (result.additionalUserInfo?.isNewUser == true) {
-                val name = result.user!!.displayName ?: defaultUserName
-                val email = result.user?.email!!
-                GmailAuthResult.NewUser(email, name)
-            } else {
-                GmailAuthResult.Success
-            }
-        }.getOrElse {
-            Log.e(TAG, it.stackTraceToString())
-            GmailAuthResult.Error(it)
+        val account = GoogleSignIn.getSignedInAccountFromIntent(intent)
+            .getResult(ApiException::class.java)
+        val credentials = GoogleAuthProvider.getCredential(account.idToken, null)
+        val result = firebaseAuth.signInWithCredential(credentials).await()
+        return if (result.additionalUserInfo?.isNewUser == true) {
+            val name = result.user!!.displayName ?: defaultUserName
+            val email = result.user?.email!!
+            GmailAuthResult.NewUser(email, name)
+        } else {
+            GmailAuthResult.Success
         }
     }
 

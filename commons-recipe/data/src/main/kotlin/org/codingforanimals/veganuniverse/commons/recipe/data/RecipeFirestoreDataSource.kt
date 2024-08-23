@@ -39,14 +39,12 @@ internal class RecipeFirestoreDataSource(
 ) : RecipeRemoteDataSource {
 
     override suspend fun getRecipeById(id: String): Recipe? {
-        return runCatching {
-            val firestoreEntity = recipeCollection
-                .document(id)
-                .get().await()
-                .toObject(RecipeFirestoreEntity::class.java)
-                ?: return null
-            return firestoreEntityMapper.mapToDataModel(firestoreEntity)
-        }.onFailure { Log.e(TAG, it.stackTraceToString()) }.getOrNull()
+        val firestoreEntity = recipeCollection
+            .document(id)
+            .get().await()
+            .toObject(RecipeFirestoreEntity::class.java)
+            ?: return null
+        return firestoreEntityMapper.mapToDataModel(firestoreEntity)
     }
 
     override suspend fun queryRecipesPagingDataByIds(ids: List<String>): Flow<PagingData<Recipe>> {
@@ -113,7 +111,7 @@ internal class RecipeFirestoreDataSource(
         return query
     }
 
-    override suspend fun insertRecipe(recipe: Recipe, model: Parcelable): Recipe {
+    override suspend fun insertRecipe(recipe: Recipe, model: Parcelable): String {
         val pictureId = uploadPictureUseCase(
             fileFolderPath = BASE_RECIPE_PICTURE_PATH,
             model = model,
@@ -124,8 +122,7 @@ internal class RecipeFirestoreDataSource(
         val docRef = recipeCollection.document()
         val docId = docRef.id
         docRef.set(entity).await()
-        val newEntity = entity.copy(id = docId)
-        return firestoreEntityMapper.mapToDataModel(newEntity)
+        return docId
     }
 
     override suspend fun deleteRecipeById(id: String): Boolean {

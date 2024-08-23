@@ -1,6 +1,7 @@
 package org.codingforanimals.veganuniverse.commons.user.domain.usecase
 
 import android.util.Log
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.user.domain.repository.CurrentUserRepository
 
 interface SendVerificationEmail {
@@ -13,7 +14,10 @@ internal class SendVerificationEmailImpl(
     override suspend fun invoke(): Result<Unit> {
         return runCatching {
             currentUserRepository.sendVerificationEmail()
-        }.onFailure { Log.e(TAG, it.stackTraceToString()) }
+        }.onFailure {
+            Log.e(TAG, it.stackTraceToString())
+            Analytics.logNonFatalException(it)
+        }
     }
 
     companion object {

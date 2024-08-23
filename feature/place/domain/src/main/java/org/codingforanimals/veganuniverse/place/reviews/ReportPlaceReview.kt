@@ -1,6 +1,8 @@
 package org.codingforanimals.veganuniverse.place.reviews
 
+import android.util.Log
 import kotlinx.coroutines.flow.first
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceReviewRepository
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 
@@ -20,5 +22,8 @@ class ReportPlaceReview(
             reviewId = reviewId,
             userId = user.id
         )
+    }.onFailure {
+        Log.e("ReportPlaceReview", "Failed to report place review", it)
+        Analytics.logNonFatalException(it)
     }
 }

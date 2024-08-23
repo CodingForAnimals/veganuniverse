@@ -1,6 +1,8 @@
 package org.codingforanimals.veganuniverse.recipes.domain.usecase
 
+import android.util.Log
 import kotlinx.coroutines.flow.first
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.recipe.domain.repository.RecipeRepository
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 
@@ -13,5 +15,8 @@ class ReportRecipe(
             "User must be logged in to report a recipe"
         }
         recipeRepository.reportRecipe(recipeId, user.id)
+    }.onFailure {
+        Log.e("ReportRecipe", "Error reporting recipe", it)
+        Analytics.logNonFatalException(it)
     }
 }

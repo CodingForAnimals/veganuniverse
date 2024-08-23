@@ -236,6 +236,7 @@ private fun PreviewPlaceReviewsScreen() {
                 title = "Buen lugar",
                 description = "Un lugar decente con opciones veganas",
                 createdAt = Date(),
+                placeName = "El pepe"
             ),
             PlaceReview(
                 id = "2",
@@ -245,6 +246,7 @@ private fun PreviewPlaceReviewsScreen() {
                 title = "Buen lugar",
                 description = "Un lugar decente con opciones veganas",
                 createdAt = Date(),
+                placeName = "El pepe"
             ),
             PlaceReview(
                 id = "3",
@@ -254,6 +256,7 @@ private fun PreviewPlaceReviewsScreen() {
                 title = "Buen lugar",
                 description = "Un lugar decente con opciones veganas",
                 createdAt = Date(),
+                placeName = "El pepe"
             ),
             PlaceReview(
                 id = "4",
@@ -263,6 +266,7 @@ private fun PreviewPlaceReviewsScreen() {
                 title = "Buen lugar",
                 description = "Un lugar decente con opciones veganas",
                 createdAt = Date(),
+                placeName = "El pepe"
             ),
             PlaceReview(
                 id = "5",
@@ -272,6 +276,7 @@ private fun PreviewPlaceReviewsScreen() {
                 title = "Buen lugar",
                 description = "Un lugar decente con opciones veganas",
                 createdAt = Date(),
+                placeName = "El pepe"
             )
         )
     )
@@ -286,6 +291,7 @@ private fun PreviewPlaceReviewsScreen() {
             title = "Buen lugar",
             description = "Un lugar decente con opciones veganas",
             createdAt = Date(),
+            placeName = "El pepe"
         ),
         placeName = "Nombre de lugar en monte grande",
         rating = 5,
