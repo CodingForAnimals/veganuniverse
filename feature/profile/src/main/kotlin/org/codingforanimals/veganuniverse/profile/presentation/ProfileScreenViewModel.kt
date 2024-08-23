@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.profile.domain.model.ListingType
+import org.codingforanimals.veganuniverse.commons.ui.listings.ListingType
 import org.codingforanimals.veganuniverse.commons.user.domain.model.User
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.AuthenticationUseCases
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
@@ -45,23 +45,38 @@ internal class ProfileScreenViewModel(
                     navigationEffectsChannel.send(NavigationEffect.RecipeListing(ListingType.BOOKMARKS))
                 }
             }
+
             Action.ContributionsClick.Recipes -> {
                 viewModelScope.launch {
                     navigationEffectsChannel.send(NavigationEffect.RecipeListing(ListingType.CONTRIBUTIONS))
                 }
             }
+
             Action.BookmarksClick.Places -> {
                 viewModelScope.launch {
                     navigationEffectsChannel.send(NavigationEffect.PlaceListing(ListingType.BOOKMARKS))
                 }
             }
+
             Action.ContributionsClick.Places -> {
                 viewModelScope.launch {
                     navigationEffectsChannel.send(NavigationEffect.PlaceListing(ListingType.CONTRIBUTIONS))
                 }
             }
+
+            Action.BookmarksClick.Products -> {
+                viewModelScope.launch {
+                    navigationEffectsChannel.send(NavigationEffect.ProductListing(ListingType.BOOKMARKS))
+                }
+            }
+
+            Action.ContributionsClick.Products -> {
+                viewModelScope.launch {
+                    navigationEffectsChannel.send(NavigationEffect.ProductListing(ListingType.CONTRIBUTIONS))
+                }
+            }
+
             Action.OnLogoutClick -> logout()
-            else -> Unit
         }
     }
 
@@ -78,6 +93,7 @@ internal class ProfileScreenViewModel(
             data object Places : ContributionsClick()
             data object Recipes : ContributionsClick()
         }
+
         sealed class BookmarksClick : Action() {
             data object Products : BookmarksClick()
             data object Places : BookmarksClick()
@@ -88,5 +104,6 @@ internal class ProfileScreenViewModel(
     sealed class NavigationEffect {
         data class PlaceListing(val listingType: ListingType) : NavigationEffect()
         data class RecipeListing(val listingType: ListingType) : NavigationEffect()
+        data class ProductListing(val listingType: ListingType) : NavigationEffect()
     }
 }

@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.commons.ui.details
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -57,7 +58,7 @@ fun ContentDetailItem(
 fun ContentDetailItem(
     modifier: Modifier = Modifier,
     title: String,
-    subtitle: @Composable () -> Unit,
+    subtitle: @Composable ColumnScope.() -> Unit,
     icon: Int? = null,
 ) {
     Column(modifier) {

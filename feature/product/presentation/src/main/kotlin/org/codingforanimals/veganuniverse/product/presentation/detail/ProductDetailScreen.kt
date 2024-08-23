@@ -2,21 +2,17 @@
 
 package org.codingforanimals.veganuniverse.product.presentation.detail
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,30 +23,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key.Companion.U
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.veganuniverse.commons.designsystem.Doubtful
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
-import org.codingforanimals.veganuniverse.commons.ui.R.string.bookmark_action
 import org.codingforanimals.veganuniverse.commons.ui.R.string.contributed_by
-import org.codingforanimals.veganuniverse.commons.ui.R.string.edit
-import org.codingforanimals.veganuniverse.commons.ui.R.string.report
-import org.codingforanimals.veganuniverse.commons.ui.R.string.unbookmark_action
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHero
+import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHeroDefaults
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
@@ -64,6 +55,7 @@ import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEm
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.detail.ProductDetailViewModel.Action
 import org.codingforanimals.veganuniverse.product.presentation.detail.ProductDetailViewModel.NavigationEffect
+import org.codingforanimals.veganuniverse.product.presentation.detail.components.ProductDetailTopBar
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
 import org.koin.androidx.compose.koinViewModel
 import java.util.Date
@@ -95,6 +87,7 @@ internal fun ProductDetailScreen(
             ProductDetailScreen(
                 product = currentState.product,
                 navigateUp = navigateUp,
+                snackbarHostState = snackbarHostState,
                 isBookmarked = isBookmarked,
                 onAction = viewModel::onAction,
             )
@@ -126,14 +119,16 @@ internal fun ProductDetailScreen(
 private fun ProductDetailScreen(
     product: Product,
     isBookmarked: Boolean,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     navigateUp: () -> Unit = {},
     onAction: (Action) -> Unit = {},
 ) {
     var imageDialogUrl: String? by remember { mutableStateOf(null) }
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             ProductDetailTopBar(
-                name = product.name,
+                title = stringResource(id = product.type.label),
                 isBookmarked = isBookmarked,
                 navigateUp = navigateUp,
                 onBookmarkClick = { onAction(Action.OnBookmarkClick) },
@@ -150,8 +145,16 @@ private fun ProductDetailScreen(
         ) {
             ContentDetailsHero(
                 url = product.imageUrl,
-                icon = VUIcons.VeganLogo,
+                icon = product.type.icon,
                 onImageClick = { imageDialogUrl = product.imageUrl },
+                colors = when (product.type.type) {
+                    ProductType.VEGAN -> ContentDetailsHeroDefaults.successColors()
+                    ProductType.NOT_VEGAN -> ContentDetailsHeroDefaults.errorColors()
+                    ProductType.DOUBTFUL -> ContentDetailsHeroDefaults.successColors().copy(
+                        divider = Doubtful,
+                        iconContainerBorder = Doubtful,
+                    )
+                }
             )
 
             Column(
@@ -159,13 +162,16 @@ private fun ProductDetailScreen(
                     .fillMaxSize()
                     .padding(Spacing_05)
             ) {
-                product.type?.let { productType ->
-                    ContentDetailItem(
-                        title = stringResource(id = productType.label),
-                        subtitle = stringResource(id = productType.description),
-                        icon = productType.icon.id,
-                    )
-                }
+                ContentDetailItem(
+                    title = product.name,
+                    subtitle = product.brand,
+                    icon = product.type.icon.id
+                )
+
+                Text(
+                    modifier = Modifier.padding(top = Spacing_05),
+                    text = stringResource(id = product.type.description),
+                )
 
                 product.comment?.let { comment ->
                     ContentDetailItem(
@@ -176,13 +182,12 @@ private fun ProductDetailScreen(
                     )
                 }
 
-                product.category?.let { category ->
-                    ContentDetailItem(
-                        title = stringResource(id = R.string.category),
-                        subtitle = stringResource(id = category.label),
-                        icon = VUIcons.Comment.id,
-                    )
-                }
+                ContentDetailItem(
+                    modifier = Modifier.padding(top = Spacing_05),
+                    title = stringResource(id = R.string.category),
+                    subtitle = stringResource(id = product.category.label),
+                    icon = VUIcons.Comment.id,
+                )
 
                 product.username?.let {
                     val timeAgo =
@@ -217,73 +222,6 @@ private fun ProductDetailScreen(
 }
 
 @Composable
-private fun ProductDetailTopBar(
-    name: String,
-    isBookmarked: Boolean,
-    navigateUp: () -> Unit = {},
-    onBookmarkClick: () -> Unit = {},
-    onEditClick: () -> Unit = {},
-    onReportClick: () -> Unit = {},
-) {
-    MediumTopAppBar(
-        title = { Text(text = name) },
-        navigationIcon = {
-            IconButton(
-                onClick = navigateUp,
-                content = {
-                    Icon(
-                        imageVector = VUIcons.ArrowBack.imageVector,
-                        contentDescription = stringResource(id = back),
-                    )
-                }
-            )
-        },
-        actions = {
-            IconButton(onClick = onBookmarkClick) {
-                Crossfade(
-                    targetState = isBookmarked,
-                    label = "bookmark_cross_fade",
-                    content = { bookmarked ->
-                        val (icon, contentDescription) = Pair(
-                            VUIcons.BookmarkFilled,
-                            unbookmark_action
-                        )
-                            .takeIf { bookmarked }
-                            ?: Pair(VUIcons.Bookmark, bookmark_action)
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = painterResource(icon.id),
-                            contentDescription = stringResource(id = contentDescription),
-                        )
-                    }
-                )
-            }
-
-            IconButton(
-                onClick = onEditClick,
-                content = {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(id = VUIcons.Edit.id),
-                        contentDescription = stringResource(id = edit),
-                    )
-                }
-            )
-            IconButton(
-                onClick = onReportClick,
-                content = {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(id = VUIcons.Report.id),
-                        contentDescription = stringResource(id = report),
-                    )
-                }
-            )
-        }
-    )
-}
-
-@Composable
 private fun ProductDetailDialog(
     dialog: ProductDetailViewModel.Dialog?,
     onReportResult: (ReportContentDialogResult) -> Unit,
@@ -294,12 +232,15 @@ private fun ProductDetailDialog(
         ProductDetailViewModel.Dialog.Report -> {
             ReportContentDialog(onResult = onReportResult)
         }
+
         ProductDetailViewModel.Dialog.Suggestion -> {
             EditContentDialog(onResult = onSuggestionResult)
         }
+
         ProductDetailViewModel.Dialog.UnverifiedEmail -> {
             UnverifiedEmailDialog(onResult = onUnverifiedEmailResult)
         }
+
         null -> Unit
     }
 }

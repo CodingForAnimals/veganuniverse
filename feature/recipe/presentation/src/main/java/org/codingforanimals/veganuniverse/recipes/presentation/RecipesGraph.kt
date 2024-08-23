@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeScreen
@@ -36,7 +37,17 @@ import org.koin.androidx.compose.koinViewModel
 sealed class RecipesDestination(route: String) : Destination(route) {
     data object Home : RecipesDestination("feature_recipes_home")
     data object Details : RecipesDestination("feature_recipes_details")
-    data object Browsing : RecipesDestination("feature_recipes_browsing")
+    data class Browsing(
+        val tag: String? = null,
+        val sorter: String? = null,
+    ) : RecipesDestination("$ROUTE?$TAG=$tag&$SORTER=$sorter") {
+        companion object {
+            const val ROUTE = "feature_recipes_browsing"
+            internal const val TAG = "tag"
+            internal const val SORTER = "sorter"
+        }
+    }
+
     data object Listing : RecipesDestination("feature_recipes_listing")
 }
 
@@ -49,30 +60,31 @@ fun NavGraphBuilder.recipesGraph(
     ) {
         RecipesHomeScreen(
             navigateToRecipeBrowsing = {
-                navController.navigate("1234")
-//                navController.navigate("${RecipesDestination.Browsing.route}?$TAG=${it.tag?.name}&$SORTER=${it.sorter?.name}")
-                                       },
+                navController.navigate(RecipesDestination.Browsing(it.tag?.name, it.sorter?.name))
+            },
             navigateToRecipeDetails = { recipeId -> navController.navigateToRecipeDetails(recipeId) },
         )
     }
 
-    composable(
-        route = "${RecipesDestination.Browsing.route}?$TAG={$TAG}&$SORTER={$SORTER}",
-        arguments = listOf(
-            navArgument(TAG) {
-                type = NavType.StringType
-                nullable = true
-            },
-            navArgument(SORTER) {
-                type = NavType.StringType
-                nullable = true
-            }
-        ),
-    ) {
-        RecipeBrowsingScreen(
-            navigateToRecipeDetails = { id -> navController.navigateToRecipeDetails(id) },
-            onBackClick = navController::navigateUp,
-        )
+    with(RecipesDestination.Browsing) {
+        composable(
+            route = "$ROUTE?$TAG={$TAG}&$SORTER={$SORTER}",
+            arguments = listOf(
+                navArgument(TAG) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument(SORTER) {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            ),
+        ) {
+            RecipeBrowsingScreen(
+                navigateToRecipeDetails = { id -> navController.navigateToRecipeDetails(id) },
+                onBackClick = navController::navigateUp,
+            )
+        }
     }
 
     composable(
@@ -94,10 +106,8 @@ fun NavGraphBuilder.recipesGraph(
                 type = NavType.StringType
             }
         )
-    ) { backstackEntry ->
-        val listingType = backstackEntry.arguments?.getString(LISTING_TYPE)
+    ) {
         RecipeListingScreen(
-            listingType = listingType,
             navigateUp = navController::navigateUp,
             navigateToRecipeDetails = { id -> navController.navigateToRecipeDetails(id) }
         )
@@ -136,10 +146,7 @@ internal data class RecipeBrowsingNavArgs(
 )
 
 internal const val LISTING_TYPE = "listing-type"
-internal const val TAG = "tag"
-internal const val SORTER = "sorter"
 internal const val RECIPE_ID = "recipe-id"
-
 
 
 class PepeViewModel(

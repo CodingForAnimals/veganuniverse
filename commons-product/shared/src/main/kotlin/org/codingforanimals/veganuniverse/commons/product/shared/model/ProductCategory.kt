@@ -31,7 +31,7 @@ enum class ProductCategory {
             return runCatching {
                 value?.let { ProductCategory.valueOf(it) }
             }.onFailure {
-                Log.e(TAG, it.stackTraceToString())
+                Log.i(TAG, it.message ?: it.stackTraceToString())
             }.getOrNull()
         }
     }

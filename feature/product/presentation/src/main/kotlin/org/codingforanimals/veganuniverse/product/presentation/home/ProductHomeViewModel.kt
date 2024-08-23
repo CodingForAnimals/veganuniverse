@@ -7,9 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -27,17 +25,13 @@ import org.codingforanimals.veganuniverse.product.domain.usecase.EditProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.GetLatestProducts
 import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
 import org.codingforanimals.veganuniverse.product.presentation.R
-import org.codingforanimals.veganuniverse.product.presentation.browsing.mapper.toView
+import org.codingforanimals.veganuniverse.product.presentation.model.toView
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
 
-data class ProductHomeUseCases(
+internal class ProductHomeViewModel(
     val getLatestProducts: GetLatestProducts,
     val reportProduct: ReportProduct,
     val editProduct: EditProduct,
-)
-
-class ProductHomeViewModel(
-    private val useCases: ProductHomeUseCases,
 ) : ViewModel() {
 
     private val navigationEffectsChannel = Channel<NavigationEffect>()
@@ -48,7 +42,7 @@ class ProductHomeViewModel(
 
     val latestProductsState = flow {
         val result = runCatching {
-            val latestProducts = useCases.getLatestProducts().map { it.toView() }
+            val latestProducts = getLatestProducts().map { it.toView() }
             LatestProductsState.Success(latestProducts)
         }.getOrElse {
             Log.e(TAG, it.stackTraceToString())
@@ -60,9 +54,6 @@ class ProductHomeViewModel(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = LatestProductsState.Loading,
     )
-
-    private val mutableUiState = MutableStateFlow(UiState())
-    val uiState = mutableUiState.asStateFlow()
 
     var showReportDialog: String? by mutableStateOf(null)
         private set
@@ -89,19 +80,28 @@ class ProductHomeViewModel(
                 }
             }
 
-            is Action.ImageDialogAction -> {
-                handleImageDialogAction(action)
-            }
-
-            is Action.RelayAction.NavigateToAuthScreen -> {
-                handleRelayActions(action)
-            }
-
             is Action.OpenReportDialog -> {
                 showReportDialog = action.productId
             }
             is Action.OpenSuggestDialog -> {
                 showSuggestionDialog = action.productId
+            }
+
+            is Action.OnProductClick -> {
+                action.product.id?.let { id ->
+                    viewModelScope.launch {
+                        navigationEffectsChannel.send(NavigationEffect.NavigateToProductDetail(id))
+                    }
+                }
+            }
+
+            is Action.OnProductTypeClick -> {
+                navigateToProductBrowsing(
+                    type = action.type
+                )
+            }
+            Action.OnShowAllClick -> {
+                navigateToProductBrowsing()
             }
         }
     }
@@ -115,7 +115,7 @@ class ProductHomeViewModel(
             ReportContentDialogResult.SendReport -> {
                 viewModelScope.launch {
                     showReportDialog?.let {
-                        val result = useCases.reportProduct(it)
+                        val result = reportProduct(it)
                         showReportDialog = null
                         when (result) {
                             ReportProduct.Result.UnauthenticatedUser -> {
@@ -151,7 +151,7 @@ class ProductHomeViewModel(
             is EditContentDialogResult.SendEdit -> {
                 viewModelScope.launch {
                     showSuggestionDialog?.let {
-                        val result = useCases.editProduct(it, action.edition)
+                        val result = editProduct(it, action.edition)
                         showSuggestionDialog = null
                         when (result) {
                             EditProduct.Result.UnauthenticatedUser -> {
@@ -213,30 +213,6 @@ class ProductHomeViewModel(
         }
     }
 
-    private fun handleImageDialogAction(action: Action.ImageDialogAction) {
-        mutableUiState.value = uiState.value.copy(
-            imageUrl = when (action) {
-                Action.ImageDialogAction.Close -> null
-                is Action.ImageDialogAction.Open -> action.url
-            }
-        )
-    }
-
-    private fun handleRelayActions(action: Action.RelayAction) {
-        when (action) {
-            Action.RelayAction.NavigateToAuthScreen -> {
-                viewModelScope.launch {
-                    navigationEffectsChannel.send(NavigationEffect.NavigateToAuthentication)
-                }
-            }
-        }
-    }
-
-    data class UiState(
-        val categories: List<ProductCategory> = ProductCategory.entries,
-        val imageUrl: String? = null,
-    )
-
     sealed class LatestProductsState {
         data object Loading : LatestProductsState()
         data object Error : LatestProductsState()
@@ -247,17 +223,12 @@ class ProductHomeViewModel(
         data class OnProductCategorySelected(val category: ProductCategory) : Action()
         data object OnMostRecentShowMoreClick : Action()
         data object OnCreateProductClick : Action()
-        sealed class ImageDialogAction : Action() {
-            data class Open(val url: String?) : ImageDialogAction()
-            data object Close : ImageDialogAction()
-        }
-
-        sealed class RelayAction : Action() {
-            data object NavigateToAuthScreen : RelayAction()
-        }
+        data object OnShowAllClick : Action()
 
         data class OpenReportDialog(val productId: String) : Action()
         data class OpenSuggestDialog(val productId: String) : Action()
+        data class OnProductClick(val product: Product) : Action()
+        data class OnProductTypeClick(val type: ProductType) : Action()
     }
 
     sealed class NavigationEffect {
@@ -266,6 +237,8 @@ class ProductHomeViewModel(
             val type: ProductType? = null,
             val sorter: ProductSorter? = null,
         ) : NavigationEffect()
+
+        data class NavigateToProductDetail(val id: String) : NavigationEffect()
 
         data object NavigateToCreateProduct : NavigationEffect()
         data object NavigateToAuthentication : NavigationEffect()

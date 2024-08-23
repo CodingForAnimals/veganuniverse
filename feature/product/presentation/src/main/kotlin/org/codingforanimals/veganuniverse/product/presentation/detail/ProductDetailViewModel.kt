@@ -30,7 +30,7 @@ import org.codingforanimals.veganuniverse.product.domain.usecase.EditProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.GetProductDetail
 import org.codingforanimals.veganuniverse.product.domain.usecase.ProductBookmarkUseCases
 import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
-import org.codingforanimals.veganuniverse.product.presentation.browsing.mapper.toView
+import org.codingforanimals.veganuniverse.product.presentation.model.toView
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 
@@ -71,6 +71,7 @@ internal class ProductDetailViewModel(
 
         bookmarkActionChannel.receiveAsFlow().collectLatest { currentValue ->
             bookmarkActionEnabled = false
+            send(!currentValue)
             val result = bookmarkUseCases.toggleBookmark(id, currentValue)
             send(result.newValue)
             handleBookmarkResult(result)
@@ -125,8 +126,9 @@ internal class ProductDetailViewModel(
     }
 
     fun onReportResult(result: ReportContentDialogResult) {
+        onAction(Action.OnDismissDialog)
         when (result) {
-            ReportContentDialogResult.Dismiss -> onAction(Action.OnDismissDialog)
+            ReportContentDialogResult.Dismiss -> Unit
             ReportContentDialogResult.SendReport -> {
                 id ?: return
                 viewModelScope.launch {
@@ -153,8 +155,9 @@ internal class ProductDetailViewModel(
     }
 
     fun onSuggestionResult(result: EditContentDialogResult) {
+        onAction(Action.OnDismissDialog)
         when (result) {
-            EditContentDialogResult.Dismiss -> onAction(Action.OnDismissDialog)
+            EditContentDialogResult.Dismiss -> Unit
             is EditContentDialogResult.SendEdit -> {
                 id ?: return
                 viewModelScope.launch {
@@ -181,8 +184,9 @@ internal class ProductDetailViewModel(
     }
 
     fun onUnverifiedEmailResult(result: UnverifiedEmailResult) {
+        onAction(Action.OnDismissDialog)
         when (result) {
-            UnverifiedEmailResult.Dismissed -> onAction(Action.OnDismissDialog)
+            UnverifiedEmailResult.Dismissed -> Unit
             UnverifiedEmailResult.UnexpectedError -> {
                 viewModelScope.launch {
                     snackbarEffectsChannel.send(Snackbar(verification_email_not_sent))

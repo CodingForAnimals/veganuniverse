@@ -38,6 +38,10 @@ internal class ProductRepositoryImpl(
         return remoteDataSource.queryProductsPagingDataFlow(params)
     }
 
+    override fun queryProductsById(ids: List<String>): Flow<PagingData<Product>> {
+        return remoteDataSource.queryProductsById(ids)
+    }
+
     override suspend fun queryProducts(params: ProductQueryParams): List<Product> {
         return remoteDataSource.queryProducts(params)
     }

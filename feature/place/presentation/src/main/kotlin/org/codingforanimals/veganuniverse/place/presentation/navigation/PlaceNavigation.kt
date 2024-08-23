@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import org.codingforanimals.veganuniverse.commons.profile.domain.model.ListingType
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsScreen
 import org.codingforanimals.veganuniverse.place.presentation.home.PlacesHomeScreen

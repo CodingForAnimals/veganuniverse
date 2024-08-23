@@ -14,5 +14,6 @@ interface ProductRepository {
     suspend fun getProductById(id: String): Product?
     suspend fun getProductListById(ids: List<String>): List<Product>
     fun queryProductsPagingDataFlow(params: ProductQueryParams): Flow<PagingData<Product>>
+    fun queryProductsById(ids: List<String>): Flow<PagingData<Product>>
     suspend fun queryProducts(params: ProductQueryParams): List<Product>
 }

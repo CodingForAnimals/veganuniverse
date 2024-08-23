@@ -19,23 +19,17 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.product.presentation.label
 import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductQueryParams
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductSorter
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
-import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
-import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.dialog.Dialog
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
-import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
-import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
-import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
-import org.codingforanimals.veganuniverse.product.domain.usecase.EditProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.QueryProductsPagingDataFlow
-import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
 import org.codingforanimals.veganuniverse.product.presentation.R
-import org.codingforanimals.veganuniverse.product.presentation.browsing.mapper.toView
+import org.codingforanimals.veganuniverse.product.presentation.model.toView
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.CATEGORY
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.SORTER
@@ -147,7 +141,12 @@ internal class ProductBrowsingViewModel(
     ) {
 
         @StringRes
-        val topBarLabel: Int = type?.toUI()?.label ?: R.string.all_products
+        val topBarLabel: Int = type?.toUI()?.label ?: run {
+            when (sorter) {
+                ProductSorter.NAME -> R.string.all_products
+                ProductSorter.DATE -> sorter.label
+            }
+        }
 
         companion object {
             fun fromNavArgs(

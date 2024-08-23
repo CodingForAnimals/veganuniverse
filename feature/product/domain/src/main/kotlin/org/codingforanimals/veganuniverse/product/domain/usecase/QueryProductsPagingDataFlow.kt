@@ -13,3 +13,4 @@ class QueryProductsPagingDataFlow(
         return productRepository.queryProductsPagingDataFlow(params)
     }
 }
+

@@ -13,7 +13,7 @@ enum class PlaceCardSorter {
             return runCatching {
                 value?.let { PlaceCardSorter.valueOf(it) }
             }.onFailure {
-                Log.e(TAG, it.stackTraceToString())
+                Log.i(TAG, it.message ?: it.stackTraceToString())
             }.getOrNull()
         }
     }

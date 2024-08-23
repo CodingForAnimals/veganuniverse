@@ -19,8 +19,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
-import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
 import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleResult
 import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
@@ -48,7 +46,6 @@ private const val TAG = "RecipeDetailsViewModel"
 internal class RecipeDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     private val useCases: RecipeDetailsUseCases,
-    private val deeplinkNavigator: DeeplinkNavigator,
     private val flowOnCurrentUser: FlowOnCurrentUser,
 ) : ViewModel() {
 
@@ -206,14 +203,6 @@ internal class RecipeDetailsViewModel(
                         ReportRecipe.Result.UnexpectedError -> {
                             snackbarEffectsChannel.send(Snackbar(unexpected_error_message))
                         }
-
-                        ReportRecipe.Result.UnverifiedEmail -> {
-                            dialog = Dialog.UnverifiedEmail
-                        }
-
-                        ReportRecipe.Result.UserMustReathenticate -> {
-                            deeplinkNavigator.navigate(Deeplink.Reauthentication)
-                        }
                     }
                 }
             }
@@ -236,12 +225,6 @@ internal class RecipeDetailsViewModel(
                         }
                         EditRecipe.Result.UnexpectedError -> {
                             snackbarEffectsChannel.send(Snackbar(edit_error))
-                        }
-                        EditRecipe.Result.UnverifiedEmail -> {
-                            dialog = Dialog.UnverifiedEmail
-                        }
-                        EditRecipe.Result.UserMustReauthenticate -> {
-                            deeplinkNavigator.navigate(Deeplink.Reauthentication)
                         }
                     }
                 }

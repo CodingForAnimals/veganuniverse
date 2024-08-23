@@ -64,6 +64,7 @@ fun ProfileScreen(
     navigateToAuthenticationPrompt: () -> Unit,
     navigateToPlaceListing: (String) -> Unit,
     navigateToRecipeListing: (String) -> Unit,
+    navigateToProductListing: (String) -> Unit,
 ) {
     val viewModel: ProfileScreenViewModel = koinViewModel()
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
@@ -83,6 +84,10 @@ fun ProfileScreen(
                 }
                 is NavigationEffect.RecipeListing -> {
                     navigateToRecipeListing(effect.listingType.name)
+                }
+
+                is NavigationEffect.ProductListing -> {
+                    navigateToProductListing(effect.listingType.name)
                 }
             }
         }.collect()

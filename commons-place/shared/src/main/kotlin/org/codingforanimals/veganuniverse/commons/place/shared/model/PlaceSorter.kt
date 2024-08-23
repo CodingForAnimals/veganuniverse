@@ -15,7 +15,7 @@ enum class PlaceSorter {
             return runCatching {
                 value?.let { PlaceSorter.valueOf(it) }
             }.onFailure {
-                Log.e(TAG, it.stackTraceToString())
+                Log.i(TAG, it.message ?: it.stackTraceToString())
             }.getOrNull()
         }
     }

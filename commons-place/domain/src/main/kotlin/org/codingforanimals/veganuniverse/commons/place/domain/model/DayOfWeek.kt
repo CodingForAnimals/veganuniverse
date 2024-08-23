@@ -16,7 +16,7 @@ enum class DayOfWeek {
         private const val TAG = "DayOfWeek"
         fun fromString(value: String?): DayOfWeek? {
             return runCatching { value?.let { DayOfWeek.valueOf(it) } }
-                .onFailure { Log.e(TAG, it.stackTraceToString()) }
+                .onFailure { Log.i(TAG, it.message ?: it.stackTraceToString()) }
                 .getOrNull()
         }
     }

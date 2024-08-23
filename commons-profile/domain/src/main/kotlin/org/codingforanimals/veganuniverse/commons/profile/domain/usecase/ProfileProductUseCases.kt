@@ -57,7 +57,7 @@ internal class ProfileProductUseCases(
         val args = ProfileEditArguments(
             userId = flowOnCurrentUser().firstOrNull()?.id ?: return,
             contentId = contentId,
-            profileEditContentType = ProfileEditContentType.RECIPE,
+            profileEditContentType = ProfileEditContentType.PRODUCT,
             profileEditActionType = ProfileEditActionType.CONTRIBUTION,
             profileEditActionValue = ProfileEditActionValue.ADD,
         )
@@ -69,7 +69,7 @@ internal class ProfileProductUseCases(
         val args = ProfileEditArguments(
             userId = flowOnCurrentUser().firstOrNull()?.id ?: return,
             contentId = contentId,
-            profileEditContentType = ProfileEditContentType.RECIPE,
+            profileEditContentType = ProfileEditContentType.PRODUCT,
             profileEditActionType = ProfileEditActionType.CONTRIBUTION,
             profileEditActionValue = ProfileEditActionValue.REMOVE,
         )

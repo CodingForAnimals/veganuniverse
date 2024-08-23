@@ -18,19 +18,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.recipe.domain.repository.RecipeRepository
+import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeQueryParams
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
-import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
-import org.codingforanimals.veganuniverse.recipes.presentation.R
-import org.codingforanimals.veganuniverse.recipes.presentation.SORTER
-import org.codingforanimals.veganuniverse.recipes.presentation.TAG
 import org.codingforanimals.veganuniverse.commons.ui.dialog.Dialog
+import org.codingforanimals.veganuniverse.recipes.presentation.R
+import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination.Browsing.Companion.SORTER
+import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination.Browsing.Companion.TAG
 
 private const val FILE_TAG = "RecipeBrowsingViewModel"
 

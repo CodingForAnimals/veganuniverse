@@ -1,25 +1,17 @@
 package org.codingforanimals.veganuniverse.product.presentation.navigation
 
 import androidx.compose.material3.SnackbarHostState
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.paging.PagingData
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingScreen
 import org.codingforanimals.veganuniverse.product.presentation.detail.ProductDetailScreen
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeScreen
+import org.codingforanimals.veganuniverse.product.presentation.listing.ProductListingScreen
 
 sealed class ProductDestination(route: String) : Destination(route) {
     data object Home : ProductDestination("product_home_route")
@@ -42,6 +34,13 @@ sealed class ProductDestination(route: String) : Destination(route) {
             const val ID_ARG = "product-id"
         }
     }
+
+    data class Listing(val type: String) : ProductDestination("$ROUTE/$type") {
+        companion object {
+            const val ROUTE = "product_listing_route"
+            const val TYPE = "type"
+        }
+    }
 }
 
 fun NavGraphBuilder.productGraph(
@@ -61,6 +60,9 @@ fun NavGraphBuilder.productGraph(
             },
             navigateToCreateProductScreen = navigateToCreateProductScreen,
             navigateToAuthScreen = { navigateToAuthScreen(ProductDestination.Home) },
+            navigateToProductDetail = { id ->
+                navController.navigate(ProductDestination.Detail(id))
+            },
         )
     }
 
@@ -107,26 +109,22 @@ fun NavGraphBuilder.productGraph(
             )
         }
     }
-}
 
-class PepeViewModel(
-) : ViewModel() {
-    private val searchChannel = Channel<Unit>()
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val products: Flow<PagingData<Int>> =
-        searchChannel.receiveAsFlow().map {
-            PagingData.from(listOf(2, 3))
-//            val params = ProductQueryParams.Builder().build()
-//            productRepository.queryProductsPagingDataFlow(params).cachedIn(viewModelScope)
-//                .map { pagingData ->
-//                    pagingData.map { model -> model.toView() }
-//                }
-        }
-
-    init {
-        viewModelScope.launch {
-            searchChannel.send(Unit)
+    with(ProductDestination.Listing) {
+        composable(
+            route = "$ROUTE/{$TYPE}",
+            arguments = listOf(
+                navArgument(TYPE) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            ProductListingScreen(
+                navigateUp = navController::navigateUp,
+                onProductClick = { id ->
+                    navController.navigate(ProductDestination.Detail(id))
+                }
+            )
         }
     }
 }

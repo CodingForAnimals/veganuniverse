@@ -21,7 +21,7 @@ enum class RecipeTag {
         private const val TAG = "RecipeTag"
         fun fromString(value: String?): RecipeTag? {
             return runCatching { value?.let { RecipeTag.valueOf(it) } }
-                .onFailure { Log.w(TAG, it.stackTraceToString()) }
+                .onFailure { Log.i(TAG, it.message ?: it.stackTraceToString()) }
                 .getOrNull()
         }
     }
