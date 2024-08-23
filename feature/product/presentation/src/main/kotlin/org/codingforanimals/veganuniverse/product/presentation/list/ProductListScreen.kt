@@ -3,6 +3,7 @@
 package org.codingforanimals.veganuniverse.product.presentation.list
 
 import android.util.Log
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -74,6 +75,7 @@ import org.codingforanimals.veganuniverse.ui.components.SelectableChip
 import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
+import org.codingforanimals.veganuniverse.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 import org.koin.androidx.compose.koinViewModel
 
@@ -181,30 +183,39 @@ private fun ProductListScreen(
             }
         }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            items(products.itemCount) { index ->
-                val product = products[index] ?: return@items
-                key(product.id) {
-                    ProductRow(
-                        product = product,
-                        onImageClick = { product.imageUrl?.let { showImageDialog(it) } },
-                        onEditClick = {
-                            onAction(
-                                Action.ProductSuggestionDialogAction.OpenEdit(
-                                    product
-                                )
+        Crossfade(
+            targetState = products.itemCount == 0 && products.loadState.refresh !is LoadState.Loading,
+            label = "products_empty_state_cross_fade",
+        ) { isEmpty ->
+            if (isEmpty) {
+                ErrorView(message = R.string.no_products_found)
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    items(products.itemCount) { index ->
+                        val product = products[index] ?: return@items
+                        key(product.id) {
+                            ProductRow(
+                                product = product,
+                                onImageClick = { product.imageUrl?.let { showImageDialog(it) } },
+                                onEditClick = {
+                                    onAction(
+                                        Action.ProductSuggestionDialogAction.OpenEdit(
+                                            product
+                                        )
+                                    )
+                                },
+                                onReportClick = {
+                                    onAction(
+                                        Action.ProductSuggestionDialogAction.OpenReport(
+                                            product
+                                        )
+                                    )
+                                },
                             )
-                        },
-                        onReportClick = {
-                            onAction(
-                                Action.ProductSuggestionDialogAction.OpenReport(
-                                    product
-                                )
-                            )
-                        },
-                    )
+                        }
+                    }
                 }
             }
         }

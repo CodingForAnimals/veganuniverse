@@ -111,12 +111,12 @@ fun ProductRow(
 
                 val rotationState by animateFloatAsState(
                     targetValue = if (additionalInfoVisible) 180f else 0f,
-                    label = "$name-$brand-chevron-rotation-value"
+                    label = "${product.id}-chevron-rotation-value"
                 )
                 Icon(
                     modifier = Modifier
-                        .rotate(rotationState)
-                        .padding(start = Spacing_05, end = Spacing_06),
+                        .padding(start = Spacing_05, end = Spacing_06)
+                        .rotate(rotationState),
                     painter = painterResource(ic_chevron_down),
                     contentDescription = null,
                 )

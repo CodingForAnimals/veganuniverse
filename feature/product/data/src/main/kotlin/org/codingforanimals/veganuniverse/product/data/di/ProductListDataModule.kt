@@ -29,7 +29,7 @@ val productDataModule = module {
         GetPaginatedProductFirestoreDataSource(
             productsCollection = get<FirebaseFirestore>().collection(PRODUCTS_ITEMS_COLLECTION),
             publicImageApi = get(),
-            pagingConfig = PagingConfig(20)
+            pagingConfig = PagingConfig(10)
         )
     }
     factory<SuggestionRepository> {
