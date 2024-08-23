@@ -15,7 +15,7 @@ class ProductSuggestionUseCases(
     private val suggestionRepository: SuggestionRepository,
     private val userRepository: UserRepository,
 ) {
-    suspend fun report(message: String): Result {
+    suspend fun sendReport(message: String): Result {
         val user = getUserStatus().firstOrNull() ?: return Result.GuestUser
         if (!user.isEmailVerified) return Result.UnverifiedEmail
         val report = Suggestion.Report(
@@ -30,7 +30,7 @@ class ProductSuggestionUseCases(
         }
     }
 
-    suspend fun edit(message: String): Result {
+    suspend fun sendEdit(message: String): Result {
         val user = getUserStatus().firstOrNull() ?: return Result.GuestUser
         if (!user.isEmailVerified) return Result.UnverifiedEmail
         val report = Suggestion.Edit(

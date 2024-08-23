@@ -47,7 +47,6 @@ fun ProductRow(
     onImageClick: () -> Unit,
     onEditClick: () -> Unit,
     onReportClick: () -> Unit,
-    onBookmarkClick: () -> Unit,
 ) = with(product) {
 
     var additionalInfoVisible by rememberSaveable { mutableStateOf(false) }
@@ -128,7 +127,6 @@ fun ProductRow(
                     product = product,
                     onEditClick = onEditClick,
                     onReportClick = onReportClick,
-                    onBookmarkClick = onBookmarkClick,
                 )
             }
             HorizontalDivider()

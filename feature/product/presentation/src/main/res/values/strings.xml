@@ -23,4 +23,6 @@
     <string name="product_suggestion_dialog_error_message_empty">Mensaje requerido</string>
     <string name="user_has_unverified_email">Para realizar esta acción necesitas validar tu correo electrónico</string>
     <string name="resend_email">Reenviar email</string>
+    <string name="product_additional_info_suggest_changes">Sugerir cambios</string>
+    <string name="product_additional_info_report">Reportar</string>
 </resources>

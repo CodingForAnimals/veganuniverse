@@ -196,7 +196,6 @@ private fun ProductHomeScreen(
                                                     )
                                                 )
                                             },
-                                            onBookmarkClick = {},
                                         )
                                     }
                                 }
