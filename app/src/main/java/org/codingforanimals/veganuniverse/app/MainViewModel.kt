@@ -1,13 +1,16 @@
 package org.codingforanimals.veganuniverse.app
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
 import org.codingforanimals.veganuniverse.commons.profile.domain.repository.ProfileRepository
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingPresenter
 import org.codingforanimals.veganuniverse.services.location.UserLocationManager
 
@@ -16,6 +19,7 @@ class MainViewModel(
     private val userLocationManager: UserLocationManager,
     private val profileRepository: ProfileRepository,
     deeplinkNavigator: DeeplinkNavigator,
+    flowOnCurrentUser: FlowOnCurrentUser,
 ) : ViewModel() {
 
     val deeplinkFlow = deeplinkNavigator.deeplinkFlow
@@ -25,7 +29,15 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            profileRepository.downloadAndStoreProfile()
+            flowOnCurrentUser().collectLatest { user ->
+                if (user == null) {
+                    Log.e("pepe", "clearing")
+                    profileRepository.clearProfile()
+                } else {
+                    Log.e("pepe", "downloading")
+                    profileRepository.downloadAndStoreProfile()
+                }
+            }
         }
     }
 

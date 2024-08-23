@@ -57,6 +57,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
     implementation(project(":feature:onboarding:presentation"))
     implementation(project(":commons-profile:domain"))
+    implementation(project(":commons:user:domain"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:create:graph"))
     implementation(project(":feature:product:presentation"))

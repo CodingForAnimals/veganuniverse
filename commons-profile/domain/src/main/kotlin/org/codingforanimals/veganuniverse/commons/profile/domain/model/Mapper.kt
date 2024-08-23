@@ -10,56 +10,56 @@ internal fun ProfileDTO.toProfileContent(): List<ProfileContent> {
     likes.recipes.forEach {
         val likedRecipe = ProfileContent(
             contentId = it.key,
-            contentType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditContentType.RECIPE,
-            actionType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionType.LIKE,
+            contentType = ProfileEditContentType.RECIPE,
+            actionType = ProfileEditActionType.LIKE,
         )
         profileContent.add(likedRecipe)
     }
     bookmarks.products.forEach {
         val bookmarkedProduct = ProfileContent(
             contentId = it.key,
-            contentType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditContentType.PRODUCT,
-            actionType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionType.BOOKMARK,
+            contentType = ProfileEditContentType.PRODUCT,
+            actionType = ProfileEditActionType.BOOKMARK,
         )
         profileContent.add(bookmarkedProduct)
     }
     bookmarks.places.forEach {
         val bookmarkedPlace = ProfileContent(
             contentId = it.key,
-            contentType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditContentType.PLACE,
-            actionType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionType.BOOKMARK,
+            contentType = ProfileEditContentType.PLACE,
+            actionType = ProfileEditActionType.BOOKMARK,
         )
         profileContent.add(bookmarkedPlace)
     }
     bookmarks.recipes.forEach {
         val bookmarkedRecipe = ProfileContent(
             contentId = it.key,
-            contentType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditContentType.RECIPE,
-            actionType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionType.BOOKMARK,
+            contentType = ProfileEditContentType.RECIPE,
+            actionType = ProfileEditActionType.BOOKMARK,
         )
         profileContent.add(bookmarkedRecipe)
     }
     contributions.products.forEach {
         val contributedProduct = ProfileContent(
             contentId = it.key,
-            contentType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditContentType.PRODUCT,
-            actionType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionType.CONTRIBUTION,
+            contentType = ProfileEditContentType.PRODUCT,
+            actionType = ProfileEditActionType.CONTRIBUTION,
         )
         profileContent.add(contributedProduct)
     }
     contributions.recipes.forEach {
         val contributedRecipe = ProfileContent(
             contentId = it.key,
-            contentType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditContentType.RECIPE,
-            actionType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionType.CONTRIBUTION,
+            contentType = ProfileEditContentType.RECIPE,
+            actionType = ProfileEditActionType.CONTRIBUTION,
         )
         profileContent.add(contributedRecipe)
     }
     contributions.places.forEach {
         val contributedPlace = ProfileContent(
             contentId = it.key,
-            contentType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditContentType.PLACE,
-            actionType = org.codingforanimals.veganuniverse.commons.profile.data.model.ProfileEditActionType.CONTRIBUTION,
+            contentType = ProfileEditContentType.PLACE,
+            actionType = ProfileEditActionType.CONTRIBUTION,
         )
         profileContent.add(contributedPlace)
     }

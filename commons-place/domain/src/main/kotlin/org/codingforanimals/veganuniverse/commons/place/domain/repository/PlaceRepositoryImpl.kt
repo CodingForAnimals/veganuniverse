@@ -1,9 +1,11 @@
 package org.codingforanimals.veganuniverse.commons.place.domain.repository
 
 import android.os.Parcelable
+import androidx.paging.PagingData
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import org.codingforanimals.veganuniverse.commons.place.data.source.PlaceRemoteDataSource
 import org.codingforanimals.veganuniverse.commons.place.shared.model.GeoLocationQueryParams
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
@@ -20,6 +22,10 @@ internal class PlaceRepositoryImpl(
         return coroutineScope {
             ids.map { async { remoteDataSource.getById(it) } }.awaitAll().filterNotNull()
         }
+    }
+
+    override fun queryPlacesPagingDataByIds(ids: List<String>): Flow<PagingData<Place>> {
+        return remoteDataSource.queryPlacesPagingDataByIds(ids)
     }
 
     override suspend fun getByLatLng(latitude: Double, longitude: Double): Place? {

@@ -16,6 +16,7 @@ import org.codingforanimals.veganuniverse.commons.profile.domain.di.PROFILE_PLAC
 import org.codingforanimals.veganuniverse.commons.profile.domain.di.profileDomainModule
 import org.codingforanimals.veganuniverse.place.details.EditPlace
 import org.codingforanimals.veganuniverse.place.details.ReportPlace
+import org.codingforanimals.veganuniverse.place.listing.usecase.QueryPlacesByIds
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -36,6 +37,7 @@ val placeFeatureDomainModule = module {
     factoryOf(::GetCurrentUserPlaceReview)
     factoryOf(::ReportPlace)
     factoryOf(::EditPlace)
+    factoryOf(::QueryPlacesByIds)
     factory {
         TogglePlaceBookmark(
             profilePlaceUseCases = get(named(PROFILE_PLACE_USE_CASES))

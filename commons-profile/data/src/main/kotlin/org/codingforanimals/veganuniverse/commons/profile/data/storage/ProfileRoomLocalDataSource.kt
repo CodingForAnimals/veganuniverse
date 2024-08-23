@@ -9,7 +9,7 @@ internal class ProfileRoomLocalDataSource(
     private val profileDao: ProfileDao,
 ) : ProfileLocalDataSource {
     override suspend fun getAllProfileContent(): List<ProfileContent> {
-        return runCatching { profileDao.getAllProfileContent() }.getOrElse { emptyList() }
+        return runCatching { profileDao.getAllProfileContent() }.onFailure { Log.e(TAG, it.stackTraceToString()) }.getOrElse { emptyList() }
     }
 
     override suspend fun getProfileContent(editArguments: ProfileEditArguments): ProfileContent? {
