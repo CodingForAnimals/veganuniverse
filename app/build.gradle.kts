@@ -22,7 +22,7 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("/Users/agustin.magne/agus/veganuniverse/vukey.jks")
+            storeFile = file("C:\\Users\\agusm\\Dev\\codingforanimals\\veganuniverse\\vukey.jks")
             storePassword = "123123"
             keyAlias = "vukey"
             keyPassword = "123123"
