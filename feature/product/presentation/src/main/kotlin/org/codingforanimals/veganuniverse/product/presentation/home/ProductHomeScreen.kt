@@ -24,7 +24,6 @@ import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEm
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel.Action
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel.NavigationEffect
 import org.codingforanimals.veganuniverse.product.presentation.home.components.AllCategories
-import org.codingforanimals.veganuniverse.product.presentation.home.components.CreateProductCTA
 import org.codingforanimals.veganuniverse.product.presentation.home.components.LatestProductsCards
 import org.codingforanimals.veganuniverse.product.presentation.home.components.ProductsByType
 import org.koin.androidx.compose.koinViewModel
@@ -33,7 +32,6 @@ import org.koin.androidx.compose.koinViewModel
 internal fun ProductHomeScreen(
     snackbarHostState: SnackbarHostState,
     navigateToCategoryListScreen: (category: String?, type: String?, sorter: String?) -> Unit,
-    navigateToCreateProductScreen: () -> Unit,
     navigateToAuthScreen: () -> Unit,
     navigateToProductDetail: (id: String) -> Unit,
     viewModel: ProductHomeViewModel = koinViewModel(),
@@ -49,7 +47,6 @@ internal fun ProductHomeScreen(
     HandleNavigationEffects(
         navigationEffects = viewModel.navigationEffects,
         navigateToCategoryListScreen = navigateToCategoryListScreen,
-        navigateToCreateProductScreen = navigateToCreateProductScreen,
         navigateToAuthScreen = navigateToAuthScreen,
         navigateToProductDetail = navigateToProductDetail,
     )
@@ -109,10 +106,6 @@ private fun ProductHomeScreen(
                 onItemClick = { onAction(Action.OnProductCategorySelected(it)) },
             )
             HorizontalDivider(modifier = Modifier.padding(top = Spacing_03))
-            CreateProductCTA(
-                modifier = Modifier.padding(top = Spacing_05),
-                onButtonClick = { onAction(Action.OnCreateProductClick) },
-            )
         }
     }
 }
@@ -121,7 +114,6 @@ private fun ProductHomeScreen(
 private fun HandleNavigationEffects(
     navigationEffects: Flow<NavigationEffect>,
     navigateToCategoryListScreen: (category: String?, type: String?, sorter: String?) -> Unit,
-    navigateToCreateProductScreen: () -> Unit,
     navigateToAuthScreen: () -> Unit,
     navigateToProductDetail: (id: String) -> Unit,
 ) {
@@ -136,7 +128,6 @@ private fun HandleNavigationEffects(
                     )
                 }
 
-                NavigationEffect.NavigateToCreateProduct -> navigateToCreateProductScreen()
                 NavigationEffect.NavigateToAuthentication -> navigateToAuthScreen()
                 is NavigationEffect.NavigateToProductDetail -> navigateToProductDetail(effect.id)
             }

@@ -45,7 +45,6 @@ sealed class ProductDestination(route: String) : Destination(route) {
 
 fun NavGraphBuilder.productGraph(
     navController: NavController,
-    navigateToCreateProductScreen: () -> Unit,
     navigateToAuthenticateScreen: () -> Unit,
     navigateToAuthScreen: (ProductDestination) -> Unit,
     snackbarHostState: SnackbarHostState,
@@ -58,7 +57,6 @@ fun NavGraphBuilder.productGraph(
             navigateToCategoryListScreen = { category, type, sorter ->
                 navController.navigate(ProductDestination.Browsing(category, type, sorter))
             },
-            navigateToCreateProductScreen = navigateToCreateProductScreen,
             navigateToAuthScreen = { navigateToAuthScreen(ProductDestination.Home) },
             navigateToProductDetail = { id ->
                 navController.navigate(ProductDestination.Detail(id))

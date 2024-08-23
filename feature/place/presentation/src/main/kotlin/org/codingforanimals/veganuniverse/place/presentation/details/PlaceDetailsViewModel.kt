@@ -18,31 +18,31 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.navigation.Deeplink
 import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
-import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
-import org.codingforanimals.veganuniverse.place.details.GetPlaceDetails
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
-import org.codingforanimals.veganuniverse.place.presentation.R
-import org.codingforanimals.veganuniverse.place.reviews.DeletePlaceReview
-import org.codingforanimals.veganuniverse.place.reviews.ReportPlaceReview
-import org.codingforanimals.veganuniverse.place.reviews.SubmitPlaceReview
-import org.codingforanimals.veganuniverse.place.presentation.details.usecase.PlaceDetailsUseCases
-import org.codingforanimals.veganuniverse.place.presentation.navigation.selected_place_id
 import org.codingforanimals.veganuniverse.commons.profile.shared.model.ToggleResult
-import org.codingforanimals.veganuniverse.commons.ui.R.string.report_success
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_error
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_success
+import org.codingforanimals.veganuniverse.commons.ui.R.string.report_success
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message_try_again
-import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
+import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 import org.codingforanimals.veganuniverse.place.details.EditPlace
+import org.codingforanimals.veganuniverse.place.details.GetPlaceDetails
 import org.codingforanimals.veganuniverse.place.details.ReportPlace
+import org.codingforanimals.veganuniverse.place.presentation.R
+import org.codingforanimals.veganuniverse.place.presentation.details.usecase.PlaceDetailsUseCases
+import org.codingforanimals.veganuniverse.place.presentation.navigation.selected_place_id
+import org.codingforanimals.veganuniverse.place.reviews.DeletePlaceReview
+import org.codingforanimals.veganuniverse.place.reviews.ReportPlaceReview
+import org.codingforanimals.veganuniverse.place.reviews.SubmitPlaceReview
 import kotlin.math.roundToInt
 
 internal class PlaceDetailsViewModel(
@@ -102,13 +102,16 @@ internal class PlaceDetailsViewModel(
         initialValue = null
     )
 
-    val otherReviewsState: StateFlow<OtherReviewsState> = flow {
-        val geoHash = placeGeoHashNavArg ?: return@flow emit(OtherReviewsState.UnexpectedError)
-        val otherReviews = useCases.getPlaceReviews(geoHash)
-        if (otherReviews.isFailure) {
-            emit(OtherReviewsState.UnexpectedError)
-        } else {
-            emit(OtherReviewsState.Success(otherReviews.getOrNull().orEmpty()))
+    val otherReviewsState: StateFlow<OtherReviewsState> = channelFlow {
+        val geoHash =
+            placeGeoHashNavArg ?: return@channelFlow send(OtherReviewsState.UnexpectedError)
+        flowOnCurrentUser().collectLatest {
+            val otherReviews = useCases.getPlaceReviews(geoHash)
+            if (otherReviews.isFailure) {
+                send(OtherReviewsState.UnexpectedError)
+            } else {
+                send(OtherReviewsState.Success(otherReviews.getOrNull().orEmpty()))
+            }
         }
     }.stateIn(
         scope = viewModelScope,
@@ -172,6 +175,7 @@ internal class PlaceDetailsViewModel(
             Action.OnReportPlaceClick -> {
                 alertDialog = AlertDialog.ReportPlace
             }
+
             Action.OnEditPlaceClick -> {
                 alertDialog = AlertDialog.EditPlace
             }
@@ -233,6 +237,7 @@ internal class PlaceDetailsViewModel(
             ReportContentDialogResult.Dismiss -> {
                 alertDialog = null
             }
+
             ReportContentDialogResult.SendReport -> {
                 placeGeoHashNavArg ?: return
                 viewModelScope.launch {
@@ -244,12 +249,15 @@ internal class PlaceDetailsViewModel(
                         ReportPlace.Result.Success -> {
                             snackbarEffectsChannel.send(Snackbar(report_success))
                         }
+
                         ReportPlace.Result.UnauthenticatedUser -> {
                             navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
                         }
+
                         ReportPlace.Result.UnexpectedError -> {
                             snackbarEffectsChannel.send(Snackbar(unexpected_error_message))
                         }
+
                         ReportPlace.Result.UnverifiedEmail -> {
                             alertDialog = AlertDialog.UnverifiedEmail
                         }
@@ -264,6 +272,7 @@ internal class PlaceDetailsViewModel(
             EditContentDialogResult.Dismiss -> {
                 alertDialog = null
             }
+
             is EditContentDialogResult.SendEdit -> {
                 placeGeoHashNavArg ?: return
                 viewModelScope.launch {
@@ -275,12 +284,15 @@ internal class PlaceDetailsViewModel(
                         EditPlace.Result.Success -> {
                             snackbarEffectsChannel.send(Snackbar(edit_success))
                         }
+
                         EditPlace.Result.UnauthenticatedUser -> {
                             navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
                         }
+
                         EditPlace.Result.UnexpectedError -> {
                             snackbarEffectsChannel.send(Snackbar(edit_error))
                         }
+
                         EditPlace.Result.UnverifiedEmail -> {
                             alertDialog = AlertDialog.UnverifiedEmail
                         }
@@ -357,10 +369,16 @@ internal class PlaceDetailsViewModel(
     private fun handleNewReviewAction(action: Action.NewReview) {
         when (action) {
             is Action.NewReview.OnRatingChange -> {
-                newReviewState = newReviewState.copy(
-                    rating = action.rating,
-                    visible = true,
-                )
+                if (user.value == null) {
+                    viewModelScope.launch {
+                        navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
+                    }
+                } else {
+                    newReviewState = newReviewState.copy(
+                        rating = action.rating,
+                        visible = true,
+                    )
+                }
             }
 
             is Action.NewReview.OnTitleChange -> {
@@ -421,6 +439,7 @@ internal class PlaceDetailsViewModel(
                 SubmitPlaceReview.Result.UnauthenticatedUser -> {
                     navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
                 }
+
                 SubmitPlaceReview.Result.UnverifiedEmail -> {
                     alertDialog = AlertDialog.UnverifiedEmail
                 }

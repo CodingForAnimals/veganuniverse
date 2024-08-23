@@ -13,8 +13,8 @@ android {
 
     defaultConfig {
         applicationId = "org.codingforanimals.veganuniverse"
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 6
+        versionName = "0.0.1"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -27,17 +27,16 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("/Users/agustin.magne/agus/veganuniverse/vukey.jks")
+            storeFile = file("/Users/agustin.magne/agus/veganuniverse/veganuniverse-keystore-release.jks")
 //            storeFile = file("C:\\Users\\agusm\\Dev\\codingforanimals\\veganuniverse\\vukey.jks")
-            storePassword = "123123"
-            keyAlias = "vukey"
-            keyPassword = "123123"
+            storePassword = "veganuniverse1324"
+            keyAlias = "key0"
+            keyPassword = "veganuniverse1324"
         }
     }
 
     buildTypes {
         named("release") {
-            isDebuggable = true
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             proguardFiles(

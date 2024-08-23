@@ -4,7 +4,6 @@ object versions {
     const val core = "1.9.23"
     const val lifecycle = "2.5.1"
     const val coroutines = "1.6.4"
-    const val composeBom = "2024.06.00"
     const val compose = "1.3.1"
     const val composeCompiler = "1.5.11"
     const val accompanist = "0.25.1"
@@ -82,7 +81,21 @@ object libs {
 
     }
 
+
+    const val coil = "io.coil-kt:coil-compose:2.7.0"
+
     object androidx {
+        const val composeBom = "2024.06.00"
+        val compose = listOf(
+            "androidx.compose.ui:ui",
+            "androidx.compose.material3:material3",
+            "androidx.compose.material:material-icons-extended",
+            "androidx.compose.ui:ui-tooling-preview",
+//        "androidx.activity:activity-compose:1.6.1",
+            "androidx.navigation:navigation-compose:2.7.7",
+            "androidx.lifecycle:lifecycle-runtime-compose:2.8.4",
+        )
+
         const val datastore = "androidx.datastore:datastore-preferences:${versions.datastore}"
         const val paging = "androidx.paging:paging-runtime-ktx:${versions.paging}"
         const val paging_compose = "androidx.paging:paging-compose:${versions.paging_compose}"
@@ -94,16 +107,6 @@ object libs {
     val android = listOf(
         "androidx.core:core-ktx:${versions.core}",
         "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle}",
-    )
-    val compose = listOf(
-        "androidx.compose.ui:ui",
-        "androidx.compose.material3:material3",
-        "androidx.compose.material:material-icons-extended",
-        "androidx.compose.ui:ui-tooling-preview",
-        "androidx.activity:activity-compose:1.6.1",
-        "androidx.navigation:navigation-compose:2.5.2",
-        "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha04",
-        "io.coil-kt:coil-compose:2.2.0"
     )
 
     val composeDebug = listOf(

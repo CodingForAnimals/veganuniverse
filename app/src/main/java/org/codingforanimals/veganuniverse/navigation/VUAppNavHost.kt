@@ -1,17 +1,11 @@
 package org.codingforanimals.veganuniverse.navigation
 
-import android.util.Log
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
-import org.codingforanimals.veganuniverse.create.graph.CreateDestination
 import org.codingforanimals.veganuniverse.create.graph.createGraph
 import org.codingforanimals.veganuniverse.place.presentation.navigation.navigateToPlaceListing
 import org.codingforanimals.veganuniverse.place.presentation.navigation.placesGraph
@@ -49,14 +43,13 @@ internal fun VUAppNavHost(
         )
         productGraph(
             navController = navController,
-            navigateToCreateProductScreen = { navController.navigate(CreateDestination.Product) },
-            snackbarHostState = snackbarHostState,
+            navigateToAuthenticateScreen = {
+                navController.navigate(RegistrationDestination.Prompt)
+            },
             navigateToAuthScreen = {
                 navController.navigate(RegistrationDestination.Prompt)
             },
-            navigateToAuthenticateScreen = {
-                navController.navigate(RegistrationDestination.Prompt)
-            }
+            snackbarHostState = snackbarHostState
         )
         registrationGraph(
             navController = navController
