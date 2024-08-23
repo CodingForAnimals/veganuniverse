@@ -41,7 +41,11 @@ include(":feature:post:presentation")
 include(":feature:places:presentation")
 include(":feature:places:domain")
 include(":services:firebase:places")
+include(":services:firebase:product")
+
 include(":entity:places")
+include(":entity:recipes")
+include(":entity:product")
 
 include(":feature:registration:presentation")
 
@@ -68,7 +72,6 @@ include(":services:firebase:user")
 include(":services:firebase")
 include(":services:google:places")
 include(":services:firebase:recipes")
-include(":entity:recipes")
 include(":feature:recipes:domain")
 
 include(":storage:firestore")
@@ -80,4 +83,16 @@ include(":shared:ui")
 include(":ui:places")
 include("ui:recipes")
 include("ui:create")
+include("ui:product")
 include("model:profile")
+
+include(":feature:create:product:domain")
+include(":feature:create:product:presentation")
+
+include(":feature:product:graph")
+
+include(":feature:product:categories:domain")
+include(":feature:product:categories:presentation")
+
+include(":feature:product:list:domain")
+include(":feature:product:list:presentation")

@@ -1,6 +1,10 @@
 package org.codingforanimals.veganuniverse.services.firebase
 
 object DatabasePath {
+    object Product {
+        const val ITEMS = "content/product/items"
+    }
+
     object Content {
         object Places {
             fun card(placeId: String) = "content/places/cards/$placeId"
@@ -24,11 +28,13 @@ object DatabasePath {
         object Bookmarks {
             const val RECIPES = "profile/bookmarks/recipes"
             const val PLACES = "profile/bookmarks/places"
+            const val PRODUCT = "profile/bookmarks/product"
         }
 
         object Contributions {
             const val RECIPES = "profile/contributions/recipes"
             const val PLACES = "profile/contributions/places"
+            const val PRODUCT = "profile/contributions/product"
         }
     }
 }

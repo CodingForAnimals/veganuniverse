@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Universo Vegano</string>
     <string name="nav_label_community">Comunidad</string>
+    <string name="nav_label_is_vegan">Es vegan?</string>
     <string name="nav_label_places">Lugares</string>
     <string name="nav_label_create">Crear</string>
     <string name="nav_label_recipes">Recetas</string>

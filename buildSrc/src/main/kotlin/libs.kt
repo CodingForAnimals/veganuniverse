@@ -22,6 +22,7 @@ object versions {
 
 object Module {
     const val UI = ":ui"
+
     object Shared {
         const val UI = ":shared:ui"
     }
@@ -43,6 +44,7 @@ object Module {
         const val BASE = ":entity"
         const val PLACES = ":entity:places"
         const val RECIPES = ":entity:recipes"
+        const val PRODUCT = ":entity:product"
     }
 
     object Services {
@@ -70,6 +72,26 @@ object Module {
         }
     }
 
+    object Product {
+        const val GRAPH = ":feature:product:graph"
+
+        object Categories {
+            const val DOMAIN = ":feature:product:categories:domain"
+            const val PRESENTATION = ":feature:product:categories:presentation"
+        }
+
+        object List {
+            const val DOMAIN = ":feature:product:list:domain"
+            const val PRESENTATION = ":feature:product:list:presentation"
+        }
+
+        const val UI = ":ui:product"
+
+        object Services {
+            const val FIREBASE = ":services:firebase:product"
+        }
+    }
+
     object Profile {
         const val GRAPH = ":feature:profile"
         const val MODEL = ":model:profile"
@@ -92,17 +114,26 @@ object Module {
     object Create {
         const val UI = ":ui:create"
         const val GRAPH = ":feature:create:graph"
+
         object Home {
             const val PRESENTATION = ":feature:create:home:presentation"
         }
+
         object Place {
             const val DOMAIN = ":feature:create:place:domain"
             const val PRESENTATION = ":feature:create:place:presentation"
         }
+
         object Recipe {
             const val DOMAIN = ":feature:create:recipe:domain"
             const val PRESENTATION = ":feature:create:recipe:presentation"
         }
+
+        object Product {
+            const val DOMAIN = ":feature:create:product:domain"
+            const val PRESENTATION = ":feature:create:product:presentation"
+        }
+
         object ThankYou {
             const val PRESENTATION = ":feature:create:thank_you:presentation"
         }

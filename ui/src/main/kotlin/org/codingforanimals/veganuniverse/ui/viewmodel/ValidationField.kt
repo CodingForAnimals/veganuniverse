@@ -26,6 +26,12 @@ data class StringField(
     override val isValid: Boolean = value.isNotBlank()
 }
 
+data class SelectableField(
+    val value: Any? = null,
+) : ValidationField() {
+    override val isValid: Boolean = value != null
+}
+
 fun areFieldsValid(vararg fields: ValidationField): Boolean {
     for (field in fields) {
         if (!field.isValid) return false

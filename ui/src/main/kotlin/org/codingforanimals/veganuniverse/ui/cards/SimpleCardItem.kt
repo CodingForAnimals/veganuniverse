@@ -3,7 +3,7 @@ package org.codingforanimals.veganuniverse.ui.cards
 class SimpleCardItem(
     id: String,
     title: String,
-    imageRef: String,
+    imageRef: Any,
 ) : CardItem(
     id = id,
     title = title,

@@ -52,7 +52,7 @@ internal fun VUApp(
             ) {
                 VUTopAppBar(
                     topLevelDestination = topLevelDestination,
-                    onBackClick = appState::navigateToCommunity,
+                    onBackClick = appState::navigateBackHomeToProducts,
                     actions = appState.topBarActions,
                     onActionClick = appState::onActionClick
                 )

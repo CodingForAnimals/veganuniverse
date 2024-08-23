@@ -45,16 +45,6 @@ class ProfileItemListViewModel(
 
     fun onAction(action: Action) {
         when (action) {
-            is Action.NavigateToItemDetails -> {
-                val navigationSideEffect = when (uiState.contentType) {
-                    SaveableContentType.PLACE -> SideEffect.NavigateToPlace(geoHash = action.id)
-                    SaveableContentType.RECIPE -> SideEffect.NavigateToRecipe(id = action.id)
-                }
-                viewModelScope.launch {
-                    sideEffectsChannel.send(navigationSideEffect)
-                }
-            }
-
             Action.OnBackClick -> {
                 viewModelScope.launch {
                     sideEffectsChannel.send(SideEffect.NavigateUp)
@@ -67,6 +57,7 @@ class ProfileItemListViewModel(
                     val navigationEffect = when (uiState.contentType) {
                         SaveableContentType.RECIPE -> SideEffect.NavigateToRecipe(action.id)
                         SaveableContentType.PLACE -> SideEffect.NavigateToPlace(action.id)
+                        SaveableContentType.PRODUCT -> throw Exception()
                     }
                     sideEffectsChannel.send(navigationEffect)
                 }
@@ -125,6 +116,7 @@ class ProfileItemListViewModel(
                             when (contentType) {
                                 SaveableContentType.PLACE -> R.string.profile_item_list_bookmarked_places_title
                                 SaveableContentType.RECIPE -> R.string.profile_item_list_bookmarked_recipes_title
+                                SaveableContentType.PRODUCT -> R.string.profile_item_list_bookmarked_products_title
                             }
                         }
 
@@ -132,6 +124,7 @@ class ProfileItemListViewModel(
                             when (contentType) {
                                 SaveableContentType.PLACE -> R.string.profile_item_list_contributed_places_title
                                 SaveableContentType.RECIPE -> R.string.profile_item_list_contributed_recipes_title
+                                SaveableContentType.PRODUCT -> R.string.profile_item_list_contributed_products_title
                             }
                         }
 
@@ -154,8 +147,6 @@ class ProfileItemListViewModel(
     sealed class Action {
         data object OnBackClick : Action()
         data object OnLoadMoreClick : Action()
-
-        data class NavigateToItemDetails(val id: String) : Action()
         data class OnItemClick(val id: String) : Action()
     }
 

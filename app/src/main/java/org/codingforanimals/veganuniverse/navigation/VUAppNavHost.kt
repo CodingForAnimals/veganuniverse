@@ -22,6 +22,7 @@ import org.codingforanimals.veganuniverse.featuredtopic.presentation.nav.navigat
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.notificationsGraph
 import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
 import org.codingforanimals.veganuniverse.places.presentation.navigation.placesGraph
+import org.codingforanimals.veganuniverse.product.graph.productGraph
 import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.profile.profileGraph
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
@@ -58,6 +59,9 @@ internal fun VUAppNavHost(
             navigateToRecipe = { navController.navigate("${RecipesDestination.Details.route}/$it") },
             navigateToPlace = { navController.navigate("${PlacesDestination.Details.route}/$it") },
             navController = navController
+        )
+        productGraph(
+            navController = navController,
         )
         registrationGraph(
             navController = navController,

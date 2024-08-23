@@ -6,12 +6,12 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import org.codingforanimals.veganuniverse.community.presentation.navigation.CommunityDestination
 import org.codingforanimals.veganuniverse.create.graph.CreateDestination
 import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
 import org.codingforanimals.veganuniverse.navigation.rememberVUNavController
 import org.codingforanimals.veganuniverse.notifications.presentation.navigation.NotificationsDestination
 import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
+import org.codingforanimals.veganuniverse.product.graph.ProductDestination
 import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
 import org.codingforanimals.veganuniverse.search.presentation.navigation.SearchDestination
@@ -45,7 +45,7 @@ class VUAppState(
 
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
-            CommunityDestination.route -> TopLevelDestination.COMMUNITY
+            ProductDestination.Categories.route -> TopLevelDestination.PRODUCTS
             PlacesDestination.Home.route -> TopLevelDestination.PLACES
             CreateDestination.Home.route -> TopLevelDestination.CREATE
             RecipesDestination.Home.route -> TopLevelDestination.RECIPES
@@ -57,7 +57,7 @@ class VUAppState(
 
     fun navigateToTopLevelDestination(destination: TopLevelDestination) {
         when (destination) {
-            TopLevelDestination.COMMUNITY -> navigateToCommunity()
+            TopLevelDestination.PRODUCTS -> navigateBackHomeToProducts()
             TopLevelDestination.PLACES -> navController.navigate(PlacesDestination.Home.route)
             TopLevelDestination.CREATE -> navController.navigate(CreateDestination.Home.route)
             TopLevelDestination.RECIPES -> navController.navigate(RecipesDestination.Home.route)
@@ -65,9 +65,9 @@ class VUAppState(
         }
     }
 
-    fun navigateToCommunity() {
-        navController.navigate(CommunityDestination.route) {
-            popUpTo(CommunityDestination.route) { inclusive = true }
+    fun navigateBackHomeToProducts() {
+        navController.navigate(ProductDestination.Categories.route) {
+            popUpTo(ProductDestination.Categories.route) { inclusive = true }
         }
     }
 
