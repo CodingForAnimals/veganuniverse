@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.commons.profile.data.remote
+package org.codingforanimals.veganuniverse.commons.profile.data.model
 
 data class ProfileDTO(
     val likes: ProfileLikesDTO = ProfileLikesDTO(),

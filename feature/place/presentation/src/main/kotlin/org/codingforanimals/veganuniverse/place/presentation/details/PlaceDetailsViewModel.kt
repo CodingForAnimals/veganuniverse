@@ -287,10 +287,10 @@ internal class PlaceDetailsViewModel(
                 alertDialogLoading = true
                 viewModelScope.launch {
                     if (useCases.deletePlaceReview(placeGeoHashNavArg, action.reviewId).isSuccess) {
-                        snackbarEffectsChannel.send(Snackbar(unexpected_error))
-                    } else {
                         refreshUserReviewActionChannel.send(Unit)
                         snackbarEffectsChannel.send(Snackbar(R.string.delete_review_success))
+                    } else {
+                        snackbarEffectsChannel.send(Snackbar(unexpected_error))
                     }
                     alertDialogLoading = false
                     alertDialog = null
