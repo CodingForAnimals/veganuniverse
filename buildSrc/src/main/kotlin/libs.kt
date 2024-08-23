@@ -4,7 +4,7 @@ object versions {
     const val core = "1.9.23"
     const val lifecycle = "2.5.1"
     const val coroutines = "1.6.4"
-    const val composeBom = "2024.04.00"
+    const val composeBom = "2024.06.00"
     const val compose = "1.3.1"
     const val composeCompiler = "1.5.11"
     const val accompanist = "0.25.1"
