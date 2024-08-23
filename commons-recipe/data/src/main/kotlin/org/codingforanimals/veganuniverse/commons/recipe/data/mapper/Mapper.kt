@@ -17,7 +17,7 @@ fun Recipe.toNewFirestoreEntity(imageId: String): RecipeFirestoreEntity {
         prepTime = prepTime,
         servings = servings,
         imageId = imageId,
-        validated = false,
+        validated = true,
         likes = 0,
         createdAt = null,
     )

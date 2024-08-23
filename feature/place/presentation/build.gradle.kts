@@ -18,12 +18,8 @@ dependencies {
     implementation(project(":commons-profile:domain"))
     implementation(project(":commons:navigation"))
     implementation(project(":feature:place:domain"))
-    implementation(Google.MAPS)
+    implementation(libs.google.mapsLibs)
 
     implementation(libs.androidx.paging)
     implementation(libs.androidx.paging_compose)
-
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }

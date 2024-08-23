@@ -3,7 +3,7 @@ package org.codingforanimals.veganuniverse.app.di
 import org.codingforanimals.veganuniverse.app.MainViewModel
 import org.codingforanimals.veganuniverse.commons.navigation.commonsNavigationModule
 import org.codingforanimals.veganuniverse.create.graph.di.createFeatureModule
-import org.codingforanimals.veganuniverse.onboarding.presentation.di.onboardingModule
+import org.codingforanimals.veganuniverse.onboarding.domain.di.onboardingDomainModule
 import org.codingforanimals.veganuniverse.place.presentation.di.placesFeaturePresentationModule
 import org.codingforanimals.veganuniverse.product.presentation.di.productPresentationModule
 import org.codingforanimals.veganuniverse.profile.di.profileFeatureModule
@@ -16,7 +16,7 @@ import org.koin.dsl.module
 internal val appModule = module {
     includes(
         locationModule,
-        onboardingModule,
+        onboardingDomainModule,
         placesFeaturePresentationModule,
         createFeatureModule,
         registrationModule,

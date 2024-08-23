@@ -18,6 +18,5 @@ dependencies {
     implementation(project(":feature:create:place:domain"))
     implementation(project(":services:google-places"))
     implementation(project(":services:location"))
-    implementation(Google.MAPS)
-
+    implementation(libs.google.mapsLibs)
 }

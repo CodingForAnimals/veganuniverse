@@ -1,48 +1,55 @@
 package org.codingforanimals.veganuniverse.app
 
-import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
 import org.codingforanimals.veganuniverse.commons.profile.domain.repository.ProfileRepository
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
-import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingPresenter
+import org.codingforanimals.veganuniverse.onboarding.domain.OnboardingRepository
 import org.codingforanimals.veganuniverse.services.location.UserLocationManager
 
 class MainViewModel(
-    private val onboardingPresenter: OnboardingPresenter,
     private val userLocationManager: UserLocationManager,
     private val profileRepository: ProfileRepository,
     deeplinkNavigator: DeeplinkNavigator,
     flowOnCurrentUser: FlowOnCurrentUser,
+    private val onboardingRepository: OnboardingRepository,
 ) : ViewModel() {
+
+    val wasOnboardingDismissed = onboardingRepository
+        .wasOnboardingDismissed()
+        .stateIn(
+            scope = viewModelScope,
+            initialValue = true,
+            started = SharingStarted.WhileSubscribed(5_000),
+        )
 
     val deeplinkFlow = deeplinkNavigator.deeplinkFlow
 
-    private val _uiState: MutableStateFlow<LaunchState> = MutableStateFlow(LaunchState.Loading)
-    val uiState: StateFlow<LaunchState> = _uiState
-
     init {
         viewModelScope.launch {
+
+            // pasar a un caso de uso.
             flowOnCurrentUser().collectLatest { user ->
                 if (user == null) {
-                    Log.e("pepe", "clearing")
                     profileRepository.clearProfile()
                 } else {
-                    Log.e("pepe", "downloading")
                     profileRepository.downloadAndStoreProfile()
                 }
             }
         }
     }
 
+    // pasar a place home screen
     fun onPermissionsChange(fineLocation: Boolean?) {
-        checkUserState()
         if (fineLocation == true) {
             viewModelScope.launch {
                 userLocationManager.requestUserLocation()
@@ -50,19 +57,9 @@ class MainViewModel(
         }
     }
 
-    private fun checkUserState() {
+    fun setOnboardingAsDismissed() {
         viewModelScope.launch {
-            val showOnboarding = async { onboardingPresenter.showOnboarding() }
-            _uiState.value = LaunchState.Completed(
-                showOnboarding = showOnboarding.await(),
-            )
+            onboardingRepository.setWasOnboardingDismissed(true)
         }
-    }
-
-    sealed class LaunchState {
-        data object Loading : LaunchState()
-        data class Completed(
-            val showOnboarding: Boolean,
-        ) : LaunchState()
     }
 }

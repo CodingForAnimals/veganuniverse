@@ -14,21 +14,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.ui.animation.ShimmerItem
 import org.codingforanimals.veganuniverse.commons.ui.components.VUAssistChip
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
-
-private fun Modifier.loadingPlaceholder() = composed {
-    placeholder(
-        visible = true,
-        color = MaterialTheme.colorScheme.surface,
-        highlight = PlaceholderHighlight.shimmer(MaterialTheme.colorScheme.surfaceVariant)
-    )
-}
 
 @Composable
 internal fun LoadingSheet() {
@@ -38,9 +33,7 @@ internal fun LoadingSheet() {
             horizontalArrangement = Arrangement.spacedBy(Spacing_04),
         ) {
             VUAssistChip(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .loadingPlaceholder(),
+                modifier = Modifier.clip(CircleShape),
                 label = "Filtrar",
                 icon = VUIcons.Filter,
                 onClick = {},
@@ -48,8 +41,7 @@ internal fun LoadingSheet() {
             )
             VUAssistChip(
                 modifier = Modifier
-                    .clip(CircleShape)
-                    .loadingPlaceholder(),
+                    .clip(CircleShape),
                 label = "Ordenar",
                 icon = VUIcons.Filter,
                 onClick = {},
@@ -57,18 +49,20 @@ internal fun LoadingSheet() {
             )
         }
         repeat(3) {
-            Column(
-                modifier = Modifier.padding(Spacing_04),
-                verticalArrangement = Arrangement.spacedBy(Spacing_04)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .clip(ShapeDefaults.Medium)
-                        .loadingPlaceholder()
-                        .height(200.dp)
-                        .fillMaxWidth()
-                )
-            }
+            ShimmerItem(Modifier
+                .padding(Spacing_04)
+                .clip(ShapeDefaults.Medium)
+                .height(200.dp)
+                .fillMaxWidth()
+            )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewLoadingSheet() {
+    VeganUniverseTheme {
+        LoadingSheet()
     }
 }

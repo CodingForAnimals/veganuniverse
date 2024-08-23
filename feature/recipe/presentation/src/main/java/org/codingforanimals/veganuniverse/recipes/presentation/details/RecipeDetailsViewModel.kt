@@ -170,7 +170,6 @@ internal class RecipeDetailsViewModel(
             }
 
             is Action.OnReportResult -> onReportResult(action.result)
-            is Action.OnEditResult -> onEditResult(action.result)
             is Action.OnUnverifiedEmailResult -> onUnverifiedEmailResult(action.result)
             Action.OnDeleteClick -> {
                 dialog = Dialog.Delete
@@ -202,29 +201,6 @@ internal class RecipeDetailsViewModel(
 
                         ReportRecipe.Result.UnexpectedError -> {
                             snackbarEffectsChannel.send(Snackbar(unexpected_error_message))
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun onEditResult(result: EditContentDialogResult) {
-        dialog = null
-        when (result) {
-            EditContentDialogResult.Dismiss -> Unit
-            is EditContentDialogResult.SendEdit -> {
-                recipeId ?: return
-                viewModelScope.launch {
-                    when (useCases.editRecipe(recipeId, result.edition)) {
-                        EditRecipe.Result.Success -> {
-                            snackbarEffectsChannel.send(Snackbar(edit_success))
-                        }
-                        EditRecipe.Result.UnauthenticatedUser -> {
-                            navigationEffectsChannel.send(NavigationEffect.NavigateToAuthenticateScreen)
-                        }
-                        EditRecipe.Result.UnexpectedError -> {
-                            snackbarEffectsChannel.send(Snackbar(edit_error))
                         }
                     }
                 }
@@ -325,7 +301,6 @@ internal class RecipeDetailsViewModel(
         data object OnLikeClick : Action()
         data object OnBookmarkClick : Action()
         data object OnErrorDialogDismissRequest : Action()
-        data class OnEditResult(val result: EditContentDialogResult) : Action()
         data class OnReportResult(val result: ReportContentDialogResult) : Action()
         data class OnUnverifiedEmailResult(val result: UnverifiedEmailResult) : Action()
     }

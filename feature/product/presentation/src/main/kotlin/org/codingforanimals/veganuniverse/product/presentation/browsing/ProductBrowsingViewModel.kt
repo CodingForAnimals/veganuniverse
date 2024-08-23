@@ -29,8 +29,8 @@ import org.codingforanimals.veganuniverse.commons.ui.dialog.Dialog
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.product.domain.usecase.QueryProductsPagingDataFlow
 import org.codingforanimals.veganuniverse.product.presentation.R
-import org.codingforanimals.veganuniverse.product.presentation.model.toView
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
+import org.codingforanimals.veganuniverse.product.presentation.model.toView
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.CATEGORY
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.SORTER
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.TYPE
@@ -59,6 +59,7 @@ internal class ProductBrowsingViewModel(
         private set
 
     private val searchChannel = Channel<Unit>()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val products: Flow<PagingData<Product>> =
         searchChannel.receiveAsFlow().flatMapLatest {

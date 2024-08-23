@@ -13,15 +13,11 @@ android {
 
     defaultConfig {
         applicationId = "org.codingforanimals.veganuniverse"
-        versionCode = 6
+        versionCode = 7
         versionName = "0.0.1"
 
         vectorDrawables {
             useSupportLibrary = true
-        }
-
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
@@ -56,6 +52,7 @@ dependencies {
      */
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
     implementation(project(":feature:onboarding:presentation"))
+    implementation(project(":feature:onboarding:domain"))
     implementation(project(":commons-profile:domain"))
     implementation(project(":commons:user:domain"))
     implementation(project(":feature:profile"))
@@ -66,8 +63,6 @@ dependencies {
     implementation(project(":feature:registration:presentation"))
     implementation(project(":services:location"))
     implementation(project(":commons:navigation"))
-    implementation("com.google.maps.android:maps-compose:${versions.googleMapCompose}")
-    implementation("com.google.android.gms:play-services-maps:${versions.googleMapServices}")
 
     implementation("androidx.core:core-splashscreen:${versions.splashScreen}")
 

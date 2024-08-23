@@ -20,20 +20,20 @@ internal class UserDataStore(
     private val idKey = stringPreferencesKey(ID)
     private val emailKey = stringPreferencesKey(EMAIL)
     private val nameKey = stringPreferencesKey(NAME)
-    private val isEmailVerifiedKey = booleanPreferencesKey(IS_EMAIL_VERIFIED)
+    private val isVerifiedKey = booleanPreferencesKey(IS_VERIFIED)
 
     override fun flowOnCurrentUser(): Flow<User?> {
         return dataStore.data.transform { preferences ->
             val id = preferences[idKey] ?: return@transform emit(null)
             val email = preferences[emailKey] ?: return@transform emit(null)
             val name = preferences[nameKey] ?: return@transform emit(null)
-            val isEmailVerified = preferences[isEmailVerifiedKey] ?: false
+            val isVerified = preferences[isVerifiedKey] ?: false
             emit(
                 User(
                     userId = id,
                     email = email,
                     name = name,
-                    isEmailVerified = isEmailVerified,
+                    isVerified = isVerified,
                 )
             )
         }
@@ -44,7 +44,7 @@ internal class UserDataStore(
             preferences[idKey] = user.userId
             preferences[emailKey] = user.email
             preferences[nameKey] = user.name
-            preferences[isEmailVerifiedKey] = user.isEmailVerified
+            preferences[isVerifiedKey] = user.isVerified
         }
     }
 
@@ -58,6 +58,6 @@ internal class UserDataStore(
         private const val ID = "id"
         private const val EMAIL = "email"
         private const val NAME = "name"
-        private const val IS_EMAIL_VERIFIED = "is_email_verified"
+        private const val IS_VERIFIED = "is_verified"
     }
 }

@@ -12,7 +12,7 @@ class ReportPlace(
     suspend operator fun invoke(placeId: String): Result {
         return runCatching {
             val user = flowOnCurrentUser(true).firstOrNull() ?: return Result.UnauthenticatedUser
-            if (!user.isEmailVerified) return Result.UnverifiedEmail
+            if (!user.isVerified) return Result.UnverifiedEmail
             placeRepository.reportPlace(placeId, user.id)
             Result.Success
         }.getOrElse {

@@ -137,15 +137,15 @@ private fun Actions(
                 }
             )
         }
-        IconButton(onClick = onEditClick) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(VUIcons.Edit.id),
-                contentDescription = stringResource(id = edit),
-            )
-        }
         isOwner?.let {
             if (isOwner) {
+                IconButton(onClick = onEditClick) {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(VUIcons.Edit.id),
+                        contentDescription = stringResource(id = edit),
+                    )
+                }
                 IconButton(onClick = onDeleteClick) {
                     Icon(
                         modifier = Modifier.size(24.dp),

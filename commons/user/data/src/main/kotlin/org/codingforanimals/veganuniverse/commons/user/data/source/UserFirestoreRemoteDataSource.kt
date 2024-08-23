@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.commons.user.data.source
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.commons.user.data.model.User
@@ -20,7 +21,6 @@ internal class UserFirestoreRemoteDataSource(
             userId = userId,
             name = name,
             email = email,
-            isEmailVerified = false,
         )
         usersCollection.document().set(user).await()
         return user
@@ -38,7 +38,10 @@ internal class UserFirestoreRemoteDataSource(
         return runCatching {
             val currentUser = auth.currentUser ?: return null
             val userDTO = getUserFromFirestore(currentUser.uid)
-            userDTO?.copy(isEmailVerified = currentUser.isEmailVerified)
+            val isVerified = currentUser.isEmailVerified || currentUser.providerId == GoogleAuthProvider.PROVIDER_ID
+            userDTO?.copy(
+                isVerified = isVerified,
+            )
         }.onFailure {
             Log.e(TAG, it.stackTraceToString())
         }.getOrNull()

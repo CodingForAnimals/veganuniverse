@@ -15,8 +15,6 @@ object versions {
     const val koinAndroid = "3.3.2"
     const val koinAndroidCompose = "3.4.1"
     const val splashScreen = "1.0.1"
-    const val googleMapCompose = "2.8.0"
-    const val googleMapServices = "18.1.0"
     const val paging = "3.3.0"
     const val paging_compose = "3.3.0"
 }
@@ -33,25 +31,6 @@ object Firebase {
     const val GEO_FIRE = "com.firebase:geofire-android-common:3.2.0"
 }
 
-object Google {
-    const val AUTH = "com.google.android.gms:play-services-auth:20.5.0"
-    const val GSON = "com.google.code.gson:gson:2.10.1"
-    const val PLACES = "com.google.android.libraries.places:places:3.2.0"
-
-    const val MAPS_COMPOSE = "com.google.maps.android:maps-compose:2.8.0"
-    const val MAPS_UTILS = "com.google.maps.android:android-maps-utils:2.3.0"
-    const val PLAY_SERVICES_MAPS = "com.google.android.gms:play-services-maps:18.1.0"
-    const val PLAY_SERVICES_LOCATION = "com.google.android.gms:play-services-location:21.0.1"
-    val MAPS = listOf(
-        MAPS_COMPOSE,
-        MAPS_UTILS,
-        PLAY_SERVICES_MAPS,
-        PLAY_SERVICES_LOCATION,
-    )
-
-    const val PLACEHOLDER = "com.google.accompanist:accompanist-placeholder-material:0.29.1-alpha"
-}
-
 object Other {
     const val IMAGE_CROPPER = "com.vanniktech:android-image-cropper:4.5.0"
     const val SHIMMER = "com.valentinilk.shimmer:compose-shimmer:1.0.5"
@@ -65,9 +44,23 @@ object Koin {
 }
 
 object libs {
-
     object google {
         const val gson = "com.google.code.gson:gson:2.10.1"
+        const val auth = "com.google.android.gms:play-services-auth:20.5.0"
+        const val places = "com.google.android.libraries.places:places:3.2.0"
+
+        const val mapsUtils = "com.google.maps.android:android-maps-utils:2.3.0"
+        const val playServicesMaps = "com.google.android.gms:play-services-maps:19.0.0"
+        const val playServicesLocation = "com.google.android.gms:play-services-location:21.0.1"
+        const val mapsCompose = "com.google.maps.android:maps-compose:6.1.1"
+        val mapsLibs = listOf(
+            mapsCompose,
+            mapsUtils,
+            playServicesMaps,
+            playServicesLocation,
+        )
+
+        const val placeholder = "com.google.accompanist:accompanist-placeholder-material:0.29.1-alpha"
     }
 
     object firebase {

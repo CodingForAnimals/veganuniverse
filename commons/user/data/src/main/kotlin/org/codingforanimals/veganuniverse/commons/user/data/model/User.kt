@@ -6,5 +6,5 @@ data class User(
     val userId: String = "",
     val name: String = "",
     val email: String = "",
-    @get: Exclude val isEmailVerified: Boolean = false,
+    @get: Exclude val isVerified: Boolean = false,
 )

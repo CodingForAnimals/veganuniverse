@@ -19,7 +19,7 @@ class SubmitProduct(
 ) {
     suspend operator fun invoke(productForm: ProductForm): Result {
             val user = flowOnCurrentUser(true).firstOrNull() ?: return Result.GuestUser
-            if (!user.isEmailVerified) {
+            if (!user.isVerified) {
                 return Result.UnverifiedEmail
             }
 
