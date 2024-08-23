@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
-import org.codingforanimals.veganuniverse.commons.recipe.data.remote.entity.RecipeFirestoreEntity
+import org.codingforanimals.veganuniverse.commons.recipe.data.model.RecipeFirestoreEntity
 
 private const val TAG = "RecipePagingSource"
 

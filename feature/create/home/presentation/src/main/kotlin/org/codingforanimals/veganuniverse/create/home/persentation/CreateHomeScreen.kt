@@ -36,11 +36,12 @@ fun CreateHomeScreen(
         onAction = { action ->
             if (user == null) {
                 navigateToAuthenticationScreen()
-            }
-            when (action) {
-                Action.OnCreatePlaceClick -> navigateToCreatePlaceScreen()
-                Action.OnCreateProductClick -> navigateToCreateProductScreen()
-                Action.OnCreateRecipeClick -> navigateToCreateRecipeScreen()
+            } else {
+                when (action) {
+                    Action.OnCreatePlaceClick -> navigateToCreatePlaceScreen()
+                    Action.OnCreateProductClick -> navigateToCreateProductScreen()
+                    Action.OnCreateRecipeClick -> navigateToCreateRecipeScreen()
+                }
             }
         },
     )

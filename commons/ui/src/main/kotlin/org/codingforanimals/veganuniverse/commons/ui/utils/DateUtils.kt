@@ -20,10 +20,10 @@ object DateUtils {
                     /* time = */ time,
                     /* now = */ Date().time,
                     /* minResolution = */ DateUtils.MINUTE_IN_MILLIS
-                ).toString()
+                ).toString().lowercase()
             }.getOrElse {
                 Log.e(TAG, it.stackTraceToString())
-                it.stackTraceToString()
+                ""
             }
         }
     }

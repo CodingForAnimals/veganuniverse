@@ -25,8 +25,8 @@ import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 fun SelectableChip(
     modifier: Modifier = Modifier,
     label: String,
-    icon: Icon? = null,
     selected: Boolean,
+    icon: Icon? = null,
     selectedIcon: Icon = VUIcons.Check,
     shape: Shape = AssistChipDefaults.shape,
     onClick: () -> Unit,

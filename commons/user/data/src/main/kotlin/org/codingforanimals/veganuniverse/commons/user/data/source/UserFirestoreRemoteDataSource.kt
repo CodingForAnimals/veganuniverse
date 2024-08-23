@@ -4,7 +4,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import org.codingforanimals.veganuniverse.commons.user.data.dto.UserDTO
+import org.codingforanimals.veganuniverse.commons.user.data.model.User
 
 private const val TAG = "UserInfoFirestoreDataSo"
 
@@ -14,19 +14,19 @@ internal class UserFirestoreRemoteDataSource(
 ) : UserRemoteDataSource {
     private val usersCollection = firestore.collection(USERS_COLLECTION)
 
-    override suspend fun createUser(email: String, name: String): UserDTO {
+    override suspend fun createUser(email: String, name: String): User {
         val userId = auth.currentUser!!.uid
-        val userDTO = UserDTO(
+        val user = User(
             userId = userId,
             name = name,
             email = email,
             isEmailVerified = false,
         )
-        usersCollection.document().set(userDTO).await()
-        return userDTO
+        usersCollection.document().set(user).await()
+        return user
     }
 
-    override suspend fun getUser(userId: String): UserDTO? {
+    override suspend fun getUser(userId: String): User? {
         return runCatching {
             getUserFromFirestore(userId)
         }.onFailure {
@@ -34,7 +34,7 @@ internal class UserFirestoreRemoteDataSource(
         }.getOrNull()
     }
 
-    override suspend fun getCurrentUser(): UserDTO? {
+    override suspend fun getCurrentUser(): User? {
         return runCatching {
             val currentUser = auth.currentUser ?: return null
             val userDTO = getUserFromFirestore(currentUser.uid)
@@ -44,10 +44,10 @@ internal class UserFirestoreRemoteDataSource(
         }.getOrNull()
     }
 
-    private suspend fun getUserFromFirestore(userId: String): UserDTO? {
+    private suspend fun getUserFromFirestore(userId: String): User? {
         return usersCollection.whereEqualTo(USER_ID, userId)
             .get().await()
-            .documents.firstOrNull()?.toObject(UserDTO::class.java)
+            .documents.firstOrNull()?.toObject(User::class.java)
     }
 
     override suspend fun reloadUser() {

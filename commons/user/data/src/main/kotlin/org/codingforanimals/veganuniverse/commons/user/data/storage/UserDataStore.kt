@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transform
-import org.codingforanimals.veganuniverse.commons.user.data.dto.UserDTO
+import org.codingforanimals.veganuniverse.commons.user.data.model.User
 
 internal val Context.userDataStore by preferencesDataStore("user-data-store")
 
@@ -22,14 +22,14 @@ internal class UserDataStore(
     private val nameKey = stringPreferencesKey(NAME)
     private val isEmailVerifiedKey = booleanPreferencesKey(IS_EMAIL_VERIFIED)
 
-    override fun flowOnCurrentUser(): Flow<UserDTO?> {
+    override fun flowOnCurrentUser(): Flow<User?> {
         return dataStore.data.transform { preferences ->
             val id = preferences[idKey] ?: return@transform emit(null)
             val email = preferences[emailKey] ?: return@transform emit(null)
             val name = preferences[nameKey] ?: return@transform emit(null)
             val isEmailVerified = preferences[isEmailVerifiedKey] ?: false
             emit(
-                UserDTO(
+                User(
                     userId = id,
                     email = email,
                     name = name,
@@ -39,12 +39,12 @@ internal class UserDataStore(
         }
     }
 
-    override suspend fun setCurrentUser(userDTO: UserDTO) {
+    override suspend fun setCurrentUser(user: User) {
         dataStore.edit { preferences ->
-            preferences[idKey] = userDTO.userId
-            preferences[emailKey] = userDTO.email
-            preferences[nameKey] = userDTO.name
-            preferences[isEmailVerifiedKey] = userDTO.isEmailVerified
+            preferences[idKey] = user.userId
+            preferences[emailKey] = user.email
+            preferences[nameKey] = user.name
+            preferences[isEmailVerifiedKey] = user.isEmailVerified
         }
     }
 

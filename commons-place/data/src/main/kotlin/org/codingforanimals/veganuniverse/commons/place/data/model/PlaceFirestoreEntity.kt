@@ -21,5 +21,6 @@ internal data class PlaceFirestoreEntity(
     val openingHours: List<OpeningHours>? = null,
     val addressComponents: AddressComponents? = null,
     val imageId: String? = null,
+    val validated: Boolean = false,
     @ServerTimestamp val createdAt: Timestamp? = null,
 )

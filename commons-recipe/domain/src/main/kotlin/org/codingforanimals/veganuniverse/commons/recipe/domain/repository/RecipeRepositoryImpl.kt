@@ -3,7 +3,7 @@ package org.codingforanimals.veganuniverse.commons.recipe.domain.repository
 import android.os.Parcelable
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import org.codingforanimals.veganuniverse.commons.recipe.data.remote.RecipeRemoteDataSource
+import org.codingforanimals.veganuniverse.commons.recipe.data.RecipeRemoteDataSource
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeQueryParams
 

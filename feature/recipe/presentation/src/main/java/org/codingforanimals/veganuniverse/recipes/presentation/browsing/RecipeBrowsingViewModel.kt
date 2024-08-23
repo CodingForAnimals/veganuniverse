@@ -3,7 +3,9 @@
 package org.codingforanimals.veganuniverse.recipes.presentation.browsing
 
 import android.util.Log
-import androidx.annotation.StringRes
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,20 +16,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.recipe.domain.repository.RecipeRepository
-import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeQueryParams
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.dialog.Dialog
-import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination.Browsing.Companion.SORTER
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination.Browsing.Companion.TAG
 
@@ -46,17 +43,16 @@ internal class RecipeBrowsingViewModel(
     private val sideEffectsChannel: Channel<SideEffect> = Channel()
     val sideEffects: Flow<SideEffect> = sideEffectsChannel.receiveAsFlow()
 
-    private val _uiState: MutableStateFlow<UiState> =
-        MutableStateFlow(UiState.init(tagNavArgument, sorterNavArgument))
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    var uiState by mutableStateOf(UiState.init(tagNavArgument, sorterNavArgument))
+        private set
 
     private val searchChannel: Channel<Unit> = Channel()
     val recipes: Flow<PagingData<Recipe>> =
         searchChannel.receiveAsFlow().flatMapLatest {
             val params = RecipeQueryParams.Builder()
-                .withSorter(uiState.value.sorter)
-                .withTag(uiState.value.filterTag)
-                .withTitle(uiState.value.searchText.ifBlank { null })
+                .withSorter(uiState.sorter)
+                .withTag(uiState.filterTag)
+                .withName(uiState.searchText.ifBlank { null })
                 .build()
             recipeRepository.queryRecipesPagingData(params)
         }.cachedIn(viewModelScope)
@@ -85,8 +81,8 @@ internal class RecipeBrowsingViewModel(
             Action.OnClearFiltersClick -> {
                 val defaultFilterTag = null
                 val defaultSorter = RecipeSorter.DATE
-                if (uiState.value.filtersChanged(defaultFilterTag, defaultSorter)) {
-                    _uiState.value = uiState.value.copy(
+                if (defaultFilterTag == uiState.filterTag && defaultSorter == uiState.sorter) {
+                    uiState = uiState.copy(
                         recipes = emptyList(),
                         filterTag = defaultFilterTag,
                         sorter = defaultSorter,
@@ -98,22 +94,33 @@ internal class RecipeBrowsingViewModel(
             }
 
             is Action.OnApplyFilters -> {
-                if (uiState.value.filtersChanged(action.tag, action.sorter)) {
-                    _uiState.value = uiState.value.copy(
-                        recipes = emptyList(),
-                        filterTag = action.tag,
-                        sorter = action.sorter,
-                    )
-                    viewModelScope.launch {
-                        searchRecipes()
-                    }
+                val resetTitle = when (action.sorter) {
+                    RecipeSorter.DATE,
+                    RecipeSorter.LIKES -> true
+
+                    else -> false
+                }
+                uiState = uiState.copy(
+                    recipes = emptyList(),
+                    filterTag = action.tag,
+                    sorter = action.sorter,
+                    searchText = EMPTY_STRING.takeIf { resetTitle } ?: uiState.searchText
+                )
+                viewModelScope.launch {
+                    searchRecipes()
+                }
+                viewModelScope.launch {
+                    sideEffectsChannel.send(SideEffect.ClearFocus)
                 }
             }
 
             is Action.OnSearchTextChange -> {
-                _uiState.value = uiState.value.copy(searchText = action.text)
+                uiState = uiState.copy(searchText = action.text)
                 searchTextDelayJob?.cancel()
-                if (action.text.isEmpty() || action.text.length >= 3) {
+                if (action.text.isEmpty() || action.text.length >= MIN_SEARCH_TEXT_LENGTH) {
+                    uiState = uiState.copy(
+                        sorter = RecipeSorter.NAME,
+                    )
                     searchTextDelayJob = viewModelScope.launch {
                         delay(searchTextDelayMs)
                         searchRecipes()
@@ -133,16 +140,6 @@ internal class RecipeBrowsingViewModel(
         val dialog: Dialog? = null,
         val canLoadMore: Boolean = true,
     ) {
-        private val filterTagUI = filterTag?.toUI()
-        fun filtersChanged(
-            tag: RecipeTag?,
-            sorter: RecipeSorter,
-        ): Boolean {
-            return (filterTag != tag || this.sorter != sorter)
-        }
-
-        @StringRes
-        val topBarLabel: Int = filterTagUI?.label ?: R.string.all_recipes
 
         companion object {
             val defaultSorter = RecipeSorter.LIKES
@@ -193,5 +190,11 @@ internal class RecipeBrowsingViewModel(
     sealed class SideEffect {
         data object NavigateUp : SideEffect()
         data class NavigateToRecipeDetails(val recipeId: String) : SideEffect()
+        data object ClearFocus : SideEffect()
+    }
+
+    companion object {
+        const val MIN_SEARCH_TEXT_LENGTH = 3
+        const val EMPTY_STRING = ""
     }
 }

@@ -44,10 +44,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -86,11 +86,12 @@ internal fun RecipeBrowsingScreen(
 ) {
 
     val recipes = viewModel.recipes.collectAsLazyPagingItems()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val focusManager = LocalFocusManager.current
 
     RecipeBrowsingScreen(
         modifier = modifier,
-        uiState = uiState,
+        uiState = viewModel.uiState,
         onAction = viewModel::onAction,
         recipes = recipes,
     )
@@ -99,6 +100,7 @@ internal fun RecipeBrowsingScreen(
         sideEffects = viewModel.sideEffects,
         navigateUp = onBackClick,
         navigateToRecipeDetails = navigateToRecipeDetails,
+        clearFocus = { focusManager.clearFocus() },
     )
 }
 
@@ -241,7 +243,7 @@ private fun RecipeBrowsingScreen(
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalArrangement = Arrangement.spacedBy(Spacing_02),
                         ) {
-                            RecipeTag.values().forEach {
+                            RecipeTag.entries.forEach {
                                 key(it.name.hashCode()) {
                                     val tagUI = remember(it) { it.toUI() }
                                     SelectableChip(
@@ -264,18 +266,17 @@ private fun RecipeBrowsingScreen(
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalArrangement = Arrangement.spacedBy(Spacing_02),
                         ) {
-                            RecipeSorter.values()
-                                .forEach {
-                                    key(it.name.hashCode()) {
-                                        val sorterUI = remember(it) { it.toUI() }
-                                        SelectableChip(
-                                            label = stringResource(sorterUI.label),
-                                            icon = sorterUI.icon,
-                                            selected = currentSorter == it,
-                                            onClick = { currentSorter = it },
-                                        )
-                                    }
+                            RecipeSorter.entries.forEach {
+                                key(it.name.hashCode()) {
+                                    val sorterUI = remember(it) { it.toUI() }
+                                    SelectableChip(
+                                        label = stringResource(sorterUI.label),
+                                        icon = sorterUI.icon,
+                                        selected = currentSorter == it,
+                                        onClick = { currentSorter = it },
+                                    )
                                 }
+                            }
                         }
                         HorizontalDivider(modifier = Modifier.padding(vertical = Spacing_04))
                         Row(
@@ -319,12 +320,14 @@ private fun HandleSideEffects(
     sideEffects: Flow<SideEffect>,
     navigateUp: () -> Unit,
     navigateToRecipeDetails: (String) -> Unit,
+    clearFocus: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         sideEffects.onEach { sideEffect ->
             when (sideEffect) {
                 is SideEffect.NavigateToRecipeDetails -> navigateToRecipeDetails(sideEffect.recipeId)
                 SideEffect.NavigateUp -> navigateUp()
+                SideEffect.ClearFocus -> clearFocus()
             }
         }.collect()
     }
