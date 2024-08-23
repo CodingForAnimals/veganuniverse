@@ -3,37 +3,28 @@ package org.codingforanimals.veganuniverse.core.location
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
+import android.util.Log
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.Priority
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
 import org.codingforanimals.veganuniverse.core.location.model.LocationResponse
 
 private const val TAG = "UserLocationManagerImpl"
 
 internal class UserLocationManagerImpl(
-    coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val context: Context,
 ) : UserLocationManager {
-
-    private val scope = CoroutineScope(coroutineDispatcherProvider.io())
 
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(context)
     }
-
-    private var userLocationJob: Job? = null
-
     private var _userLocation =
         MutableStateFlow<LocationResponse>(LocationResponse.LocationNotRequested)
 
@@ -41,15 +32,11 @@ internal class UserLocationManagerImpl(
         get() = _userLocation
 
     @SuppressLint("MissingPermission")
-    override fun fetchUserLocation() {
-        userLocationJob?.cancel()
-        userLocationJob = scope.launch {
-            _userLocation.value = LocationResponse.LocationLoading
-            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-                .addOnSuccessListener { location -> handleSuccess(location) }
-                .addOnFailureListener { exception -> handleException(exception) }
-
-        }
+    override suspend fun requestUserLocation() {
+        _userLocation.value = LocationResponse.LocationLoading
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+            .addOnSuccessListener { location -> handleSuccess(location) }
+            .addOnFailureListener { exception -> handleException(exception) }
     }
 
     override fun requestUserEnableLocationService() = callbackFlow {
@@ -74,10 +61,12 @@ internal class UserLocationManagerImpl(
     }
 
     private fun handleException(exception: Throwable) {
+        Log.e(TAG, exception.stackTraceToString())
         val userLocationErrorResponse = when (exception) {
             is SecurityException -> {
                 LocationResponse.PermissionsNotGranted
             }
+
             else -> {
                 LocationResponse.UnknownError
             }

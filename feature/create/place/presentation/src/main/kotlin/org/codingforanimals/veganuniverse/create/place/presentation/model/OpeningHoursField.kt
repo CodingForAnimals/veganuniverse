@@ -4,7 +4,7 @@ import org.codingforanimals.veganuniverse.ui.calendar.DayOfWeek
 import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 data class OpeningHoursField(
-    private val openingHours: List<OpeningHours> = defaultOpeningHours,
+    private val openingHours: List<CreatePlaceOpeningHoursUI> = defaultOpeningHours,
     val isEditing: Boolean = false,
     val isExpanded: Boolean = true,
 ) {
@@ -13,13 +13,13 @@ data class OpeningHoursField(
 
     companion object {
         private val defaultOpeningHours = listOf(
-            OpeningHours(DayOfWeek.SUNDAY),
-            OpeningHours(DayOfWeek.MONDAY),
-            OpeningHours(DayOfWeek.TUESDAY),
-            OpeningHours(DayOfWeek.WEDNESDAY),
-            OpeningHours(DayOfWeek.THURSDAY),
-            OpeningHours(DayOfWeek.FRIDAY),
-            OpeningHours(DayOfWeek.SATURDAY),
+            CreatePlaceOpeningHoursUI(DayOfWeek.SUNDAY),
+            CreatePlaceOpeningHoursUI(DayOfWeek.MONDAY),
+            CreatePlaceOpeningHoursUI(DayOfWeek.TUESDAY),
+            CreatePlaceOpeningHoursUI(DayOfWeek.WEDNESDAY),
+            CreatePlaceOpeningHoursUI(DayOfWeek.THURSDAY),
+            CreatePlaceOpeningHoursUI(DayOfWeek.FRIDAY),
+            CreatePlaceOpeningHoursUI(DayOfWeek.SATURDAY),
         )
     }
 }

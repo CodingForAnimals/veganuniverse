@@ -26,7 +26,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
-import org.codingforanimals.veganuniverse.commons.user.domain.usecase.GetUserInfo
+import org.codingforanimals.veganuniverse.user.domain.usecase.GetUser
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.components.ProductAdditionalInfoViewModel.ProductAdditionalInfoState
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
@@ -46,13 +46,15 @@ import org.koin.core.parameter.parametersOf
 
 class ProductAdditionalInfoViewModel(
     private val product: Product,
-    private val getUserInfo: GetUserInfo,
+    private val getUser: GetUser,
 ) : ViewModel() {
 
-    val additionalInfo = flow<ProductAdditionalInfoState> {
-        val userInfo = getUserInfo(product.userId)
+    val additionalInfo = flow {
+        val userInfo = product.userId?.let { getUser(it) } ?: return@flow emit(
+            ProductAdditionalInfoState.NoContent
+        )
         val additionalInfo = ProductAdditionalInfo(
-            username = userInfo?.name,
+            username = userInfo.name,
             createdAt = product.creationDate?.time,
             comment = product.comment
         )
@@ -65,6 +67,7 @@ class ProductAdditionalInfoViewModel(
 
     sealed class ProductAdditionalInfoState {
         data object Loading : ProductAdditionalInfoState()
+        data object NoContent : ProductAdditionalInfoState()
         data class Content(val additionalInfo: ProductAdditionalInfo) : ProductAdditionalInfoState()
     }
 }
@@ -164,6 +167,8 @@ fun ProductAdditionalInfo(
                             }
                         }
                     }
+
+                    ProductAdditionalInfoState.NoContent -> Unit
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),

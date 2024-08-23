@@ -10,9 +10,11 @@ android {
 }
 
 dependencies {
-    implementation(AndroidX.paging)
-    implementation(AndroidX.paging_compose)
+    implementation(libs.androidx.paging)
+    implementation(libs.androidx.paging_compose)
     implementation(project(":commons:user:domain"))
+    implementation(project(":commons:product:domain"))
+    implementation(project(":commons:product:presentation"))
     implementation(project(":feature:product:domain"))
-    implementation(project(Module.Product.UI))
+    implementation(project(":ui:product"))
 }

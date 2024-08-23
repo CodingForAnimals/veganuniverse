@@ -9,7 +9,7 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Entity.RECIPES))
+    implementation(project(":entity:recipes"))
     bomImplementation(
         Firebase.BOM,
         listOf(

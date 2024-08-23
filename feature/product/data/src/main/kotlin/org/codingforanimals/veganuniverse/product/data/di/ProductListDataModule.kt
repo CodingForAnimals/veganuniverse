@@ -2,7 +2,7 @@ package org.codingforanimals.veganuniverse.product.data.di
 
 import androidx.paging.PagingConfig
 import com.google.firebase.firestore.FirebaseFirestore
-import org.codingforanimals.veganuniverse.commons.firebase.storage.di.commonsFirebaseStorageModule
+import org.codingforanimals.veganuniverse.firebase.storage.di.firebaseStorageModule
 import org.codingforanimals.veganuniverse.product.data.source.GetLatestProductsFirestoreDataSource
 import org.codingforanimals.veganuniverse.product.data.source.GetLatestProductsRemoteDataSource
 import org.codingforanimals.veganuniverse.product.data.source.GetPaginatedProductFirestoreDataSource
@@ -16,9 +16,8 @@ private const val PRODUCTS_SUGGESTIONS_COLLECTION = "content/products/suggestion
 
 val productDataModule = module {
     includes(
-        commonsFirebaseStorageModule,
+        firebaseStorageModule,
     )
-    factory { get<FirebaseFirestore>().collection(PRODUCTS_ITEMS_COLLECTION) }
     factory<GetLatestProductsRemoteDataSource> {
         GetLatestProductsFirestoreDataSource(
             productsCollection = get<FirebaseFirestore>().collection(PRODUCTS_ITEMS_COLLECTION),

@@ -2,7 +2,7 @@ package org.codingforanimals.veganuniverse.navigation
 
 import org.codingforanimals.veganuniverse.app.R
 import org.codingforanimals.veganuniverse.create.graph.CreateDestination
-import org.codingforanimals.veganuniverse.places.presentation.navigation.PlacesDestination
+import org.codingforanimals.veganuniverse.places.presentation.navigation.PlaceDestination
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
@@ -24,7 +24,7 @@ enum class TopLevelDestination(
         titleRes = R.string.nav_label_is_vegan,
     ),
     PLACES(
-        route = PlacesDestination.Home.route,
+        route = PlaceDestination.Home.route,
         unselectedIcon = VUIcons.Location,
         selectedIcon = VUIcons.LocationFilled,
         iconTextId = R.string.nav_label_places,

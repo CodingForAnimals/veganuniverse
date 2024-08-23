@@ -8,8 +8,12 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Entity.RECIPES))
-    implementation(project(Module.Services.Firebase.RECIPES))
-    implementation(project(Module.Services.Firebase.PROFILE))
-    implementation(project(Module.Profile.MODEL))
+    implementation(project(":commons:network"))
+    implementation(project(":commons:user:domain"))
+    implementation(project(":commons:recipe:domain"))
+    implementation(project(":commons:profile:domain"))
+    implementation(project(":entity:recipes"))
+    implementation(project(":services:firebase:recipes"))
+    implementation(project(":services:firebase:profile"))
+    implementation(project(":model:profile"))
 }

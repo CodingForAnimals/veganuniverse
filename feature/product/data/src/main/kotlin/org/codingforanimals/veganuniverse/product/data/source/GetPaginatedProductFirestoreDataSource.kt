@@ -7,7 +7,7 @@ import androidx.paging.map
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.codingforanimals.veganuniverse.commons.firebase.storage.PublicImageApi
+import org.codingforanimals.veganuniverse.firebase.storage.model.PublicImageApi
 import org.codingforanimals.veganuniverse.product.data.model.Product
 import org.codingforanimals.veganuniverse.product.data.paging.ProductFirestorePagingSource
 
@@ -48,7 +48,7 @@ internal class GetPaginatedProductFirestoreDataSource(
             pagingData.map { product ->
                 product.imageStorageRef?.let { imageStorageRef ->
                     product.copy(
-                        imageStorageRef = publicImageApi.withImageStorageRef(imageStorageRef)
+                        imageStorageRef = publicImageApi.getFilePath(imageStorageRef)
                     )
                 } ?: product
             }

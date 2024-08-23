@@ -1,11 +1,11 @@
 package org.codingforanimals.veganuniverse.profile
 
+import androidx.compose.material3.Text
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import org.codingforanimals.veganuniverse.profile.home.presentation.ProfileScreen
 import org.codingforanimals.veganuniverse.profile.itemlist.presentation.ProfileItemListScreen
 import org.codingforanimals.veganuniverse.profile.itemlist.presentation.ProfileItemListViewModel
 import org.codingforanimals.veganuniverse.ui.navigation.Destination
@@ -24,16 +24,7 @@ fun NavGraphBuilder.profileGraph(
     composable(
         route = ProfileDestination.Home.route
     ) {
-        ProfileScreen(
-            navigateToRegister = navigateToRegister,
-            navigateToRecipe = navigateToRecipe,
-            navigateToPlace = navigateToPlace,
-            navigateToItemList = { saveableType, contentType ->
-                navController.navigate(
-                    "${ProfileDestination.ItemList.route}/$saveableType/$contentType"
-                )
-            }
-        )
+        Text("Profile screen")
     }
 
     composable(

@@ -15,6 +15,11 @@ fun DependencyHandler.bomImplementation(bom: String, dependencies: List<Any>) {
     implementation(dependencies)
 }
 
+fun DependencyHandler.bomImplementation(bom: String, vararg dependencies: String) {
+    add("implementation", platform(bom))
+    dependencies.forEach { implementation(it) }
+}
+
 fun DependencyHandler.debugImplementation(dependencyNotation: List<Any>) {
     for (dep in dependencyNotation) {
         add("debugImplementation", dep)

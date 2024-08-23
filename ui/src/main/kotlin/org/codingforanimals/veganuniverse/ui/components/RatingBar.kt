@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Icon
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.ui.Spacing_02
 import org.codingforanimals.veganuniverse.ui.icon.VUIcons
@@ -40,9 +42,10 @@ fun InteractiveRatingBar(
                 onClick = { onValueChange(starIndex) },
             ) {
                 Icon(
+                    modifier = Modifier.padding(Spacing_02),
                     painter = painterResource(icon.id),
                     contentDescription = "",
-                    tint = color
+                    tint = color,
                 )
             }
         }
@@ -54,6 +57,7 @@ fun RatingBar(
     rating: Int,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
+    starIconSize: Dp = 17.dp,
 ) {
     Row(
         modifier = modifier.wrapContentSize(),
@@ -65,7 +69,7 @@ fun RatingBar(
                 else -> VUIcons.Star
             }
             Icon(
-                modifier = Modifier.size(17.dp),
+                modifier = Modifier.size(starIconSize),
                 painter = painterResource(icon.id),
                 contentDescription = "",
                 tint = color

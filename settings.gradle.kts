@@ -26,20 +26,8 @@ include(":feature:profile:home:presentation")
 include(":feature:profile:itemlist:domain")
 include(":feature:profile:itemlist:presentation")
 
-include(":feature:community:presentation")
-
-include(":feature:featuredtopic:presentation")
-include(":feature:featuredtopic:data")
-include(":feature:featuredtopic:model")
-
 include(":feature:onboarding:presentation")
 
-include(":feature:recipes:presentation")
-
-include(":feature:post:presentation")
-
-include(":feature:places:presentation")
-include(":feature:places:domain")
 include(":services:firebase:places")
 
 include(":entity:places")
@@ -50,19 +38,25 @@ include(":feature:registration:presentation")
 include(":feature:onboarding:data")
 include(":feature:onboarding:model")
 
-include(":feature:notifications:presentation")
-
 include(":feature:create:graph")
 include(":feature:create:home:presentation")
-include(":feature:create:place:domain")
-include(":feature:create:place:presentation")
-include(":feature:create:recipe:domain")
-include(":feature:create:recipe:presentation")
-include(":feature:create:thank_you:presentation")
+include(
+    ":feature:create:place:domain",
+    ":feature:create:place:presentation",
+)
 
-include(":feature:search:presentation")
+include(
+    ":feature:create:recipe:domain",
+    ":feature:create:recipe:presentation",
+)
 
-include(":feature:settings:presentation")
+include(
+    ":feature:create:thank_you:presentation",
+)
+
+include(
+    ":feature:settings:presentation",
+)
 
 include(":core:auth")
 include(":services:firebase:user")
@@ -70,7 +64,6 @@ include(":services:firebase:user")
 include(":services:firebase")
 include(":services:google:places")
 include(":services:firebase:recipes")
-include(":feature:recipes:domain")
 
 include(":storage:firestore")
 include(":storage:recipes")
@@ -84,9 +77,20 @@ include("ui:product")
 include("model:profile")
 
 include(
+    ":feature:place:domain",
+    ":feature:place:presentation",
+)
+
+include(
     ":feature:create:product:data",
     ":feature:create:product:domain",
     ":feature:create:product:presentation"
+)
+
+include(
+    ":feature:recipe:data",
+    ":feature:recipe:domain",
+    ":feature:recipe:presentation",
 )
 
 include(
@@ -99,4 +103,35 @@ include(
     ":commons:user:data",
     ":commons:user:domain",
     ":commons:firebase:storage",
+)
+
+include(
+    ":commons:profile:shared",
+    ":commons:profile:data",
+    ":commons:profile:domain",
+)
+
+include(
+    ":commons:recipe:shared",
+    ":commons:recipe:data",
+    ":commons:recipe:domain",
+    ":commons:recipe:presentation",
+)
+
+include(
+    ":commons:product:shared",
+    ":commons:product:data",
+    ":commons:product:domain",
+    ":commons:product:presentation",
+)
+
+include(
+    ":commons:place:shared",
+    ":commons:place:data",
+    ":commons:place:domain",
+    ":commons:place:presentation",
+)
+
+include(
+    ":commons:network",
 )

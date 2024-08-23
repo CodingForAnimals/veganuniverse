@@ -17,18 +17,22 @@ open class CreatePlaceErrorDialog(@StringRes val title: Int, @StringRes val mess
             message = R.string.place_type_error_dialog_message
         )
 
-    object MissingCriticalFieldErrorDialog :
-        CreatePlaceErrorDialog(
-            title = R.string.place_missing_field_error_dialog_title,
-            message = R.string.place_missing_field_error_dialog_message
-        )
-
     object InvalidFormErrorDialog : CreatePlaceErrorDialog(
         title = R.string.invalid_form_title,
         message = R.string.invalid_form_message,
     )
 
-    data class PlaceAlreadyExists(val navigateToExistingPlace: suspend () -> Unit) :
+    object NoInternet : CreatePlaceErrorDialog(
+        title = R.string.no_internet_title,
+        message = R.string.no_internet_message,
+    )
+
+    object UnverifiedEmail : CreatePlaceErrorDialog(
+        title = R.string.generic_error_title,
+        message = R.string.email_not_yet_verified,
+    )
+
+    data object PlaceAlreadyExists :
         CreatePlaceErrorDialog(
             title = R.string.place_already_exists_error_dialog_title,
             message = R.string.place_already_exists_error_dialog_message,

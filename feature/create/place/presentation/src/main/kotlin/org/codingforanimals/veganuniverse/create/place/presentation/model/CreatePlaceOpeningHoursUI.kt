@@ -1,0 +1,42 @@
+package org.codingforanimals.veganuniverse.create.place.presentation.model
+
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_friday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_monday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_saturday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_sunday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_thursday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_tuesday
+import org.codingforanimals.veganuniverse.core.ui.R.string.day_of_week_wednesday
+import org.codingforanimals.veganuniverse.place.model.OpeningHours
+import org.codingforanimals.veganuniverse.place.model.Period
+import org.codingforanimals.veganuniverse.ui.calendar.DayOfWeek
+
+data class CreatePlaceOpeningHoursUI(
+    val dayOfWeek: DayOfWeek,
+    val isClosed: Boolean = false,
+    val isSplit: Boolean = false,
+    val mainPeriod: Period = defaultPeriod(),
+    val secondaryPeriod: Period = defaultPeriod(),
+) {
+
+    val dayStringRes = when (dayOfWeek) {
+        DayOfWeek.SUNDAY -> day_of_week_sunday
+        DayOfWeek.MONDAY -> day_of_week_monday
+        DayOfWeek.TUESDAY -> day_of_week_tuesday
+        DayOfWeek.WEDNESDAY -> day_of_week_wednesday
+        DayOfWeek.THURSDAY -> day_of_week_thursday
+        DayOfWeek.FRIDAY -> day_of_week_friday
+        DayOfWeek.SATURDAY -> day_of_week_saturday
+    }
+
+    companion object {
+        fun defaultPeriod() = Period(9, 0, 20, 0)
+        fun fromModel(model: OpeningHours): CreatePlaceOpeningHoursUI? {
+            return CreatePlaceOpeningHoursUI(
+                dayOfWeek = DayOfWeek.fromString(model.dayOfWeek) ?: return null,
+                mainPeriod = model.mainPeriod ?: defaultPeriod(),
+                secondaryPeriod = model.secondaryPeriod ?: defaultPeriod(),
+            )
+        }
+    }
+}

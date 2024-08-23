@@ -7,33 +7,38 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.product.domain.usecase.GetLatestProducts
+import org.codingforanimals.veganuniverse.product.domain.ProductRepository
+import org.codingforanimals.veganuniverse.product.model.ProductCategory
+import org.codingforanimals.veganuniverse.product.model.ProductQueryParams
+import org.codingforanimals.veganuniverse.product.model.ProductSorter
+import org.codingforanimals.veganuniverse.product.model.ProductType
+import org.codingforanimals.veganuniverse.product.presentation.browsing.mapper.toView
 import org.codingforanimals.veganuniverse.product.presentation.components.ProductSuggestionType
-import org.codingforanimals.veganuniverse.product.presentation.list.mapper.toViewModel
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
-import org.codingforanimals.veganuniverse.product.ui.ProductCategory
 
 class ProductHomeViewModel(
-    getLatestProducts: GetLatestProducts,
+    productRepository: ProductRepository,
 ) : ViewModel() {
 
     private val sideEffectsChannel = Channel<SideEffect>()
     val sideEffects = sideEffectsChannel.receiveAsFlow()
 
-    val latestProductsState = getLatestProducts().transform {
-        emit(
-            when (it) {
-                GetLatestProducts.State.Error -> LatestProductsState.Error
-                GetLatestProducts.State.Loading -> LatestProductsState.Loading
-                is GetLatestProducts.State.Success -> LatestProductsState.Success(
-                    it.products.map { domainModel -> domainModel.toViewModel() }
-                )
-            }
-        )
+    val latestProductsState = flow {
+        val params = ProductQueryParams.Builder()
+            .withSorter(ProductSorter.DATE)
+            .withMaxSize(3)
+            .withPageSize(3)
+            .build()
+        val result = runCatching {
+            productRepository.queryProducts(params).map { it.toView() }
+        }.getOrNull()?.let {
+            LatestProductsState.Success(it)
+        } ?: LatestProductsState.Error
+        emit(result)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -45,23 +50,46 @@ class ProductHomeViewModel(
 
     fun onAction(action: Action) {
         when (action) {
-            is Action.OnProductCategorySelected -> navigateToCategoryList(action.category.name)
-            Action.OnSeeAllClick -> navigateToCategoryList()
+            is Action.OnProductCategorySelected -> {
+                navigateToProductBrowsing(category = action.category)
+            }
+
+            Action.OnMostRecentShowMoreClick -> {
+                navigateToProductBrowsing(sorter = ProductSorter.DATE)
+            }
+
             Action.OnCreateProductClick -> {
                 viewModelScope.launch {
-                    sideEffectsChannel.send(SideEffect.NavigateToCreateProductScreen)
+                    sideEffectsChannel.send(SideEffect.NavigateToCreateProduct)
                 }
             }
 
-            is Action.ImageDialogAction -> handleImageDialogAction(action)
-            is Action.ProductSuggestionDialogAction -> handleProductActionDialog(action)
-            is Action.RelayAction.NavigateToAuthScreen -> handleRelayActions(action)
+            is Action.ImageDialogAction -> {
+                handleImageDialogAction(action)
+            }
+
+            is Action.ProductSuggestionDialogAction -> {
+                handleProductActionDialog(action)
+            }
+
+            is Action.RelayAction.NavigateToAuthScreen -> {
+                handleRelayActions(action)
+            }
         }
     }
 
-    private fun navigateToCategoryList(category: String? = null) {
+    private fun navigateToProductBrowsing(
+        category: ProductCategory? = null,
+        type: ProductType? = null,
+        sorter: ProductSorter? = null,
+    ) {
+        val sideEffect = SideEffect.NavigateToProductBrowsing(
+            category = category,
+            type = type,
+            sorter = sorter
+        )
         viewModelScope.launch {
-            sideEffectsChannel.send(SideEffect.NavigateToCategoryListScreen(category))
+            sideEffectsChannel.send(sideEffect)
         }
     }
 
@@ -107,7 +135,7 @@ class ProductHomeViewModel(
         when (action) {
             Action.RelayAction.NavigateToAuthScreen -> {
                 viewModelScope.launch {
-                    sideEffectsChannel.send(SideEffect.NavigateToAuthScreen)
+                    sideEffectsChannel.send(SideEffect.NavigateToAuthentication)
                 }
             }
         }
@@ -127,7 +155,7 @@ class ProductHomeViewModel(
 
     sealed class Action {
         data class OnProductCategorySelected(val category: ProductCategory) : Action()
-        data object OnSeeAllClick : Action()
+        data object OnMostRecentShowMoreClick : Action()
         data object OnCreateProductClick : Action()
         sealed class ImageDialogAction : Action() {
             data class Open(val url: String?) : ImageDialogAction()
@@ -150,9 +178,14 @@ class ProductHomeViewModel(
     }
 
     sealed class SideEffect {
-        data class NavigateToCategoryListScreen(val categoryName: String?) : SideEffect()
-        data object NavigateToCreateProductScreen : SideEffect()
-        data object NavigateToAuthScreen : SideEffect()
+        data class NavigateToProductBrowsing(
+            val category: ProductCategory? = null,
+            val type: ProductType? = null,
+            val sorter: ProductSorter? = null,
+        ) : SideEffect()
+
+        data object NavigateToCreateProduct : SideEffect()
+        data object NavigateToAuthentication : SideEffect()
 
         data class ShowSnackbar(
             @StringRes val message: Int,

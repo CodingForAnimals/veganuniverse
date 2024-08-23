@@ -10,7 +10,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":commons:product:domain"))
+    implementation(project(":commons:product:presentation"))
     implementation(project(":feature:create:product:domain"))
-    implementation(project(Module.Create.UI))
-    implementation(project(Module.Product.UI))
+    implementation(project(":ui:create"))
+    implementation(project(":ui:product"))
 }

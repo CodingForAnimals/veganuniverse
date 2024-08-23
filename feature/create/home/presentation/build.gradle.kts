@@ -10,5 +10,5 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Core.AUTH))
+    implementation(project(":core:auth"))
 }

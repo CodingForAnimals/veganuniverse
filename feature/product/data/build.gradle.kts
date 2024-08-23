@@ -10,10 +10,10 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Core.COMMON))
+    implementation(project(":core:common"))
     implementation(project(":commons:firebase:storage"))
-    implementation(AndroidX.paging)
-    implementation(AndroidX.datastore)
+    implementation(libs.androidx.paging)
+    implementation(libs.androidx.datastore)
 
     bomImplementation(
         Firebase.BOM,
@@ -24,6 +24,6 @@ dependencies {
             Firebase.STORAGE,
         )
     )
-    implementation(project(Module.Core.AUTH))
-    implementation(project(Module.Services.Firebase.BASE))
+    implementation(project(":core:auth"))
+    implementation(project(":services:firebase"))
 }

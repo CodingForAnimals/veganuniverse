@@ -2,7 +2,8 @@ package org.codingforanimals.veganuniverse.create.place.presentation.model
 
 import android.graphics.Bitmap
 import com.google.android.gms.maps.model.LatLng
-import org.codingforanimals.veganuniverse.places.entity.AddressComponents
+import org.codingforanimals.veganuniverse.place.model.AddressComponents
+import org.codingforanimals.veganuniverse.place.model.OpeningHours
 
 sealed class GetPlaceDataStatus {
     data object Loading : GetPlaceDataStatus()

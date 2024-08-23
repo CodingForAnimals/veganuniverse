@@ -13,7 +13,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.profile.itemlist.presentation.usecase.GetProfileItemsUseCase
 import org.codingforanimals.veganuniverse.profile.model.SaveableContentType
 import org.codingforanimals.veganuniverse.profile.model.SaveableType
 import org.codingforanimals.veganuniverse.ui.cards.CardItem
@@ -24,7 +23,6 @@ private const val TAG = "ProfileItemListViewMode"
 
 class ProfileItemListViewModel(
     savedStateHandle: SavedStateHandle,
-    private val getProfileItems: GetProfileItemsUseCase,
 ) : ViewModel() {
 
     private val sideEffectsChannel: Channel<SideEffect> = Channel()
@@ -66,28 +64,28 @@ class ProfileItemListViewModel(
     }
 
     private fun getMoreItems() {
-        getMoreItemsJob?.cancel()
-        getMoreItemsJob = viewModelScope.launch {
-            uiState = uiState.copy(loading = true)
-            val res = getProfileItems(
-                saveableType = uiState.saveableType,
-                contentType = uiState.contentType,
-                index = uiState.lastItemIndex,
-            )
-            uiState = when (res) {
-                GetProfileItemsUseCase.Result.Error -> uiState.copy(
-                    errorDialog = Dialog.unknownErrorDialog(),
-                    loading = false,
-                )
-
-                is GetProfileItemsUseCase.Result.Success -> uiState.copy(
-                    lastItemIndex = res.lastIndex,
-                    items = uiState.appendItems(res.items),
-                    loading = false,
-                    canLoadMore = res.items.isNotEmpty(),
-                )
-            }
-        }
+//        getMoreItemsJob?.cancel()
+//        getMoreItemsJob = viewModelScope.launch {
+//            uiState = uiState.copy(loading = true)
+//            val res = getProfileItems(
+//                saveableType = uiState.saveableType,
+//                contentType = uiState.contentType,
+//                index = uiState.lastItemIndex,
+//            )
+//            uiState = when (res) {
+//                GetProfileItemsUseCase.Result.Error -> uiState.copy(
+//                    errorDialog = Dialog.unknownErrorDialog(),
+//                    loading = false,
+//                )
+//
+//                is GetProfileItemsUseCase.Result.Success -> uiState.copy(
+//                    lastItemIndex = res.lastIndex,
+//                    items = uiState.appendItems(res.items),
+//                    loading = false,
+//                    canLoadMore = res.items.isNotEmpty(),
+//                )
+//            }
+//        }
     }
 
     data class UiState(

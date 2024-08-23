@@ -1,16 +1,16 @@
 @file:Suppress("ClassName")
 
 object versions {
-    const val core = "1.9.21"
+    const val core = "1.9.23"
     const val lifecycle = "2.5.1"
     const val coroutines = "1.6.4"
-    const val composeBom = "2024.02.00"
+    const val composeBom = "2024.04.00"
     const val compose = "1.3.1"
-    const val composeCompiler = "1.5.7"
+    const val composeCompiler = "1.5.11"
     const val accompanist = "0.25.1"
     const val retrofit = "2.9.0"
     const val moshi = "1.14.0"
-    const val room = "2.4.3"
+    const val room = "2.6.1"
     const val mockk = "1.12.5"
     const val datastore = "1.0.0"
     const val koinAndroid = "3.3.2"
@@ -20,137 +20,6 @@ object versions {
     const val googleMapServices = "18.1.0"
     const val paging = "3.2.1"
     const val paging_compose = "3.3.0-alpha03"
-}
-
-object Module {
-    const val UI = ":ui"
-
-    object Storage {
-        const val FIRESTORE = ":storage:firestore"
-        const val RECIPES = ":storage:recipes"
-    }
-
-    object Core {
-        const val COMMON = ":core:common"
-        const val DATASTORE = ":core:datastore"
-        const val UI = ":core:ui"
-        const val LOCATION = ":core:location"
-        const val AUTH = ":core:auth"
-    }
-
-    object Entity {
-        const val BASE = ":entity"
-        const val PLACES = ":entity:places"
-        const val RECIPES = ":entity:recipes"
-    }
-
-    object Services {
-        object Firebase {
-            const val BASE = ":services:firebase"
-            const val USER = ":services:firebase:user"
-            const val PROFILE = ":services:firebase:profile"
-            const val PLACES = ":services:firebase:places"
-            const val RECIPES = ":services:firebase:recipes"
-        }
-
-        object Google {
-            const val PLACES = ":services:google:places"
-        }
-    }
-
-    object Places {
-        const val DOMAIN = ":feature:places:domain"
-        const val PRESENTATION = ":feature:places:presentation"
-        const val UI = ":ui:places"
-        const val ENTITY = ":entity:places"
-
-        object Services {
-            const val FIREBASE = ":services:firebase:places"
-        }
-    }
-
-    object Product {
-        const val DOMAIN = ":feature:product:domain"
-        const val MODEL = ":model:product"
-        const val STORAGE = ":storage:product"
-        const val GRAPH = ":feature:product:graph"
-        const val FIREBASE = ":services:firebase:product"
-        object Categories {
-            const val DOMAIN = ":feature:product:home:domain"
-            const val PRESENTATION = ":feature:product:home:presentation"
-        }
-
-        object List {
-            const val DATA = ":feature:product:list:data"
-            const val DOMAIN = ":feature:product:list:domain"
-            const val PRESENTATION = ":feature:product:list:presentation"
-        }
-
-        const val UI = ":ui:product"
-
-        object Services {
-            const val FIREBASE = ":services:firebase:product"
-        }
-    }
-
-    object Profile {
-        const val GRAPH = ":feature:profile"
-        const val MODEL = ":model:profile"
-
-        object Home {
-            const val DOMAIN = ":feature:profile:home:domain"
-            const val PRESENTATION = ":feature:profile:home:presentation"
-        }
-
-        object ItemList {
-            const val DOMAIN = ":feature:profile:itemlist:domain"
-            const val PRESENTATION = ":feature:profile:itemlist:presentation"
-        }
-
-        object Services {
-            const val FIREBASE = ":services:firebase:profile"
-        }
-    }
-
-    object Create {
-        const val UI = ":ui:create"
-        const val GRAPH = ":feature:create:graph"
-
-        object Home {
-            const val PRESENTATION = ":feature:create:home:presentation"
-        }
-
-        object Place {
-            const val DOMAIN = ":feature:create:place:domain"
-            const val PRESENTATION = ":feature:create:place:presentation"
-        }
-
-        object Recipe {
-            const val DOMAIN = ":feature:create:recipe:domain"
-            const val PRESENTATION = ":feature:create:recipe:presentation"
-        }
-
-        object Product {
-            const val DOMAIN = ":feature:create:product:domain"
-            const val PRESENTATION = ":feature:create:product:presentation"
-        }
-
-        object ThankYou {
-            const val PRESENTATION = ":feature:create:thank_you:presentation"
-        }
-    }
-
-    object Recipes {
-        const val DOMAIN = ":feature:recipes:domain"
-        const val PRESENTATION = ":feature:recipes:presentation"
-        const val UI = ":ui:recipes"
-    }
-}
-
-object AndroidX {
-    const val paging = "androidx.paging:paging-runtime-ktx:${versions.paging}"
-    const val paging_compose = "androidx.paging:paging-compose:${versions.paging_compose}"
-    const val datastore = "androidx.datastore:datastore-preferences:${versions.datastore}"
 }
 
 object Firebase {
@@ -198,6 +67,26 @@ object Koin {
 
 object libs {
 
+    object google {
+        const val gson = "com.google.code.gson:gson:2.10.1"
+    }
+
+    object firebase {
+        const val bom = "com.google.firebase:firebase-bom:32.1.1"
+        const val auth = "com.google.firebase:firebase-auth-ktx"
+        const val firestore = "com.google.firebase:firebase-firestore-ktx"
+        const val storage = "com.google.firebase:firebase-storage-ktx"
+        const val database = "com.google.firebase:firebase-database-ktx"
+        const val geofire = "com.firebase:geofire-android:3.2.0"
+
+    }
+
+    object androidx {
+        const val datastore = "androidx.datastore:datastore-preferences:${versions.datastore}"
+        const val paging = "androidx.paging:paging-runtime-ktx:${versions.paging}"
+        const val paging_compose = "androidx.paging:paging-compose:${versions.paging_compose}"
+    }
+
     val android = listOf(
         "androidx.core:core-ktx:${versions.core}",
         "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle}",
@@ -239,7 +128,6 @@ object libs {
     val room = listOf(
         "androidx.room:room-ktx:${versions.room}",
         "androidx.room:room-runtime:${versions.room}",
-        "androidx.room:room-paging:2.5.0-alpha01",
     )
     const val roomCompiler =
         "androidx.room:room-compiler:${versions.room}"

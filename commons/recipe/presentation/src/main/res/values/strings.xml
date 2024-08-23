@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recipe_tag_label_gluten_free">Sin tacc</string>
+    <string name="recipe_tag_label_low_sodium">Bajo en sodio</string>
+    <string name="recipe_tag_label_sugar_free">Sin azucar</string>
+    <string name="recipe_tag_label_not_dairy">No lácteo</string>
+    <string name="recipe_tag_label_lunch_and_dinner">Almuerzo / cena</string>
+    <string name="recipe_tag_label_salty">Salado</string>
+    <string name="recipe_tag_label_nibbles">Picada</string>
+    <string name="recipe_tag_label_breakfast_and_dinner">Desayuno / merienda</string>
+    <string name="recipe_tag_label_quick_recipe">En 15 minutos</string>
+    <string name="recipe_tag_label_sweet">Dulce</string>
+    <string name="recipe_tag_label_dressing">Salsas y aderezos</string>
+    <string name="recipe_tag_label_canned">Conservas</string>
+
+    <string name="most_recent">Más nuevos</string>
+    <string name="likes_amount">Me likeados</string>
+</resources>

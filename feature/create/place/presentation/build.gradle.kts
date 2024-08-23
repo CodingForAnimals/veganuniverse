@@ -10,15 +10,17 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Core.COMMON))
-    implementation(project(Module.Core.LOCATION))
-    implementation(project(Module.Core.AUTH))
-    implementation(project(Module.Create.Place.DOMAIN))
-    implementation(project(Module.Entity.PLACES))
-    implementation(project(Module.Places.UI))
-    implementation(project(Module.UI))
-    implementation(project(Module.Create.UI))
-    implementation(project(Module.Services.Google.PLACES))
+    implementation(project(":commons:place:shared"))
+    implementation(project(":commons:place:presentation"))
+    implementation(project(":core:common"))
+    implementation(project(":core:location"))
+    implementation(project(":core:auth"))
+    implementation(project(":feature:create:place:domain"))
+    implementation(project(":entity:places"))
+    implementation(project(":ui:places"))
+    implementation(project(":ui"))
+    implementation(project(":ui:create"))
+    implementation(project(":services:google:places"))
     implementation(Google.MAPS)
 
 }

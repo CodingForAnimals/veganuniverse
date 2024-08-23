@@ -21,7 +21,6 @@ sealed class CreateDestination(route: String) : Destination(route) {
 fun NavGraphBuilder.createGraph(
     navController: NavController,
     navigateToAuthenticationScreen: (CreateDestination) -> Unit,
-    navigateToPlaceDetailsScreen: (String) -> Unit,
 ) {
     composable(
         route = CreateDestination.Home.route,
@@ -39,7 +38,6 @@ fun NavGraphBuilder.createGraph(
     ) {
         CreatePlaceScreen(
             navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou.route) },
-            navigateToAlreadyExistingPlace = {},
             navigateToAuthenticationScreen = { navigateToAuthenticationScreen(CreateDestination.Place) },
             navigateUp = navController::navigateUp,
         )

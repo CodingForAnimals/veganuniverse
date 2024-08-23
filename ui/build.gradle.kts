@@ -23,5 +23,5 @@ dependencies {
     implementation(Other.IMAGE_CROPPER)
     implementation(Other.SHIMMER)
     implementation(libs.permissionsCompose)
-    implementation(project(Module.Core.UI))
+    implementation(project(":core:ui"))
 }

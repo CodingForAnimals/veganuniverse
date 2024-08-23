@@ -10,6 +10,6 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Core.DATASTORE))
+    implementation(project(":core:datastore"))
 
 }

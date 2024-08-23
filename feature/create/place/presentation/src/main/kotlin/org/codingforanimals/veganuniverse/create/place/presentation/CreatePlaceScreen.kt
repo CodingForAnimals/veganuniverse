@@ -22,13 +22,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.maps.android.compose.CameraPositionState
-import java.util.concurrent.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -54,16 +56,15 @@ import org.codingforanimals.veganuniverse.create.place.presentation.entity.Creat
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem.SelectIcon
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem.SelectTags
 import org.codingforanimals.veganuniverse.create.place.presentation.entity.CreatePlaceFormItem.SubmitButton
-import org.codingforanimals.veganuniverse.create.place.presentation.error.ErrorDialog
 import org.codingforanimals.veganuniverse.create.ui.ImagePicker
-import org.codingforanimals.veganuniverse.places.ui.PlaceTag
+import org.codingforanimals.veganuniverse.place.model.PlaceTag
+import org.codingforanimals.veganuniverse.place.model.toUI
 import org.codingforanimals.veganuniverse.ui.Spacing_02
 import org.codingforanimals.veganuniverse.ui.Spacing_03
 import org.codingforanimals.veganuniverse.ui.Spacing_04
 import org.codingforanimals.veganuniverse.ui.Spacing_05
 import org.codingforanimals.veganuniverse.ui.Spacing_06
 import org.codingforanimals.veganuniverse.ui.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.ui.auth.VerifyEmailPromptScreen
 import org.codingforanimals.veganuniverse.ui.components.SelectableChip
 import org.codingforanimals.veganuniverse.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.ui.components.VUNormalTextField
@@ -72,11 +73,11 @@ import org.codingforanimals.veganuniverse.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.ui.utils.rememberImageCropperLauncherForActivityResult
 import org.koin.androidx.compose.koinViewModel
+import java.util.concurrent.CancellationException
 
 @Composable
 fun CreatePlaceScreen(
     navigateToThankYouScreen: () -> Unit,
-    navigateToAlreadyExistingPlace: () -> Unit,
     navigateToAuthenticationScreen: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: CreatePlaceViewModel = koinViewModel(),
@@ -99,7 +100,6 @@ fun CreatePlaceScreen(
         imagePicker = imagePicker,
         addressPicker = placesApiLauncher,
         cameraPositionState = viewModel.uiState.cameraPositionState,
-        navigateToAlreadyExistingPlace = navigateToAlreadyExistingPlace,
         navigateToAuthenticationScreen = navigateToAuthenticationScreen,
         navigateUp = navigateUp,
     )
@@ -115,18 +115,16 @@ fun CreatePlaceScreen(
             onAction = viewModel::onAction,
         )
 
-        if (viewModel.uiState.showVerifyEmailPrompt) {
-            VerifyEmailPromptScreen(
-                onSendRequest = { viewModel.onAction(Action.OnVerifyEmailPromptSendRequest) },
-                onDismissRequest = { viewModel.onAction(Action.OnVerifyEmailPromptDismissRequest) },
-            )
-        }
-
         viewModel.uiState.errorDialog?.let { errorData ->
-            ErrorDialog(
-                errorData = errorData,
-                navigateToAlreadyExistingPlace = navigateToAlreadyExistingPlace,
+            AlertDialog(
                 onDismissRequest = { viewModel.onAction(Action.OnErrorDialogDismissRequest) },
+                confirmButton = {
+                    TextButton(onClick = { viewModel.onAction(Action.OnErrorDialogDismissRequest) }) {
+                        Text(text = stringResource(R.string.ok))
+                    }
+                },
+                title = { Text(text = stringResource(id = errorData.title)) },
+                text = { Text(text = stringResource(id = errorData.title)) },
             )
         }
 
@@ -224,13 +222,16 @@ private fun CreatePlaceScreen(
                             horizontalArrangement = Arrangement.spacedBy(Spacing_04),
                         ) {
                             for (tag in PlaceTag.values()) {
-                                val selected = uiState.selectedTagsField.contains(tag)
-                                SelectableChip(
-                                    label = stringResource(tag.label),
-                                    icon = tag.icon,
-                                    selected = selected,
-                                    onClick = { onAction(Action.OnFormChange(tag = tag)) },
-                                )
+                                key(tag.name) {
+                                    val tagUI = tag.toUI()
+                                    val selected = uiState.selectedTagsField.contains(tag)
+                                    SelectableChip(
+                                        label = stringResource(tagUI.label),
+                                        icon = tagUI.icon,
+                                        selected = selected,
+                                        onClick = { onAction(Action.OnFormChange(tag = tag)) },
+                                    )
+                                }
                             }
                         }
                     }
@@ -256,7 +257,6 @@ private fun HandleSideEffects(
     imagePicker: ActivityResultLauncher<PickVisualMediaRequest>,
     addressPicker: ActivityResultLauncher<Intent>,
     cameraPositionState: CameraPositionState,
-    navigateToAlreadyExistingPlace: () -> Unit,
     navigateToAuthenticationScreen: () -> Unit,
     navigateUp: () -> Unit,
 ) {
@@ -281,10 +281,6 @@ private fun HandleSideEffects(
                     } catch (e: CancellationException) {
                         Log.d("PlacesHomeScreen.kt", e.stackTraceToString())
                     }
-                }
-
-                SideEffect.NavigateToAlreadyExistingPlace -> {
-                    navigateToAlreadyExistingPlace()
                 }
 
                 SideEffect.NavigateToAuthenticateScreen -> {

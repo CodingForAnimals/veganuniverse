@@ -6,9 +6,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import org.codingforanimals.veganuniverse.product.presentation.browsing.CATEGORY_ARG
+import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductListScreen
+import org.codingforanimals.veganuniverse.product.presentation.browsing.SORTER_ARG
+import org.codingforanimals.veganuniverse.product.presentation.browsing.TYPE_ARG
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeScreen
-import org.codingforanimals.veganuniverse.product.presentation.list.ProductListScreen
-import org.codingforanimals.veganuniverse.product.presentation.list.ProductListViewModel
 import org.codingforanimals.veganuniverse.ui.navigation.Destination
 
 sealed class ProductDestination(route: String) : Destination(route) {
@@ -27,8 +29,8 @@ fun NavGraphBuilder.productGraph(
     ) {
         ProductHomeScreen(
             snackbarHostState = snackbarHostState,
-            navigateToCategoryListScreen = { categoryName ->
-                navController.navigate("${ProductDestination.List.route}/$categoryName")
+            navigateToCategoryListScreen = { category, type, sorter ->
+                navController.navigate("${ProductDestination.List.route}?category=$category&type=$type&sorter=$sorter")
             },
             navigateToCreateProductScreen = navigateToCreateProductScreen,
             navigateToAuthScreen = { navigateToAuthScreen(ProductDestination.Home) },
@@ -36,9 +38,17 @@ fun NavGraphBuilder.productGraph(
     }
 
     composable(
-        route = "${ProductDestination.List.route}/{${ProductListViewModel.CATEGORY_ARG}}",
+        route = "${ProductDestination.List.route}?category={$CATEGORY_ARG}&type={$TYPE_ARG}&sorter={$SORTER_ARG}",
         arguments = listOf(
-            navArgument(ProductListViewModel.CATEGORY_ARG) {
+            navArgument(CATEGORY_ARG) {
+                type = NavType.StringType
+                nullable = true
+            },
+            navArgument(TYPE_ARG) {
+                type = NavType.StringType
+                nullable = true
+            },
+            navArgument(SORTER_ARG) {
                 type = NavType.StringType
                 nullable = true
             }

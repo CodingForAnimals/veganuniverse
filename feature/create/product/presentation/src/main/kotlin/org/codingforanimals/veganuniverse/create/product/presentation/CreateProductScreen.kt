@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -55,8 +56,9 @@ import org.codingforanimals.veganuniverse.create.ui.CreateContentHero
 import org.codingforanimals.veganuniverse.create.ui.HeroAnchorDefaults
 import org.codingforanimals.veganuniverse.create.ui.ImagePicker
 import org.codingforanimals.veganuniverse.create.ui.R.string.submit_button_label
-import org.codingforanimals.veganuniverse.product.ui.ProductCategory
-import org.codingforanimals.veganuniverse.product.ui.ProductType
+import org.codingforanimals.veganuniverse.product.model.ProductCategory
+import org.codingforanimals.veganuniverse.product.model.ProductType
+import org.codingforanimals.veganuniverse.product.presentation.toUI
 import org.codingforanimals.veganuniverse.ui.Spacing_03
 import org.codingforanimals.veganuniverse.ui.Spacing_04
 import org.codingforanimals.veganuniverse.ui.Spacing_06
@@ -227,11 +229,12 @@ private fun CreateProductScreen(
                     RadioButtonDefaults.colors()
                 }
                 ProductType.values().forEach { type ->
+                    val typeUI = remember { type.toUI() }
                     VURadioButton(
                         modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(type.label),
+                        label = stringResource(typeUI.label),
                         selected = uiState.productTypeField.type == type,
-                        icon = type.icon,
+                        icon = typeUI.icon,
                         onClick = { onAction(Action.OnProductTypeSelected(type)) },
                         colors = colors,
                         paddingValues = PaddingValues(horizontal = Spacing_06)
@@ -268,6 +271,7 @@ private fun CreateProductScreen(
                 ) {
                     ProductCategory.values().forEach { category ->
                         key(category.name) {
+                            val categoryUI = remember { category.toUI() }
                             val border = if (uiState.productCategoryField.category == category) {
                                 BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
                             } else {
@@ -286,15 +290,15 @@ private fun CreateProductScreen(
                                         .fillMaxWidth()
                                         .weight(1f),
                                     contentScale = ContentScale.Crop,
-                                    model = category.imageRef,
-                                    contentDescription = stringResource(category.label),
+                                    model = categoryUI.imageRef,
+                                    contentDescription = stringResource(categoryUI.label),
                                 )
                                 Text(
                                     modifier = Modifier
                                         .wrapContentHeight()
                                         .fillMaxWidth()
                                         .padding(Spacing_03),
-                                    text = stringResource(category.label),
+                                    text = stringResource(categoryUI.label),
                                     maxLines = 2,
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.SemiBold,

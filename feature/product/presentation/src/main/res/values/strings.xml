@@ -2,7 +2,7 @@
 <resources>
     <string name="categories_header_message">Buscá por nombre y/o categoría para encontrar rápidamente si un producto, ingrediente o aditivo es:</string>
     <string name="categories">Categorías</string>
-    <string name="see_all">Ver todos</string>
+    <string name="show_more">Ver más</string>
     <string name="go_to_add_product">Ir a agregar producto</string>
     <string name="add_product_suggestion">Si no encontrás un producto, ¡podés agregarlo!</string>
     <string name="all_products">Últimos agregados</string>
@@ -26,4 +26,7 @@
     <string name="product_additional_info_suggest_changes">Editar</string>
     <string name="product_additional_info_report">Reportar</string>
     <string name="no_products_found">¡No hemos encontrado productos!</string>
+    <string name="clear_filters">Limpiar filtros</string>
+    <string name="apply_filters">Aplicar filtros</string>
+    <string name="order_by">Ordenar por</string>
 </resources>

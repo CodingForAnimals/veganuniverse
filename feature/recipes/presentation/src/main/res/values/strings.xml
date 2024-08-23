@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="user_profile_thumbnail">Foto de perfil del usuario</string>
-    <string name="recipe_image">Imágen de la receta</string>
-    <string name="all_recipes">Todas las recetas</string>
-    <string name="recipes_carousel_title_most_liked">Directo al corazón</string>
-    <string name="recipe_image_description">Imagen de la receta</string>
-</resources>

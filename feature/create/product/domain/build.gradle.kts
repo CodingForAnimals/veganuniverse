@@ -8,6 +8,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":commons:user:domain"))
+    implementation(project(":commons:product:domain"))
+    implementation(project(":commons:profile:domain"))
+    implementation(project(":commons:network"))
     implementation(project(":feature:create:product:data"))
-    implementation(project(Module.Core.AUTH))
+    implementation(project(":core:auth"))
 }

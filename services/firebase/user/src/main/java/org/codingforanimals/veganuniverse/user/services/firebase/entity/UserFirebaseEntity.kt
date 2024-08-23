@@ -9,5 +9,5 @@ data class UserFirebaseEntity(
     val name: String,
     val email: String,
     @get:Exclude val isEmailVerified: Boolean,
-    val profilePictureUrl: String,
+    val profilePictureUrl: String? = null,
 )

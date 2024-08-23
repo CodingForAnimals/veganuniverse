@@ -10,9 +10,9 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Create.Home.PRESENTATION))
-    implementation(project(Module.Create.Place.PRESENTATION))
-    implementation(project(Module.Create.Recipe.PRESENTATION))
-    implementation(project(Module.Create.Product.PRESENTATION))
-    implementation(project(Module.Create.ThankYou.PRESENTATION))
+    implementation(project(":feature:create:home:presentation"))
+    implementation(project(":feature:create:place:presentation"))
+    implementation(project(":feature:create:recipe:presentation"))
+    implementation(project(":feature:create:product:presentation"))
+    implementation(project(":feature:create:thank_you:presentation"))
 }

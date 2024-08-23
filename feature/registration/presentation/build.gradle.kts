@@ -11,8 +11,8 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Core.COMMON))
-    implementation(project(Module.Core.AUTH))
+    implementation(project(":core:common"))
+    implementation(project(":core:auth"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

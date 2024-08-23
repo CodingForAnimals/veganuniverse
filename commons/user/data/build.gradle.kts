@@ -4,15 +4,16 @@ plugins {
 }
 
 android {
-    namespace = "org.codingforanimals.veganuniverse.commons.user.data"
+    namespace = "org.codingforanimals.veganuniverse.user.data"
 }
 
 dependencies {
     bomImplementation(
-        bom = Firebase.BOM,
+        bom = libs.firebase.bom,
         dependencies = listOf(
-            Firebase.FIRESTORE,
+            libs.firebase.firestore,
+            libs.firebase.auth,
         )
     )
-    implementation(project(Module.Services.Firebase.BASE))
+    implementation(libs.androidx.datastore)
 }

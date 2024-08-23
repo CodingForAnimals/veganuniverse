@@ -1,11 +1,12 @@
 package org.codingforanimals.veganuniverse.create.recipe.model
 
 import androidx.annotation.StringRes
-import org.codingforanimals.veganuniverse.recipes.ui.RecipeTag
+import org.codingforanimals.veganuniverse.recipe.model.RecipeTag
+import org.codingforanimals.veganuniverse.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.ui.icon.Icon
 import org.codingforanimals.veganuniverse.ui.viewmodel.ValidationField
 
-data class TagsField(
+internal data class TagsField(
     val tags: List<Tag> = RecipeTag.values().toViewEntity(),
 ) : ValidationField() {
     override val isValid: Boolean
@@ -27,7 +28,7 @@ data class TagsField(
     }
 }
 
-data class Tag(
+internal data class Tag(
     val name: String,
     @StringRes val label: Int,
     val icon: Icon,
@@ -35,5 +36,12 @@ data class Tag(
 )
 
 private fun Array<RecipeTag>.toViewEntity(): List<Tag> {
-    return map { Tag(name = it.name, label = it.label, icon = it.icon) }
+    return map {
+        val tagUI = it.toUI()
+        Tag(
+            name = it.name,
+            label = tagUI.label,
+            icon = tagUI.icon,
+        )
+    }
 }

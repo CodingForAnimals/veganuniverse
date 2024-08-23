@@ -7,6 +7,6 @@ import org.codingforanimals.veganuniverse.core.location.model.LocationResponse
 
 interface UserLocationManager {
     val userLocation: StateFlow<LocationResponse>
-    fun fetchUserLocation()
+    suspend fun requestUserLocation()
     fun requestUserEnableLocationService(): Flow<PendingIntent>
 }

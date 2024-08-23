@@ -16,7 +16,7 @@ import org.codingforanimals.veganuniverse.ui.components.VUIconDefaults
 
 data class ToggleIconState(
     val loading: Boolean = true,
-    val toggled: Boolean = false,
+    val value: Boolean = false,
 )
 
 @Composable
@@ -29,16 +29,16 @@ fun ToggleableIcon(
     offIcon: Icon,
     offTint: Color = Color.Unspecified,
 ) {
-    val icon = remember(state.toggled) {
-        if (state.toggled) {
+    val icon = remember(state.value) {
+        if (state.value) {
             onIcon
         } else {
             offIcon
         }
     }
 
-    val tint = remember(state.toggled) {
-        if (state.toggled) {
+    val tint = remember(state.value) {
+        if (state.value) {
             onTint
         } else {
             offTint

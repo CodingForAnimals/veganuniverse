@@ -9,5 +9,5 @@ android {
 
 dependencies {
     bomImplementation(Firebase.BOM, listOf(Firebase.FIRESTORE, Firebase.STORAGE))
-    implementation(project(Module.Services.Firebase.BASE))
+    implementation(project(":services:firebase"))
 }

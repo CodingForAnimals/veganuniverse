@@ -5,9 +5,9 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import org.codingforanimals.veganuniverse.common.utils.areNotBlank
+import org.codingforanimals.veganuniverse.place.model.PlaceTag
+import org.codingforanimals.veganuniverse.place.model.PlaceType
 import org.codingforanimals.veganuniverse.places.ui.PlaceMarker
-import org.codingforanimals.veganuniverse.places.ui.PlaceTag
-import org.codingforanimals.veganuniverse.places.ui.PlaceType
 import org.codingforanimals.veganuniverse.ui.viewmodel.ValidationField
 
 data class LocationField(

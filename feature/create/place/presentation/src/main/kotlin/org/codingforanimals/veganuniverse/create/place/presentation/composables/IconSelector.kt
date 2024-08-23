@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -14,7 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import org.codingforanimals.veganuniverse.create.place.presentation.CreatePlaceViewModel
 import org.codingforanimals.veganuniverse.create.place.presentation.R
 import org.codingforanimals.veganuniverse.create.place.presentation.model.TypeField
-import org.codingforanimals.veganuniverse.places.ui.PlaceType
+import org.codingforanimals.veganuniverse.place.model.PlaceType
+import org.codingforanimals.veganuniverse.place.model.toUI
 import org.codingforanimals.veganuniverse.ui.Spacing_06
 import org.codingforanimals.veganuniverse.ui.Spacing_07
 import org.codingforanimals.veganuniverse.ui.components.VURadioButton
@@ -38,15 +40,18 @@ internal fun IconSelector(
     }
 
     for (type in PlaceType.values()) {
-        val isSelected = remember(typeField) { typeField.value == type }
-        VURadioButton(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { onAction(CreatePlaceViewModel.Action.OnFormChange(type = type)) },
-            selected = isSelected,
-            label = type.label,
-            icon = type.icon,
-            paddingValues = PaddingValues(horizontal = Spacing_07),
-            colors = colors,
-        )
+        key(type.name) {
+            val typeUI = type.toUI()
+            val isSelected = remember(typeField) { typeField.value == type }
+            VURadioButton(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { onAction(CreatePlaceViewModel.Action.OnFormChange(type = type)) },
+                selected = isSelected,
+                label = stringResource(typeUI.label),
+                icon = typeUI.icon,
+                paddingValues = PaddingValues(horizontal = Spacing_07),
+                colors = colors,
+            )
+        }
     }
 }

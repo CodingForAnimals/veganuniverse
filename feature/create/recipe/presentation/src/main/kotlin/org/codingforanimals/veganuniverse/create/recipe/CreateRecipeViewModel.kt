@@ -10,17 +10,19 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.codingforanimals.veganuniverse.auth.model.SendVerificationEmailResult
 import org.codingforanimals.veganuniverse.auth.usecase.SendVerificationEmailUseCase
 import org.codingforanimals.veganuniverse.common.coroutines.CoroutineDispatcherProvider
+import org.codingforanimals.veganuniverse.create.recipe.domain.model.RecipeForm
+import org.codingforanimals.veganuniverse.create.recipe.domain.usecase.SubmitRecipe
 import org.codingforanimals.veganuniverse.create.recipe.model.StringListField
 import org.codingforanimals.veganuniverse.create.recipe.model.TagsField
-import org.codingforanimals.veganuniverse.create.recipe.usecase.SubmitRecipeStatus
-import org.codingforanimals.veganuniverse.create.recipe.usecase.SubmitRecipeUseCase
+import org.codingforanimals.veganuniverse.recipe.model.RecipeTag
+import org.codingforanimals.veganuniverse.ui.R.string.connection_error_message
+import org.codingforanimals.veganuniverse.ui.R.string.connection_error_title
 import org.codingforanimals.veganuniverse.ui.R.string.generic_error_title
 import org.codingforanimals.veganuniverse.ui.R.string.success
 import org.codingforanimals.veganuniverse.ui.R.string.unknown_error_message
@@ -30,9 +32,9 @@ import org.codingforanimals.veganuniverse.ui.viewmodel.areFieldsValid
 import org.codingforanimals.veganuniverse.user.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.user.R.string.verification_email_too_many_requests
 
-class CreateRecipeViewModel(
-    private val submitRecipe: SubmitRecipeUseCase,
+internal class CreateRecipeViewModel(
     private val sendVerificationEmail: SendVerificationEmailUseCase,
+    private val submitRecipe: SubmitRecipe,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
@@ -140,38 +142,49 @@ class CreateRecipeViewModel(
     private fun submitRecipeAttempt() {
         submitRecipeJob?.cancel()
         submitRecipeJob = viewModelScope.launch {
-            submitRecipe(uiState).collectLatest { status ->
-                when (status) {
-                    SubmitRecipeStatus.Loading -> {
-                        uiState = uiState.copy(loading = true)
-                    }
+            val recipeForm = uiState.recipeForm() ?: run {
+                uiState = uiState.copy(isValidating = true)
+                return@launch
+            }
 
-                    SubmitRecipeStatus.EmailNotVerified -> {
-                        uiState = uiState.copy(
-                            loading = false,
-                            showVerifyEmailPrompt = true,
+            uiState = uiState.copy(loading = true)
+
+            when (submitRecipe(recipeForm)) {
+                SubmitRecipe.Result.GuestUser -> {
+                    uiState = uiState.copy(loading = false)
+                    sideEffectChannel.send(SideEffect.NavigateToAuthenticationScreen)
+                }
+
+                is SubmitRecipe.Result.Success -> {
+                    uiState = uiState.copy(loading = false)
+                    sideEffectChannel.send(SideEffect.NavigateToThankYouScreen)
+                }
+
+                SubmitRecipe.Result.NoInternet -> {
+                    uiState = uiState.copy(
+                        loading = false,
+                        dialog = Dialog(
+                            title = connection_error_title,
+                            message = connection_error_message,
                         )
-                    }
+                    )
+                }
 
-                    SubmitRecipeStatus.Error -> {
-                        uiState = uiState.copy(
-                            loading = false,
-                            dialog = Dialog(
-                                title = generic_error_title,
-                                message = unknown_error_message,
-                            )
+                SubmitRecipe.Result.UnexpectedError -> {
+                    uiState = uiState.copy(
+                        loading = false,
+                        dialog = Dialog(
+                            title = generic_error_title,
+                            message = unknown_error_message,
                         )
-                    }
+                    )
+                }
 
-                    SubmitRecipeStatus.UnauthorizedUser -> {
-                        uiState = uiState.copy(loading = false)
-                        sideEffectChannel.send(SideEffect.NavigateToAuthenticationScreen)
-                    }
-
-                    SubmitRecipeStatus.Success -> {
-                        uiState = uiState.copy(loading = false)
-                        sideEffectChannel.send(SideEffect.NavigateToThankYouScreen)
-                    }
+                SubmitRecipe.Result.UnverifiedEmail -> {
+                    uiState = uiState.copy(
+                        loading = false,
+                        showVerifyEmailPrompt = true,
+                    )
                 }
             }
         }
@@ -246,6 +259,22 @@ class CreateRecipeViewModel(
                 stepsField,
                 tagsField,
             )
+
+        fun recipeForm(): RecipeForm? {
+            return RecipeForm(
+                imageModel = pictureField.model ?: return null,
+                title = titleField.value.ifBlank { return null },
+                description = descriptionField.value.ifBlank { return null },
+                tags = tagsField.tags.mapNotNull {
+                    if (!it.selected) return@mapNotNull null
+                    RecipeTag.fromString(it.name)
+                }.ifEmpty { return null },
+                ingredients = ingredientsField.list.ifEmpty { return null },
+                steps = stepsField.list.ifEmpty { return null },
+                prepTime = prepTimeField.value.ifEmpty { return null },
+                servings = servingsField.value.ifEmpty { return null },
+            )
+        }
     }
 
     data class Dialog(
