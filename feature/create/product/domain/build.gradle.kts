@@ -8,9 +8,6 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Product.STORAGE))
-    implementation(project(Module.Product.ENTITY))
-    implementation(project(Module.Product.Services.FIREBASE))
-    implementation(project(Module.Services.Firebase.PROFILE))
-    implementation(project(Module.Profile.MODEL))
+    implementation(project(":feature:create:product:data"))
+    implementation(project(Module.Core.AUTH))
 }

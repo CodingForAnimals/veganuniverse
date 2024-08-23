@@ -77,7 +77,7 @@ private fun CreateHomeScreen(
                 )
                 CreateContentSelectionCard(
                     title = stringResource(R.string.product),
-                    image = R.drawable.img_create_post,
+                    image = R.drawable.img_create_product,
                     onClick = { onAction(Action.OnCreateProductClick) },
                 )
             }

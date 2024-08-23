@@ -41,11 +41,9 @@ include(":feature:post:presentation")
 include(":feature:places:presentation")
 include(":feature:places:domain")
 include(":services:firebase:places")
-include(":services:firebase:product")
 
 include(":entity:places")
 include(":entity:recipes")
-include(":entity:product")
 
 include(":feature:registration:presentation")
 
@@ -85,15 +83,27 @@ include("ui:create")
 include("ui:product")
 include("model:profile")
 
-include(":feature:create:product:domain")
-include(":feature:create:product:presentation")
+include(
+    ":feature:create:product:data",
+    ":feature:create:product:domain",
+    ":feature:create:product:presentation"
+)
 
 include(":feature:product:graph")
 
-include(":feature:product:categories:domain")
-include(":feature:product:categories:presentation")
+include(
+    ":feature:product:categories:domain",
+    ":feature:product:categories:presentation",
+)
 
-include(":feature:product:list:domain")
-include(":feature:product:list:presentation")
+include(
+    ":feature:product:list:data",
+    ":feature:product:list:domain",
+    ":feature:product:list:presentation"
+)
 
-include(":storage:product")
+include(
+    ":commons:user:data",
+    ":commons:user:domain",
+    ":commons:firebase:storage",
+)

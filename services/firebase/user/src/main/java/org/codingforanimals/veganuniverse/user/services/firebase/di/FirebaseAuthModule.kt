@@ -26,6 +26,7 @@ val userFirebaseModule = module {
     factory<Authenticator> {
         FirebaseAuthenticator(
             googleSignInWrapper = get(),
+            firestore = get(),
             firebaseAuth = get(),
             firebaseUserEntityMapper = get(named(FIREBASE_USER_ENTITY_MAPPER))
         )

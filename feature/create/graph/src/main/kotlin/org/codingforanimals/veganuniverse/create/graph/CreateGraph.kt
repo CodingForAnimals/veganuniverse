@@ -59,6 +59,7 @@ fun NavGraphBuilder.createGraph(
         route = CreateDestination.Product.route,
     ) {
         CreateProductScreen(
+            navigateUp = navController::navigateUp,
             navigateToThankYouScreen = { navController.navigate(CreateDestination.ThankYou.route) },
             navigateToAuthenticationScreen = { navigateToAuthenticationScreen(CreateDestination.Product) },
         )

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -140,7 +141,8 @@ private fun CreatePlaceScreen(
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(Spacing_05)
+        verticalArrangement = Arrangement.spacedBy(Spacing_05),
+        contentPadding = PaddingValues(bottom = Spacing_06),
     ) {
         items(
             items = uiState.content,
@@ -237,7 +239,7 @@ private fun CreatePlaceScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentSize(Alignment.CenterEnd)
-                            .padding(bottom = 75.dp, end = Spacing_06),
+                            .padding(horizontal = Spacing_06),
                         onClick = { onAction(Action.OnSubmitClick) },
                         content = { Text(text = stringResource(R.string.submit_button_label)) },
                     )

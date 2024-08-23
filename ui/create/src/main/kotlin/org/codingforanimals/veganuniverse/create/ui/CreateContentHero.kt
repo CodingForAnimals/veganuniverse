@@ -14,7 +14,7 @@ import org.codingforanimals.veganuniverse.ui.icon.Icon
 @Composable
 fun CreateContentHero(
     content: @Composable () -> Unit,
-    heroAnchorIcon: Icon,
+    heroAnchorIcon: Icon?,
     heroAnchorColors: HeroAnchorColors = HeroAnchorDefaults.primaryColors(),
 ) {
     Box(

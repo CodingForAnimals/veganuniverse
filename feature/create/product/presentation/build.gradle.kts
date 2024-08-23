@@ -10,11 +10,7 @@ android {
 }
 
 dependencies {
-    implementation(project(Module.Create.Product.DOMAIN))
-    implementation(project(Module.Product.ENTITY))
-    implementation(project(Module.Core.COMMON))
-    implementation(project(Module.Core.AUTH))
-    implementation(project(Module.UI))
+    implementation(project(":feature:create:product:domain"))
     implementation(project(Module.Create.UI))
     implementation(project(Module.Product.UI))
 }

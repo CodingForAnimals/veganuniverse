@@ -24,7 +24,7 @@ import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 fun SelectableChip(
     modifier: Modifier = Modifier,
     label: String,
-    icon: Icon,
+    icon: Icon? = null,
     selected: Boolean,
     selectedIcon: Icon = VUIcons.Check,
     shape: Shape = AssistChipDefaults.shape,
@@ -49,17 +49,19 @@ fun SelectableChip(
         onClick = onClick,
         label = { Text(label) },
         leadingIcon = {
-            Crossfade(targetState = selected, label = "${label}_crossfade_animation") {
-                if (it) {
-                    VUIcon(
-                        icon = selectedIcon,
-                        contentDescription = ""
-                    )
-                } else {
-                    VUIcon(
-                        icon = icon,
-                        contentDescription = "",
-                    )
+            icon?.let {
+                Crossfade(targetState = selected, label = "${label}_crossfade_animation") {
+                    if (it) {
+                        VUIcon(
+                            icon = selectedIcon,
+                            contentDescription = ""
+                        )
+                    } else {
+                        VUIcon(
+                            icon = icon,
+                            contentDescription = "",
+                        )
+                    }
                 }
             }
         },
@@ -71,7 +73,6 @@ fun SelectableChip(
             borderColor = borderColor.value
         )
     )
-
 }
 
 object VUSelectableChipDefaults {

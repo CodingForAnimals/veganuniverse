@@ -3,12 +3,12 @@ package org.codingforanimals.veganuniverse.auth.model
 import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailLoginResponse
 import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailRegistrationResponse
 import org.codingforanimals.veganuniverse.user.services.firebase.model.ProviderAuthenticationResponse
-import org.codingforanimals.veganuniverse.user.services.firebase.model.UserFirebaseEntity
+import org.codingforanimals.veganuniverse.user.services.firebase.entity.UserFirebaseEntity
 import org.codingforanimals.veganuniverse.user.services.firebase.model.SendVerificationEmailResult as FirebaseSendVerificationEmailResult
 
 internal fun UserFirebaseEntity.toDomainEntity(): User {
     return User(
-        id = id,
+        id = userId,
         name = name,
         email = email,
         isEmailVerified = isEmailVerified,

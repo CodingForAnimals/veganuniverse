@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.product.ui
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
@@ -14,4 +15,16 @@ enum class ProductCategory(
     DRESSINGS_SAUCES(R.string.dressings_sauces, R.drawable.img_dressings_sauces),
     CLEANING_HYGIENE(R.string.cleaning_hygiene, R.drawable.img_cleaning_hygiene),
     COSMETICS(R.string.cosmetics, R.drawable.img_cosmetics),
+    ;
+
+    companion object {
+        private const val TAG = "ProductCategory"
+        fun fromString(value: String): ProductCategory? {
+            return runCatching {
+                ProductCategory.valueOf(value)
+            }.onFailure {
+                Log.e(TAG, it.stackTraceToString())
+            }.getOrNull()
+        }
+    }
 }

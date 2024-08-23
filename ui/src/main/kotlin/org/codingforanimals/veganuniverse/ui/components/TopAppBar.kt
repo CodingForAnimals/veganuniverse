@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import org.codingforanimals.veganuniverse.ui.icon.VUIcons
 
 @Composable
@@ -62,7 +63,7 @@ fun VUTopAppBar(
                 }
             }
         },
-        title = { Text(title) },
+        title = { Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         actions = actions,
     )
 }

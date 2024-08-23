@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -122,6 +123,7 @@ private fun CreateRecipeScreen(
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Spacing_06),
+        contentPadding = PaddingValues(bottom = Spacing_06)
     ) {
         item {
             val heroAnchorColors = when {
@@ -280,10 +282,7 @@ private fun CreateRecipeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.End)
-                    .padding(
-                        start = Spacing_06, end = Spacing_06,
-                        bottom = Spacing_12,
-                    ),
+                    .padding(horizontal = Spacing_06),
                 onClick = { onAction(Action.OnSubmitClick) },
                 content = {
                     Text(text = stringResource(submit_button_label))

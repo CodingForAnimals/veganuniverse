@@ -6,7 +6,7 @@ import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailLogi
 import org.codingforanimals.veganuniverse.user.services.firebase.model.EmailRegistrationResponse
 import org.codingforanimals.veganuniverse.user.services.firebase.model.ProviderAuthenticationResponse
 import org.codingforanimals.veganuniverse.user.services.firebase.model.SendVerificationEmailResult
-import org.codingforanimals.veganuniverse.user.services.firebase.model.UserFirebaseEntity
+import org.codingforanimals.veganuniverse.user.services.firebase.entity.UserFirebaseEntity
 
 interface Authenticator {
     val userFlow: Flow<UserFirebaseEntity?>

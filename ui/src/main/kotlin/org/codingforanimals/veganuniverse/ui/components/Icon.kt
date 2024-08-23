@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,7 +22,7 @@ fun VUIcon(
     iconModifier: Modifier = Modifier,
     icon: Icon,
     onIconClick: () -> Unit,
-    contentDescription: String,
+    contentDescription: String? = null,
     tint: Color = Color.Unspecified,
 ) {
     IconButton(
@@ -42,7 +43,7 @@ fun VUIcon(
 fun VUIcon(
     modifier: Modifier = Modifier,
     icon: Icon,
-    contentDescription: String,
+    contentDescription: String? = null,
 ) {
     when (icon) {
         is Icon.ImageVectorIcon -> {
@@ -55,6 +56,14 @@ fun VUIcon(
 
         is Icon.DrawableResourceIcon -> {
             Icon(
+                modifier = modifier.size(VUIconDefaults.defaultIconSize),
+                painter = painterResource(icon.id),
+                contentDescription = contentDescription,
+            )
+        }
+
+        is Icon.ImageDrawableResourceIcon -> {
+            Image(
                 modifier = modifier.size(VUIconDefaults.defaultIconSize),
                 painter = painterResource(icon.id),
                 contentDescription = contentDescription,
@@ -68,7 +77,7 @@ fun VUIcon(
     modifier: Modifier = Modifier,
     icon: Icon,
     tint: Color,
-    contentDescription: String,
+    contentDescription: String? = null,
 ) {
     when (icon) {
         is Icon.ImageVectorIcon -> {
@@ -86,6 +95,14 @@ fun VUIcon(
                 painter = painterResource(icon.id),
                 contentDescription = contentDescription,
                 tint = tint,
+            )
+        }
+
+        is Icon.ImageDrawableResourceIcon -> {
+            Image(
+                modifier = modifier.size(VUIconDefaults.defaultIconSize),
+                painter = painterResource(icon.id),
+                contentDescription = contentDescription,
             )
         }
     }

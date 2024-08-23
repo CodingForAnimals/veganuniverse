@@ -1,12 +1,12 @@
 @file:Suppress("ClassName")
 
 object versions {
-    const val core = "1.9.0"
+    const val core = "1.9.21"
     const val lifecycle = "2.5.1"
     const val coroutines = "1.6.4"
     const val composeBom = "2023.10.01"
     const val compose = "1.3.1"
-    const val composeCompiler = "1.5.1"
+    const val composeCompiler = "1.5.7"
     const val accompanist = "0.25.1"
     const val retrofit = "2.9.0"
     const val moshi = "1.14.0"
@@ -18,6 +18,8 @@ object versions {
     const val splashScreen = "1.0.1"
     const val googleMapCompose = "2.8.0"
     const val googleMapServices = "18.1.0"
+    const val paging = "3.2.1"
+    const val paging_compose = "3.3.0-alpha03"
 }
 
 object Module {
@@ -68,15 +70,18 @@ object Module {
     }
 
     object Product {
+        const val DOMAIN = ":feature:product:domain"
+        const val MODEL = ":model:product"
         const val STORAGE = ":storage:product"
         const val GRAPH = ":feature:product:graph"
-        const val ENTITY = ":entity:product"
+        const val FIREBASE = ":services:firebase:product"
         object Categories {
             const val DOMAIN = ":feature:product:categories:domain"
             const val PRESENTATION = ":feature:product:categories:presentation"
         }
 
         object List {
+            const val DATA = ":feature:product:list:data"
             const val DOMAIN = ":feature:product:list:domain"
             const val PRESENTATION = ":feature:product:list:presentation"
         }
@@ -142,8 +147,10 @@ object Module {
     }
 }
 
-object Android {
-    const val DATASTORE = "androidx.datastore:datastore-preferences:${versions.datastore}"
+object AndroidX {
+    const val paging = "androidx.paging:paging-runtime-ktx:${versions.paging}"
+    const val paging_compose = "androidx.paging:paging-compose:${versions.paging_compose}"
+    const val datastore = "androidx.datastore:datastore-preferences:${versions.datastore}"
 }
 
 object Firebase {
