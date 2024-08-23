@@ -38,7 +38,7 @@ internal class RecipesHomeViewModel(
         emit(result)
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.Lazily,
+        started = SharingStarted.WhileSubscribed(5_000),
         initialValue = RecipeListState.Loading,
     )
 
@@ -56,7 +56,7 @@ internal class RecipesHomeViewModel(
         emit(result)
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.Lazily,
+        started = SharingStarted.WhileSubscribed(5_000),
         initialValue = RecipeListState.Loading,
     )
 

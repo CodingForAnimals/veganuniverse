@@ -102,6 +102,7 @@ include(
     ":commons:designsystem",
     ":commons:network",
     ":commons:navigation",
+    ":commons:data",
 )
 
 include(

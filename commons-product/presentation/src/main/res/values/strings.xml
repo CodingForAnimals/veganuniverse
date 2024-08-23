@@ -25,4 +25,7 @@
     <string name="vitamins_and_supplements">Vitaminas y suplementos</string>
     <string name="additives">Aditivos</string>
     <string name="other">Otros</string>
+    <string name="product_confirmed_vegan_description">Este producto es apto vegan. No contiene ingredientes de origen animal y tampoco se han usado animales en su producción.</string>
+    <string name="product_not_vegan_description">Este producto no es apto vegan. Contiene ingredientes de origen animal y/o se usan animales para su producción.</string>
+    <string name="product_doubtful_vegan_description">No sabemos si este producto es apto vegan o no. Si vos sabés, ¡podés enviarnos una sugerencia!</string>
 </resources>

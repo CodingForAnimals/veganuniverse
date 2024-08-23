@@ -69,7 +69,7 @@ class CreatePlaceViewModel(
     private val snackbarEffectsChannel = Channel<Snackbar>()
     val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
 
-    var showUnverifiedEmailDialog by mutableStateOf(false)
+    var dialog: Dialog? by mutableStateOf(null)
         private set
 
     fun onAction(action: Action) {
@@ -79,7 +79,7 @@ class CreatePlaceViewModel(
             Action.OnErrorDialogDismissRequest -> dismissErrorDialog()
             is Action.OnPlaceSelected -> getPlaceData(action.activityResult)
             is Action.OnFormChange -> onFormChange(action)
-            Action.OnSubmitClick -> attemptSubmitForm()
+            Action.OnSubmitClick -> onSubmitClick()
             Action.OnOpeningHoursEditButtonClick -> openOpeningHoursEditDialog()
             Action.OnOpeningHoursDismissEditDialog -> dismissOpeningHoursEditDialog()
             Action.OnTimePickerDismissed -> updateSelectedPeriod()
@@ -92,11 +92,16 @@ class CreatePlaceViewModel(
                     sideEffectChannel.send(SideEffect.NavigateUp)
                 }
             }
+
+            is Action.OnPlaceOwnershipNoticePublishClick -> attemptSubmitForm(action.placeForm)
+            Action.DismissDialog -> {
+                dialog = null
+            }
         }
     }
 
     fun onUnverifiedEmailResult(result: UnverifiedEmailResult) {
-        showUnverifiedEmailDialog = false
+        dialog = null
         when (result) {
             UnverifiedEmailResult.Dismissed -> Unit
             UnverifiedEmailResult.UnexpectedError -> {
@@ -220,12 +225,16 @@ class CreatePlaceViewModel(
         }
     }
 
-    private fun attemptSubmitForm() {
-        val placeForm = uiState.toForm() ?: run {
+    private fun onSubmitClick() {
+        uiState.toForm()?.let {
+            dialog = Dialog.PlaceOwnershipNotice(it)
+        } ?: run {
             uiState = uiState.copy(isValidating = true)
-            return
         }
+    }
 
+    private fun attemptSubmitForm(placeForm: PlaceForm) {
+        dialog = null
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true)
             val result = submitPlace(placeForm)
@@ -242,7 +251,7 @@ class CreatePlaceViewModel(
                 }
 
                 SubmitPlace.Result.UnverifiedEmail -> {
-                    showUnverifiedEmailDialog = true
+                    dialog = Dialog.UnverifiedEmail
                 }
 
                 is SubmitPlace.Result.AlreadyExists -> {
@@ -464,6 +473,8 @@ class CreatePlaceViewModel(
 
         data class OnDayOpenCloseSwitchClick(val day: DayOfWeek) : Action()
         data class OnChangeSplitPeriodClick(val day: DayOfWeek) : Action()
+        data class OnPlaceOwnershipNoticePublishClick(val placeForm: PlaceForm) : Action()
+        data object DismissDialog : Action()
     }
 
     sealed class SideEffect {
@@ -483,5 +494,10 @@ class CreatePlaceViewModel(
                 private const val DEFAULT_ANIMATION_DURATION = 750
             }
         }
+    }
+
+    sealed class Dialog {
+        data object UnverifiedEmail : Dialog()
+        data class PlaceOwnershipNotice(val form: PlaceForm) : Dialog()
     }
 }

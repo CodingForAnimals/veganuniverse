@@ -126,13 +126,18 @@ private fun ProductHomeScreen(
             HorizontalDivider(modifier = Modifier.padding(top = Spacing_03))
         }
         item {
-            LatestProducts(
+            LatestProductsCards(
                 latestProductsState = latestProductsState,
                 onShowMoreClick = { onAction(Action.OnMostRecentShowMoreClick) },
                 onImageClick = { onAction(Action.ImageDialogAction.Open(it)) },
-                onEditClick = { onAction(Action.OpenSuggestDialog(it)) },
-                onReportClick = { onAction(Action.OpenReportDialog(it)) }
             )
+//            LatestProducts(
+//                latestProductsState = latestProductsState,
+//                onShowMoreClick = { onAction(Action.OnMostRecentShowMoreClick) },
+//                onImageClick = { onAction(Action.ImageDialogAction.Open(it)) },
+//                onEditClick = { onAction(Action.OpenSuggestDialog(it)) },
+//                onReportClick = { onAction(Action.OpenReportDialog(it)) }
+//            )
         }
         item {
             AllCategories(

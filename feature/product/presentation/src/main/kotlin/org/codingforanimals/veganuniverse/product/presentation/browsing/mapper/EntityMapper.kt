@@ -15,6 +15,6 @@ internal fun ProductDomainModel.toView(): Product {
         userId = userId,
         username = username,
         imageUrl = imageUrl,
-        creationDate = createdAt,
+        createdAt = createdAt,
     )
 }

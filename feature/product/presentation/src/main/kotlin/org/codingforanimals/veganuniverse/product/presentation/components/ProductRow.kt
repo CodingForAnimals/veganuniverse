@@ -39,6 +39,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 
 @Composable
 fun ProductRow(
@@ -46,6 +47,8 @@ fun ProductRow(
     onImageClick: () -> Unit,
     onEditClick: () -> Unit,
     onReportClick: () -> Unit,
+    navigateToAuthenticateScreen: () -> Unit,
+    onSnackbarEffect: (Snackbar) -> Unit,
 ) = with(product) {
 
     var additionalInfoVisible by rememberSaveable { mutableStateOf(false) }
@@ -126,6 +129,8 @@ fun ProductRow(
                     product = product,
                     onEditClick = onEditClick,
                     onReportClick = onReportClick,
+                    onSnackbarEffect = onSnackbarEffect,
+                    navigateToAuthenticateScreen = navigateToAuthenticateScreen
                 )
             }
             HorizontalDivider()

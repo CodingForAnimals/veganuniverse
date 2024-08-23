@@ -14,5 +14,6 @@
     <string name="recipe_tag_label_canned">Conservas</string>
 
     <string name="most_recent">Más nuevos</string>
-    <string name="likes_amount">Me likeados</string>
+    <string name="likes_amount">Más likeados</string>
+    <string name="by_title">Por título</string>
 </resources>

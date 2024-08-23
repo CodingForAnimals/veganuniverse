@@ -1,13 +1,9 @@
 package org.codingforanimals.veganuniverse.commons.ui.contentdetails
 
-import android.net.Uri
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,69 +19,30 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.icon.Icon
-import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 
 @Composable
 fun ContentDetailsHero(
-    imageUri: Uri? = null,
-    url: String? = null,
+    url: String?,
     icon: Icon,
     onImageClick: () -> Unit,
     colors: ContentDetailsHeroColors = ContentDetailsHeroColors.primaryColors(),
 ) {
-
-    val uri = rememberAsyncImagePainter(imageUri)
     Box {
         val heroImageModifier = Modifier
             .fillMaxWidth()
             .aspectRatio(2f)
             .padding(bottom = 20.dp)
             .clickable(onClick = onImageClick)
-        when {
-            imageUri != null -> {
-                Image(
-                    modifier = heroImageModifier,
-                    painter = uri, contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                )
-            }
+        AsyncImage(
+            modifier = heroImageModifier,
+            contentScale = ContentScale.Crop,
+            model = url,
+            contentDescription = null,
+        )
 
-            url != null -> {
-                AsyncImage(
-                    modifier = heroImageModifier,
-                    contentScale = ContentScale.Crop,
-                    model = url,
-                    contentDescription = null,
-                )
-            }
-
-            else -> {
-                Column(
-                    modifier = heroImageModifier.background(colors.imageBackground),
-                    verticalArrangement = Arrangement.spacedBy(
-                        Spacing_03,
-                        Alignment.CenterVertically
-                    ),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    VUIcon(
-                        modifier = Modifier.size(24.dp),
-                        icon = VUIcons.Pictures,
-                        contentDescription = "",
-                        tint = colors.galleryIconTint,
-                    )
-                    Text(
-                        text = "Subir foto",
-                        color = colors.galleryTextColor,
-                    )
-                }
-            }
-        }
         Box(
             modifier = Modifier
                 .height(40.dp)

@@ -1,23 +1,43 @@
 package org.codingforanimals.veganuniverse.recipes.presentation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.compose.collectAsLazyPagingItems
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
-import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingScreen
-import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeScreen
-import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsScreen
-import org.codingforanimals.veganuniverse.recipes.presentation.report.RecipeReportDialog
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingScreen
+import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsScreen
+import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeScreen
+import org.codingforanimals.veganuniverse.recipes.presentation.listing.RecipeListingScreen
+import org.codingforanimals.veganuniverse.recipes.presentation.report.RecipeReportDialog
+import org.koin.androidx.compose.koinViewModel
 
 sealed class RecipesDestination(route: String) : Destination(route) {
     data object Home : RecipesDestination("feature_recipes_home")
     data object Details : RecipesDestination("feature_recipes_details")
     data object Browsing : RecipesDestination("feature_recipes_browsing")
+    data object Listing : RecipesDestination("feature_recipes_listing")
 }
 
 fun NavGraphBuilder.recipesGraph(
@@ -28,8 +48,11 @@ fun NavGraphBuilder.recipesGraph(
         route = RecipesDestination.Home.route,
     ) {
         RecipesHomeScreen(
-            navigateToRecipeBrowsing = { navController.navigate("${RecipesDestination.Browsing.route}?$TAG=${it.tag?.name}&$SORTER=${it.sorter?.name}") },
-            navigateToRecipeDetails = { recipeId -> navController.navigate("${RecipesDestination.Details.route}/$recipeId") },
+            navigateToRecipeBrowsing = {
+                navController.navigate("1234")
+//                navController.navigate("${RecipesDestination.Browsing.route}?$TAG=${it.tag?.name}&$SORTER=${it.sorter?.name}")
+                                       },
+            navigateToRecipeDetails = { recipeId -> navController.navigateToRecipeDetails(recipeId) },
         )
     }
 
@@ -47,7 +70,7 @@ fun NavGraphBuilder.recipesGraph(
         ),
     ) {
         RecipeBrowsingScreen(
-            navigateToRecipeDetails = { tag -> navController.navigate("${RecipesDestination.Details.route}/$tag") },
+            navigateToRecipeDetails = { id -> navController.navigateToRecipeDetails(id) },
             onBackClick = navController::navigateUp,
         )
     }
@@ -64,11 +87,47 @@ fun NavGraphBuilder.recipesGraph(
         )
     }
 
+    composable(
+        route = "${RecipesDestination.Listing.route}/{$LISTING_TYPE}",
+        arguments = listOf(
+            navArgument(LISTING_TYPE) {
+                type = NavType.StringType
+            }
+        )
+    ) { backstackEntry ->
+        val listingType = backstackEntry.arguments?.getString(LISTING_TYPE)
+        RecipeListingScreen(
+            listingType = listingType,
+            navigateUp = navController::navigateUp,
+            navigateToRecipeDetails = { id -> navController.navigateToRecipeDetails(id) }
+        )
+    }
+
     dialog("report") {
         RecipeReportDialog(
             onCloseDialog = navController::navigateUp,
         )
     }
+
+    composable(
+        route = "1234",
+    ) {
+        val viewModel: PepeViewModel = koinViewModel()
+        val products = viewModel.products.collectAsLazyPagingItems()
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Button(onClick = navigateToAuthenticateScreen) {
+                Text(text = products.itemCount.toString())
+            }
+        }
+    }
+}
+
+private fun NavController.navigateToRecipeDetails(id: String) {
+    navigate("${RecipesDestination.Details.route}/$id")
+}
+
+fun NavController.navigateToRecipeListing(listingType: String) {
+    navigate("${RecipesDestination.Listing.route}/$listingType")
 }
 
 internal data class RecipeBrowsingNavArgs(
@@ -76,6 +135,31 @@ internal data class RecipeBrowsingNavArgs(
     val sorter: RecipeSorter? = null,
 )
 
+internal const val LISTING_TYPE = "listing-type"
 internal const val TAG = "tag"
 internal const val SORTER = "sorter"
 internal const val RECIPE_ID = "recipe-id"
+
+
+
+class PepeViewModel(
+) : ViewModel() {
+    private val searchChannel = Channel<Unit>()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val products: Flow<PagingData<Int>> =
+        searchChannel.receiveAsFlow().map {
+            PagingData.from(listOf(2, 3))
+//            val params = ProductQueryParams.Builder().build()
+//            productRepository.queryProductsPagingDataFlow(params).cachedIn(viewModelScope)
+//                .map { pagingData ->
+//                    pagingData.map { model -> model.toView() }
+//                }
+        }.cachedIn(viewModelScope)
+
+    init {
+        viewModelScope.launch {
+            searchChannel.send(Unit)
+        }
+    }
+}

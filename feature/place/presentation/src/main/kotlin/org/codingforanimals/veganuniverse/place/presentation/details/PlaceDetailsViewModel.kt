@@ -33,6 +33,7 @@ import org.codingforanimals.veganuniverse.commons.ui.R.string.report_success
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_error
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_success
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message_try_again
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
@@ -125,7 +126,7 @@ internal class PlaceDetailsViewModel(
             toggleBookmarkEnabled = false
             send(!currentValue)
             val result = useCases.togglePlaceBookmark(placeGeoHashNavArg, currentValue)
-            handleToggleResultSideEffects(result, ::toggleBookmark)
+            handleToggleResultSideEffects(result)
             send(result.newValue)
             toggleBookmarkEnabled = true
         }
@@ -137,7 +138,6 @@ internal class PlaceDetailsViewModel(
 
     private suspend fun handleToggleResultSideEffects(
         result: ToggleResult,
-        retryAction: suspend () -> Unit,
     ) {
         when (result) {
             is ToggleResult.Success -> Unit
@@ -148,8 +148,7 @@ internal class PlaceDetailsViewModel(
             is ToggleResult.UnexpectedError -> {
                 snackbarEffectsChannel.send(
                     Snackbar(
-                        message = unexpected_error,
-                        action = retryAction,
+                        message = unexpected_error_message_try_again,
                     )
                 )
             }
@@ -292,6 +291,7 @@ internal class PlaceDetailsViewModel(
     }
 
     private fun toggleBookmark() {
+        if (!toggleBookmarkEnabled) return
         viewModelScope.launch {
             toggleBookmarkActionChannel.send(isBookmarked.value)
         }

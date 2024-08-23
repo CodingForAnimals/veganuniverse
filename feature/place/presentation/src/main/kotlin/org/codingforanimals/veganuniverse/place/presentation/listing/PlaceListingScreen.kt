@@ -2,7 +2,6 @@
 
 package org.codingforanimals.veganuniverse.place.presentation.listing
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +25,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.animation.animateAlphaOnStart
-import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
-import org.codingforanimals.veganuniverse.place.presentation.R
 import org.codingforanimals.veganuniverse.place.presentation.details.composables.ErrorView
 import org.codingforanimals.veganuniverse.place.presentation.home.bottomsheet.PlaceCard
 import org.koin.androidx.compose.koinViewModel
@@ -93,7 +90,11 @@ internal fun PlaceListingScreen(
                 when {
                     refresh is LoadState.Loading -> item { CircularProgressIndicator() }
                     append is LoadState.Loading -> item { CircularProgressIndicator() }
-                    places.itemCount == 0 -> item { ErrorView(message = R.string.empty_places_message) }
+                    places.itemCount == 0 -> item {
+                        viewModel.emptyResultsTextRes?.let {
+                            ErrorView(message = it)
+                        }
+                    }
                 }
             }
         }

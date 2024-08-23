@@ -12,15 +12,16 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import org.codingforanimals.veganuniverse.commons.data.paging.ContentListingPagingSource
 import org.codingforanimals.veganuniverse.commons.network.mapFirestoreExceptions
-import org.codingforanimals.veganuniverse.firebase.storage.model.ResizeResolution
-import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureUseCase
+import org.codingforanimals.veganuniverse.commons.recipe.data.model.getSortingDirection
 import org.codingforanimals.veganuniverse.commons.recipe.data.model.getSortingField
 import org.codingforanimals.veganuniverse.commons.recipe.data.paging.RecipePagingSource
 import org.codingforanimals.veganuniverse.commons.recipe.data.remote.entity.RecipeFirestoreEntity
@@ -28,6 +29,8 @@ import org.codingforanimals.veganuniverse.commons.recipe.data.remote.mapper.Reci
 import org.codingforanimals.veganuniverse.commons.recipe.data.remote.mapper.toNewFirestoreEntity
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeQueryParams
+import org.codingforanimals.veganuniverse.firebase.storage.model.ResizeResolution
+import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureUseCase
 
 internal class RecipeFirestoreDataSource(
     private val recipeCollection: CollectionReference,
@@ -48,11 +51,29 @@ internal class RecipeFirestoreDataSource(
         }.onFailure { Log.e(TAG, it.stackTraceToString()) }.getOrNull()
     }
 
-    override suspend fun getRecipesByIdList(ids: List<String>): List<Recipe> =
-        coroutineScope {
-            val dataModelsDeferred = ids.map { async { getRecipeById(it) } }
-            awaitAll(*dataModelsDeferred.toTypedArray()).filterNotNull()
+    override suspend fun queryRecipesPagingDataByIds(ids: List<String>): Flow<PagingData<Recipe>> {
+        suspend fun query(ids: List<String>): List<RecipeFirestoreEntity> = coroutineScope {
+            val deferreds = mutableListOf<Deferred<RecipeFirestoreEntity?>>()
+            ids.forEach { recipeId ->
+                val deferred = async {
+                    recipeCollection.document(recipeId).get().await()
+                        .toObject(RecipeFirestoreEntity::class.java)
+                }
+                deferreds.add(deferred)
+            }
+            return@coroutineScope deferreds.awaitAll().filterNotNull()
         }
+        return Pager(
+            config = PagingConfig(pageSize = 2),
+            pagingSourceFactory = {
+                ContentListingPagingSource(
+                    ids = ids,
+                    pageSize = 2,
+                    query = { query(it) },
+                )
+            }
+        ).flow.map { pagingData -> pagingData.map { firestoreEntityMapper.mapToDataModel(it) } }
+    }
 
     override fun queryRecipesPagingData(params: RecipeQueryParams): Flow<PagingData<Recipe>> {
         val query = params.getQuery()
@@ -83,7 +104,7 @@ internal class RecipeFirestoreDataSource(
                 .orderBy(FIELD_LOWERCASE_TITLE)
                 .whereGreaterThanOrEqualTo(FIELD_LOWERCASE_TITLE, lowercaseTitle)
                 .whereLessThanOrEqualTo(FIELD_LOWERCASE_TITLE, "$lowercaseTitle\uf8ff")
-        } ?: query.orderBy(sorter.getSortingField, Query.Direction.DESCENDING)
+        } ?: query.orderBy(sorter.getSortingField, sorter.getSortingDirection)
 
         tag?.let { tag ->
             query = query.whereArrayContains(FIELD_TAGS, tag.name)
@@ -149,6 +170,8 @@ internal class RecipeFirestoreDataSource(
         private const val TAG = "RecipeFirestoreDataSour"
         private const val FIELD_LOWERCASE_TITLE = "lowercaseTitle"
         private const val FIELD_TAGS = "tags"
-        private const val FIELD_LIKES = "likes"
+        internal const val FIELD_LIKES = "likes"
+        internal const val FIELD_NAME = "name"
+        internal const val FIELD_CREATED_AT = "createdAt"
     }
 }

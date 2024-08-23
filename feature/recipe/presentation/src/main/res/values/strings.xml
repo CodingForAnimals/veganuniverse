@@ -27,5 +27,12 @@
     <string name="step_by_step">Paso a paso</string>
     <string name="step">Paso</string>
     <string name="recipe_details_description_title">Sobre esta receta</string>
-    <string name="contributed_by">Contribuida por</string>
+    <string name="delete">Eliminar</string>
+    <string name="delete_recipe_error_message">¡Oops! No pudimos eliminar tu receta. Podés volver a intentarlo.</string>
+    <string name="delete_recipe_dialog_title">¿Eliminar receta?</string>
+    <string name="delete_recipe_dialog_text">Estás eliminando tu receta. Si lo haces, no podrás recuperarla. ¿Querés continuar?</string>
+    <string name="your_recipes">Tus recetas</string>
+    <string name="bookmarked_recipes">Recetas guardadas</string>
+    <string name="empty_bookmarked_recipes_message">¡No has guardado ninguna receta todavía! Podés tener acá una lista de tus recetas favoritas.</string>
+    <string name="empty_contributed_recipes_message">¡No has contribuido ninguna receta todavía! Todas los que vayas agregando los podrás ver y editar desde este acceso rápido.</string>
 </resources>

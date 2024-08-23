@@ -3,6 +3,7 @@ package org.codingforanimals.veganuniverse.commons.recipe.shared.model
 import android.util.Log
 
 enum class RecipeSorter {
+    NAME,
     DATE,
     LIKES,
     ;

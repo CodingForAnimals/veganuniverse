@@ -12,13 +12,15 @@ sealed class ProfileDestination(route: String) : Destination(route = route) {
 fun NavGraphBuilder.profileGraph(
     navigateToRegister: () -> Unit,
     navigateToPlaceListing: (String) -> Unit,
+    navigateToRecipeListing: (String) -> Unit,
 ) {
     composable(
         route = ProfileDestination.Home.route
     ) {
         ProfileScreen(
             navigateToAuthenticationPrompt = navigateToRegister,
-            navigateToPlaceListing = navigateToPlaceListing
+            navigateToPlaceListing = navigateToPlaceListing,
+            navigateToRecipeListing = navigateToRecipeListing,
         )
     }
 }

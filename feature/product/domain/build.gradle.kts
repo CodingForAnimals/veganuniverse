@@ -12,4 +12,5 @@ dependencies {
     implementation(libs.androidx.paging)
     implementation(project(":commons-product:domain"))
     implementation(project(":commons:user:domain"))
+    implementation(project(":commons-profile:domain"))
 }

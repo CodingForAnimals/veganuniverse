@@ -18,8 +18,8 @@ object versions {
     const val splashScreen = "1.0.1"
     const val googleMapCompose = "2.8.0"
     const val googleMapServices = "18.1.0"
-    const val paging = "3.2.1"
-    const val paging_compose = "3.3.0-alpha03"
+    const val paging = "3.3.0"
+    const val paging_compose = "3.3.0"
 }
 
 object Firebase {

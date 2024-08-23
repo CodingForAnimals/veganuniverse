@@ -15,8 +15,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -26,8 +24,8 @@ import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCa
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductQueryParams
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductSorter
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
-import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
+import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.dialog.Dialog
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
@@ -39,17 +37,13 @@ import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.browsing.mapper.toView
 import org.codingforanimals.veganuniverse.product.presentation.model.Product
+import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.CATEGORY
+import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.SORTER
+import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.TYPE
 
-data class ProductBrowsingUseCases(
-    val queryProductsPagingDataFlow: QueryProductsPagingDataFlow,
-    val reportProduct: ReportProduct,
-    val editProduct: EditProduct,
-)
-
-@OptIn(ExperimentalCoroutinesApi::class)
-class ProductBrowsingViewModel(
+internal class ProductBrowsingViewModel(
     savedStateHandle: SavedStateHandle,
-    private val useCases: ProductBrowsingUseCases,
+    queryProductsPagingDataFlow: QueryProductsPagingDataFlow,
 ) : ViewModel() {
 
     private val navigationEffectsChannel = Channel<NavigationEffect>()
@@ -61,37 +55,30 @@ class ProductBrowsingViewModel(
     private val searchTextDelayMs = 750L
     private var searchTextDelayJob: Job? = null
 
-    var showReportDialog: String? by mutableStateOf(null)
-        private set
-
-    var showSuggestionDialog: String? by mutableStateOf(null)
-        private set
-
-    var showUnverifiedEmailDialog: Boolean by mutableStateOf(false)
-        private set
-
-    private val _uiState = MutableStateFlow(
+    var uiState by mutableStateOf(
         UiState.fromNavArgs(
-            categoryNavArg = savedStateHandle[CATEGORY_ARG],
-            typeNavArg = savedStateHandle[TYPE_ARG],
-            sorterNavArg = savedStateHandle[SORTER_ARG],
+            categoryNavArg = savedStateHandle[CATEGORY],
+            typeNavArg = savedStateHandle[TYPE],
+            sorterNavArg = savedStateHandle[SORTER],
         )
     )
-    val uiState = _uiState.asStateFlow()
+        private set
 
     private val searchChannel = Channel<Unit>()
+    @OptIn(ExperimentalCoroutinesApi::class)
     val products: Flow<PagingData<Product>> =
         searchChannel.receiveAsFlow().flatMapLatest {
             val params = ProductQueryParams.Builder()
-                .withKeyword(uiState.value.searchText)
-                .withCategory(uiState.value.category)
-                .withType(uiState.value.type)
-                .withSorter(uiState.value.sorter)
+                .withKeyword(uiState.searchText)
+                .withCategory(uiState.category)
+                .withType(uiState.type)
+                .withSorter(uiState.sorter)
                 .build()
-            useCases.queryProductsPagingDataFlow(params).map { pagingData ->
-                pagingData.map { model -> model.toView() }
-            }.cachedIn(viewModelScope)
-        }
+            queryProductsPagingDataFlow(params)
+                .map { pagingData ->
+                    pagingData.map { model -> model.toView() }
+                }
+        }.cachedIn(viewModelScope)
 
     init {
         viewModelScope.launch {
@@ -108,7 +95,7 @@ class ProductBrowsingViewModel(
             }
 
             is Action.OnSearchTextChange -> {
-                _uiState.value = uiState.value.copy(searchText = action.text)
+                uiState = uiState.copy(searchText = action.text)
                 searchTextDelayJob?.cancel()
                 if (action.text.isEmpty() || action.text.length >= 3) {
                     searchTextDelayJob = viewModelScope.launch {
@@ -120,7 +107,7 @@ class ProductBrowsingViewModel(
 
             is Action.ApplyFiltersClick -> {
                 viewModelScope.launch {
-                    _uiState.value = uiState.value.copy(
+                    uiState = uiState.copy(
                         category = action.category,
                         type = action.type,
                         sorter = action.sorter,
@@ -130,7 +117,7 @@ class ProductBrowsingViewModel(
             }
 
             Action.OnClearFiltersClick -> {
-                _uiState.value = uiState.value.copy(
+                uiState = uiState.copy(
                     type = null,
                     category = null,
                     sorter = ProductSorter.NAME,
@@ -140,123 +127,15 @@ class ProductBrowsingViewModel(
                 }
             }
 
-            is Action.RelayAction.NavigateToAuthScreen -> {
-                handleRelayActions(action)
-            }
-
-            is Action.OpenReportDialog -> {
-                showReportDialog = action.productId
-            }
-
-            is Action.OpenSuggestDialog -> {
-                showSuggestionDialog = action.productId
-            }
-        }
-    }
-
-    fun onReportResult(action: ReportContentDialogResult) {
-        when (action) {
-            ReportContentDialogResult.Dismiss -> {
-                showReportDialog = null
-            }
-
-            ReportContentDialogResult.SendReport -> {
+            is Action.OnProductClick -> {
                 viewModelScope.launch {
-                    showReportDialog?.let {
-                        val result = useCases.reportProduct(it)
-                        showReportDialog = null
-                        when (result) {
-                            ReportProduct.Result.UnauthenticatedUser -> {
-                                navigationEffectsChannel.send(NavigationEffect.NavigateToAuthScreen)
-                            }
-
-                            ReportProduct.Result.Success -> {
-                                snackbarEffectsChannel.send(
-                                    Snackbar(R.string.product_report_success)
-                                )
-                            }
-
-                            ReportProduct.Result.UnexpectedError -> {
-                                snackbarEffectsChannel.send(Snackbar(R.string.product_report_error))
-                            }
-
-                            ReportProduct.Result.UnverifiedEmail -> {
-                                showUnverifiedEmailDialog = true
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun onEditResult(action: EditContentDialogResult) {
-        when (action) {
-            EditContentDialogResult.Dismiss -> {
-                showSuggestionDialog = null
-            }
-
-            is EditContentDialogResult.SendEdit -> {
-                viewModelScope.launch {
-                    showSuggestionDialog?.let {
-                        val result = useCases.editProduct(it, action.edition)
-                        showSuggestionDialog = null
-                        when (result) {
-                            EditProduct.Result.UnauthenticatedUser -> {
-                                navigationEffectsChannel.send(NavigationEffect.NavigateToAuthScreen)
-                            }
-
-                            EditProduct.Result.UnverifiedEmail -> {
-                                showUnverifiedEmailDialog = true
-                            }
-
-                            EditProduct.Result.UnexpectedError -> {
-                                snackbarEffectsChannel.send(Snackbar(R.string.product_edit_error))
-                            }
-
-                            EditProduct.Result.Success -> {
-                                snackbarEffectsChannel.send(Snackbar(R.string.product_edit_success))
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun onUnverifiedEmailResult(result: UnverifiedEmailResult) {
-        showUnverifiedEmailDialog = false
-        when (result) {
-            UnverifiedEmailResult.Dismissed -> Unit
-            UnverifiedEmailResult.UnexpectedError -> {
-                viewModelScope.launch {
-                    snackbarEffectsChannel.send(
-                        Snackbar(message = verification_email_not_sent)
-                    )
-                }
-            }
-
-            UnverifiedEmailResult.VerificationEmailSent -> {
-                viewModelScope.launch {
-                    snackbarEffectsChannel.send(
-                        Snackbar(message = verification_email_sent)
-                    )
+                    navigationEffectsChannel.send(NavigationEffect.NavigateToProductDetails(action.id))
                 }
             }
         }
     }
 
     private suspend fun searchProducts() = searchChannel.send(Unit)
-
-    private fun handleRelayActions(action: Action.RelayAction) {
-        when (action) {
-            Action.RelayAction.NavigateToAuthScreen -> {
-                viewModelScope.launch {
-                    navigationEffectsChannel.send(NavigationEffect.NavigateToAuthScreen)
-                }
-            }
-        }
-    }
 
     data class UiState(
         val category: ProductCategory? = null,
@@ -279,8 +158,9 @@ class ProductBrowsingViewModel(
                 return categoryNavArg?.let {
                     UiState(
                         category = ProductCategory.fromString(it),
-                        type = ProductType.fromString(typeNavArg),
-                        sorter = ProductSorter.fromString(sorterNavArg) ?: ProductSorter.NAME,
+                        type = typeNavArg?.let { ProductType.fromString(it) },
+                        sorter = sorterNavArg?.let { ProductSorter.fromString(it) }
+                            ?: ProductSorter.NAME,
                     )
                 } ?: UiState()
             }
@@ -292,26 +172,18 @@ class ProductBrowsingViewModel(
         data object OnClearFiltersClick : Action()
 
         data class OnSearchTextChange(val text: String) : Action()
+        data class OnProductClick(val id: String) : Action()
         data class ApplyFiltersClick(
             val category: ProductCategory?,
             val type: ProductType?,
             val sorter: ProductSorter
         ) : Action()
-
-        sealed class RelayAction : Action() {
-            data object NavigateToAuthScreen : RelayAction()
-        }
-
-        data class OpenReportDialog(val productId: String) : Action()
-        data class OpenSuggestDialog(val productId: String) : Action()
     }
 
     sealed class NavigationEffect {
         data object NavigateUp : NavigationEffect()
         data object NavigateToAuthScreen : NavigationEffect()
+        data class NavigateToProductDetails(val id: String) : NavigationEffect()
     }
 }
 
-const val CATEGORY_ARG = "category_arg"
-const val TYPE_ARG = "type_arg"
-const val SORTER_ARG = "sorter_arg"

@@ -17,8 +17,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,12 +28,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -44,15 +41,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_09
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
+import org.codingforanimals.veganuniverse.commons.ui.R.string.contributed_by
 import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHero
@@ -86,6 +82,7 @@ internal fun RecipeDetailsScreen(
 
     RecipeDetailsScreen(
         recipeState = recipeState,
+        isOwner = viewModel.isOwner,
         isLiked = isLiked,
         isBookmarked = isBookmarked,
         onAction = viewModel::onAction,
@@ -96,7 +93,8 @@ internal fun RecipeDetailsScreen(
         onEditResult = { viewModel.onAction(Action.OnEditResult(it)) },
         onReportResult = { viewModel.onAction(Action.OnReportResult(it)) },
         onUnverifiedEmailResult = { viewModel.onAction(Action.OnUnverifiedEmailResult(it)) },
-        onImageDismissRequest = { viewModel.onAction(Action.OnImageDialogDismissRequest) }
+        onDialogDismissRequest = { viewModel.onAction(Action.OnDialogDismissRequest) },
+        onConfirmDelete = { viewModel.onAction(Action.OnConfirmDelete) }
     )
 
     HandleNavigationEffects(
@@ -109,6 +107,7 @@ internal fun RecipeDetailsScreen(
 @Composable
 internal fun RecipeDetailsScreen(
     recipeState: RecipeDetailsViewModel.RecipeState,
+    isOwner: Boolean?,
     isLiked: Boolean,
     isBookmarked: Boolean,
     onAction: (Action) -> Unit = {},
@@ -117,6 +116,7 @@ internal fun RecipeDetailsScreen(
         topBar = {
             RecipeDetailsTopAppBar(
                 recipeState = recipeState,
+                isOwner = isOwner,
                 isLiked = isLiked,
                 onLikeClick = { onAction(Action.OnLikeClick) },
                 isBookmarked = isBookmarked,
@@ -124,6 +124,7 @@ internal fun RecipeDetailsScreen(
                 onBackClick = { onAction(Action.OnBackClick) },
                 onEditClick = { onAction(Action.OnEditClick) },
                 onReportClick = { onAction(Action.OnReportClick) },
+                onDeleteClick = { onAction(Action.OnDeleteClick) }
             )
         }
     ) { paddingValues ->
@@ -180,8 +181,8 @@ private fun RecipeContent(
         verticalArrangement = Arrangement.spacedBy(Spacing_06),
     ) {
         ContentDetailsHero(
-            icon = VUIcons.RecipesFilled,
             url = recipe.imageUrl,
+            icon = VUIcons.RecipesFilled,
             onImageClick = { onAction(Action.OnImageClick(recipe.imageUrl)) },
         )
 
@@ -214,7 +215,7 @@ private fun RecipeContent(
                     recipe.createdAt?.let { DateUtils.getTimeAgo(time = it.time) }
                 val contributedBy = "$username${createdAt?.let { ", $it" }}"
                 ContentDetailItem(
-                    title = stringResource(id = R.string.contributed_by),
+                    title = stringResource(id = contributed_by),
                     subtitle = contributedBy,
                     icon = VUIcons.Create.id,
                 )
@@ -299,7 +300,8 @@ private fun HandleDialog(
     onEditResult: (EditContentDialogResult) -> Unit,
     onReportResult: (ReportContentDialogResult) -> Unit,
     onUnverifiedEmailResult: (UnverifiedEmailResult) -> Unit,
-    onImageDismissRequest: () -> Unit,
+    onDialogDismissRequest: () -> Unit,
+    onConfirmDelete: () -> Unit,
 ) {
     dialog?.let {
         when (dialog) {
@@ -313,7 +315,7 @@ private fun HandleDialog(
 
             is RecipeDetailsViewModel.Dialog.Image -> {
                 Dialog(
-                    onDismissRequest = onImageDismissRequest,
+                    onDismissRequest = onDialogDismissRequest,
                     properties = DialogProperties(usePlatformDefaultWidth = false),
                 ) {
                     AsyncImage(
@@ -328,6 +330,24 @@ private fun HandleDialog(
 
             RecipeDetailsViewModel.Dialog.UnverifiedEmail -> {
                 UnverifiedEmailDialog(onResult = onUnverifiedEmailResult)
+            }
+
+            RecipeDetailsViewModel.Dialog.Delete -> {
+                AlertDialog(
+                    onDismissRequest = onDialogDismissRequest,
+                    confirmButton = {
+                        Button(onClick = onConfirmDelete) {
+                            Text(text = stringResource(id = R.string.delete))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = onDialogDismissRequest) {
+                            Text(text = stringResource(id = R.string.back))
+                        }
+                    },
+                    title = { Text(text = stringResource(id = R.string.delete_recipe_dialog_title))},
+                    text = { Text(text = stringResource(id = R.string.delete_recipe_dialog_text))}
+                )
             }
         }
     }
@@ -373,6 +393,7 @@ private fun PreviewRecipeDetailsScreen() {
         }
         RecipeDetailsScreen(
             recipeState = RecipeDetailsViewModel.RecipeState.Success(recipe),
+            isOwner = false,
             isLiked = true,
             isBookmarked = true
         )

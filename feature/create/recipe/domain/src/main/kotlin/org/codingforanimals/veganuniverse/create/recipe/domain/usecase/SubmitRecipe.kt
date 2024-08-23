@@ -11,7 +11,7 @@ import org.codingforanimals.veganuniverse.create.recipe.domain.model.RecipeForm
 
 class SubmitRecipe(
     private val recipeRepository: RecipeRepository,
-    private val profileContentUseCases: ProfileContentUseCases,
+    private val profileRecipeUseCases: ProfileContentUseCases,
     private val flowOnCurrentUser: FlowOnCurrentUser,
 ) {
     suspend operator fun invoke(recipeForm: RecipeForm): Result {
@@ -24,7 +24,7 @@ class SubmitRecipe(
         return try {
             val recipe = recipeRepository.insertRecipe(recipeFormAsModel, recipeForm.imageModel)
                 ?.also { finalRecipe ->
-                    finalRecipe.id?.let { profileContentUseCases.addContribution(it) }
+                    finalRecipe.id?.let { profileRecipeUseCases.addContribution(it) }
                 }
             return recipe?.let {
                 Result.Success(it)
@@ -42,7 +42,7 @@ class SubmitRecipe(
             id = null,
             userId = userId,
             username = username,
-            title = title,
+            name = name,
             description = description,
             tags = tags,
             ingredients = ingredients,

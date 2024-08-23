@@ -105,7 +105,7 @@ internal class CreateRecipeViewModel(
 
     private fun updateTextForm(action: Action.OnTextChange) {
         uiState = when (action) {
-            is Action.OnTextChange.Title -> uiState.copy(titleField = StringField(action.text))
+            is Action.OnTextChange.Name -> uiState.copy(nameField = StringField(action.text))
             is Action.OnTextChange.Description -> uiState.copy(descriptionField = StringField(action.text))
             is Action.OnTextChange.Servings -> uiState.copy(servingsField = StringField(action.text))
             is Action.OnTextChange.PrepTime -> uiState.copy(prepTimeField = StringField(action.text))
@@ -211,7 +211,7 @@ internal class CreateRecipeViewModel(
 
     data class UiState(
         val pictureField: PictureField = PictureField(),
-        val titleField: StringField = StringField(),
+        val nameField: StringField = StringField(),
         val descriptionField: StringField = StringField(),
         val servingsField: StringField = StringField(),
         val prepTimeField: StringField = StringField(),
@@ -226,7 +226,7 @@ internal class CreateRecipeViewModel(
         val areFieldsValid: Boolean
             get() = areFieldsValid(
                 pictureField,
-                titleField,
+                nameField,
                 descriptionField,
                 servingsField,
                 prepTimeField,
@@ -238,7 +238,7 @@ internal class CreateRecipeViewModel(
         fun recipeForm(): RecipeForm? {
             return RecipeForm(
                 imageModel = pictureField.model ?: return null,
-                title = titleField.value.ifBlank { return null },
+                name = nameField.value.ifBlank { return null },
                 description = descriptionField.value.ifBlank { return null },
                 tags = tagsField.tags.mapNotNull {
                     if (!it.selected) return@mapNotNull null
@@ -264,7 +264,7 @@ internal class CreateRecipeViewModel(
         }
 
         sealed class OnTextChange : Action() {
-            data class Title(val text: String) : OnTextChange()
+            data class Name(val text: String) : OnTextChange()
             data class Description(val text: String) : OnTextChange()
             data class Servings(val text: String) : OnTextChange()
             data class PrepTime(val text: String) : OnTextChange()
