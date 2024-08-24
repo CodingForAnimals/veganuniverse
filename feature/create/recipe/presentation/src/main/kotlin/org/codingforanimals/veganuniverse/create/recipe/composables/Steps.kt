@@ -79,6 +79,7 @@ internal fun Steps(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary,
                     )
+                    val imeAction = if (index == stepsField.list.lastIndex) ImeAction.Done else ImeAction.Next
                     VUNormalTextField(
                         modifier = Modifier.weight(1f),
                         value = step,
@@ -87,7 +88,7 @@ internal fun Steps(
                         maxChars = 128,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences,
-                            imeAction = ImeAction.Next,
+                            imeAction = imeAction,
                         ),
                     )
                     var expanded by remember { mutableStateOf(false) }
