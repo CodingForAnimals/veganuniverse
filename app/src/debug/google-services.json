@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:381536040984:android:6c136b8e1019b228c02b6d",
+        "mobilesdk_app_id": "1:381536040984:android:0478c2fe544cb653c02b6d",
         "android_client_info": {
-          "package_name": "org.codingforanimals.veganuniverse"
+          "package_name": "org.codingforanimals.veganuniverse.debug"
         }
       },
       "oauth_client": [
         {
-          "client_id": "381536040984-brpu9fu5nos0ugc1jj6oldk0i5q7jrsd.apps.googleusercontent.com",
+          "client_id": "381536040984-j16ini8jjpjk1d59s9vt43ppmea1qqne.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "org.codingforanimals.veganuniverse",
+            "package_name": "org.codingforanimals.veganuniverse.debug",
             "certificate_hash": "a5d4e9044bcc96e262ea3f9a12bad84e645b8ff6"
           }
         },
@@ -29,7 +29,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyATDgK_LBizEIapwfzy90-_BI4tVAyKenE"
+          "current_key": "AIzaSyBpjL34K86bKE3dcqwqEd8JvJgbhz_L-G0"
         }
       ],
       "services": {
