@@ -13,4 +13,5 @@
     <string name="places">Lugares</string>
     <string name="recipes">Recetas</string>
     <string name="bookmarked_places">Lugares guardados</string>
+    <string name="version">Versión %1$s</string>
 </resources>

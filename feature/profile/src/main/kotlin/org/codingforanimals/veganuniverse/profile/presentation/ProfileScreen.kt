@@ -1,5 +1,7 @@
 package org.codingforanimals.veganuniverse.profile.presentation
 
+import android.content.pm.PackageManager
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -31,8 +33,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
@@ -44,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
@@ -118,6 +123,7 @@ private fun ProfileScreen(
                 ProfileContentScreen(
                     modifier = Modifier.fillMaxSize(),
                     user = state.user,
+                    appVersion = appVersion(),
                     isVerified = state.isVerified,
                     onAction = onAction,
                 )
@@ -170,6 +176,7 @@ private fun AuthenticatePromptScreen(
 @Composable
 private fun ProfileContentScreen(
     user: User,
+    appVersion: String,
     isVerified: Boolean,
     modifier: Modifier = Modifier,
     onAction: (Action) -> Unit = {},
@@ -298,6 +305,13 @@ private fun ProfileContentScreen(
             modifier = Modifier
                 .padding(top = Spacing_05)
                 .align(Alignment.End),
+            text = stringResource(R.string.version, appVersion),
+            style = MaterialTheme.typography.labelSmall
+        )
+
+        Text(
+            modifier = Modifier
+                .align(Alignment.End),
             text = buildAnnotatedString {
                 withStyle(MaterialTheme.typography.labelSmall.toSpanStyle()) {
                     append(stringResource(id = R.string.made_by))
@@ -360,6 +374,23 @@ private fun RowScope.ProfileContentCard(
     )
 }
 
+@Composable
+private fun appVersion(): String {
+    val context = LocalContext.current
+    return remember {
+        runCatching {
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                PackageManager.GET_ACTIVITIES
+            ).versionName
+        }.getOrElse {
+            Log.e("ProfileScreen", "Error getting app version", it)
+            Analytics.logNonFatalException(it)
+            "0.0.0"
+        }
+    }
+}
+
 private const val WHITESPACE = " "
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -373,7 +404,8 @@ private fun PreviewProfileContentScreen() {
             ProfileContentScreen(
                 modifier = Modifier.padding(it),
                 user = User(id = "123", "El Pepe Argento", "elpepe@gmail.com"),
-                isVerified = true,
+                appVersion = "1.0.0",
+                isVerified = true
             )
         }
     }

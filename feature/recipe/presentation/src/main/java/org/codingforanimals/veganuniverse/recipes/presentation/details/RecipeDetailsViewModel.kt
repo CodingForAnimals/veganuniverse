@@ -232,7 +232,9 @@ internal class RecipeDetailsViewModel(
     private fun deleteRecipe() {
         recipeId ?: return
         viewModelScope.launch {
-            if (useCases.deleteRecipe(recipeId).isSuccess) {
+            val result = useCases.deleteRecipe(recipeId)
+            dialog = null
+            if (result.isSuccess) {
                 navigationEffectsChannel.send(NavigationEffect.NavigateUp)
             } else {
                 snackbarEffectsChannel.send(Snackbar(R.string.delete_recipe_error_message))
