@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -32,17 +33,12 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
-import org.codingforanimals.veganuniverse.place.presentation.R
-import org.codingforanimals.veganuniverse.place.presentation.composables.Review
-import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.Action
-import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.NewReviewState
-import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.OtherReviewsState
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
 import org.codingforanimals.veganuniverse.commons.ui.animation.animateAlphaOnStart
 import org.codingforanimals.veganuniverse.commons.ui.components.InteractiveRatingBar
 import org.codingforanimals.veganuniverse.commons.ui.components.RatingBar
@@ -51,8 +47,13 @@ import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.components.VUTextFieldDefaults
 import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
-import org.codingforanimals.veganuniverse.commons.user.domain.model.User
 import org.codingforanimals.veganuniverse.commons.ui.utils.DateUtils
+import org.codingforanimals.veganuniverse.commons.user.domain.model.User
+import org.codingforanimals.veganuniverse.place.presentation.R
+import org.codingforanimals.veganuniverse.place.presentation.composables.Review
+import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.Action
+import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.NewReviewState
+import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.OtherReviewsState
 import kotlin.math.roundToInt
 
 @Composable
@@ -223,12 +224,11 @@ private fun AddReviewForm(
 ) {
     Card(modifier = modifier) {
         Column(verticalArrangement = Arrangement.spacedBy(Spacing_02)) {
-
             Row(modifier = Modifier) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(top = Spacing_04),
+                        .padding(start = Spacing_06, top = Spacing_04),
                     verticalArrangement = Arrangement.SpaceEvenly,
                     content = {
                         user?.name?.let { Text(text = it) }
@@ -306,6 +306,7 @@ private fun AddReviewForm(
                     }
                 },
             )
+            Spacer(modifier = Modifier.height(Spacing_02))
 
         }
     }
@@ -316,7 +317,14 @@ private fun AddReviewForm(
 private fun PreviewNewForm() {
     VeganUniverseTheme {
         VeganUniverseBackground {
-            AddReviewForm(newReviewState = NewReviewState(), user = null, onAction = {})
+            AddReviewForm(
+                newReviewState = NewReviewState(),
+                user = User(
+                    "123",
+                    "John Doe",
+                    "email@gmail.com"
+                ),
+                onAction = {})
         }
     }
 }

@@ -18,7 +18,7 @@ gradlew.bat
 #for firebase functions
 /functions
 
-**/release
+/app/release/**
 **/build
 
 functions/
