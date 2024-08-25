@@ -202,6 +202,17 @@ private fun RecipeContent(
                 icon = VUIcons.Community.id,
             )
 
+            val likesText = when (recipe.likes) {
+                0 -> stringResource(R.string.recipe_no_favs)
+                1 -> stringResource(R.string.recipe_one_favs)
+                else -> stringResource(R.string.recipe_n_favs, recipe.likes)
+            }
+            ContentDetailItem(
+                title = stringResource(id = R.string.likes),
+                subtitle = likesText,
+                icon = VUIcons.Favorite.id,
+            )
+
             ContentDetailItem(
                 title = stringResource(id = R.string.servings),
                 subtitle = recipe.servings,

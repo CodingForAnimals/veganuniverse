@@ -37,4 +37,8 @@
     <string name="empty_contributed_recipes_message">¡No has contribuido ninguna receta todavía! Todas los que vayas agregando los podrás ver y editar desde este acceso rápido.</string>
     <string name="upcoming_feature_edit_recipe_message">Estamos trabajando para que muy pronto puedas editar tus recetas, ¡Gracias!</string>
     <string name="upcoming_feature_edit_recipe_title">Editar receta (Muy pronto)</string>
+    <string name="likes">Favoritos</string>
+    <string name="recipe_n_favs">¡Esta receta está marcada como favorita para %1$s personas!</string>
+    <string name="recipe_no_favs">Esta receta todavía nadie la ha marcado como favorita.</string>
+    <string name="recipe_one_favs">Esta receta ha sido marcada como favorita por una persona.</string>
 </resources>
