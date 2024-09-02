@@ -11,7 +11,7 @@ data class OnboardingInfo(
 )
 
 internal val onboardingInfo = listOf(
-    OnboardingInfo(title = "Te damos la bienvenida a\nUniverso Vegano", subtitle = "Un espacio donde encontrar toda la información que necesitás", imageId = org.codingforanimals.veganuniverse.commons.ui.R.drawable.logo, imageSize = 150.dp),
-    OnboardingInfo(title = "Una red vegana", subtitle = "Tendemos puentes para que ser vegan sea cada día un poco más fácil y accesible", imageId = R.drawable.onboarding_image_1, imageSize = 300.dp),
-    OnboardingInfo(title = "Información oportuna", subtitle = "Recetas\nLugares\nProductos aptos\nPsicología vegana\ny mucho más...", imageId = R.drawable.onboarding_image_2, imageSize = 300.dp),
+    OnboardingInfo(title = "Te damos la bienvenida a\nUniverso Vegano", subtitle = "Una espacio donde encontrás toda la información que necesitás.", imageId = org.codingforanimals.veganuniverse.commons.ui.R.drawable.logo, imageSize = 150.dp),
+    OnboardingInfo(title = "Para veganos y no veganos", subtitle = "Tendemos puentes para que ser vegan sea cada día un poco más fácil y accesible", imageId = R.drawable.onboarding_image_1, imageSize = 300.dp),
+    OnboardingInfo(title = "Todo en una sola app", subtitle = "Buscá productos aptos\nDescubrí lugares para comer\nAprendé y compartí recetas\ny mucho más que está por venir...", imageId = R.drawable.onboarding_image_2, imageSize = 300.dp),
 )

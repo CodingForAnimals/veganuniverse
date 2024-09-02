@@ -18,7 +18,7 @@ internal class CurrentCurrentUserRepositoryImpl(
     override suspend fun createUser(email: String, name: String) {
         val dto = userRemoteDataSource.createUser(email, name)
         userLocalStorage.setCurrentUser(dto)
-        userLocalStorage.setIsVerified(false)
+        userLocalStorage.setIsVerified(userRemoteDataSource.isEmailVerified())
     }
 
     override suspend fun clearUserLocalStorage() {

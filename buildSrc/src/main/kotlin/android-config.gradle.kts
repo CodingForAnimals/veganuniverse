@@ -6,7 +6,7 @@ configure<BaseExtension> {
 //    buildToolsVersion("30.0.3")
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

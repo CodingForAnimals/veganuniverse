@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "org.codingforanimals.veganuniverse"
-        versionCode = 14
+        versionCode = 15
         versionName = "1.0.0"
 
         vectorDrawables {

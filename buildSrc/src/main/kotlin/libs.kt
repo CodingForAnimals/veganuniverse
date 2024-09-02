@@ -64,7 +64,7 @@ object libs {
     }
 
     object firebase {
-        const val bom = "com.google.firebase:firebase-bom:32.1.1"
+        const val bom = "com.google.firebase:firebase-bom:33.2.0"
         const val auth = "com.google.firebase:firebase-auth-ktx"
         const val firestore = "com.google.firebase:firebase-firestore-ktx"
         const val storage = "com.google.firebase:firebase-storage-ktx"
