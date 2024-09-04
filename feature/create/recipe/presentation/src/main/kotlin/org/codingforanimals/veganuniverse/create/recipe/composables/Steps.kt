@@ -85,7 +85,7 @@ internal fun Steps(
                         value = step,
                         onValueChange = { onAction(Action.OnStepChange.Text(index, it)) },
                         placeholder = if (index == 0) stringResource(R.string.create_recipe_steps_placeholder) else null,
-                        maxChars = 128,
+                        maxChars = 600,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences,
                             imeAction = imeAction,

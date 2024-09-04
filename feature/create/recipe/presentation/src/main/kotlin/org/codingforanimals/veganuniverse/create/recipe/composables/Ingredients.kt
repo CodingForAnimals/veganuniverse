@@ -67,7 +67,7 @@ internal fun Ingredients(
                         value = ingredient,
                         onValueChange = { onAction(Action.OnIngredientChange.Text(index, it)) },
                         placeholder = if (index == 0) stringResource(R.string.create_recipe_ingredient_placeholder) else null,
-                        maxChars = 128,
+                        maxChars = 600,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences,
                             imeAction = ImeAction.Next,

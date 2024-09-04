@@ -96,7 +96,7 @@ fun VUNormalTextField(
         label = label?.let { { Text(label) } },
         value = value,
         onValueChange = {
-            if (value.length <= maxChars) {
+            if (it.length <= maxChars) {
                 onValueChange(it)
             }
         },
