@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.flowOf
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
@@ -33,7 +33,6 @@ import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.components.ProductCard
-import org.codingforanimals.veganuniverse.product.presentation.model.Product
 import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 
@@ -134,18 +133,20 @@ private fun PreviewProductListingScreen() {
     VeganUniverseTheme {
         val productA = Product(
             id = "123",
-            name = "Galletita Pepe",
+            name = "Producto Pepe",
             brand = "Argento's",
-            comment = "Excelente galletita, económica y 100% vegana. Recomiendo!",
-            type = ProductType.VEGAN.toUI(),
-            category = ProductCategory.BAKED_GOODS.toUI(),
-            userId = "123",
-            username = "El Pepe",
+            comment = "Rico y económico. 100% vegano. Recomiendo!!",
+            type = ProductType.VEGAN,
+            category = ProductCategory.ADDITIVES,
+            userId = "123123",
+            username = "Paola Argento",
             imageUrl = null,
-            createdAt = Date()
+            createdAt = Date(),
+            validated = true,
         )
         val productB = productA.copy(id = "1234")
-        val products = flowOf(PagingData.from(listOf(productA, productB))).collectAsLazyPagingItems()
+        val products =
+            flowOf(PagingData.from(listOf(productA, productB))).collectAsLazyPagingItems()
         ProductListingScreen(
             title = R.string.bookmarked_products,
             emptyResultLabel = R.string.empty_bookmarked_products_message,

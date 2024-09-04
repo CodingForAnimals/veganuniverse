@@ -108,5 +108,6 @@ include(
 )
 
 include(
+    ":commons-create:domain",
     ":commons-create:presentation",
 )

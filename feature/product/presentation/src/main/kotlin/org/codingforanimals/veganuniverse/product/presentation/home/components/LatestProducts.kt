@@ -29,7 +29,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
 import org.codingforanimals.veganuniverse.commons.ui.R.string.most_recent
@@ -40,7 +40,6 @@ import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.components.ProductCard
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel
-import org.codingforanimals.veganuniverse.product.presentation.model.Product
 import java.util.Date
 
 @Composable
@@ -163,12 +162,13 @@ private fun PreviewLatestProductsCards() {
                     name = "Producto Pepe",
                     brand = "Argento's",
                     comment = "Rico y económico. 100% vegano. Recomiendo!!",
-                    type = ProductType.VEGAN.toUI(),
-                    category = ProductCategory.BAKED_GOODS.toUI(),
+                    type = ProductType.VEGAN,
+                    category = ProductCategory.ADDITIVES,
                     userId = "123123",
                     username = "Paola Argento",
                     imageUrl = null,
                     createdAt = Date(),
+                    validated = true,
                 )
                 LatestProductsCards(
                     latestProductsState = ProductHomeViewModel.LatestProductsState.Success(

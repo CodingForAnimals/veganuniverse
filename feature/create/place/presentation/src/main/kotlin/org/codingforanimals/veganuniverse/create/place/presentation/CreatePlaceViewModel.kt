@@ -23,8 +23,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
-import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
 import org.codingforanimals.veganuniverse.commons.place.domain.model.DayOfWeek
 import org.codingforanimals.veganuniverse.commons.place.shared.model.AddressComponents
 import org.codingforanimals.veganuniverse.commons.place.shared.model.OpeningHours
@@ -58,7 +56,6 @@ class CreatePlaceViewModel(
     private val getPlaceDataUseCase: GetPlaceDataUseCase,
     private val getAutoCompleteIntentUseCase: GetAutoCompleteIntentUseCase,
     private val submitPlace: SubmitPlace,
-    private val deeplinkNavigator: DeeplinkNavigator,
 ) : ViewModel() {
 
     var uiState by mutableStateOf(UiState(content = getCreatePlaceScreenContent()))
@@ -69,6 +66,9 @@ class CreatePlaceViewModel(
 
     private val snackbarEffectsChannel = Channel<Snackbar>()
     val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
+
+    private val navigationEffectsChannel = Channel<NavigationEffect>()
+    val navigationEffects = navigationEffectsChannel.receiveAsFlow()
 
     var dialog: Dialog? by mutableStateOf(null)
         private set
@@ -90,7 +90,7 @@ class CreatePlaceViewModel(
             Action.OnHideExpandOpeningHoursClick -> updateHideExpandOpeningHoursState()
             Action.OnBackClick -> {
                 viewModelScope.launch {
-                    sideEffectChannel.send(SideEffect.NavigateUp)
+                    navigationEffectsChannel.send(NavigationEffect.NavigateToThankYouScreen)
                 }
             }
 
@@ -240,7 +240,8 @@ class CreatePlaceViewModel(
             uiState = uiState.copy(isLoading = true)
             submitPlace(placeForm)
                 .onSuccess {
-                    deeplinkNavigator.navigate(DeepLink.ThankYou)
+                    uiState = uiState.copy(isLoading = false)
+                    navigationEffectsChannel.send(NavigationEffect.NavigateToThankYouScreen)
                 }
                 .onFailure { exception ->
                     Log.e("CreatePlace", exception.stackTraceToString())
@@ -471,7 +472,6 @@ class CreatePlaceViewModel(
 
     sealed class SideEffect {
         data object OpenImageSelector : SideEffect()
-        data object NavigateUp : SideEffect()
 
         data class OpenAutoCompleteOverlay(val autocompleteIntent: Intent) : SideEffect()
         data class ZoomInLocation(private val latLng: LatLng) : SideEffect() {
@@ -483,6 +483,11 @@ class CreatePlaceViewModel(
                 private const val DEFAULT_ANIMATION_DURATION = 750
             }
         }
+    }
+
+    sealed class NavigationEffect {
+        data object NavigateUp : NavigationEffect()
+        data object NavigateToThankYouScreen : NavigationEffect()
     }
 
     sealed class Dialog {

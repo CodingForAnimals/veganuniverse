@@ -3,4 +3,8 @@
     <string name="thanks_for_your_contribution">¡Gracias por tu aporte!</string>
     <string name="thank_you_subtitle">En comunidad hacemos que volverse vegan sea más fácil y accesible cada día!</string>
     <string name="thank_you_continue">Continuar</string>
+    <string name="product_content_available_text">El producto que contribuiste está en proceso de verificación. Cuando hayamos validado esta información podrás compartirlo. ¡Mientras tanto podés verlo desde tu perfil!</string>
+    <string name="place_content_available_text">El lugar que contribuiste está en proceso de verificación. Cuando hayamos validado esta información podrás compartirlo. ¡Mientras tanto podés verlo desde tu perfil!</string>
+    <string name="recipe_content_available_text">¡Ya podés compartir tu receta! Podés encontrarla en el buscador de recetas o en tu perfil.</string>
+    <string name="go_to_profile">Ir al perfil</string>
 </resources>

@@ -35,7 +35,9 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Doubtful
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.product.presentation.resolveBrand
 import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
+import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
@@ -55,7 +57,6 @@ import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEm
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.detail.ProductDetailViewModel.Action
 import org.codingforanimals.veganuniverse.product.presentation.detail.components.ProductDetailTopBar
-import org.codingforanimals.veganuniverse.product.presentation.model.Product
 import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 
@@ -143,6 +144,8 @@ private fun ProductDetailScreen(
 @Composable
 private fun ProductDetailScreen(product: Product) {
     var imageDialogUrl: String? by remember { mutableStateOf(null) }
+    val typeUI = remember { product.type.toUI() }
+    val categoryUI = remember { product.category.toUI() }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -150,9 +153,9 @@ private fun ProductDetailScreen(product: Product) {
     ) {
         ContentDetailsHero(
             url = product.imageUrl,
-            icon = product.type.icon,
+            icon = typeUI.icon,
             onImageClick = { imageDialogUrl = product.imageUrl },
-            colors = when (product.type.type) {
+            colors = when (product.type) {
                 ProductType.VEGAN -> ContentDetailsHeroDefaults.successColors()
                 ProductType.NOT_VEGAN -> ContentDetailsHeroDefaults.errorColors()
                 ProductType.DOUBTFUL -> ContentDetailsHeroDefaults.successColors().copy(
@@ -170,12 +173,12 @@ private fun ProductDetailScreen(product: Product) {
         ) {
             ContentDetailItem(
                 title = product.name,
-                subtitle = product.brand,
+                subtitle = product.resolveBrand,
             )
             ContentDetailItem(
-                title = stringResource(product.type.label),
-                subtitle = stringResource(product.type.description),
-                icon = product.type.icon.id,
+                title = stringResource(typeUI.label),
+                subtitle = stringResource(typeUI.description),
+                icon = typeUI.icon.id,
             )
 
             product.comment?.let { comment ->
@@ -189,7 +192,7 @@ private fun ProductDetailScreen(product: Product) {
             ContentDetailItem(
                 modifier = Modifier.padding(top = Spacing_05),
                 title = stringResource(id = R.string.category),
-                subtitle = stringResource(id = product.category.label),
+                subtitle = stringResource(id = categoryUI.label),
                 icon = VUIcons.Comment.id,
             )
 
@@ -250,15 +253,16 @@ private fun ProductDetailDialog(
 
 private val productPreview = Product(
     id = "123",
-    name = "El Pepaso",
-    brand = "Argento",
-    comment = "Antes no era vegano pero ahora sí lo es.",
-    type = ProductType.VEGAN.toUI(),
-    category = ProductCategory.BAKED_GOODS.toUI(),
+    name = "Producto Pepe",
+    brand = "Argento's",
+    comment = "Rico y económico. 100% vegano. Recomiendo!!",
+    type = ProductType.VEGAN,
+    category = ProductCategory.ADDITIVES,
     userId = "123123",
-    username = "Pepe Argento",
-    imageUrl = "",
-    createdAt = Date()
+    username = "Paola Argento",
+    imageUrl = null,
+    createdAt = Date(),
+    validated = true,
 )
 
 @Preview
@@ -275,7 +279,7 @@ private fun PreviewVeganProductDetailScreen() {
 @Composable
 private fun PreviewNotVeganProductDetailScreen() {
     VeganUniverseTheme {
-        val product = productPreview.copy(type = ProductType.NOT_VEGAN.toUI())
+        val product = productPreview.copy(type = ProductType.NOT_VEGAN)
         ProductDetailScreen(
             product = product,
         )
@@ -286,7 +290,7 @@ private fun PreviewNotVeganProductDetailScreen() {
 @Composable
 private fun PreviewDoubtfulVeganProductDetailScreen() {
     VeganUniverseTheme {
-        val product = productPreview.copy(type = ProductType.DOUBTFUL.toUI())
+        val product = productPreview.copy(type = ProductType.DOUBTFUL)
         ProductDetailScreen(
             product = product,
         )

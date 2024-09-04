@@ -1,6 +1,7 @@
 package org.codingforanimals.veganuniverse.commons.create.presentation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +14,7 @@ import org.codingforanimals.veganuniverse.commons.ui.icon.Icon
 
 @Composable
 fun CreateContentHero(
-    content: @Composable () -> Unit,
+    content: @Composable BoxScope.() -> Unit,
     heroAnchorIcon: Icon?,
     heroAnchorColors: HeroAnchorColors = HeroAnchorDefaults.primaryColors(),
 ) {

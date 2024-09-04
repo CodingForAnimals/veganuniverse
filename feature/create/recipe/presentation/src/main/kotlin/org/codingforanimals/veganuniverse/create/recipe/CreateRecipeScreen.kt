@@ -65,6 +65,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CreateRecipeScreen(
     navigateUp: () -> Unit,
+    navigateToThankYouScreen: () -> Unit,
 ) {
     val viewModel: CreateRecipeViewModel = koinViewModel()
     val imagePicker = rememberImageCropperLauncherForActivityResult(
@@ -108,13 +109,21 @@ fun CreateRecipeScreen(
     HandleSideEffects(
         sideEffect = viewModel.sideEffect,
         imagePicker = imagePicker,
-        navigateUp = navigateUp,
     )
 
     HandleSnackbarEffects(
         snackbarEffects = viewModel.snackbarEffects,
         snackbarHostState = snackbarHostState,
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEffects.onEach { effect ->
+            when (effect) {
+                CreateRecipeViewModel.NavigationEffect.NavigateToThankYouScreen -> navigateToThankYouScreen()
+                CreateRecipeViewModel.NavigationEffect.NavigateUp -> navigateUp()
+            }
+        }.collect()
+    }
 }
 
 @Composable
@@ -299,7 +308,6 @@ private fun CreateRecipeScreen(
 private fun HandleSideEffects(
     sideEffect: Flow<SideEffect>,
     imagePicker: ActivityResultLauncher<PickVisualMediaRequest>,
-    navigateUp: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         sideEffect.onEach { sideEffect ->
@@ -307,8 +315,6 @@ private fun HandleSideEffects(
                 SideEffect.OpenImageSelector -> {
                     imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }
-
-                SideEffect.NavigateUp -> navigateUp()
             }
         }.collect()
     }

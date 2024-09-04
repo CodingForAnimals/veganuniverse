@@ -27,7 +27,7 @@ data class ProductQueryParams internal constructor(
             return this
         }
 
-        fun withExactSearch(name: String, brand: String): Builder {
+        fun withExactSearch(name: String, brand: String?): Builder {
             this.name = name
             this.brand = brand
             return this

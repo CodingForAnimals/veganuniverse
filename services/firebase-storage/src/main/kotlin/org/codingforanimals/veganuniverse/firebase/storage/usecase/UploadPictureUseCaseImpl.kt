@@ -29,6 +29,7 @@ internal class UploadPictureUseCaseImpl(
                     bytes.toByteArray(),
                     storageImageMetadata,
                 )
+
             }
 
             is Uri -> {

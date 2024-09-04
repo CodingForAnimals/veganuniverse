@@ -9,7 +9,6 @@ data class ProductTypeUI(
     @StringRes val label: Int,
     val icon: Icon.ImageDrawableResourceIcon,
     @StringRes val description: Int,
-    val type: ProductType,
 )
 
 fun ProductType.toUI(): ProductTypeUI {
@@ -18,21 +17,18 @@ fun ProductType.toUI(): ProductTypeUI {
             label = R.string.product_confirmed_vegan,
             icon = VUIcons.ProductConfirmedVegan,
             description = R.string.product_confirmed_vegan_description,
-            type = this,
         )
 
         ProductType.NOT_VEGAN -> ProductTypeUI(
             label = R.string.product_not_vegan,
             icon = VUIcons.ProductNotVegan,
             description = R.string.product_not_vegan_description,
-            type = this,
         )
 
         ProductType.DOUBTFUL -> ProductTypeUI(
             label = R.string.product_doubtful_vegan,
             icon = VUIcons.ProductDoubtfulVegan,
             description = R.string.product_doubtful_vegan_description,
-            type = this,
         )
     }
 }

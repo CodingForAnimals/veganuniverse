@@ -10,7 +10,7 @@ import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductQu
 internal class ProductRepositoryImpl(
     private val remoteDataSource: ProductRemoteDataSource,
 ) : ProductRepository {
-    override suspend fun insertProduct(product: Product, imageModel: Parcelable): String {
+    override suspend fun insertProduct(product: Product, imageModel: Parcelable?): String {
         return remoteDataSource.insertProduct(product, imageModel)
     }
 

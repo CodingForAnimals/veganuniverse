@@ -12,8 +12,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
-import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.ui.viewmodel.PictureField
@@ -30,7 +28,6 @@ import org.codingforanimals.veganuniverse.create.recipe.presentation.R
 
 internal class CreateRecipeViewModel(
     private val submitRecipe: SubmitRecipe,
-    private val deeplinkNavigator: DeeplinkNavigator,
 ) : ViewModel() {
 
     private var imagePickerJob: Job? = null
@@ -41,6 +38,14 @@ internal class CreateRecipeViewModel(
 
     private val snackbarEffectsChannel = Channel<Snackbar>()
     val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
+
+    private val navigationEffectsChannel = Channel<NavigationEffect>()
+    val navigationEffects = navigationEffectsChannel.receiveAsFlow()
+
+    sealed class NavigationEffect {
+        data object NavigateUp : NavigationEffect()
+        data object NavigateToThankYouScreen : NavigationEffect()
+    }
 
     var showUnverifiedEmailDialog by mutableStateOf(false)
         private set
@@ -59,7 +64,7 @@ internal class CreateRecipeViewModel(
             Action.DialogDismissRequest -> dismissDialog()
             Action.OnBackClick -> {
                 viewModelScope.launch {
-                    sideEffectChannel.send(SideEffect.NavigateUp)
+                    navigationEffectsChannel.send(NavigationEffect.NavigateUp)
                 }
             }
         }
@@ -172,9 +177,10 @@ internal class CreateRecipeViewModel(
             submitRecipe(recipeForm)
                 .onSuccess {
                     uiState = uiState.copy(loading = false)
-                    deeplinkNavigator.navigate(DeepLink.ThankYou)
+                    navigationEffectsChannel.send(NavigationEffect.NavigateToThankYouScreen)
                 }
                 .onFailure {
+                    uiState = uiState.copy(loading = false)
                     snackbarEffectsChannel.send(Snackbar(R.string.create_recipe_error))
                 }
         }
@@ -268,6 +274,5 @@ internal class CreateRecipeViewModel(
 
     sealed class SideEffect {
         data object OpenImageSelector : SideEffect()
-        data object NavigateUp : SideEffect()
     }
 }

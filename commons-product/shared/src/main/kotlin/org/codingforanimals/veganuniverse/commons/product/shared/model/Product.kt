@@ -7,7 +7,7 @@ data class Product(
     val userId: String?,
     val username: String?,
     val name: String,
-    val brand: String,
+    val brand: String?,
     val comment: String?,
     val type: ProductType,
     val category: ProductCategory,

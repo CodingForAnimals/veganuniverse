@@ -10,6 +10,7 @@ import org.codingforanimals.veganuniverse.place.presentation.navigation.navigate
 import org.codingforanimals.veganuniverse.place.presentation.navigation.placesGraph
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 import org.codingforanimals.veganuniverse.product.presentation.navigation.productGraph
+import org.codingforanimals.veganuniverse.profile.ProfileDestination
 import org.codingforanimals.veganuniverse.profile.profileGraph
 import org.codingforanimals.veganuniverse.recipes.presentation.navigateToRecipeListing
 import org.codingforanimals.veganuniverse.recipes.presentation.recipesGraph
@@ -35,7 +36,12 @@ internal fun VUAppNavHost(
             navController = navController
         )
         createGraph(
-            navController = navController
+            navController = navController,
+            navigateToProfileScreen = {
+                navController.navigate(ProfileDestination.Home.route) {
+                    popUpTo(navController.graph.startDestinationId)
+                }
+            }
         )
         recipesGraph(
             navController = navController

@@ -1,6 +1,7 @@
 package org.codingforanimals.veganuniverse.create.product.presentation
 
 import android.net.Uri
+import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,12 +11,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
-import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
 import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
-import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_title
 import org.codingforanimals.veganuniverse.commons.ui.dialog.Dialog
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.ui.viewmodel.PictureField
@@ -31,7 +29,6 @@ import org.codingforanimals.veganuniverse.create.product.presentation.model.Prod
 
 class CreateProductViewModel(
     private val submitProduct: SubmitProduct,
-    private val deeplinkNavigator: DeeplinkNavigator,
 ) : ViewModel() {
 
     private var imagePickerJob: Job? = null
@@ -41,6 +38,14 @@ class CreateProductViewModel(
 
     private val snackbarEffectsChannel = Channel<Snackbar>()
     val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
+
+    private val navigationEffectsChannel = Channel<NavigationEffect>()
+    val navigationEffects = navigationEffectsChannel.receiveAsFlow()
+
+    sealed class NavigationEffect {
+        data object NavigateUp : NavigationEffect()
+        data object NavigateToThankYouScreen : NavigationEffect()
+    }
 
     var uiState by mutableStateOf(UiState())
         private set
@@ -84,7 +89,7 @@ class CreateProductViewModel(
 
     private fun navigateUp() {
         viewModelScope.launch {
-            sideEffectsChannel.send(SideEffect.NavigateUp)
+            navigationEffectsChannel.send(NavigationEffect.NavigateUp)
         }
     }
 
@@ -128,29 +133,29 @@ class CreateProductViewModel(
         with(uiState) {
             val category = productCategoryField.category ?: return@with showFormAsInvalid()
             val type = productTypeField.type ?: return@with showFormAsInvalid()
-            val imageModel = pictureField.model ?: return@with showFormAsInvalid()
             val productForm = ProductForm(
                 name = nameField.value.trim(),
-                brand = brandField.value.trim(),
+                brand = brandField.value.trim().takeIf { productSupportsBrand },
                 category = category,
                 type = type,
                 comment = commentsField.value.trim().ifBlank { null },
-                imageModel = imageModel,
+                imageModel = pictureField.model.takeIf { productSupportsImage },
             )
             viewModelScope.launch {
                 uiState = uiState.copy(loading = true)
                 submitProduct(productForm)
                     .onSuccess {
                         uiState = uiState.copy(loading = false)
-                        deeplinkNavigator.navigate(DeepLink.ThankYou)
+                        navigationEffectsChannel.send(NavigationEffect.NavigateToThankYouScreen)
                     }
                     .onFailure { exception ->
+                        uiState = uiState.copy(loading = false)
                         when (exception) {
                             is SubmitProduct.ProductConflictException -> {
                                 uiState = uiState.copy(
                                     dialog = Dialog(
-                                        title = unexpected_error_title,
-                                        message = R.string.product_already_exists
+                                        title = R.string.product_already_exists,
+                                        message = R.string.product_already_exists_message
                                     )
                                 )
                             }
@@ -185,12 +190,35 @@ class CreateProductViewModel(
     ) {
         val heroAnchorIcon = productTypeField.type?.toUI()?.icon
         fun isFormValid() = areFieldsValid(
-            pictureField,
+            pictureField.takeIf { productFormRequiresImage },
             nameField,
-            brandField,
+            brandField.takeIf { productSupportsBrand },
             productTypeField,
             productCategoryField,
         )
+
+        @StringRes
+        val productNamePlaceholder: Int = when (productCategoryField.category) {
+            ProductCategory.ADDITIVES -> R.string.additive_name
+            else -> R.string.product_name
+        }
+
+        val productSupportsImage: Boolean = when (productCategoryField.category) {
+            ProductCategory.ADDITIVES -> false
+            else -> true
+        }
+
+        private val productFormRequiresImage: Boolean = when (productCategoryField.category) {
+            ProductCategory.ADDITIVES,
+            ProductCategory.OTHER -> false
+
+            else -> true
+        }
+
+        val productSupportsBrand: Boolean = when (productCategoryField.category) {
+            ProductCategory.ADDITIVES -> false
+            else -> true
+        }
     }
 
     sealed class Action {
@@ -213,7 +241,6 @@ class CreateProductViewModel(
     }
 
     sealed class SideEffect {
-        data object NavigateUp : SideEffect()
         data object OpenImageSelector : SideEffect()
     }
 }

@@ -51,7 +51,7 @@ class SubmitProduct(
             userId = userId,
             username = username,
             name = name.trim(),
-            brand = brand.trim(),
+            brand = brand?.trim(),
             comment = comment?.trim(),
             type = type,
             category = category,

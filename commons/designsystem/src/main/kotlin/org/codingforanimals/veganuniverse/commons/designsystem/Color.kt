@@ -17,6 +17,8 @@ val Outline = Color(0xFFBABFC4)
 val ShimmerBackground = Color(0xFF8F8F8F)
 val Success = Color(0xFF49730D)
 val Doubtful = Color(0xFFEB8106)
+val LightBlue = Color(0xFF82dfe5)
+val LightGray = Color(0xFFd9d9d9)
 
 internal val LightColorScheme = lightColorScheme(
     primary = Primary,

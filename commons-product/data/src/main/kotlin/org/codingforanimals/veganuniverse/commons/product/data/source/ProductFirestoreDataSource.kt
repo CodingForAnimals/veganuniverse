@@ -37,13 +37,14 @@ internal class ProductFirestoreDataSource(
     private val firestoreEntityMapper: ProductFirestoreEntityMapper,
     private val uploadPictureUseCase: UploadPictureUseCase,
 ) : ProductRemoteDataSource {
-    override suspend fun insertProduct(product: Product, imageModel: Parcelable): String {
-        val pictureId = uploadPictureUseCase(
-            fileFolderPath = BASE_PRODUCT_PICTURE_PATH,
-            model = imageModel,
-        )
-        val resizedPictureId = pictureId + ResizeResolution.MEDIUM.suffix
-
+    override suspend fun insertProduct(product: Product, imageModel: Parcelable?): String {
+        val resizedPictureId = imageModel?.let {
+            val pictureId = uploadPictureUseCase(
+                fileFolderPath = BASE_PRODUCT_PICTURE_PATH,
+                model = imageModel,
+            )
+            pictureId + ResizeResolution.MEDIUM.suffix
+        }
         val entity = product.toNewFirestoreEntity(resizedPictureId)
         val docRef = references.items.document()
         docRef.set(entity).await()
@@ -172,7 +173,8 @@ internal class ProductFirestoreDataSource(
         return query
     }
 
-    private fun Product.toNewFirestoreEntity(imageId: String): ProductFirestoreEntity {
+    private fun Product.toNewFirestoreEntity(imageId: String?): ProductFirestoreEntity {
+        val nameWithNoDashes = name.replace(DASH, SPACE)
         return ProductFirestoreEntity(
             id = id,
             userId = userId,
@@ -180,8 +182,8 @@ internal class ProductFirestoreDataSource(
             name = name,
             nameLowercase = name.lowercase(),
             brand = brand,
-            brandLowercase = brand.lowercase(),
-            keywords = DataUtils.createKeywords(name, brand),
+            brandLowercase = brand?.lowercase(),
+            keywords = DataUtils.createKeywords(name, nameWithNoDashes, brand),
             comment = comment,
             type = type.name,
             category = category.name,
@@ -203,5 +205,7 @@ internal class ProductFirestoreDataSource(
         private const val FIELD_CATEGORY = "category"
         private const val FIELD_VALIDATED = "validated"
         private const val FIELD_CREATED_AT = "createdAt"
+        private const val DASH = "-"
+        private const val SPACE = " "
     }
 }

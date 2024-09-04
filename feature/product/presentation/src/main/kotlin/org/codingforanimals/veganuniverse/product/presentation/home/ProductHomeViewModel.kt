@@ -10,13 +10,11 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
+import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductSorter
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
-import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.product.domain.usecase.GetLatestProducts
-import org.codingforanimals.veganuniverse.product.presentation.model.Product
-import org.codingforanimals.veganuniverse.product.presentation.model.toView
 
 internal class ProductHomeViewModel(
     val getLatestProducts: GetLatestProducts,
@@ -27,8 +25,7 @@ internal class ProductHomeViewModel(
 
     val latestProductsState = flow {
         val result = runCatching {
-            val latestProducts = getLatestProducts().map { it.toView() }
-            LatestProductsState.Success(latestProducts)
+            LatestProductsState.Success(getLatestProducts())
         }.getOrElse {
             Log.e(TAG, it.stackTraceToString())
             Analytics.logNonFatalException(it)

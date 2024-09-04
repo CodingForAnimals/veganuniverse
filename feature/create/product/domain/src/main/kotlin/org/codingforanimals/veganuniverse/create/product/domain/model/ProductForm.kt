@@ -6,9 +6,9 @@ import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductTy
 
 data class ProductForm(
     val name: String,
-    val brand: String,
+    val brand: String?,
     val category: ProductCategory,
     val type: ProductType,
     val comment: String?,
-    val imageModel: Parcelable,
+    val imageModel: Parcelable?,
 )

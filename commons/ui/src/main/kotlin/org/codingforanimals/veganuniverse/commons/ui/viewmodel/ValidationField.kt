@@ -32,8 +32,9 @@ data class SelectableField(
     override val isValid: Boolean = value != null
 }
 
-fun areFieldsValid(vararg fields: ValidationField): Boolean {
+fun areFieldsValid(vararg fields: ValidationField?): Boolean {
     for (field in fields) {
+        if (field == null) continue
         if (!field.isValid) return false
     }
     return true

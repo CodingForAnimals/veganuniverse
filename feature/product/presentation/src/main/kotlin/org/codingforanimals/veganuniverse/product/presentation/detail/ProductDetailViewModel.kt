@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_error
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_success
 import org.codingforanimals.veganuniverse.commons.ui.R.string.report_error
@@ -30,8 +31,6 @@ import org.codingforanimals.veganuniverse.product.domain.usecase.EditProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.GetProductDetail
 import org.codingforanimals.veganuniverse.product.domain.usecase.ProductBookmarkUseCases
 import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
-import org.codingforanimals.veganuniverse.product.presentation.model.Product
-import org.codingforanimals.veganuniverse.product.presentation.model.toView
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
 
 internal class ProductDetailViewModel(
@@ -50,7 +49,7 @@ internal class ProductDetailViewModel(
     val product = flow {
         id ?: return@flow
         getProductDetail(id)?.let { result ->
-            emit(State.Success(result.product.toView()))
+            emit(State.Success(result.product))
         } ?: emit(State.Error)
     }.stateIn(
         scope = viewModelScope,

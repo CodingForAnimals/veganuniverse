@@ -7,7 +7,7 @@ import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductQueryParams
 
 interface ProductRepository {
-    suspend fun insertProduct(product: Product, imageModel: Parcelable): String
+    suspend fun insertProduct(product: Product, imageModel: Parcelable?): String
     suspend fun reportProduct(productId: String, userId: String)
     suspend fun editProduct(productId: String, userId: String, edition: String)
     suspend fun deleteProductById(id: String)

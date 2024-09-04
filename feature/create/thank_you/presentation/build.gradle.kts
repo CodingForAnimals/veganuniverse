@@ -8,3 +8,7 @@ plugins {
 android {
     namespace = "org.codingforanimals.veganuniverse.create.thank_you.presentation"
 }
+
+dependencies {
+    implementation(project(":commons-create:domain"))
+}

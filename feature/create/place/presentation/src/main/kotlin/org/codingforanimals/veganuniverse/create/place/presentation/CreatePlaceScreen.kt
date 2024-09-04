@@ -87,6 +87,7 @@ import java.util.concurrent.CancellationException
 @Composable
 fun CreatePlaceScreen(
     navigateUp: () -> Unit,
+    navigateToThankYouScreen: () -> Unit,
     viewModel: CreatePlaceViewModel = koinViewModel(),
 ) {
 
@@ -181,6 +182,15 @@ fun CreatePlaceScreen(
         snackbarEffects = viewModel.snackbarEffects,
         snackbarHostState = snackbarHostState,
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEffects.onEach { effect ->
+            when (effect) {
+                CreatePlaceViewModel.NavigationEffect.NavigateToThankYouScreen -> navigateToThankYouScreen()
+                CreatePlaceViewModel.NavigationEffect.NavigateUp -> navigateUp()
+            }
+        }.collect()
+    }
 }
 
 @Composable
@@ -331,8 +341,6 @@ private fun HandleSideEffects(
                         Log.d("PlacesHomeScreen.kt", e.stackTraceToString())
                     }
                 }
-
-                SideEffect.NavigateUp -> navigateUp()
             }
         }.collect()
     }
