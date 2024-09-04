@@ -1,8 +1,10 @@
 package org.codingforanimals.veganuniverse.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import org.codingforanimals.veganuniverse.validator.navigation.validatorNavigation
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.create.graph.createGraph
@@ -21,6 +23,7 @@ import org.codingforanimals.veganuniverse.registration.presentation.navigation.r
 internal fun VUAppNavHost(
     navController: NavHostController,
     startDestination: Destination = ProductDestination.Home,
+    snackbarHostState: SnackbarHostState,
 ) {
     NavHost(
         navController = navController,
@@ -59,6 +62,10 @@ internal fun VUAppNavHost(
             navigateToProductListing = { listingType ->
                 navController.navigate(ProductDestination.Listing(listingType))
             }
+        )
+
+        validatorNavigation(
+            snackbarHostState = snackbarHostState,
         )
     }
 }

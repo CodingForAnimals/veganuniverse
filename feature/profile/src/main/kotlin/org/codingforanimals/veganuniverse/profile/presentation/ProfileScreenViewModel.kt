@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
+import org.codingforanimals.veganuniverse.commons.navigation.DeeplinkNavigator
 import org.codingforanimals.veganuniverse.commons.ui.listings.ListingType
 import org.codingforanimals.veganuniverse.commons.user.domain.model.User
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.AuthenticationUseCases
@@ -19,6 +21,7 @@ internal class ProfileScreenViewModel(
     flowOnCurrentUser: FlowOnCurrentUser,
     isUserVerified: IsUserVerified,
     private val authenticationUseCases: AuthenticationUseCases,
+    private val deeplinkNavigator: DeeplinkNavigator,
 ) : ViewModel() {
 
     private val navigationEffectsChannel = Channel<NavigationEffect>()
@@ -79,6 +82,11 @@ internal class ProfileScreenViewModel(
             }
 
             Action.OnLogoutClick -> logout()
+            Action.OnValidatorCardClick -> {
+                viewModelScope.launch {
+                    deeplinkNavigator.navigate(DeepLink.Validator)
+                }
+            }
         }
     }
 
@@ -90,6 +98,8 @@ internal class ProfileScreenViewModel(
 
     sealed class Action {
         data object OnLogoutClick : Action()
+        data object OnValidatorCardClick : Action()
+
         sealed class ContributionsClick : Action() {
             data object Products : ContributionsClick()
             data object Places : ContributionsClick()

@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.navigation.model.DeepLinkNavigationOptions
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingScreen
-import org.codingforanimals.veganuniverse.ui.VUApp
+import org.codingforanimals.veganuniverse.navigation.VeganUniverseApp
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             VeganUniverseTheme {
                 val navController = rememberNavController()
-                VUApp(
+                VeganUniverseApp(
                     navController = navController
                 )
 

@@ -2,7 +2,6 @@ package org.codingforanimals.veganuniverse.commons.ui.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
@@ -28,18 +27,6 @@ fun RowScope.BottomNavBarItem(
             unselectedTextColor = VeganUniverseNavigationDefaults.navigationContentColor(),
             indicatorColor = VeganUniverseNavigationDefaults.navigationIndicatorColor()
         )
-    )
-}
-
-@Composable
-fun BottomNavBar(
-    modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit,
-) {
-    NavigationBar(
-        modifier = modifier,
-        content = content,
-        contentColor = VeganUniverseNavigationDefaults.navigationContentColor(),
     )
 }
 

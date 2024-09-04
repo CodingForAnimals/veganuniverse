@@ -5,19 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.MarkerState
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import org.codingforanimals.veganuniverse.commons.place.presentation.model.administrativeArea
-import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
-import org.codingforanimals.veganuniverse.commons.ui.listings.ListingType
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.toCard
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.GetProfile
+import org.codingforanimals.veganuniverse.commons.ui.listings.ListingType
 import org.codingforanimals.veganuniverse.place.listing.usecase.QueryPlacesByIds
 import org.codingforanimals.veganuniverse.place.presentation.R
-import org.codingforanimals.veganuniverse.place.presentation.home.model.PlaceCardUI
 import org.codingforanimals.veganuniverse.place.presentation.navigation.LISTING_TYPE
 
 internal class PlaceListingViewModel(
@@ -51,20 +46,6 @@ internal class PlaceListingViewModel(
             queryPlacesByIds(ids).cachedIn(viewModelScope).map { pagingData ->
                 pagingData.map { it.toCard() }
             }
-        )
-    }
-
-    private fun Place.toCard(): PlaceCardUI {
-        return PlaceCardUI(
-            geoHash = geoHash ?: "",
-            name = name ?: "",
-            rating = rating,
-            streetAddress = addressComponents?.streetAddress ?: "",
-            administrativeArea = addressComponents?.administrativeArea ?: "",
-            type = type ?: PlaceType.STORE,
-            tags = tags.orEmpty(),
-            imageUrl = imageUrl,
-            markerState = MarkerState(LatLng(latitude, longitude))
         )
     }
 }

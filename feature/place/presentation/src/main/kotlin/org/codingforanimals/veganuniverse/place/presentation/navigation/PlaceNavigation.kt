@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsScreen
 import org.codingforanimals.veganuniverse.place.presentation.home.PlacesHomeScreen
@@ -42,6 +44,11 @@ fun NavGraphBuilder.placesGraph(
         route = "${PlaceDestination.Details.route}/{$selected_place_id}",
         arguments = listOf(
             navArgument(selected_place_id) { type = NavType.StringType },
+        ),
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = "${DeepLink.PlaceDetail.pathWithSchema}/{$selected_place_id}"
+            }
         )
     ) {
         PlaceDetailsScreen(

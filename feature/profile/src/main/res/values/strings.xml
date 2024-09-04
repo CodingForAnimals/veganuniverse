@@ -6,6 +6,7 @@
     <string name="access">Ingresar</string>
     <string name="your_bookmarks">Tus guardados</string>
     <string name="your_contributions">Tus contribuciones</string>
+    <string name="your_role">Tu rol en el Universo Vegano</string>
     <string name="log_out">Cerrar sesión</string>
     <string name="made_by">Hecho por</string>
     <string name="coding_for_animals">Coding for Animals</string>
@@ -14,4 +15,5 @@
     <string name="recipes">Recetas</string>
     <string name="bookmarked_places">Lugares guardados</string>
     <string name="version">Versión %1$s</string>
+    <string name="vegan_universe_validator">Validador de Universo Vegano</string>
 </resources>

@@ -20,6 +20,10 @@ include(
 )
 
 include(
+    ":feature:validator"
+)
+
+include(
     ":feature:onboarding:data",
     ":feature:onboarding:domain",
     ":feature:onboarding:presentation"

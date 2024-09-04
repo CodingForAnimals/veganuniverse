@@ -49,6 +49,7 @@ import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBac
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.commons.ui.utils.DateUtils
 import org.codingforanimals.veganuniverse.commons.user.domain.model.User
+import org.codingforanimals.veganuniverse.commons.user.domain.model.UserRole
 import org.codingforanimals.veganuniverse.place.presentation.R
 import org.codingforanimals.veganuniverse.place.presentation.composables.Review
 import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.Action
@@ -322,7 +323,8 @@ private fun PreviewNewForm() {
                 user = User(
                     "123",
                     "John Doe",
-                    "email@gmail.com"
+                    "email@gmail.com",
+                    UserRole.REGULAR,
                 ),
                 onAction = {})
         }

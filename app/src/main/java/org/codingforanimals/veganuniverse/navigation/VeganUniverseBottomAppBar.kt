@@ -1,19 +1,19 @@
-package org.codingforanimals.veganuniverse.ui.navbar
+package org.codingforanimals.veganuniverse.navigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import org.codingforanimals.veganuniverse.navigation.TopLevelDestination
-import org.codingforanimals.veganuniverse.commons.ui.components.BottomNavBar
 import org.codingforanimals.veganuniverse.commons.ui.components.BottomNavBarItem
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.navigation.isRouteInHierarchy
 
 
 @Composable
-internal fun VUBottomNavBar(
+internal fun VeganUniverseBottomAppBar(
     modifier: Modifier = Modifier,
     visible: Boolean,
     destinations: List<TopLevelDestination>,
@@ -21,9 +21,12 @@ internal fun VUBottomNavBar(
     currentDestination: NavDestination?,
 ) {
     AnimatedVisibility(visible = visible) {
-        BottomNavBar(modifier = modifier) {
+        BottomAppBar(
+            modifier = modifier,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        ) {
             destinations.forEach {
-                val isSelected = currentDestination.isTopLevelDestinationInHierarchy(it)
+                val isSelected = currentDestination.isRouteInHierarchy(it.route)
                 BottomNavBarItem(
                     isSelected = isSelected,
                     onClick = { if (!isSelected) navigateToDestination(it) },
@@ -41,8 +44,3 @@ internal fun VUBottomNavBar(
         }
     }
 }
-
-private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
-    this?.hierarchy?.any {
-        it.route?.contains(destination.route, true) ?: false
-    } ?: false

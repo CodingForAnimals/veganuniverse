@@ -13,6 +13,7 @@ android {
 dependencies {
     implementation(project(":commons:user:domain"))
     implementation(project(":commons-profile:domain"))
+    implementation(project(":commons:navigation"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
