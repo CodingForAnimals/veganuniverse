@@ -10,11 +10,13 @@ import org.codingforanimals.veganuniverse.commons.product.data.source.ProductFir
 import org.codingforanimals.veganuniverse.commons.product.data.source.ProductFirestoreDataSource.Companion.PRODUCTS_REPORTS_REFERENCE
 import org.codingforanimals.veganuniverse.commons.product.data.source.ProductFirestoreDataSource.Companion.PRODUCTS_SUGGESTIONS_REFERENCE
 import org.codingforanimals.veganuniverse.commons.product.data.source.ProductRemoteDataSource
+import org.codingforanimals.veganuniverse.firebase.storage.di.firebaseStorageModule
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val productCommonDataModule = module {
+    includes(firebaseStorageModule)
     factoryOf(::ProductFirestoreEntityMapperImpl) bind ProductFirestoreEntityMapper::class
 
     factory<ProductRemoteDataSource> {

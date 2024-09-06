@@ -88,7 +88,9 @@ internal fun EmailValidatedScreen(
                     contentDescription = null,
                 )
                 Button(
-                    modifier = Modifier.padding(top = Spacing_06),
+                    modifier = Modifier
+                        .padding(top = Spacing_06)
+                        .align(Alignment.CenterHorizontally),
                     onClick = navigateToEmailSignIn,
                     content = {
                         Text(text = stringResource(R.string.sign_in_again))

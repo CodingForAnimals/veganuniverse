@@ -16,5 +16,6 @@ interface ProductRemoteDataSource {
     fun queryProductsPagingDataFlow(params: ProductQueryParams): Flow<PagingData<Product>>
     fun queryProductsById(ids: List<String>): Flow<PagingData<Product>>
     suspend fun queryProducts(params: ProductQueryParams): List<Product>
+    suspend fun validateProduct(id: String)
 }
 

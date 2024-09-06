@@ -10,6 +10,7 @@ import org.codingforanimals.veganuniverse.commons.place.data.source.PlaceRemoteD
 import org.codingforanimals.veganuniverse.commons.place.shared.model.GeoLocationQueryParams
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceCard
+import org.codingforanimals.veganuniverse.commons.place.shared.query.PlaceQueryParams
 
 internal class PlaceRepositoryImpl(
     private val remoteDataSource: PlaceRemoteDataSource,
@@ -26,6 +27,10 @@ internal class PlaceRepositoryImpl(
 
     override fun queryPlacesPagingDataByIds(ids: List<String>): Flow<PagingData<Place>> {
         return remoteDataSource.queryPlacesPagingDataByIds(ids)
+    }
+
+    override fun queryPlacesPagingDataFlow(params: PlaceQueryParams): Flow<PagingData<Place>> {
+        return remoteDataSource.queryPlacesPagingDataFlow(params)
     }
 
     override suspend fun getByLatLng(latitude: Double, longitude: Double): Place? {
@@ -50,5 +55,9 @@ internal class PlaceRepositoryImpl(
 
     override suspend fun deleteById(id: String) {
         return remoteDataSource.deleteById(id)
+    }
+
+    override suspend fun validatePlace(id: String) {
+        return remoteDataSource.validatePlace(id)
     }
 }

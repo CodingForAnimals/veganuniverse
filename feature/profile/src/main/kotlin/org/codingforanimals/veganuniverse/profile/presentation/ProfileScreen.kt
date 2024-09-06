@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -58,6 +57,7 @@ import org.codingforanimals.veganuniverse.commons.ui.components.VuIcon
 import org.codingforanimals.veganuniverse.commons.ui.icon.Icon
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.commons.user.domain.model.User
+import org.codingforanimals.veganuniverse.commons.user.domain.model.UserRole
 import org.codingforanimals.veganuniverse.profile.R
 import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.Action
 import org.codingforanimals.veganuniverse.profile.presentation.ProfileScreenViewModel.NavigationEffect
@@ -238,16 +238,25 @@ private fun ProfileContentScreen(
             horizontalArrangement = Arrangement.spacedBy(Spacing_05),
         ) {
             ProfileContentCard(
+                modifier = modifier
+                    .aspectRatio(1f)
+                    .weight(1f),
                 icon = VUIcons.VeganLogo,
                 label = stringResource(id = R.string.products),
                 onClick = { onAction(Action.BookmarksClick.Products) }
             )
             ProfileContentCard(
+                modifier = modifier
+                    .aspectRatio(1f)
+                    .weight(1f),
                 icon = VUIcons.Location,
                 label = stringResource(id = R.string.places),
                 onClick = { onAction(Action.BookmarksClick.Places) }
             )
             ProfileContentCard(
+                modifier = modifier
+                    .aspectRatio(1f)
+                    .weight(1f),
                 icon = VUIcons.Recipes,
                 label = stringResource(id = R.string.recipes),
                 onClick = { onAction(Action.BookmarksClick.Recipes) }
@@ -275,19 +284,51 @@ private fun ProfileContentScreen(
             horizontalArrangement = Arrangement.spacedBy(Spacing_05),
         ) {
             ProfileContentCard(
+                modifier = modifier
+                    .aspectRatio(1f)
+                    .weight(1f),
                 icon = VUIcons.VeganLogo,
                 label = stringResource(id = R.string.products),
                 onClick = { onAction(Action.ContributionsClick.Products) }
             )
             ProfileContentCard(
+                modifier = modifier
+                    .aspectRatio(1f)
+                    .weight(1f),
                 icon = VUIcons.Location,
                 label = stringResource(id = R.string.places),
                 onClick = { onAction(Action.ContributionsClick.Places) }
             )
             ProfileContentCard(
+                modifier = modifier
+                    .aspectRatio(1f)
+                    .weight(1f),
                 icon = VUIcons.Recipes,
                 label = stringResource(id = R.string.recipes),
                 onClick = { onAction(Action.ContributionsClick.Recipes) }
+            )
+        }
+        if (user.role == UserRole.VALIDATOR) {
+            Row(
+                modifier = Modifier.padding(top = Spacing_06),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Spacing_03),
+            ) {
+                Icon(
+                    modifier = Modifier.size(20.dp),
+                    painter = painterResource(id = VUIcons.Profile.id),
+                    contentDescription = null,
+                )
+                Text(
+                    text = stringResource(id = R.string.your_role),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            }
+            ProfileContentCard(
+                modifier = Modifier.padding(top = Spacing_04),
+                icon = VUIcons.Check,
+                label = stringResource(R.string.vegan_universe_validator),
+                onClick = { onAction(Action.OnValidatorCardClick) }
             )
         }
 
@@ -332,16 +373,14 @@ private fun ProfileContentScreen(
 }
 
 @Composable
-private fun RowScope.ProfileContentCard(
+private fun ProfileContentCard(
     icon: Icon,
     label: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
     Card(
-        modifier = modifier
-            .aspectRatio(1f)
-            .weight(1f),
+        modifier = modifier,
         onClick = onClick,
         border = BorderStroke(
             width = 1.dp,
@@ -403,7 +442,7 @@ private fun PreviewProfileContentScreen() {
         ) {
             ProfileContentScreen(
                 modifier = Modifier.padding(it),
-                user = User(id = "123", "El Pepe Argento", "elpepe@gmail.com"),
+                user = User(id = "123", "El Pepe Argento", "elpepe@gmail.com", UserRole.VALIDATOR),
                 appVersion = "1.0.0",
                 isVerified = true
             )

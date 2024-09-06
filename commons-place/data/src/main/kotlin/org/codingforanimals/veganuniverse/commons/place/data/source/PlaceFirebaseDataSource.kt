@@ -23,6 +23,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
@@ -30,9 +31,11 @@ import org.codingforanimals.veganuniverse.commons.place.data.mapper.PlaceEntityM
 import org.codingforanimals.veganuniverse.commons.place.data.model.PlaceCardDatabaseEntity
 import org.codingforanimals.veganuniverse.commons.place.data.model.PlaceFirestoreEntity
 import org.codingforanimals.veganuniverse.commons.place.data.paging.PlaceListingPagingSource
+import org.codingforanimals.veganuniverse.commons.place.data.paging.PlacePagingSource
 import org.codingforanimals.veganuniverse.commons.place.shared.model.GeoLocationQueryParams
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceCard
+import org.codingforanimals.veganuniverse.commons.place.shared.query.PlaceQueryParams
 import org.codingforanimals.veganuniverse.firebase.storage.model.ResizeResolution
 import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureUseCase
 
@@ -74,6 +77,21 @@ internal class PlaceFirebaseDataSource(
                 )
             }
         ).flow.mapNotNull { it.map { mapper.mapPlace(it) } }
+    }
+
+    override fun queryPlacesPagingDataFlow(params: PlaceQueryParams): Flow<PagingData<Place>> {
+        val query = placesCollection.whereEqualTo(VALIDATED_FIRESTORE_FIELD, params.validated)
+        return Pager(
+            config = PagingConfig(
+                pageSize = params.pageSize,
+                maxSize = params.maxSize,
+            ),
+            pagingSourceFactory = { PlacePagingSource(query) },
+        ).flow.map { pagingData ->
+            pagingData.map { entity ->
+                mapper.mapPlace(entity)
+            }
+        }
     }
 
     override suspend fun getByLatLng(latitude: Double, longitude: Double): Place? {
@@ -186,6 +204,14 @@ internal class PlaceFirebaseDataSource(
         }
     }
 
+    override suspend fun validatePlace(id: String) {
+        coroutineScope {
+            val validateCardDeferred = cardsReference.child(id).child(VALIDATED_RTDB_FIELD).setValue(true).asDeferred()
+            val validatePlaceDeferred = placesCollection.document(id).update(VALIDATED_FIRESTORE_FIELD, true).asDeferred()
+            awaitAll(validateCardDeferred, validatePlaceDeferred)
+        }
+    }
+
     private fun Place.toNewCard(imageId: String): PlaceCardDatabaseEntity {
         fun getAdministrativeArea(): String? {
             return addressComponents?.let {
@@ -229,6 +255,8 @@ internal class PlaceFirebaseDataSource(
 
     companion object {
         private const val TAG = "PlaceFirebaseDataSource"
+        private const val VALIDATED_FIRESTORE_FIELD = "validated"
+        private const val VALIDATED_RTDB_FIELD = "v"
         internal const val PLACES_GEOFIRE = "content/places/geofire"
         internal const val PLACES_CARDS = "content/places/cards"
         internal const val PLACES_ITEMS_COLLECTION = "content/places/items"

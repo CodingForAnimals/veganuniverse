@@ -20,20 +20,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.place.presentation.PlaceCard
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.PlaceCardUI
+import org.codingforanimals.veganuniverse.commons.ui.components.VUAssistChip
+import org.codingforanimals.veganuniverse.commons.ui.components.VUAssistChipDefaults
+import org.codingforanimals.veganuniverse.commons.ui.components.VUImage
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUImages
 import org.codingforanimals.veganuniverse.place.presentation.home.PlacesHomeViewModel
 import org.codingforanimals.veganuniverse.place.presentation.home.PlacesHomeViewModel.Action
 import org.codingforanimals.veganuniverse.place.presentation.home.PlacesHomeViewModel.FilterState
 import org.codingforanimals.veganuniverse.place.presentation.home.PlacesHomeViewModel.PlacesState
 import org.codingforanimals.veganuniverse.place.presentation.home.composables.FilterDialog
 import org.codingforanimals.veganuniverse.place.presentation.home.composables.SortDialog
-import org.codingforanimals.veganuniverse.place.presentation.home.model.PlaceCardUI
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
-import org.codingforanimals.veganuniverse.commons.ui.components.VUAssistChip
-import org.codingforanimals.veganuniverse.commons.ui.components.VUAssistChipDefaults
-import org.codingforanimals.veganuniverse.commons.ui.components.VUImage
-import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
-import org.codingforanimals.veganuniverse.commons.ui.icon.VUImages
 
 @Composable
 internal fun SuccessSheet(

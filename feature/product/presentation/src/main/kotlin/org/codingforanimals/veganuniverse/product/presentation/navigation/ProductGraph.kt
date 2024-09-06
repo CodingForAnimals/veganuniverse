@@ -5,6 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingScreen
@@ -91,6 +93,11 @@ fun NavGraphBuilder.productGraph(
             arguments = listOf(
                 navArgument(ID_ARG) {
                     type = NavType.StringType
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${DeepLink.ProductDetail.pathWithSchema}/{$ID_ARG}"
                 }
             )
         ) {

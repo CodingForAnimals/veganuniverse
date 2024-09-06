@@ -1,8 +1,9 @@
-package org.codingforanimals.veganuniverse.place.presentation.home.model
+package org.codingforanimals.veganuniverse.commons.place.presentation.model
 
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
+import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceCard
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
@@ -21,7 +22,21 @@ data class PlaceCardUI(
     val fullStreetAddress: String = "$streetAddress, $administrativeArea"
 }
 
-internal fun PlaceCard.toUI(): PlaceCardUI {
+fun Place.toCard(): PlaceCardUI {
+    return PlaceCardUI(
+        geoHash = geoHash ?: "",
+        name = name ?: "",
+        rating = rating,
+        streetAddress = addressComponents?.streetAddress ?: "",
+        administrativeArea = addressComponents?.administrativeArea ?: "",
+        type = type ?: PlaceType.STORE,
+        tags = tags.orEmpty(),
+        imageUrl = imageUrl,
+        markerState = MarkerState(LatLng(latitude, longitude))
+    )
+}
+
+fun PlaceCard.toUI(): PlaceCardUI {
     return PlaceCardUI(
         geoHash = geoHash,
         name = name.orEmpty(),

@@ -127,6 +127,10 @@ internal class ProductFirestoreDataSource(
             .map { firestoreEntityMapper.mapToModel(it) }
     }
 
+    override suspend fun validateProduct(id: String) {
+        references.items.document(id).update(FIELD_VALIDATED, true).await()
+    }
+
     private fun ProductSorter.getSortingField(): String {
         return when (this) {
             ProductSorter.NAME -> FIELD_NAME_LOWERCASE

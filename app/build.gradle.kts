@@ -66,6 +66,7 @@ dependencies {
     implementation(project(":feature:registration:presentation"))
     implementation(project(":services:location"))
     implementation(project(":commons:navigation"))
+    implementation(project(":feature:validator"))
 
     implementation(libs.firebase.auth)
 

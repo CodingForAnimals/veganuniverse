@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.registration.presentation.di
 
+import org.codingforanimals.veganuniverse.commons.profile.domain.di.profileDomainModule
 import org.codingforanimals.veganuniverse.registration.presentation.emailregistration.di.emailRegistrationModule
 import org.codingforanimals.veganuniverse.registration.presentation.emailsignin.di.signInModule
 import org.codingforanimals.veganuniverse.registration.presentation.prompt.di.promptModule
@@ -10,6 +11,7 @@ import org.koin.dsl.module
 
 val registrationModule = module {
     includes(
+        profileDomainModule,
         promptModule,
         emailRegistrationModule,
         signInModule,

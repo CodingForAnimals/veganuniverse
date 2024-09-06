@@ -1,4 +1,4 @@
-package org.codingforanimals.veganuniverse.place.presentation.home.bottomsheet
+package org.codingforanimals.veganuniverse.commons.place.presentation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -29,15 +29,15 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.shimmer
 import org.codingforanimals.veganuniverse.commons.designsystem.PrimaryLight
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
+import org.codingforanimals.veganuniverse.commons.place.presentation.model.PlaceCardUI
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
-import org.codingforanimals.veganuniverse.place.presentation.home.model.PlaceCardUI
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
 import org.codingforanimals.veganuniverse.commons.ui.components.RatingBar
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons

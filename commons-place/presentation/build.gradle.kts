@@ -12,4 +12,5 @@ android {
 dependencies {
     api(project(":commons-place:domain"))
     api(project(":commons-place:shared"))
+    implementation(libs.google.mapsCompose)
 }

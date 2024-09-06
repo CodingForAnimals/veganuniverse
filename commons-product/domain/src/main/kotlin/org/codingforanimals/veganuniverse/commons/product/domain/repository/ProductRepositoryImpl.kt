@@ -46,4 +46,7 @@ internal class ProductRepositoryImpl(
         return remoteDataSource.queryProducts(params)
     }
 
+    override suspend fun validateProduct(id: String) {
+        return remoteDataSource.validateProduct(id)
+    }
 }
