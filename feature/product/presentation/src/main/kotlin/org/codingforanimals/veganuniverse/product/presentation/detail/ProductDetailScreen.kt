@@ -16,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,6 +33,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.codingforanimals.veganuniverse.commons.designsystem.Doubtful
+import org.codingforanimals.veganuniverse.commons.designsystem.LightBlue
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
@@ -41,9 +43,9 @@ import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
-import org.codingforanimals.veganuniverse.commons.ui.R.string.contributed_by
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHero
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHeroDefaults
+import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHeroImageType
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
@@ -51,7 +53,6 @@ import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentD
 import org.codingforanimals.veganuniverse.commons.ui.details.ContentDetailItem
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
-import org.codingforanimals.veganuniverse.commons.ui.utils.DateUtils
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 import org.codingforanimals.veganuniverse.product.presentation.R
@@ -151,8 +152,16 @@ private fun ProductDetailScreen(product: Product) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+        val imageType = when (product.category) {
+            ProductCategory.ADDITIVES -> ContentDetailsHeroImageType.Text(
+                text = product.name,
+                containerColor = LightBlue
+            )
+
+            else -> ContentDetailsHeroImageType.Image(product.imageUrl)
+        }
         ContentDetailsHero(
-            url = product.imageUrl,
+            imageType = imageType,
             icon = typeUI.icon,
             onImageClick = { imageDialogUrl = product.imageUrl },
             colors = when (product.type) {
@@ -196,17 +205,20 @@ private fun ProductDetailScreen(product: Product) {
                 icon = VUIcons.Comment.id,
             )
 
+            /**
+             * Displaying contributor name temporarily disabled
             product.username?.let {
-                val timeAgo =
-                    product.createdAt?.time?.let { ", ${DateUtils.getTimeAgo(it)}" }
-                val subtitle = remember { "$it$timeAgo" }
-                ContentDetailItem(
-                    modifier = Modifier.padding(top = Spacing_05),
-                    title = stringResource(id = contributed_by),
-                    subtitle = subtitle,
-                    icon = VUIcons.Profile.id
-                )
+            val timeAgo =
+            product.createdAt?.time?.let { ", ${DateUtils.getTimeAgo(it)}" }
+            val subtitle = remember { "$it$timeAgo" }
+            ContentDetailItem(
+            modifier = Modifier.padding(top = Spacing_05),
+            title = stringResource(id = contributed_by),
+            subtitle = subtitle,
+            icon = VUIcons.Profile.id
+            )
             }
+             */
         }
     }
 
@@ -257,7 +269,7 @@ private val productPreview = Product(
     brand = "Argento's",
     comment = "Rico y económico. 100% vegano. Recomiendo!!",
     type = ProductType.VEGAN,
-    category = ProductCategory.ADDITIVES,
+    category = ProductCategory.CHOCOLATES,
     userId = "123123",
     username = "Paola Argento",
     imageUrl = null,
@@ -269,9 +281,11 @@ private val productPreview = Product(
 @Composable
 private fun PreviewVeganProductDetailScreen() {
     VeganUniverseTheme {
-        ProductDetailScreen(
-            product = productPreview,
-        )
+        Surface {
+            ProductDetailScreen(
+                product = productPreview,
+            )
+        }
     }
 }
 
@@ -279,10 +293,12 @@ private fun PreviewVeganProductDetailScreen() {
 @Composable
 private fun PreviewNotVeganProductDetailScreen() {
     VeganUniverseTheme {
-        val product = productPreview.copy(type = ProductType.NOT_VEGAN)
-        ProductDetailScreen(
-            product = product,
-        )
+        Surface {
+            val product = productPreview.copy(type = ProductType.NOT_VEGAN)
+            ProductDetailScreen(
+                product = product,
+            )
+        }
     }
 }
 
@@ -290,9 +306,28 @@ private fun PreviewNotVeganProductDetailScreen() {
 @Composable
 private fun PreviewDoubtfulVeganProductDetailScreen() {
     VeganUniverseTheme {
-        val product = productPreview.copy(type = ProductType.DOUBTFUL)
-        ProductDetailScreen(
-            product = product,
-        )
+        Surface {
+            val product = productPreview.copy(type = ProductType.DOUBTFUL)
+            ProductDetailScreen(
+                product = product,
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewAdditiveProductDetailScreen() {
+    VeganUniverseTheme {
+        Surface {
+            val product = productPreview.copy(
+                type = ProductType.DOUBTFUL,
+                category = ProductCategory.ADDITIVES,
+                name = "INS 311"
+            )
+            ProductDetailScreen(
+                product = product,
+            )
+        }
     }
 }

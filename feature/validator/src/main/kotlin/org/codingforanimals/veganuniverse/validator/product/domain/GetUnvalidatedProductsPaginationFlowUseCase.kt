@@ -8,7 +8,7 @@ internal class GetUnvalidatedProductsPaginationFlowUseCase(
     private val productRepository: ProductRepository,
 ) {
     operator fun invoke() = productRepository.queryProductsPagingDataFlow(
-        ProductQueryParams.Builder().validated(false).withPageSize(2).withSorter(ProductSorter.DATE)
+        ProductQueryParams.Builder().validated(false).withSorter(ProductSorter.DATE)
             .build()
     )
 }

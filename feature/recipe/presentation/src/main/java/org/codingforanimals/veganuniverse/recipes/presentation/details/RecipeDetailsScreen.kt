@@ -55,6 +55,7 @@ import org.codingforanimals.veganuniverse.commons.ui.R.string.ok
 import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHero
+import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHeroImageType
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.FeatureItemScreenTagsFlowRow
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.TagItem
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
@@ -185,7 +186,7 @@ private fun RecipeContent(
         verticalArrangement = Arrangement.spacedBy(Spacing_06),
     ) {
         ContentDetailsHero(
-            url = recipe.imageUrl,
+            imageType = ContentDetailsHeroImageType.Image(recipe.imageUrl),
             icon = VUIcons.RecipesFilled,
             onImageClick = { onAction(Action.OnImageClick(recipe.imageUrl)) },
         )

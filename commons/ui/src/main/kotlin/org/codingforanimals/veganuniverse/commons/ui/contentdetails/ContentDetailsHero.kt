@@ -3,30 +3,50 @@ package org.codingforanimals.veganuniverse.commons.ui.contentdetails
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import org.codingforanimals.veganuniverse.commons.designsystem.LightBlue
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Success
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.icon.Icon
+import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+
+sealed class ContentDetailsHeroImageType {
+    data class Image(val url: String?) : ContentDetailsHeroImageType()
+    data class Text(val text: String, val containerColor: Color) : ContentDetailsHeroImageType()
+}
 
 @Composable
 fun ContentDetailsHero(
-    url: String?,
+    imageType: ContentDetailsHeroImageType,
     icon: Icon,
     onImageClick: () -> Unit,
     colors: ContentDetailsHeroColors = ContentDetailsHeroDefaults.primaryColors(),
@@ -37,12 +57,41 @@ fun ContentDetailsHero(
             .aspectRatio(2f)
             .padding(bottom = 20.dp)
             .clickable(onClick = onImageClick)
-        AsyncImage(
-            modifier = heroImageModifier,
-            contentScale = ContentScale.Crop,
-            model = url,
-            contentDescription = null,
-        )
+
+        when (imageType) {
+            is ContentDetailsHeroImageType.Image -> {
+                AsyncImage(
+                    modifier = heroImageModifier,
+                    contentScale = ContentScale.Crop,
+                    model = imageType.url,
+                    contentDescription = null,
+                )
+            }
+            is ContentDetailsHeroImageType.Text -> {
+                Box(heroImageModifier) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(vertical = Spacing_05)
+                            .aspectRatio(1f)
+                            .align(Alignment.Center)
+                            .clip(CardDefaults.shape)
+                            .background(imageType.containerColor)
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(Spacing_04)
+                                .align(Alignment.Center),
+                            text = imageType.text,
+                            style = MaterialTheme.typography.headlineMedium,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+            }
+        }
 
         Box(
             modifier = Modifier
@@ -128,3 +177,27 @@ data class ContentDetailsHeroColors(
     val iconContainerBorder: Color,
     val iconTint: Color,
 )
+
+@Preview
+@Composable
+private fun PreviewContentDetailsHero() {
+    VeganUniverseTheme {
+        Surface {
+            Column(
+                modifier = Modifier.padding(Spacing_06),
+                verticalArrangement = Arrangement.SpaceEvenly,
+            ) {
+                ContentDetailsHero(
+                    imageType = ContentDetailsHeroImageType.Image(null),
+                    icon = VUIcons.RecipesFilled,
+                    onImageClick = {},
+                )
+                ContentDetailsHero(
+                    imageType = ContentDetailsHeroImageType.Text("INS 311", LightBlue),
+                    icon = VUIcons.ProductConfirmedVegan,
+                    onImageClick = {},
+                )
+            }
+        }
+    }
+}

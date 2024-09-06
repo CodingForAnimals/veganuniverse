@@ -53,6 +53,7 @@ import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_t
 import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHero
+import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHeroImageType
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.details.ContentDetailItem
@@ -224,7 +225,7 @@ private fun PlaceDetails(
         modifier = Modifier.verticalScroll(rememberScrollState()),
     ) {
         ContentDetailsHero(
-            url = place.imageUrl,
+            imageType = ContentDetailsHeroImageType.Image(place.imageUrl),
             icon = place.type?.toUI()?.icon ?: VUIcons.Store,
             onImageClick = { showImageDialog = true },
         )
