@@ -11,4 +11,6 @@
     <string name="create_product_error">¡Oops! Ocurrió un error inesperado y no pudimos crear tu producto. Podés volver a intentarlo.</string>
     <string name="additive_name">Nombre del aditivo</string>
     <string name="product_already_exists_message">¡Podés contribuir con otro!</string>
+    <string name="selected_category">Categoría seleccionada</string>
+    <string name="create_additive_title">Agrega un aditivo a la lista</string>
 </resources>

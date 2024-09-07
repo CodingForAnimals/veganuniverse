@@ -29,6 +29,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.product.presentation.component.ProductCard
 import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
@@ -38,7 +39,6 @@ import org.codingforanimals.veganuniverse.commons.ui.animation.ShimmerItem
 import org.codingforanimals.veganuniverse.commons.ui.animation.shimmer
 import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.product.presentation.R
-import org.codingforanimals.veganuniverse.product.presentation.components.ProductCard
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel
 import java.util.Date
 

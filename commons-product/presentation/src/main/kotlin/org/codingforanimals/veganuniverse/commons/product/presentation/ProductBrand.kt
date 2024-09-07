@@ -8,6 +8,6 @@ import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCa
 val Product.resolveBrand: String
     @Composable
     get() = when (category) {
-        ProductCategory.ADDITIVES -> stringResource(id = R.string.additive)
+        ProductCategory.ADDITIVES -> comment ?: stringResource(id = R.string.additive)
         else -> brand.orEmpty()
     }

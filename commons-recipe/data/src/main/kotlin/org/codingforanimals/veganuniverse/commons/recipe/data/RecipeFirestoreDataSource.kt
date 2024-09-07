@@ -60,11 +60,11 @@ internal class RecipeFirestoreDataSource(
             return@coroutineScope deferreds.awaitAll().filterNotNull()
         }
         return Pager(
-            config = PagingConfig(pageSize = 2),
+            config = PagingConfig(pageSize = 10),
             pagingSourceFactory = {
                 ContentListingPagingSource(
                     ids = ids,
-                    pageSize = 2,
+                    pageSize = 10,
                     query = { query(it) },
                 )
             }

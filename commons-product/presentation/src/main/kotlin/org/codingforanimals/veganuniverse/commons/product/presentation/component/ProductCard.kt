@@ -79,6 +79,8 @@ fun ProductCard(
                     Text(
                         text = product.resolveBrand,
                         style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
                 val typeUI = remember { product.type.toUI() }

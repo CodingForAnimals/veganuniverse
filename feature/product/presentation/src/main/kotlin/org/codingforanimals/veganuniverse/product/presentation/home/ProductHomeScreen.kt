@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package org.codingforanimals.veganuniverse.product.presentation.home
 
 import androidx.compose.foundation.layout.Column

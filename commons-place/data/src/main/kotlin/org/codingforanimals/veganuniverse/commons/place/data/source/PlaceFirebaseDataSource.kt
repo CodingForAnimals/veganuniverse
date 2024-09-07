@@ -68,11 +68,11 @@ internal class PlaceFirebaseDataSource(
             return@coroutineScope placeDeferredList.awaitAll().filterNotNull()
         }
         return Pager(
-            config = PagingConfig(pageSize = 2),
+            config = PagingConfig(pageSize = 10),
             pagingSourceFactory = {
                 PlaceListingPagingSource(
                     ids = ids,
-                    pageSize = 2,
+                    pageSize = 10,
                     query = ::query,
                 )
             }

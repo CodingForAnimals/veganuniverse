@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -28,6 +29,7 @@ import org.codingforanimals.veganuniverse.create.product.presentation.model.Prod
 import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductTypeField
 
 class CreateProductViewModel(
+    savedStateHandle: SavedStateHandle,
     private val submitProduct: SubmitProduct,
 ) : ViewModel() {
 
@@ -47,7 +49,7 @@ class CreateProductViewModel(
         data object NavigateToThankYouScreen : NavigationEffect()
     }
 
-    var uiState by mutableStateOf(UiState())
+    var uiState by mutableStateOf(UiState.fromCategory(savedStateHandle[CATEGORY]))
         private set
 
     var showUnverifiedEmailDialog: Boolean by mutableStateOf(false)
@@ -121,8 +123,8 @@ class CreateProductViewModel(
     }
 
     private fun handleProductCategorySelect(action: Action.OnProductCategorySelected) {
-        uiState =
-            uiState.copy(productCategoryField = ProductCategoryField(action.category))
+//        uiState =
+//            uiState.copy(productCategoryField = ProductCategoryField(action.category))
     }
 
     private fun attemptSubmitProduct() {
@@ -131,7 +133,7 @@ class CreateProductViewModel(
         }
 
         with(uiState) {
-            val category = productCategoryField.category ?: return@with showFormAsInvalid()
+//            val category = productCategoryField.category ?: return@with showFormAsInvalid()
             val type = productTypeField.type ?: return@with showFormAsInvalid()
             val productForm = ProductForm(
                 name = nameField.value.trim(),
@@ -178,46 +180,58 @@ class CreateProductViewModel(
     }
 
     data class UiState(
+        val category: ProductCategory,
         val pictureField: PictureField = PictureField(),
         val nameField: StringField = StringField(),
         val brandField: StringField = StringField(),
         val commentsField: StringField = StringField(),
         val productTypeField: ProductTypeField = ProductTypeField(),
-        val productCategoryField: ProductCategoryField = ProductCategoryField(),
         val isValidating: Boolean = false,
         val dialog: Dialog? = null,
         val loading: Boolean = false,
     ) {
+        val title: Int = when (category) {
+            ProductCategory.ADDITIVES -> R.string.create_additive_title
+            else -> R.string.create_product_title
+        }
         val heroAnchorIcon = productTypeField.type?.toUI()?.icon
         fun isFormValid() = areFieldsValid(
             pictureField.takeIf { productFormRequiresImage },
             nameField,
             brandField.takeIf { productSupportsBrand },
             productTypeField,
-            productCategoryField,
         )
 
         @StringRes
-        val productNamePlaceholder: Int = when (productCategoryField.category) {
+        val productNamePlaceholder: Int = when (category) {
             ProductCategory.ADDITIVES -> R.string.additive_name
             else -> R.string.product_name
         }
 
-        val productSupportsImage: Boolean = when (productCategoryField.category) {
+        val productSupportsImage: Boolean = when (category) {
             ProductCategory.ADDITIVES -> false
             else -> true
         }
 
-        private val productFormRequiresImage: Boolean = when (productCategoryField.category) {
+        private val productFormRequiresImage: Boolean = when (category) {
             ProductCategory.ADDITIVES,
             ProductCategory.OTHER -> false
 
             else -> true
         }
 
-        val productSupportsBrand: Boolean = when (productCategoryField.category) {
+        val productSupportsBrand: Boolean = when (category) {
             ProductCategory.ADDITIVES -> false
             else -> true
+        }
+
+        companion object {
+            fun fromCategory(value: String?): UiState {
+                val category = ProductCategory.fromString(value) ?: ProductCategory.OTHER
+                return UiState(
+                    category = category
+                )
+            }
         }
     }
 
@@ -242,5 +256,9 @@ class CreateProductViewModel(
 
     sealed class SideEffect {
         data object OpenImageSelector : SideEffect()
+    }
+
+    companion object {
+        private const val CATEGORY = "category"
     }
 }

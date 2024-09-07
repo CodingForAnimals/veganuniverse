@@ -5,14 +5,19 @@ package org.codingforanimals.veganuniverse.product.presentation.detail
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -27,6 +32,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -34,10 +42,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import org.codingforanimals.veganuniverse.commons.designsystem.Doubtful
 import org.codingforanimals.veganuniverse.commons.designsystem.LightBlue
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.commons.product.presentation.resolveBrand
 import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
@@ -182,7 +190,7 @@ private fun ProductDetailScreen(product: Product) {
         ) {
             ContentDetailItem(
                 title = product.name,
-                subtitle = product.resolveBrand,
+                subtitle = product.brand.takeUnless { product.category == ProductCategory.ADDITIVES },
             )
             ContentDetailItem(
                 title = stringResource(typeUI.label),
@@ -201,8 +209,43 @@ private fun ProductDetailScreen(product: Product) {
             ContentDetailItem(
                 modifier = Modifier.padding(top = Spacing_05),
                 title = stringResource(id = R.string.category),
-                subtitle = stringResource(id = categoryUI.label),
                 icon = VUIcons.Comment.id,
+                subtitle = {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = Spacing_03),
+                        horizontalArrangement = Arrangement.spacedBy(Spacing_06)
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .weight(1f)
+                                .aspectRatio(1f),
+                        ) {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f),
+                                contentScale = ContentScale.Crop,
+                                model = categoryUI.imageRef,
+                                contentDescription = stringResource(categoryUI.label),
+                            )
+                            Text(
+                                modifier = Modifier
+                                    .wrapContentHeight()
+                                    .fillMaxWidth()
+                                    .padding(Spacing_03),
+                                text = stringResource(categoryUI.label),
+                                maxLines = 2,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                textAlign = TextAlign.Center,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                        Spacer(Modifier.weight(1f))
+                    }
+                }
             )
 
             /**

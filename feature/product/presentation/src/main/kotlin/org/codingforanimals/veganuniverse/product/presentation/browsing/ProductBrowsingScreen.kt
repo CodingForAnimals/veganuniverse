@@ -63,6 +63,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
+import org.codingforanimals.veganuniverse.commons.product.presentation.component.ProductCard
 import org.codingforanimals.veganuniverse.commons.product.presentation.label
 import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
@@ -81,7 +82,6 @@ import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.Action
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.NavigationEffect
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.UiState
-import org.codingforanimals.veganuniverse.product.presentation.components.ProductCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

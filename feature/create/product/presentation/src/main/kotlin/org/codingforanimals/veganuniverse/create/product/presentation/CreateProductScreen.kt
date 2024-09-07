@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -62,6 +64,7 @@ import org.codingforanimals.veganuniverse.commons.create.presentation.HeroAnchor
 import org.codingforanimals.veganuniverse.commons.create.presentation.ImagePicker
 import org.codingforanimals.veganuniverse.commons.create.presentation.R.string.publish
 import org.codingforanimals.veganuniverse.commons.designsystem.LightBlue
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
@@ -85,6 +88,78 @@ import org.codingforanimals.veganuniverse.create.product.presentation.CreateProd
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductViewModel.UiState
 import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductCategoryField
 import org.koin.androidx.compose.koinViewModel
+
+@Composable
+fun SelectProductCategoryScreen(
+    navigateUp: () -> Unit,
+    onCategoryClick: (String) -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            VUTopAppBar(
+                title = stringResource(R.string.create_product_top_app_bar_title),
+                onBackClick = navigateUp,
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues)
+                .padding(Spacing_06)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(Spacing_04),
+        ) {
+            Text(
+                text = stringResource(R.string.product_category),
+                style = MaterialTheme.typography.titleLarge,
+            )
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                maxItemsInEachRow = 2,
+                horizontalArrangement = Arrangement.spacedBy(
+                    Spacing_06,
+                    Alignment.CenterHorizontally
+                ),
+                verticalArrangement = Arrangement.spacedBy(Spacing_06),
+            ) {
+                ProductCategory.entries.forEach { category ->
+                    key(category.name) {
+                        val categoryUI = remember { category.toUI() }
+                        Card(
+                            modifier = Modifier
+                                .weight(1f)
+                                .aspectRatio(1f),
+                            onClick = { onCategoryClick(category.name) },
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+                        ) {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f),
+                                contentScale = ContentScale.Crop,
+                                model = categoryUI.imageRef,
+                                contentDescription = stringResource(categoryUI.label),
+                            )
+                            Text(
+                                modifier = Modifier
+                                    .wrapContentHeight()
+                                    .fillMaxWidth()
+                                    .padding(Spacing_03),
+                                text = stringResource(categoryUI.label),
+                                maxLines = 2,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                textAlign = TextAlign.Center,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun CreateProductScreen(
@@ -163,7 +238,7 @@ private fun CreateProductScreen(
         verticalArrangement = Arrangement.spacedBy(Spacing_06),
     ) {
         val heroAnchorColors = when {
-            !uiState.productSupportsImage -> HeroAnchorDefaults.secondaryColors()
+            !uiState.productSupportsImage -> HeroAnchorDefaults.primaryColors()
             uiState.pictureField.isValid -> HeroAnchorDefaults.primaryColors()
             uiState.isValidating -> HeroAnchorDefaults.errorColors()
             else -> HeroAnchorDefaults.secondaryColors()
@@ -179,8 +254,8 @@ private fun CreateProductScreen(
                         onClick = { onAction(Action.ImagePicker.Click) },
                     )
                 } else {
-                    val background = remember(uiState.productCategoryField.category) {
-                        when (uiState.productCategoryField.category) {
+                    val background = remember {
+                        when (uiState.category) {
                             ProductCategory.ADDITIVES -> LightBlue
                             else -> Color.Transparent
                         }
@@ -211,7 +286,7 @@ private fun CreateProductScreen(
 
         Text(
             modifier = Modifier.padding(horizontal = Spacing_06),
-            text = stringResource(R.string.create_product_title),
+            text = stringResource(uiState.title),
             style = MaterialTheme.typography.titleLarge,
         )
 
@@ -270,7 +345,7 @@ private fun CreateProductScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Spacing_04),
+            verticalArrangement = Arrangement.spacedBy(Spacing_03),
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = Spacing_06),
@@ -296,12 +371,6 @@ private fun CreateProductScreen(
                 )
             }
         }
-
-        val categoryColor = when {
-            !uiState.isValidating -> MaterialTheme.colorScheme.onSurfaceVariant
-            !uiState.productCategoryField.isValid -> MaterialTheme.colorScheme.error
-            else -> MaterialTheme.colorScheme.onSurfaceVariant
-        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -309,57 +378,43 @@ private fun CreateProductScreen(
             verticalArrangement = Arrangement.spacedBy(Spacing_04),
         ) {
             Text(
-                text = stringResource(R.string.product_category),
+                text = stringResource(R.string.selected_category),
                 style = MaterialTheme.typography.titleLarge,
-                color = categoryColor,
+                color = typeColor,
             )
-            FlowRow(
+
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                maxItemsInEachRow = 2,
-                horizontalArrangement = Arrangement.spacedBy(
-                    Spacing_06,
-                    Alignment.CenterHorizontally
-                ),
-                verticalArrangement = Arrangement.spacedBy(Spacing_06),
+                horizontalArrangement = Arrangement.spacedBy(Spacing_06)
             ) {
-                ProductCategory.entries.forEach { category ->
-                    key(category.name) {
-                        val categoryUI = remember { category.toUI() }
-                        val border = if (uiState.productCategoryField.category == category) {
-                            BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-                        } else {
-                            BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
-                        }
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .aspectRatio(1f),
-                            onClick = { onAction(Action.OnProductCategorySelected(category)) },
-                            border = border
-                        ) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f),
-                                contentScale = ContentScale.Crop,
-                                model = categoryUI.imageRef,
-                                contentDescription = stringResource(categoryUI.label),
-                            )
-                            Text(
-                                modifier = Modifier
-                                    .wrapContentHeight()
-                                    .fillMaxWidth()
-                                    .padding(Spacing_03),
-                                text = stringResource(categoryUI.label),
-                                maxLines = 2,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                textAlign = TextAlign.Center,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
+                val categoryUI = remember { uiState.category.toUI() }
+                Card(
+                    modifier = Modifier
+                        .weight(1f)
+                        .aspectRatio(1f),
+                ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentScale = ContentScale.Crop,
+                        model = categoryUI.imageRef,
+                        contentDescription = stringResource(categoryUI.label),
+                    )
+                    Text(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth()
+                            .padding(Spacing_03),
+                        text = stringResource(categoryUI.label),
+                        maxLines = 2,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                        overflow = TextOverflow.Ellipsis,
+                    )
                 }
+                Spacer(Modifier.weight(1f))
             }
         }
 
@@ -403,7 +458,7 @@ private fun PreviewCreateProductScreen() {
         VeganUniverseTheme {
             Surface {
                 CreateProductScreen(
-                    uiState = UiState(),
+                    uiState = UiState(category = ProductCategory.OTHER),
                     onAction = {},
                 )
             }
@@ -419,7 +474,7 @@ private fun PreviewCreateAdditiveScreen() {
             Surface {
                 CreateProductScreen(
                     uiState = UiState(
-                        productCategoryField = ProductCategoryField(ProductCategory.ADDITIVES),
+                        category = ProductCategory.ADDITIVES,
                         nameField = StringField("INS 311"),
                     ),
                     onAction = {},
@@ -437,7 +492,7 @@ private fun PreviewCreateOtherScreen() {
             Surface {
                 CreateProductScreen(
                     uiState = UiState(
-                        productCategoryField = ProductCategoryField(ProductCategory.OTHER),
+                        ProductCategory.OTHER,
                         nameField = StringField("OLEOMARGARINA"),
                     ),
                     onAction = {},

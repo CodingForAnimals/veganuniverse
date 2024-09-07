@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.flowOf
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.product.presentation.component.ProductCard
 import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
@@ -32,7 +33,6 @@ import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.product.presentation.R
-import org.codingforanimals.veganuniverse.product.presentation.components.ProductCard
 import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 

@@ -24,7 +24,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
 @Composable
 fun ContentDetailItem(
     title: String,
-    subtitle: String,
+    subtitle: String?,
     modifier: Modifier = Modifier,
     icon: Int? = null,
     iconTint: Color = Color.Unspecified,
@@ -57,10 +57,12 @@ fun ContentDetailItem(
             icon?.let {
                 Spacer(modifier = Modifier.size(24.dp))
             }
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.bodyLarge,
-            )
+            subtitle?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
         }
     }
 }
