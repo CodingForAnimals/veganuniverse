@@ -18,7 +18,9 @@ internal fun VUTopAppBar(
     onBackClick: () -> Unit = {},
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
 ) {
-    AnimatedVisibility(visible = topLevelDestination != null) {
+    AnimatedVisibility(
+        visible = topLevelDestination != null,
+    ) {
         VUMediumTopAppBar(
             modifier = modifier,
             title = topLevelDestination?.titleRes?.let { stringResource(it) } ?: "",

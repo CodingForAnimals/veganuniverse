@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.maps.android.compose.CameraPositionState
@@ -31,6 +32,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.ui.topbar.HomeScreenTopAppBar
+import org.codingforanimals.veganuniverse.place.presentation.R
 import org.codingforanimals.veganuniverse.place.presentation.home.PlacesHomeViewModel.Action
 import org.codingforanimals.veganuniverse.place.presentation.home.PlacesHomeViewModel.FilterState
 import org.codingforanimals.veganuniverse.place.presentation.home.PlacesHomeViewModel.PlacesState
@@ -50,7 +53,7 @@ internal fun PlacesHomeScreen(
     navigateToPlaceDetails: (String) -> Unit,
     viewModel: PlacesHomeViewModel = koinViewModel(),
 ) {
-    BackHandler(onBack = { viewModel.onAction(Action.OnBackClick) })
+    BackHandler(onBack = { viewModel.onAction(Action.HandleBackGesture) })
 
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(
@@ -76,11 +79,15 @@ internal fun PlacesHomeScreen(
     HandleSideEffects(
         sideEffects = viewModel.sideEffects,
         cameraPositionState = uiState.cameraPositionState,
+        scaffoldState = scaffoldState,
         onSettingsScreenDismissed = { viewModel.onAction(Action.OnSettingsScreenDismissed) },
         onEnableLocationActivityResult = { viewModel.onEnableLocationResult(it) },
-        scaffoldState = scaffoldState,
         navigateToPlaceDetails = navigateToPlaceDetails,
         onLocationFromOverlaySelected = { viewModel.onAction(Action.OnLocationFromOverlaySelected(it)) },
+    )
+
+    HandleNavigationEffects(
+        navigationEffects = viewModel.navigationEffects,
         navigateUp = navigateUp,
     )
 }
@@ -97,6 +104,12 @@ private fun PlacesHomeScreen(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         snackbarHost = { state -> SnackbarHost(hostState = state) },
+        topBar = {
+            HomeScreenTopAppBar(
+                title = stringResource(R.string.places_home_title),
+                onBackClick = { onAction(Action.OnBackClick) },
+            )
+        },
         sheetPeekHeight = 300.dp,
         sheetContent = {
             when (placesState) {
@@ -124,6 +137,20 @@ private fun PlacesHomeScreen(
 }
 
 @Composable
+private fun HandleNavigationEffects(
+    navigationEffects: Flow<PlacesHomeViewModel.NavigationEffect>,
+    navigateUp: () -> Unit,
+) {
+    LaunchedEffect(Unit) {
+        navigationEffects.onEach { effect ->
+            when (effect) {
+                PlacesHomeViewModel.NavigationEffect.NavigateUp -> navigateUp()
+            }
+        }.collect()
+    }
+}
+
+@Composable
 private fun HandleSideEffects(
     sideEffects: Flow<SideEffect>,
     cameraPositionState: CameraPositionState,
@@ -132,7 +159,6 @@ private fun HandleSideEffects(
     onEnableLocationActivityResult: (Int) -> Unit,
     navigateToPlaceDetails: (String) -> Unit,
     onLocationFromOverlaySelected: (ActivityResult) -> Unit,
-    navigateUp: () -> Unit,
 ) {
 
     val enableLocationActivityLauncher = rememberLauncherForActivityResult(
@@ -154,7 +180,6 @@ private fun HandleSideEffects(
     LaunchedEffect(Unit) {
         sideEffects.onEach { effect ->
             when (effect) {
-                SideEffect.NavigateUp -> navigateUp()
                 is SideEffect.NavigateToPlaceDetails -> navigateToPlaceDetails(effect.id)
                 is SideEffect.ZoomInLocation -> {
                     try {

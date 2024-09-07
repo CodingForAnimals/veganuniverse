@@ -9,6 +9,7 @@ import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSort
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
+import org.codingforanimals.veganuniverse.commons.ui.navigation.popToStartDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeScreen
@@ -38,6 +39,7 @@ fun NavGraphBuilder.recipesGraph(
         route = RecipesDestination.Home.route,
     ) {
         RecipesHomeScreen(
+            navigateUp = navController::navigateUp,
             navigateToRecipeBrowsing = {
                 navController.navigate(RecipesDestination.Browsing(it.tag?.name, it.sorter?.name))
             },

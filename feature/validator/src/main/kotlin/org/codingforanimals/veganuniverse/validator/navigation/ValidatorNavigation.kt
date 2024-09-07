@@ -1,6 +1,7 @@
 package org.codingforanimals.veganuniverse.validator.navigation
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -19,7 +20,12 @@ sealed class ValidatorDestination(override val route: String) : Destination(rout
     }
 }
 
+private fun NavController.exitValidator() {
+    popBackStack(ValidatorDestination.ROUTE, true)
+}
+
 fun NavGraphBuilder.validatorNavigation(
+    navController: NavController,
     snackbarHostState: SnackbarHostState,
 ) {
     navigation(
@@ -34,13 +40,23 @@ fun NavGraphBuilder.validatorNavigation(
         composable(
             route = ValidatorDestination.ValidateProducts.route,
         ) {
-            ValidateProductsScreen(snackbarHostState)
+            ValidateProductsScreen(
+                snackbarHostState = snackbarHostState,
+                onBackClick = {
+                    navController.exitValidator()
+                }
+            )
         }
 
         composable(
             route = ValidatorDestination.ValidatePlaces.route,
         ) {
-            ValidatePlacesScreen(snackbarHostState)
+            ValidatePlacesScreen(
+                snackbarHostState = snackbarHostState,
+                onBackClick = {
+                    navController.exitValidator()
+                }
+            )
         }
     }
 }

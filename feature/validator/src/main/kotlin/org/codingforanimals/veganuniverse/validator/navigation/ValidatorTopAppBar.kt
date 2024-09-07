@@ -10,14 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.validator.R
 
 @Composable
-fun ValidatorTopAppBar(
-    navController: NavController,
+internal fun ValidatorTopAppBar(
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     MediumTopAppBar(
@@ -27,9 +26,7 @@ fun ValidatorTopAppBar(
         },
         navigationIcon = {
             IconButton(
-                onClick = {
-                    navController.popBackStack(ValidatorDestination.ROUTE, true)
-                }
+                onClick = onBackClick,
             ) {
                 Icon(
                     imageVector = VUIcons.Close.imageVector,
