@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.validator.place.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ internal class ValidatePlacesViewModel(
         data object Refresh : SideEffect()
     }
 
-    val unvalidatedPlaces = getUnvalidatedPlacesPaginationFlowUseCase()
+    val unvalidatedPlaces = getUnvalidatedPlacesPaginationFlowUseCase().cachedIn(viewModelScope)
 
     fun validatePlace(place: Place) {
         viewModelScope.launch {

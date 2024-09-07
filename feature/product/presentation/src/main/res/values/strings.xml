@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="categories_header_message">Productos</string>
+    <string name="categories_header_message">Filtrá por productos</string>
     <string name="categories">Categorías</string>
     <string name="show_more">Ver más</string>
     <string name="show_all">Ver todos</string>
@@ -33,4 +33,6 @@
     <string name="empty_contributed_products_message">¡No has contribuido ningún producto todavía! Todos los que vayas agregando los podrás ver y editar desde este acceso rápido.</string>
     <string name="product">Producto</string>
     <string name="brand">Marca</string>
+    <string name="product_home_title">¿Es vegan?</string>
+    <string name="latest_products_title">Últimos productos agregados</string>
 </resources>

@@ -16,4 +16,5 @@
     <string name="bookmarked_places">Lugares guardados</string>
     <string name="version">Versión %1$s</string>
     <string name="vegan_universe_validator">Validador de Universo Vegano</string>
+    <string name="profile_home_title">Tu universo</string>
 </resources>

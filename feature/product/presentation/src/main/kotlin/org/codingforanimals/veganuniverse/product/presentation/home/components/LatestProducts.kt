@@ -55,7 +55,7 @@ internal fun LatestProductsCards(
         ) {
             Text(
                 modifier = Modifier.weight(1f),
-                text = stringResource(most_recent),
+                text = "Últimos productos agregados",
                 style = MaterialTheme.typography.titleMedium,
             )
             TextButton(onClick = onShowMoreClick) {

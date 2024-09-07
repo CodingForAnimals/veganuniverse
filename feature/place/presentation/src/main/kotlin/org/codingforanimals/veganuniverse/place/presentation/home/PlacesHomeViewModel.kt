@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -50,6 +51,9 @@ internal class PlacesHomeViewModel(
 
     private val mutableFiltersState: MutableStateFlow<FilterState> = MutableStateFlow(FilterState())
     val filtersState: StateFlow<FilterState> = mutableFiltersState.asStateFlow()
+
+    private val navigationEffectsChannel = Channel<NavigationEffect>()
+    val navigationEffects: Flow<NavigationEffect> = navigationEffectsChannel.receiveAsFlow()
 
     private val searchPlacesChannel: Channel<SearchPlacesParams> = Channel()
     private val filterPlacesChannel: Channel<FilterState> = Channel()
@@ -142,6 +146,11 @@ internal class PlacesHomeViewModel(
     fun onAction(action: Action) {
         when (action) {
             Action.OnBackClick -> {
+                viewModelScope.launch {
+                    navigationEffectsChannel.send(NavigationEffect.NavigateUp)
+                }
+            }
+            Action.HandleBackGesture -> {
                 handleBackClick()
             }
 
@@ -236,7 +245,7 @@ internal class PlacesHomeViewModel(
             mutableUiState.value = uiState.value.copy(isFocused = false)
         } else {
             viewModelScope.launch {
-                _sideEffects.send(SideEffect.NavigateUp)
+                navigationEffectsChannel.send(NavigationEffect.NavigateUp)
             }
         }
     }
@@ -349,13 +358,14 @@ internal class PlacesHomeViewModel(
         data class OnSortRequest(val newSorter: PlaceCardSorter) : Action()
         data class OnLocationFromOverlaySelected(val activityResult: ActivityResult) : Action()
         data object OnMapClick : Action()
+        data object HandleBackGesture : Action()
+
         data class OnPlaceClick(val place: PlaceCardUI) : Action()
     }
 
     sealed class SideEffect {
         data class NavigateToPlaceDetails(val id: String) : SideEffect()
         data class OpenLocationOnlyAutocompleteOverlay(val intent: Intent) : SideEffect()
-        data object NavigateUp : SideEffect()
         data object PartiallyExpand : SideEffect()
         data class LocationServiceEnableRequest(val intent: IntentSenderRequest) : SideEffect()
         data class ShowSnackbar(val snackbar: Snackbar) : SideEffect()
@@ -449,5 +459,9 @@ internal class PlacesHomeViewModel(
         data object Loading : UserLocationState()
         data object Success : UserLocationState()
         data object Unavailable : UserLocationState()
+    }
+
+    sealed class NavigationEffect {
+        data object NavigateUp : NavigationEffect()
     }
 }

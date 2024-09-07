@@ -5,12 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,48 +30,61 @@ import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
 import org.codingforanimals.veganuniverse.validator.commons.ValidateContentAlertDialog
 import org.codingforanimals.veganuniverse.validator.commons.ValidateContentButton
+import org.codingforanimals.veganuniverse.validator.navigation.ValidatorTopAppBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ValidateProductsScreen(
     snackbarHostState: SnackbarHostState,
+    onBackClick: () -> Unit,
 ) {
     val viewModel: ValidateProductsViewModel = koinViewModel()
     val products = viewModel.unvalidatedProducts.collectAsLazyPagingItems()
 
     var selectedProductForValidation by remember { mutableStateOf<Product?>(null) }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(Spacing_06),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(Spacing_06)
-    ) {
-        items(products.itemCount) { index ->
-            val product = products[index] ?: return@items
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(Spacing_01),
-            ) {
-                ProductCard(
-                    product = product,
-                    onClick = { viewModel.onProductClick(product) },
-                )
-                ValidateContentButton(
-                    modifier = Modifier.align(Alignment.End),
-                    onValidate = { selectedProductForValidation = product }
-                )
-            }
+    Scaffold(
+        topBar = {
+            ValidatorTopAppBar(
+                onBackClick = onBackClick,
+            )
         }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(Spacing_06),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(Spacing_06)
+        ) {
+            items(products.itemCount) { index ->
+                val product = products[index] ?: return@items
+                key(product.id) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(Spacing_01),
+                    ) {
+                        ProductCard(
+                            product = product,
+                            onClick = { viewModel.onProductClick(product) },
+                        )
+                        ValidateContentButton(
+                            modifier = Modifier.align(Alignment.End),
+                            onValidate = { selectedProductForValidation = product }
+                        )
+                    }
+                }
+            }
 
-        products.loadState.apply {
-            when {
-                refresh is LoadState.Loading -> item { CircularProgressIndicator() }
-                append is LoadState.Loading -> item { CircularProgressIndicator() }
+            products.loadState.apply {
+                when {
+                    refresh is LoadState.Loading -> item { CircularProgressIndicator() }
+                    append is LoadState.Loading -> item { CircularProgressIndicator() }
+                }
             }
         }
     }
-
     selectedProductForValidation?.let {
         ValidateContentAlertDialog(
             onDismissRequest = { selectedProductForValidation = null },

@@ -38,7 +38,9 @@ fun NavGraphBuilder.createGraph(
     composable(
         route = CreateDestination.Home.route,
     ) {
-        CreateHomeScreen()
+        CreateHomeScreen(
+            navigateUp = navController::navigateUp,
+        )
     }
 
     composable(

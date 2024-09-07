@@ -93,6 +93,7 @@ internal class ProductHomeViewModel(
         data class OnProductCategorySelected(val category: ProductCategory) : Action()
         data object OnMostRecentShowMoreClick : Action()
         data object OnShowAllClick : Action()
+
         data class OnProductClick(val product: Product) : Action()
         data class OnProductTypeClick(val type: ProductType) : Action()
     }

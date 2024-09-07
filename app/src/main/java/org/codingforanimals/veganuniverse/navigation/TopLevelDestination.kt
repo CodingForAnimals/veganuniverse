@@ -50,5 +50,11 @@ enum class TopLevelDestination(
         selectedIcon = VUIcons.ProfileFilled,
         iconTextId = R.string.nav_label_profile,
         titleRes = R.string.nav_label_profile,
-    )
+    ),
+    ;
+    companion object {
+        fun fromRoute(value: String?): TopLevelDestination? {
+            return entries.firstOrNull { it.route == value }
+        }
+    }
 }

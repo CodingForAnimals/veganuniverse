@@ -42,4 +42,5 @@
     <string name="bookmarked_places">Lugares guardados</string>
     <string name="empty_bookmarked_places_message">¡No has guardado ningún lugar todavía! Podés tener acá una lista de tus lugares favoritos.</string>
     <string name="empty_contributed_places_message">¡No has contribuido ningún lugar todavía! Todos los que vayas agregando los podrás ver y editar desde este acceso rápido.</string>
+    <string name="places_home_title">Mapa de lugares</string>
 </resources>

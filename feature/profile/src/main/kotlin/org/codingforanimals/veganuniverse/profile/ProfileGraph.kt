@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.profile
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
@@ -10,6 +11,7 @@ sealed class ProfileDestination(route: String) : Destination(route = route) {
 }
 
 fun NavGraphBuilder.profileGraph(
+    navController: NavController,
     navigateToRegister: () -> Unit,
     navigateToPlaceListing: (String) -> Unit,
     navigateToRecipeListing: (String) -> Unit,
@@ -19,6 +21,7 @@ fun NavGraphBuilder.profileGraph(
         route = ProfileDestination.Home.route
     ) {
         ProfileScreen(
+            navigateUp = navController::navigateUp,
             navigateToAuthenticationPrompt = navigateToRegister,
             navigateToPlaceListing = navigateToPlaceListing,
             navigateToRecipeListing = navigateToRecipeListing,

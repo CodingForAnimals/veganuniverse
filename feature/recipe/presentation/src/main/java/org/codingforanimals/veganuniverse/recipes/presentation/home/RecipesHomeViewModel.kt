@@ -89,6 +89,12 @@ internal class RecipesHomeViewModel(
                     sideEffectsChannel.send(SideEffect.NavigateToRecipeBrowsing(navArgs))
                 }
             }
+
+            Action.OnBackClick -> {
+                viewModelScope.launch {
+                    sideEffectsChannel.send(SideEffect.NavigateUp)
+                }
+            }
         }
     }
 
@@ -101,11 +107,14 @@ internal class RecipesHomeViewModel(
     sealed class Action {
         data object OnShowLatestRecipesClick : Action()
         data object OnShowMostLikedRecipesClick : Action()
+        data object OnBackClick : Action()
+
         data class OnRecipeTagClick(val recipeTag: RecipeTag) : Action()
         data class OnRecipeClick(val recipe: Recipe) : Action()
     }
 
     sealed class SideEffect {
+        data object NavigateUp : SideEffect()
         data class NavigateToRecipe(val id: String) : SideEffect()
         data class NavigateToRecipeBrowsing(val navArgs: RecipeBrowsingNavArgs) : SideEffect()
     }
