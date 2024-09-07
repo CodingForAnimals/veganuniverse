@@ -33,7 +33,6 @@ import org.codingforanimals.veganuniverse.commons.product.presentation.component
 import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
-import org.codingforanimals.veganuniverse.commons.ui.R.string.most_recent
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message
 import org.codingforanimals.veganuniverse.commons.ui.animation.ShimmerItem
 import org.codingforanimals.veganuniverse.commons.ui.animation.shimmer
@@ -78,7 +77,7 @@ internal fun LatestProductsCards(
                             verticalArrangement = Arrangement.spacedBy(Spacing_05)
                         ) {
                             state.products.forEach { product ->
-                                key(product.id) {
+                                 key(product.id) {
                                     ProductCard(
                                         product = product,
                                         onClick = { onProductClick(product) },

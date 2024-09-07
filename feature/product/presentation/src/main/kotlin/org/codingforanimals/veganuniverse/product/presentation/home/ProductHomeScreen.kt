@@ -1,11 +1,12 @@
 package org.codingforanimals.veganuniverse.product.presentation.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +24,7 @@ import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel.Action
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel.NavigationEffect
 import org.codingforanimals.veganuniverse.product.presentation.home.components.AllCategories
+import org.codingforanimals.veganuniverse.product.presentation.home.components.FilterProductsByType
 import org.codingforanimals.veganuniverse.product.presentation.home.components.LatestProductsCards
 import org.codingforanimals.veganuniverse.product.presentation.home.components.ProductsByType
 import org.koin.androidx.compose.koinViewModel

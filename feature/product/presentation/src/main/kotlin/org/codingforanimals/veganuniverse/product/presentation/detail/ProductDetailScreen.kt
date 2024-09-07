@@ -209,43 +209,8 @@ private fun ProductDetailScreen(product: Product) {
             ContentDetailItem(
                 modifier = Modifier.padding(top = Spacing_05),
                 title = stringResource(id = R.string.category),
+                subtitle = stringResource(id = categoryUI.label),
                 icon = VUIcons.Comment.id,
-                subtitle = {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = Spacing_03),
-                        horizontalArrangement = Arrangement.spacedBy(Spacing_06)
-                    ) {
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .aspectRatio(1f),
-                        ) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f),
-                                contentScale = ContentScale.Crop,
-                                model = categoryUI.imageRef,
-                                contentDescription = stringResource(categoryUI.label),
-                            )
-                            Text(
-                                modifier = Modifier
-                                    .wrapContentHeight()
-                                    .fillMaxWidth()
-                                    .padding(Spacing_03),
-                                text = stringResource(categoryUI.label),
-                                maxLines = 2,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                textAlign = TextAlign.Center,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                        Spacer(Modifier.weight(1f))
-                    }
-                }
             )
 
             /**
