@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.navigation
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -44,6 +46,7 @@ internal fun VeganUniverseApp(
     VeganUniverseBackground {
         val snackbarHostState = remember { SnackbarHostState() }
         Scaffold(
+            contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
             bottomBar = {
                 Crossfade(
                     targetState = isInValidatorApp,
@@ -79,32 +82,6 @@ internal fun VeganUniverseApp(
                         }
                     }
                 }
-//                Crossfade(
-//                    targetState = isInValidatorApp,
-//                    label = "bottom_bar_animation",
-//                ) {
-//                    if (it) {
-//                        ValidatorBottomAppBar(
-//                            navController = navController,
-//                            currentDestination = currentDestination,
-//                        )
-//                    } else {
-//                        currentTopLevelDestination?.let {
-//                            VeganUniverseBottomAppBar(
-//                                destinations = TopLevelDestination.entries,
-//                                currentDestination = currentDestination,
-//                                navigateToDestination = { destination ->
-//                                    navController.navigate(destination.route) {
-//                                        restoreState = true
-//                                        popUpTo(navController.graph.findStartDestination().id) {
-//                                            saveState = true
-//                                        }
-//                                    }
-//                                }
-//                            )
-//                        }
-//                    }
-//                }
             },
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { padding ->

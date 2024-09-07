@@ -62,8 +62,8 @@ private fun ProductHomeScreen(
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(paddingValues)
                 .fillMaxSize()
+                .padding(paddingValues)
                 .verticalScroll(rememberScrollState()),
         ) {
             Column(

@@ -121,8 +121,10 @@ class PlacesClientImpl(
     private val Place.isEstablishment: Boolean
         get() = types?.contains(Place.Type.ESTABLISHMENT) == true
 
+    private val streetAddressesType = listOf(Place.Type.STREET_ADDRESS, Place.Type.PREMISE)
+
     private val Place.isStreetAddress: Boolean
-        get() = types?.contains(Place.Type.STREET_ADDRESS) == true
+        get() = streetAddressesType.any { types?.contains(it) == true }
 
     private fun List<GooglePlacesPeriod>.toOpeningHours(): List<OpeningHours> {
         val googlePeriods = sortedBy { it.open?.time?.hours }.groupBy { it.open?.day }

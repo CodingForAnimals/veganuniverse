@@ -3,7 +3,6 @@ package org.codingforanimals.veganuniverse.commons.product.shared.model
 import android.util.Log
 
 enum class ProductCategory {
-    ADDITIVES,
     CHOCOLATES,
     COOKIES,
     SWEET_SNACKS,
@@ -22,6 +21,7 @@ enum class ProductCategory {
     COSMETICS,
     CLEANING_HYGIENE,
     VITAMINS_AND_SUPPLEMENTS,
+    ADDITIVES,
     OTHER,
     ;
 

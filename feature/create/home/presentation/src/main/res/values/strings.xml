@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="places">Lugares</string>
-    <string name="recipes">Recetas</string>
-    <string name="post">Publicación</string>
-    <string name="product">Producto</string>
+    <string name="create_place_card_label">Lugares</string>
+    <string name="create_recipes_card_label">Recetas</string>
+    <string name="create_product_card_label">Productos o aditivos</string>
     <string name="create_home_title">¡Haz tu aporte!</string>
 </resources>

@@ -67,7 +67,7 @@ private fun CreateHomeScreen(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
-                    title = stringResource(R.string.places),
+                    title = stringResource(R.string.create_place_card_label),
                     image = R.drawable.img_create_place,
                     onClick = { onAction(Action.OnCreatePlaceClick) }
                 )
@@ -75,7 +75,7 @@ private fun CreateHomeScreen(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
-                    title = stringResource(R.string.recipes),
+                    title = stringResource(R.string.create_recipes_card_label),
                     image = R.drawable.img_create_recipe,
                     onClick = { onAction(Action.OnCreateRecipeClick) }
                 )
@@ -84,7 +84,7 @@ private fun CreateHomeScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-                title = stringResource(R.string.product),
+                title = stringResource(R.string.create_product_card_label),
                 image = R.drawable.img_create_product,
                 onClick = { onAction(Action.OnCreateProductClick) },
             )
