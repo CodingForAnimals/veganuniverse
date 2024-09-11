@@ -184,7 +184,7 @@ private fun CreateProductScreen(
                 } else {
                     val background = remember {
                         when (uiState.category) {
-                            ProductCategory.ADDITIVES -> LightBlue
+                            ProductCategory.ADDITIVE -> LightBlue
                             else -> Color.Transparent
                         }
                     }
@@ -402,7 +402,7 @@ private fun PreviewCreateAdditiveScreen() {
             Surface {
                 CreateProductScreen(
                     uiState = UiState(
-                        category = ProductCategory.ADDITIVES,
+                        category = ProductCategory.ADDITIVE,
                         nameField = StringField("INS 311"),
                     ),
                     onAction = {},

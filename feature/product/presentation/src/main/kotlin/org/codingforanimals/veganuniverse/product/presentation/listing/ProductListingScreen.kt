@@ -137,7 +137,7 @@ private fun PreviewProductListingScreen() {
             brand = "Argento's",
             comment = "Rico y económico. 100% vegano. Recomiendo!!",
             type = ProductType.VEGAN,
-            category = ProductCategory.ADDITIVES,
+            category = ProductCategory.ADDITIVE,
             userId = "123123",
             username = "Paola Argento",
             imageUrl = null,

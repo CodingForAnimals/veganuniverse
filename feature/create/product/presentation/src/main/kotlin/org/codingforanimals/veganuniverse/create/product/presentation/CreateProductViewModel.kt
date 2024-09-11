@@ -25,7 +25,6 @@ import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.ver
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 import org.codingforanimals.veganuniverse.create.product.domain.model.ProductForm
 import org.codingforanimals.veganuniverse.create.product.domain.usecase.SubmitProduct
-import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductCategoryField
 import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductTypeField
 
 class CreateProductViewModel(
@@ -191,7 +190,7 @@ class CreateProductViewModel(
         val loading: Boolean = false,
     ) {
         val title: Int = when (category) {
-            ProductCategory.ADDITIVES -> R.string.create_additive_title
+            ProductCategory.ADDITIVE -> R.string.create_additive_title
             else -> R.string.create_product_title
         }
         val heroAnchorIcon = productTypeField.type?.toUI()?.icon
@@ -204,30 +203,31 @@ class CreateProductViewModel(
 
         @StringRes
         val productNamePlaceholder: Int = when (category) {
-            ProductCategory.ADDITIVES -> R.string.additive_name
+            ProductCategory.ADDITIVE -> R.string.additive_name
             else -> R.string.product_name
         }
 
         val productSupportsImage: Boolean = when (category) {
-            ProductCategory.ADDITIVES -> false
+            ProductCategory.ADDITIVE -> false
             else -> true
         }
 
         private val productFormRequiresImage: Boolean = when (category) {
-            ProductCategory.ADDITIVES,
+            ProductCategory.ADDITIVE,
             ProductCategory.OTHER -> false
 
             else -> true
         }
 
         val productSupportsBrand: Boolean = when (category) {
-            ProductCategory.ADDITIVES -> false
+            ProductCategory.ADDITIVE -> false
             else -> true
         }
 
         companion object {
             fun fromCategory(value: String?): UiState {
-                val category = ProductCategory.fromString(value) ?: ProductCategory.OTHER
+                val category =
+                    ProductCategory.fromString(value) ?: ProductCategory.OTHER
                 return UiState(
                     category = category
                 )

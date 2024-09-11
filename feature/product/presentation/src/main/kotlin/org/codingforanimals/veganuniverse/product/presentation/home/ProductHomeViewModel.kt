@@ -58,7 +58,7 @@ internal class ProductHomeViewModel : ViewModel() {
             }
 
             Action.OnSeeAdditivesClick -> {
-                navigateToProductBrowsing(category = ProductCategory.ADDITIVES)
+                navigateToProductBrowsing(category = ProductCategory.ADDITIVE)
             }
         }
     }

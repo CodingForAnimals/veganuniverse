@@ -161,7 +161,7 @@ private fun ProductDetailScreen(product: Product) {
             .verticalScroll(rememberScrollState())
     ) {
         val imageType = when (product.category) {
-            ProductCategory.ADDITIVES -> ContentDetailsHeroImageType.Text(
+            ProductCategory.ADDITIVE -> ContentDetailsHeroImageType.Text(
                 text = product.name,
                 containerColor = LightBlue
             )
@@ -190,7 +190,7 @@ private fun ProductDetailScreen(product: Product) {
         ) {
             ContentDetailItem(
                 title = product.name,
-                subtitle = product.brand.takeUnless { product.category == ProductCategory.ADDITIVES },
+                subtitle = product.brand.takeUnless { product.category == ProductCategory.ADDITIVE },
             )
             ContentDetailItem(
                 title = stringResource(typeUI.label),
@@ -277,7 +277,7 @@ private val productPreview = Product(
     brand = "Argento's",
     comment = "Rico y económico. 100% vegano. Recomiendo!!",
     type = ProductType.VEGAN,
-    category = ProductCategory.CHOCOLATES,
+    category = ProductCategory.CHOCOLATE,
     userId = "123123",
     username = "Paola Argento",
     imageUrl = null,
@@ -330,7 +330,7 @@ private fun PreviewAdditiveProductDetailScreen() {
         Surface {
             val product = productPreview.copy(
                 type = ProductType.DOUBTFUL,
-                category = ProductCategory.ADDITIVES,
+                category = ProductCategory.ADDITIVE,
                 name = "INS 311"
             )
             ProductDetailScreen(

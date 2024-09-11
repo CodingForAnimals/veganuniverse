@@ -110,7 +110,7 @@ private fun ProductCardImage(
 ) {
     val image = remember {
         when (category) {
-            ProductCategory.ADDITIVES -> ProductCardImage.TextImage(
+            ProductCategory.ADDITIVE -> ProductCardImage.TextImage(
                 text = name,
                 backgroundColor = LightBlue
             )
@@ -173,7 +173,7 @@ private fun PreviewProductCard() {
                 brand = "Argento's",
                 comment = "Rico y económico. 100% vegano. Recomiendo!!",
                 type = ProductType.VEGAN,
-                category = ProductCategory.BAKED_GOODS,
+                category = ProductCategory.BAKED,
                 userId = "123123",
                 username = "Paola Argento",
                 imageUrl = null,
@@ -182,7 +182,7 @@ private fun PreviewProductCard() {
             )
             val additive = product.copy(
                 name = "INS-311",
-                category = ProductCategory.ADDITIVES,
+                category = ProductCategory.ADDITIVE,
             )
             val other = product.copy(
                 category = ProductCategory.OTHER
