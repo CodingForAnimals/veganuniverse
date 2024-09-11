@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,6 +34,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_10
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
 import org.codingforanimals.veganuniverse.registration.presentation.R
@@ -83,7 +86,7 @@ private fun ValidateEmailPromptScreen(
                     IconButton(onClick = { onAction(Action.OnNavigateUpClick) }) {
                         Icon(
                             imageVector = VUIcons.ArrowBack.imageVector,
-                            contentDescription = stringResource(id = R.string.back),
+                            contentDescription = stringResource(id = back),
                         )
                     }
                 }
@@ -92,54 +95,61 @@ private fun ValidateEmailPromptScreen(
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(paddingValues)
-                .padding(Spacing_06)
                 .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = stringResource(R.string.validate_email_screen_title),
-                style = MaterialTheme.typography.headlineLarge,
-            )
-            Text(
-                modifier = Modifier.padding(top = Spacing_06),
-                text = stringResource(R.string.validate_email_screen_message),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-            Icon(
-                modifier = Modifier
-                    .padding(vertical = Spacing_10)
-                    .size(120.dp)
-                    .align(Alignment.CenterHorizontally),
-                painter = painterResource(id = VUIcons.Email.id),
-                contentDescription = null,
-            )
-            Button(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                enabled = !isLoading,
-                onClick = { onAction(Action.OnEmailValidatedClick) },
-                content = {
-                    Text(text = stringResource(id = R.string.validate_email_screen_action))
-                }
-            )
-            TextButton(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = Spacing_04),
-                enabled = !isLoading,
-                onClick = { onAction(Action.OnResendEmailClick) },
-                content = {
-                    Text(text = stringResource(R.string.reenviar_correo))
-                },
-            )
-            SecondaryAuthOptionDivider()
-            TextButton(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                enabled = !isLoading,
-                onClick = { onAction(Action.OnContinueAsGuestClick) },
-                content = {
-                    Text(text = stringResource(R.string.continue_as_guest))
-                }
-            )
+            Column(
+                modifier = Modifier.fillMaxSize().padding(Spacing_06)
+            ) {
+                Text(
+                    text = stringResource(R.string.validate_email_screen_title),
+                    style = MaterialTheme.typography.headlineLarge,
+                )
+                Text(
+                    modifier = Modifier.padding(top = Spacing_06),
+                    text = stringResource(R.string.validate_email_screen_message),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(vertical = Spacing_10)
+                        .size(100.dp)
+                        .align(Alignment.CenterHorizontally),
+                    painter = painterResource(id = VUIcons.Email.id),
+                    contentDescription = null,
+                )
+                Button(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    enabled = !isLoading,
+                    onClick = { onAction(Action.OnEmailValidatedClick) },
+                    content = {
+                        Text(text = stringResource(id = R.string.validate_email_screen_action))
+                    }
+                )
+                TextButton(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = Spacing_04),
+                    enabled = !isLoading,
+                    onClick = { onAction(Action.OnResendEmailClick) },
+                    content = {
+                        Text(text = stringResource(R.string.reenviar_correo))
+                    },
+                )
+                SecondaryAuthOptionDivider(
+                    modifier = Modifier.padding(vertical = Spacing_04)
+                )
+                TextButton(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    enabled = !isLoading,
+                    onClick = { onAction(Action.OnContinueAsGuestClick) },
+                    content = {
+                        Text(text = stringResource(R.string.continue_as_guest))
+                    }
+                )
+            }
         }
     }
 }

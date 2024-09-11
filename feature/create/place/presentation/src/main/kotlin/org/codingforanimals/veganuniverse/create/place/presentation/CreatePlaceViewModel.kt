@@ -90,7 +90,7 @@ class CreatePlaceViewModel(
             Action.OnHideExpandOpeningHoursClick -> updateHideExpandOpeningHoursState()
             Action.OnBackClick -> {
                 viewModelScope.launch {
-                    navigationEffectsChannel.send(NavigationEffect.NavigateToThankYouScreen)
+                    navigationEffectsChannel.send(NavigationEffect.NavigateUp)
                 }
             }
 

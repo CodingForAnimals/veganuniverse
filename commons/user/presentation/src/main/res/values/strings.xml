@@ -5,5 +5,4 @@
     <string name="unverified_email_dialog_title">Valida tu correo electrónico</string>
     <string name="verification_email_not_sent">¡Oops! No hemos podido enviarte nuevamente el correo de verificación. Intenta nuevamente más tarde</string>
     <string name="verification_email_sent">¡Correo de verificación enviado! Revisa tu casilla por favor, no olvides revisar la carpeta de spam.</string>
-    <string name="back">Volver</string>
 </resources>

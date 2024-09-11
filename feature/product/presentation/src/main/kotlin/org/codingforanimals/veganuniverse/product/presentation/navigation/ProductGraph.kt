@@ -19,13 +19,15 @@ sealed class ProductDestination(route: String) : Destination(route) {
     data class Browsing(
         val category: String? = null,
         val type: String? = null,
-        val sorter: String? = null
-    ) : ProductDestination("$ROUTE?$CATEGORY=$category&$TYPE=$type&$SORTER=$sorter") {
+        val sorter: String? = null,
+        val searchText: String = "",
+    ) : ProductDestination("$ROUTE?$CATEGORY=$category&$TYPE=$type&$SORTER=$sorter&$SEARCH_TEXT=$searchText") {
         companion object {
             const val ROUTE = "product_list_route"
             const val CATEGORY = "category"
             const val TYPE = "type"
             const val SORTER = "sorter"
+            const val SEARCH_TEXT = "search_text"
         }
     }
 
@@ -51,8 +53,15 @@ fun NavGraphBuilder.productGraph(
         route = ProductDestination.Home.route,
     ) {
         ProductHomeScreen(
-            navigateToCategoryListScreen = { category, type, sorter ->
-                navController.navigate(ProductDestination.Browsing(category, type, sorter))
+            navigateToCategoryListScreen = { category, type, sorter, searchText ->
+                navController.navigate(
+                    ProductDestination.Browsing(
+                        category,
+                        type,
+                        sorter,
+                        searchText
+                    )
+                )
             },
             navigateToProductDetail = { id ->
                 navController.navigate(ProductDestination.Detail(id))
@@ -62,7 +71,7 @@ fun NavGraphBuilder.productGraph(
 
     with(ProductDestination.Browsing) {
         composable(
-            route = "$ROUTE?$CATEGORY={$CATEGORY}&$TYPE={$TYPE}&$SORTER={$SORTER}",
+            route = "$ROUTE?$CATEGORY={$CATEGORY}&$TYPE={$TYPE}&$SORTER={$SORTER}&$SEARCH_TEXT={$SEARCH_TEXT}",
             arguments = listOf(
                 navArgument(CATEGORY) {
                     type = NavType.StringType

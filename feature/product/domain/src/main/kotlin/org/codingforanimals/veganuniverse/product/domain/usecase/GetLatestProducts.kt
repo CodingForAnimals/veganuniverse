@@ -11,8 +11,8 @@ class GetLatestProducts(
     suspend operator fun invoke(): List<Product> {
         val params = ProductQueryParams.Builder()
             .withSorter(ProductSorter.DATE)
-            .withMaxSize(3)
-            .withPageSize(3)
+            .withMaxSize(2)
+            .withPageSize(2)
             .build()
         return productRepository.queryProducts(params)
     }

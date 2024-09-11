@@ -14,7 +14,7 @@ import org.codingforanimals.veganuniverse.registration.presentation.navigation.R
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailRegistration
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.EmailSignIn
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination.ValidateEmailPrompt
-import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreen
+import org.codingforanimals.veganuniverse.registration.presentation.prompt.AuthPromptScreen
 import org.codingforanimals.veganuniverse.registration.presentation.reauthentication.EmailValidatedScreen
 
 sealed class RegistrationDestination(route: String) : Destination(route) {
@@ -36,7 +36,7 @@ fun NavGraphBuilder.registrationGraph(
             }
         ),
         content = {
-            PromptScreen(
+            AuthPromptScreen(
                 navigateUp = navController::navigateUp,
                 navigateToEmailRegistration = { navController.navigate(EmailRegistration) },
                 navigateToEmailSignIn = { navController.navigate(EmailSignIn) },

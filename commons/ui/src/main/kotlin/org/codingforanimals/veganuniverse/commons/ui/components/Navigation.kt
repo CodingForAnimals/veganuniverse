@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun RowScope.BottomNavBarItem(
@@ -13,13 +15,20 @@ fun RowScope.BottomNavBarItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
+    label: String,
 ) {
     NavigationBarItem(
         modifier = modifier,
         selected = isSelected,
         onClick = onClick,
         icon = icon,
-//        label = label,
+        label = {
+            Text(
+                text = label,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
         colors = NavigationBarItemDefaults.colors(
             selectedIconColor = VeganUniverseNavigationDefaults.navigationSelectedItemColor(),
             unselectedIconColor = VeganUniverseNavigationDefaults.navigationContentColor(),

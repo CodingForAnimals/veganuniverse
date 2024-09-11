@@ -29,6 +29,7 @@ import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.product.domain.usecase.QueryProductsPagingDataFlow
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.CATEGORY
+import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.SEARCH_TEXT
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.SORTER
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.TYPE
 
@@ -51,6 +52,7 @@ internal class ProductBrowsingViewModel(
             categoryNavArg = savedStateHandle[CATEGORY],
             typeNavArg = savedStateHandle[TYPE],
             sorterNavArg = savedStateHandle[SORTER],
+            searchTextNavArg = savedStateHandle[SEARCH_TEXT],
         )
     )
         private set
@@ -148,12 +150,14 @@ internal class ProductBrowsingViewModel(
                 categoryNavArg: String?,
                 typeNavArg: String?,
                 sorterNavArg: String?,
+                searchTextNavArg: String?,
             ): UiState {
                 return UiState(
                     category = ProductCategory.fromString(categoryNavArg),
                     type = typeNavArg?.let { ProductType.fromString(it) },
                     sorter = sorterNavArg?.let { ProductSorter.fromString(it) }
                         ?: ProductSorter.NAME,
+                    searchText = searchTextNavArg.orEmpty()
                 )
             }
         }

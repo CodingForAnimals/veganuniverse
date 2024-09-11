@@ -89,7 +89,6 @@ fun AllCategories(
                             text = stringResource(categoryUI.label),
                             maxLines = 2,
                             style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
                             textAlign = TextAlign.Center,
                             overflow = TextOverflow.Ellipsis,
                         )

@@ -5,6 +5,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import org.codingforanimals.veganuniverse.commons.ui.components.BottomNavBarItem
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 
@@ -33,6 +34,7 @@ internal fun VeganUniverseBottomAppBar(
                         VUIcon(icon = icon)
                     }
                 },
+                label = stringResource(it.titleRes)
             )
         }
     }

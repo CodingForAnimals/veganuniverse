@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="categories_header_message">Filtrá por productos</string>
-    <string name="categories">Categorías</string>
+    <string name="categories_header_message">¿Es vegan?</string>
+    <string name="categories">Buscá por categoría</string>
     <string name="show_more">Ver más</string>
     <string name="show_all">Ver todos</string>
     <string name="go_to_add_product">Ir a agregar producto</string>
     <string name="add_product_suggestion">Si no encontrás un producto, ¡podés agregarlo!</string>
     <string name="all_products">Todos los productos</string>
     <string name="product_list_default_title">Todos los productos</string>
-    <string name="search_product">Buscar producto</string>
+    <string name="search_product">Buscar producto o aditivo</string>
     <string name="no_image">Sin imagen</string>
     <string name="product_suggestion_dialog_edit_title">Editar producto</string>
     <string name="report_product">Reportar producto</string>
@@ -33,6 +33,7 @@
     <string name="empty_contributed_products_message">¡No has contribuido ningún producto todavía! Todos los que vayas agregando los podrás ver y editar desde este acceso rápido.</string>
     <string name="product">Producto</string>
     <string name="brand">Marca</string>
-    <string name="product_home_title">¿Es vegan?</string>
-    <string name="latest_products_title">Últimos productos agregados</string>
+    <string name="product_home_title">Universo Vegano</string>
+    <string name="latest_products_title">Últimas contribuciones</string>
+    <string name="product_see_additives">Ver listado de aditivos</string>
 </resources>

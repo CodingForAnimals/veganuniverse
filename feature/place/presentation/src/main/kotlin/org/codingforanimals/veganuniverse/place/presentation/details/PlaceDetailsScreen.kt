@@ -156,7 +156,7 @@ private fun PlaceDetailsScreen(
                             Icon(
                                 imageVector = VUIcons.ArrowBack.imageVector,
                                 contentDescription = stringResource(
-                                    id = R.string.back
+                                    id = back
                                 )
                             )
                         }
@@ -329,7 +329,7 @@ private fun HandleAlertDialog(
                     onClick = { onAction(Action.OnAlertDialogDismissRequest) },
                     enabled = userActionEnabled,
                 ) {
-                    Text(text = stringResource(id = R.string.back))
+                    Text(text = stringResource(id = back))
                 }
             },
             icon = { VUIcon(icon = VUIcons.Delete) },

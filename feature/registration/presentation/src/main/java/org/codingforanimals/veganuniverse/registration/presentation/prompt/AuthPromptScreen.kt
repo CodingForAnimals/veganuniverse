@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package org.codingforanimals.veganuniverse.registration.presentation.prompt
 
 import android.content.Intent
@@ -7,13 +9,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,14 +20,21 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,26 +42,24 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import org.codingforanimals.veganuniverse.commons.ui.R.string.back
-import org.codingforanimals.veganuniverse.registration.presentation.R
-import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreenViewModel.Action
-import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewmodel.AuthProvider
-import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewmodel.RegistrationScreenItem
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_09
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
-import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.dialog.NoActionDialog
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.registration.presentation.R
 import org.codingforanimals.veganuniverse.registration.presentation.components.SecondaryAuthOptionDivider
+import org.codingforanimals.veganuniverse.registration.presentation.prompt.PromptScreenViewModel.Action
+import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewmodel.AuthProvider
+import org.codingforanimals.veganuniverse.registration.presentation.prompt.viewmodel.RegistrationScreenItem
 import org.koin.androidx.compose.koinViewModel
 
 private const val TAG = "PromptScreen"
 
 @Composable
-internal fun PromptScreen(
+internal fun AuthPromptScreen(
     navigateUp: () -> Unit,
     navigateToEmailRegistration: () -> Unit,
     navigateToEmailSignIn: () -> Unit,
@@ -78,16 +82,10 @@ internal fun PromptScreen(
         providerSignInActivityLauncher = providerSignInActivityLauncher,
     )
 
-    VUIcon(
-        modifier = Modifier.padding(Spacing_06),
-        icon = VUIcons.Close,
-        contentDescription = "",
-        onIconClick = navigateUp,
-    )
-
-    PromptScreen(
+    AuthPromptScreen(
         content = viewModel.content,
         onAction = viewModel::onAction,
+        navigateUp = navigateUp,
     )
 
     uiState.errorDialog?.let { errorDialog ->
@@ -103,51 +101,72 @@ internal fun PromptScreen(
 }
 
 @Composable
-private fun PromptScreen(
+private fun AuthPromptScreen(
     content: List<RegistrationScreenItem>,
     onAction: (Action) -> Unit,
+    navigateUp: () -> Unit,
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(Spacing_09),
-        verticalArrangement = Arrangement.spacedBy(Spacing_08, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        items(
-            items = content,
-            itemContent = { item ->
-                when (item) {
-                    is RegistrationScreenItem.Text -> Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(R.string.prompt_screen_message),
-                    )
-
-                    is RegistrationScreenItem.Title -> Text(
-                        modifier = Modifier.wrapContentWidth(Alignment.CenterHorizontally),
-                        text = stringResource(R.string.prompt_screen_title),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-
-                    RegistrationScreenItem.RegisterButton -> OutlinedButton(
-                        onClick = { onAction(Action.OnRegisterButtonClick) },
-                        colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                        content = { Text(text = stringResource(R.string.register_button_label)) },
-                    )
-
-                    RegistrationScreenItem.SignInButton -> TextButton(
-                        onClick = { onAction(Action.OnSignInButtonClick) },
-                    ) {
-                        Text(text = stringResource(R.string.sign_in_button_label))
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                ),
+                navigationIcon = {
+                    IconButton(navigateUp) {
+                        Icon(
+                            imageVector = VUIcons.Close.imageVector,
+                            contentDescription = stringResource(back),
+                        )
                     }
-
-                    RegistrationScreenItem.ProvidersDivider -> SecondaryAuthOptionDivider()
-                    RegistrationScreenItem.Providers -> GoogleProviderButton(onAction)
                 }
-            },
-        )
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentPadding = PaddingValues(horizontal = Spacing_09, vertical = Spacing_06),
+            verticalArrangement = Arrangement.spacedBy(Spacing_08, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            items(
+                items = content,
+                itemContent = { item ->
+                    when (item) {
+                        is RegistrationScreenItem.Text -> Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = stringResource(R.string.prompt_screen_message),
+                        )
+
+                        is RegistrationScreenItem.Title -> Text(
+                            modifier = Modifier.wrapContentWidth(Alignment.CenterHorizontally),
+                            text = stringResource(R.string.prompt_screen_title),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+
+                        RegistrationScreenItem.RegisterButton -> OutlinedButton(
+                            onClick = { onAction(Action.OnRegisterButtonClick) },
+                            colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                            content = { Text(text = stringResource(R.string.register_button_label)) },
+                        )
+
+                        RegistrationScreenItem.SignInButton -> TextButton(
+                            onClick = { onAction(Action.OnSignInButtonClick) },
+                        ) {
+                            Text(text = stringResource(R.string.sign_in_button_label))
+                        }
+
+                        RegistrationScreenItem.ProvidersDivider -> SecondaryAuthOptionDivider()
+                        RegistrationScreenItem.Providers -> GoogleProviderButton(onAction)
+                    }
+                },
+            )
+        }
     }
 }
 

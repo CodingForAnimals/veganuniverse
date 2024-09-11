@@ -14,7 +14,7 @@ fun VeganUniverseBackground(
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = Color("#F0F0F1".toColorInt()),
+        color = Color(0xFFF0F0F1),
     ) {
         content()
     }

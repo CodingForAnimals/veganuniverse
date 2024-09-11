@@ -25,7 +25,6 @@
     <string name="alert_dialog_report_review_confirm_button_label">Reportar</string>
     <string name="alert_dialog_delete_review_confirm_button_label">Eliminar</string>
     <string name="place_details_add_review_username_placeholder">Mi usuario</string>
-    <string name="back">Volver</string>
     <string name="opening_hours">Horario de atención</string>
     <string name="place_reviews_topbar_title">Reseñas de %1$s</string>
     <string name="report_review_success">La reseña ha sido reportada con éxito.</string>

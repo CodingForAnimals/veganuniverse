@@ -50,6 +50,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_09
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.R.string.contributed_by
 import org.codingforanimals.veganuniverse.commons.ui.R.string.ok
 import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
@@ -148,7 +149,7 @@ internal fun RecipeDetailsScreen(
                                     TextButton(
                                         onClick = { onAction(Action.OnErrorDialogDismissRequest) },
                                         content = {
-                                            Text(text = stringResource(R.string.back))
+                                            Text(text = stringResource(back))
                                         }
                                     )
                                 }
@@ -363,7 +364,7 @@ private fun HandleDialog(
                     },
                     dismissButton = {
                         TextButton(onClick = onDialogDismissRequest) {
-                            Text(text = stringResource(id = R.string.back))
+                            Text(text = stringResource(id = back))
                         }
                     },
                     title = { Text(text = stringResource(id = R.string.delete_recipe_dialog_title)) },

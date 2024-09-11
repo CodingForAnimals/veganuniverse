@@ -23,6 +23,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.recipes.presentation.R
@@ -46,7 +47,7 @@ internal fun RecipeListingScreen(
                     IconButton(onClick = navigateUp) {
                         Icon(
                             imageVector = VUIcons.ArrowBack.imageVector,
-                            contentDescription = stringResource(id = R.string.back)
+                            contentDescription = stringResource(id = back)
                         )
                     }
                 }

@@ -39,11 +39,11 @@
     <string name="email_registration_error">No pudimos crear un usuario con este email y contraseña</string>
     <string name="continue_label">Continuar</string>
     <string name="reauthentication_failed">No hemos podido continuar. Verifica que tengas conexión a internet y que la contraseña sea correcta.</string>
-    <string name="back">Volver</string>
     <string name="validate_email_screen_title">Revisa tu casilla</string>
     <string name="validate_email_screen_message">¡Te enviamos un email para que puedas verificar tu correo! Así podrás acceder a todas nuestras funcionalidades. Recuerda revisar tu casilla de spam.</string>
     <string name="reenviar_correo">Reenviar correo</string>
     <string name="continue_as_guest">Continuar como invitado</string>
     <string name="validate_email_screen_action">¡Ya validé mi correo!</string>
     <string name="sign_in_again">Iniciar sesión nuevamente</string>
+    <string name="or_else">ó bien</string>
 </resources>

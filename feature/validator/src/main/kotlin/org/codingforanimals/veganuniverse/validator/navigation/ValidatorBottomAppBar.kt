@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.validator.navigation
 
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import org.codingforanimals.veganuniverse.commons.ui.components.BottomNavBarItem
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
@@ -24,6 +25,7 @@ fun ValidatorBottomAppBar(
                     val icon = if (isSelected) it.selectedIcon else it.unselectedIcon
                     VUIcon(icon = icon)
                 },
+                label = stringResource(it.label)
             )
         }
     }

@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.SendVerificationEmail
 import org.koin.androidx.compose.koinViewModel
@@ -72,7 +73,7 @@ private fun UnverifiedEmailDialog(
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest,
-                content = { Text(text = stringResource(R.string.back)) }
+                content = { Text(text = stringResource(back)) }
             )
         },
         title = { Text(text = stringResource(id = R.string.unverified_email_dialog_title)) },

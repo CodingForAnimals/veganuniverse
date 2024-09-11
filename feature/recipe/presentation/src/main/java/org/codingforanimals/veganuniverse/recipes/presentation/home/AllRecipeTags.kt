@@ -3,10 +3,14 @@
 package org.codingforanimals.veganuniverse.recipes.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -27,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
@@ -54,7 +59,7 @@ internal fun AllRecipeTags(
             horizontalArrangement = Arrangement.spacedBy(Spacing_04),
             verticalArrangement = Arrangement.spacedBy(Spacing_04),
         ) {
-            RecipeTag.values()
+            RecipeTag.entries
                 .forEachIndexed { index, recipeTag ->
                     key(index) {
                         val recipeTagUI = remember { recipeTag.toUI() }
@@ -64,31 +69,35 @@ internal fun AllRecipeTags(
                                 .aspectRatio(1f),
                             onClick = { onRecipeTagClick(recipeTag) },
                         ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center,
                             ) {
-                                AsyncImage(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .sizeIn(maxWidth = 50.dp, maxHeight = 50.dp)
-                                        .padding(top = Spacing_06, bottom = Spacing_04),
-                                    model = recipeTagUI.icon.model,
-                                    contentScale = ContentScale.Fit,
-                                    contentDescription = stringResource(recipeTagUI.label),
-                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-                                )
-                                Text(
-                                    modifier = Modifier
-                                        .wrapContentHeight()
-                                        .fillMaxWidth()
-                                        .padding(Spacing_03),
-                                    text = stringResource(recipeTagUI.label),
-                                    maxLines = 1,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                    textAlign = TextAlign.Center,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    AsyncImage(
+                                        modifier = Modifier
+                                            .fillMaxHeight(0.33f)
+                                            .aspectRatio(1f),
+                                        model = recipeTagUI.icon.model,
+                                        contentScale = ContentScale.Fit,
+                                        contentDescription = stringResource(recipeTagUI.label),
+                                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                                    )
+                                    Text(
+                                        modifier = Modifier
+                                            .wrapContentHeight()
+                                            .fillMaxWidth()
+                                            .padding(Spacing_02),
+                                        text = stringResource(recipeTagUI.label),
+                                        maxLines = 2,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        textAlign = TextAlign.Center,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
                             }
                         }
                     }

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.R.string.bookmark_action
 import org.codingforanimals.veganuniverse.commons.ui.R.string.delete
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit
@@ -45,7 +46,7 @@ internal fun RecipeDetailsTopAppBar(
                     Icon(
                         imageVector = VUIcons.ArrowBack.imageVector,
                         contentDescription = stringResource(
-                            id = R.string.back
+                            id = back
                         )
                     )
                 }

@@ -12,17 +12,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
+import org.codingforanimals.veganuniverse.registration.presentation.R
 
 @Composable
-internal fun SecondaryAuthOptionDivider() {
+internal fun SecondaryAuthOptionDivider(
+    modifier: Modifier = Modifier,
+) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = Spacing_08, bottom = Spacing_04),
+        modifier = modifier
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(Spacing_06),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -32,7 +35,7 @@ internal fun SecondaryAuthOptionDivider() {
                 .background(MaterialTheme.colorScheme.onSurfaceVariant)
                 .weight(1f)
         )
-        Text(text = "ó bien")
+        Text(text = stringResource(R.string.or_else))
         Spacer(
             Modifier
                 .height(1.dp)
