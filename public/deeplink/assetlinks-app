@@ -1,0 +1,36 @@
+This file contains the two separate files, both named 'assetlinks.json'.
+These files are deployed in .well-known folder.
+
+
+DEBUG
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "org.codingforanimals.veganuniverse.debug",
+      "sha256_cert_fingerprints": [
+        "01:99:3F:2C:D4:30:63:54:45:5E:B4:42:6D:BA:75:79:96:20:66:81:0C:7D:00:EE:5A:AB:FA:95:47:A2:0E:38"
+      ]
+    }
+  }
+]
+
+RELEASE
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "org.codingforanimals.veganuniverse",
+      "sha256_cert_fingerprints": [
+        "FB:BF:39:A3:70:9F:DE:4E:89:47:DD:B1:AE:DC:59:E2:B9:56:A8:52:4F:27:B5:9F:00:D5:EF:70:AE:A6:99:A4"
+      ]
+    }
+  }
+]
+

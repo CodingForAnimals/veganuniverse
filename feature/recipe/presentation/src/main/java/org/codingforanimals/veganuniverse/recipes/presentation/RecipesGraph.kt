@@ -5,11 +5,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
-import org.codingforanimals.veganuniverse.commons.ui.navigation.popToStartDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeScreen
@@ -70,6 +70,11 @@ fun NavGraphBuilder.recipesGraph(
 
     composable(
         route = "${RecipesDestination.Details.route}/{$RECIPE_ID}",
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = "https://veganuniverse-a924e .web.app/recipe/{$RECIPE_ID}"
+            }
+        ),
         arguments = listOf(
             navArgument(RECIPE_ID) { type = NavType.StringType }
         )
