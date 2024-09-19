@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
@@ -72,7 +73,8 @@ fun NavGraphBuilder.recipesGraph(
         route = "${RecipesDestination.Details.route}/{$RECIPE_ID}",
         deepLinks = listOf(
             navDeepLink {
-                uriPattern = "https://veganuniverse-a924e .web.app/recipe/{$RECIPE_ID}"
+                uriPattern = "https://veganuniverse-a924e.web.app/recipe/{$RECIPE_ID}"
+//                uriPattern = "${DeepLink.APP_LINKS_BASE_URL}/recipe/{$RECIPE_ID}"
             }
         ),
         arguments = listOf(

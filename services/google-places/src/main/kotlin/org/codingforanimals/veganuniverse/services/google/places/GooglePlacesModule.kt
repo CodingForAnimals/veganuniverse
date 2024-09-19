@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import com.google.android.libraries.places.api.net.PlacesClient as GooglePlacesClient
 
 val googlePlacesModule = module {
-    factory { createClient(get()) }
+    single { createClient(get()) }
     factoryOf(::PlacesClientImpl) bind PlacesClient::class
 }
 

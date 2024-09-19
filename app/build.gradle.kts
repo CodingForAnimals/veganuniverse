@@ -23,9 +23,9 @@ android {
 
     signingConfigs {
         create("release") {
-//            storeFile = file("/Users/agustin.magne/agus/veganuniverse/veganuniverse-keystore-release.jks")
-            storeFile =
-                file("C:\\Users\\agusm\\Dev\\codingforanimals\\veganuniverse\\veganuniverse-keystore-release.jks")
+            storeFile = file("/Users/agustin.magne/agus/veganuniverse/veganuniverse-keystore-release.jks")
+//            storeFile =
+//                file("C:\\Users\\agusm\\Dev\\codingforanimals\\veganuniverse\\veganuniverse-keystore-release.jks")
             storePassword = "veganuniverse1324"
             keyAlias = "key0"
             keyPassword = "veganuniverse1324"
