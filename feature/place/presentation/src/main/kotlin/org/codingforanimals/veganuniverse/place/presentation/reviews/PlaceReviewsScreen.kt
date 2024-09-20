@@ -138,7 +138,7 @@ private fun PlaceReviewsScreen(
                             title = review.title,
                             description = review.description,
                             date = review.createdAt?.let { DateUtils.getTimeAgo(it.time) },
-                            actionIcon = VUIcons.Delete.id,
+                            actionIcon = VUIcons.Delete,
                             onActionIconClick = {
                                 review.id?.let {
                                     onAction(Action.DeleteUserReview.DeleteIconClick(it))
@@ -160,7 +160,7 @@ private fun PlaceReviewsScreen(
                             title = review.title,
                             description = review.description,
                             date = review.createdAt?.let { DateUtils.getTimeAgo(it.time) },
-                            actionIcon = VUIcons.Report.id,
+                            actionIcon = VUIcons.Report,
                             onActionIconClick = {
                                 review.id?.let {
                                     onAction(Action.ReportReview.ReportIconClick(it))

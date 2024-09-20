@@ -56,7 +56,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="https" />
-                <data android:host="veganuniverse-a924e.web.app" />
+                <data android:host="${appLinksHost}" />
             </intent-filter>
         </activity>
     </application>

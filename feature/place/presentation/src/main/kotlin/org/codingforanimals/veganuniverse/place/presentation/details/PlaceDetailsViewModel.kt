@@ -34,6 +34,7 @@ import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.ver
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
 import org.codingforanimals.veganuniverse.place.presentation.R
 import org.codingforanimals.veganuniverse.place.presentation.details.usecase.PlaceDetailsUseCases
+import org.codingforanimals.veganuniverse.place.presentation.navigation.PlaceDestination
 import org.codingforanimals.veganuniverse.place.presentation.navigation.selected_place_id
 import kotlin.math.roundToInt
 
@@ -49,6 +50,9 @@ internal class PlaceDetailsViewModel(
 
     private val snackbarEffectsChannel = Channel<Snackbar>()
     val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
+
+    private val sideEffectsChannel = Channel<SideEffect>()
+    val sideEffects = sideEffectsChannel.receiveAsFlow()
 
     private val placeGeoHashNavArg = savedStateHandle.get<String>(selected_place_id)
 
@@ -195,6 +199,13 @@ internal class PlaceDetailsViewModel(
             is Action.OnEditResult -> onPlaceEditResult(action.result)
             is Action.OnReportResult -> onPlaceReportResult(action.result)
             is Action.OnUnverifiedEmailDialogResult -> onUnverifiedEmailResult(action.result)
+            Action.OnShareClick -> {
+                viewModelScope.launch {
+                    placeGeoHashNavArg ?: return@launch
+                    val placeAppLink = PlaceDestination.Details.getAppLink(placeGeoHashNavArg)
+                    sideEffectsChannel.send(SideEffect.Share(placeAppLink))
+                }
+            }
         }
     }
 
@@ -422,6 +433,7 @@ internal class PlaceDetailsViewModel(
     }
 
     sealed class Action {
+        data object OnShareClick : Action()
         sealed class NewReview : Action() {
             data class OnRatingChange(val rating: Int) : NewReview()
             data class OnTitleChange(val title: String) : NewReview()
@@ -464,6 +476,10 @@ internal class PlaceDetailsViewModel(
             val rating: Int,
             val userId: String?,
         ) : NavigationEffect()
+    }
+
+    sealed class SideEffect {
+        data class Share(val textToShare: String) : SideEffect()
     }
 
     companion object {

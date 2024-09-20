@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,7 +23,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.navigation.model.DeepLinkNavigationOptions
-import org.codingforanimals.veganuniverse.commons.ui.components.VeganUniverseBackground
 import org.codingforanimals.veganuniverse.navigation.VeganUniverseApp
 import org.codingforanimals.veganuniverse.onboarding.presentation.OnboardingScreen
 import org.koin.android.ext.android.inject
@@ -52,31 +52,31 @@ class MainActivity : ComponentActivity() {
             )
         }
         setContent {
-            VeganUniverseTheme {
-                VeganUniverseBackground(
-                    modifier = Modifier.navigationBarsPadding()
+            VeganUniverseTheme(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .navigationBarsPadding(),
+            ) {
+                val navController = rememberNavController()
+                VeganUniverseApp(
+                    navController = navController
+                )
+
+                val onboardingDismissed by mainViewModel.wasOnboardingDismissed.collectAsStateWithLifecycle()
+                AnimatedVisibility(
+                    visible = !onboardingDismissed,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
                 ) {
-                    val navController = rememberNavController()
-                    VeganUniverseApp(
-                        navController = navController
-                    )
+                    OnboardingScreen(onDismiss = { mainViewModel.setOnboardingAsDismissed() })
+                }
 
-                    val onboardingDismissed by mainViewModel.wasOnboardingDismissed.collectAsStateWithLifecycle()
-                    AnimatedVisibility(
-                        visible = !onboardingDismissed,
-                        enter = fadeIn(),
-                        exit = fadeOut(),
-                    ) {
-                        OnboardingScreen(onDismiss = { mainViewModel.setOnboardingAsDismissed() })
-                    }
-
-                    LaunchedEffect(Unit) {
-                        mainViewModel.deeplinkFlow.collectLatest { deeplinkNavigation ->
-                            navController.navigate(
-                                deepLink = deeplinkNavigation.uri,
-                                navOptions = deeplinkNavigation.options?.toNavOptions(),
-                            )
-                        }
+                LaunchedEffect(Unit) {
+                    mainViewModel.deeplinkFlow.collectLatest { deeplinkNavigation ->
+                        navController.navigate(
+                            deepLink = deeplinkNavigation.uri,
+                            navOptions = deeplinkNavigation.options?.toNavOptions(),
+                        )
                     }
                 }
             }

@@ -56,6 +56,8 @@ object VUIcons {
     val Pictures = DrawableResourceIcon(R.drawable.ic_pictures)
     val Check = DrawableResourceIcon(R.drawable.ic_check)
     val Add = ImageVectorIcon(Icons.Default.Add)
+    val ChevronRight = DrawableResourceIcon(R.drawable.ic_chevron_right)
+    val ChevronDown = DrawableResourceIcon(R.drawable.ic_chevron_down)
 
     // Icons used in tags mainly
     val Restaurant = DrawableResourceIcon(R.drawable.ic_restaurant)

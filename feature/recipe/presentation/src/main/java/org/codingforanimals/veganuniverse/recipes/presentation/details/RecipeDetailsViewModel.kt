@@ -32,6 +32,7 @@ import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOn
 import org.codingforanimals.veganuniverse.recipes.domain.usecase.RecipeDetailsUseCases
 import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.RECIPE_ID
+import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.details.entity.RecipeView
 
 private const val TAG = "RecipeDetailsViewModel"
@@ -48,6 +49,9 @@ internal class RecipeDetailsViewModel(
 
     private val navigationEffectsChannel: Channel<NavigationEffect> = Channel()
     val navigationEffects: Flow<NavigationEffect> = navigationEffectsChannel.receiveAsFlow()
+
+    private val sideEffectsChannel: Channel<SideEffect> = Channel()
+    val sideEffects: Flow<SideEffect> = sideEffectsChannel.receiveAsFlow()
 
     private val recipeId = savedStateHandle.get<String>(RECIPE_ID)
 
@@ -195,6 +199,13 @@ internal class RecipeDetailsViewModel(
             }
 
             Action.OnConfirmDelete -> deleteRecipe()
+            Action.OnShareClick -> {
+                viewModelScope.launch {
+                    recipeId ?: return@launch
+                    val recipeAppLink = RecipesDestination.Details.getAppLink(recipeId)
+                    sideEffectsChannel.send(SideEffect.Share(recipeAppLink))
+                }
+            }
         }
     }
 
@@ -268,6 +279,7 @@ internal class RecipeDetailsViewModel(
 
     sealed class Action {
         data object OnBackClick : Action()
+        data object OnShareClick : Action()
         data object OnEditClick : Action()
         data object OnReportClick : Action()
         data object OnDeleteClick : Action()
@@ -282,5 +294,9 @@ internal class RecipeDetailsViewModel(
 
     sealed class NavigationEffect {
         data object NavigateUp : NavigationEffect()
+    }
+
+    sealed class SideEffect {
+        data class Share(val textToShare: String) : SideEffect()
     }
 }

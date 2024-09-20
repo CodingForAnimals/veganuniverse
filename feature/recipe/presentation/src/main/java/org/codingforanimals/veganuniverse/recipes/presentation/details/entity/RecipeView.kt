@@ -1,6 +1,8 @@
 package org.codingforanimals.veganuniverse.recipes.presentation.details.entity
 
+import androidx.compose.ui.res.stringResource
 import org.codingforanimals.veganuniverse.commons.recipe.presentation.RecipeTagUI
+import org.codingforanimals.veganuniverse.recipes.presentation.R
 import java.util.Date
 
 data class RecipeView(
@@ -17,4 +19,10 @@ data class RecipeView(
     val prepTime: String,
     val servings: String,
     val imageUrl: String?,
-)
+) {
+    val likesText = when (likes) {
+        0 -> R.string.recipe_no_favs
+        1 -> R.string.recipe_one_favs
+        else -> R.string.recipe_n_favs
+    }
+}

@@ -52,7 +52,7 @@ internal fun Ingredients(
         }
         Text(
             text = stringResource(R.string.ingredients),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleMedium,
             color = color,
         )
         ingredientsField.list.forEachIndexed { index, ingredient ->

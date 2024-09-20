@@ -15,7 +15,7 @@ android {
             buildConfigField(
                 type = "String",
                 name = "APP_LINKS_BASE_URL",
-                value = "\"https://veganuniverse-prod.web.app\""
+                value = "\"https://veganuniverse-prod.firebaseapp.com\""
             )
         }
 
@@ -23,7 +23,7 @@ android {
             buildConfigField(
                 type = "String",
                 name = "APP_LINKS_BASE_URL",
-                value = "\"https://veganuniverse-a924e.web.app\""
+                value = "\"https://veganuniverse-a924e.firebaseapp.com\""
             )
         }
     }

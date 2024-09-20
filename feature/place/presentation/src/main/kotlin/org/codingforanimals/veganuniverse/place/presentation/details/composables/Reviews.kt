@@ -109,7 +109,7 @@ private fun ReviewsSuccessContent(
                 Column(modifier = Modifier.padding(top = Spacing_04)) {
                     Text(
                         text = stringResource(R.string.place_details_add_review_header_title),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleMedium,
                     )
                     InteractiveRatingBar(
                         modifier = Modifier.padding(top = Spacing_02),
@@ -132,7 +132,7 @@ private fun ReviewsSuccessContent(
             Text(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.place_details_review_list_header_title),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -185,7 +185,7 @@ private fun ReviewList(
                             1.dp,
                             MaterialTheme.colorScheme.primary
                         ),
-                        actionIcon = VUIcons.Delete.id,
+                        actionIcon = VUIcons.Delete,
                         onActionIconClick = {
                             userReview.id?.let {
                                 onAction(Action.Reviews.DeleteUserReview.DeleteIconClick(it))
@@ -202,7 +202,7 @@ private fun ReviewList(
                             title = review.title,
                             description = review.description,
                             date = review.createdAt?.time?.let { DateUtils.getTimeAgo(it) },
-                            actionIcon = VUIcons.Report.id,
+                            actionIcon = VUIcons.Report,
                             onActionIconClick = {
                                 review.id?.let {
                                     onAction(Action.Reviews.ReportReview.ReportIconClick(it))

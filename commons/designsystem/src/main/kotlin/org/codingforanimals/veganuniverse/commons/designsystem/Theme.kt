@@ -1,27 +1,25 @@
 package org.codingforanimals.veganuniverse.commons.designsystem
 
-import android.app.Activity
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun VeganUniverseTheme(
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = LightColorScheme
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.surface.toArgb()
-        }
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = LightColorScheme,
         typography = Typography,
-        content = content
+        content = {
+            Surface(
+                modifier = modifier,
+                color = Color(0xFFF0F0F1),
+                content = content,
+            )
+        }
     )
 }

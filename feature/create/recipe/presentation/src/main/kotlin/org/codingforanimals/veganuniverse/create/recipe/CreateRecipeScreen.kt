@@ -160,7 +160,7 @@ private fun CreateRecipeScreen(
             Text(
                 modifier = Modifier.padding(horizontal = Spacing_06),
                 text = stringResource(R.string.create_recipe_title),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
             )
         }
 
@@ -267,7 +267,7 @@ private fun CreateRecipeScreen(
             Text(
                 modifier = Modifier.padding(horizontal = Spacing_06),
                 text = stringResource(R.string.tags),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 color = color,
             )
             FlowRow(

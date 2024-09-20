@@ -4,6 +4,7 @@ package org.codingforanimals.veganuniverse.place.presentation.details.composable
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -52,7 +53,6 @@ import org.codingforanimals.veganuniverse.commons.place.presentation.model.displ
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.label
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
-import org.codingforanimals.veganuniverse.commons.ui.R.drawable.ic_chevron_down
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.place.presentation.R
@@ -131,35 +131,30 @@ internal fun OpeningHours(
     openingHours: List<OpeningHoursUI>,
 ) {
     Column(modifier) {
-        var openingHoursExpanded by rememberSaveable { mutableStateOf(true) }
+        var openingHoursExpanded by rememberSaveable { mutableStateOf(false) }
         Row(
+            modifier = Modifier.clickable { openingHoursExpanded = !openingHoursExpanded },
             horizontalArrangement = Arrangement.spacedBy(Spacing_04),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(id = VUIcons.Clock.id),
-                contentDescription = null,
-            )
+            VUIcon(icon = VUIcons.Clock)
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .padding(vertical = Spacing_03)
+                    .weight(1f),
                 text = stringResource(R.string.opening_hours),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            IconButton(onClick = { openingHoursExpanded = !openingHoursExpanded }) {
-                val rotationState by animateFloatAsState(
-                    targetValue = if (openingHoursExpanded) 180f else 0f,
-                    label = "chevron-rotation-value"
-                )
-                Icon(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .rotate(rotationState),
-                    painter = painterResource(id = ic_chevron_down), contentDescription = null
-                )
-            }
+            val rotationState by animateFloatAsState(
+                targetValue = if (openingHoursExpanded) 180f else 0f,
+                label = "chevron-rotation-value"
+            )
+            VUIcon(
+                modifier = Modifier.rotate(rotationState),
+                icon = VUIcons.ChevronDown,
+            )
         }
         AnimatedVisibility(
             modifier = Modifier.padding(
@@ -175,26 +170,26 @@ internal fun OpeningHours(
                             Text(
                                 modifier = Modifier.weight(1f),
                                 text = stringResource(openingHours.dayOfWeek.label),
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyMedium
                             )
                             openingHours.mainPeriod?.let { mainPeriod ->
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = mainPeriod.displayPeriod,
-                                        style = MaterialTheme.typography.bodyLarge
+                                        style = MaterialTheme.typography.bodyMedium
                                     )
                                     openingHours.secondaryPeriod?.let { secondaryPeriod ->
                                         Text(
                                             modifier = Modifier.padding(top = Spacing_02),
                                             text = secondaryPeriod.displayPeriod,
-                                            style = MaterialTheme.typography.bodyLarge
+                                            style = MaterialTheme.typography.bodyMedium
                                         )
                                     }
                                 }
                             } ?: Text(
                                 modifier = Modifier.weight(1f),
                                 text = stringResource(closed),
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
                     }
@@ -209,30 +204,15 @@ internal fun FlowRowTags(
     modifier: Modifier = Modifier,
     tags: List<PlaceTag>,
 ) {
-    Column(modifier) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(Spacing_04),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(id = VUIcons.Comment.id),
-                contentDescription = null,
-            )
-            Text(
-                text = stringResource(id = org.codingforanimals.veganuniverse.commons.ui.R.string.tags),
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
-        FlowRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = Spacing_07),
-            maxItemsInEachRow = 2,
-        ) {
-            tags.forEachIndexed { index, tag ->
+    val isListOddNumbered = remember { tags.size.rem(2) == 1 }
+    FlowRow(
+        modifier = modifier
+            .fillMaxWidth(),
+        maxItemsInEachRow = 2,
+    ) {
+        tags.forEachIndexed { index, tag ->
+            key(index) {
                 val tagUI = tag.toUI()
-                val isSingleTagRow = (index == (tags.size - 1)) && (index.rem(2) == 0)
                 Row(
                     modifier = Modifier
                         .weight(1f)
@@ -250,11 +230,9 @@ internal fun FlowRowTags(
                         style = MaterialTheme.typography.titleSmall,
                     )
                 }
-                if (isSingleTagRow) {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
             }
         }
+        if (isListOddNumbered) Spacer(modifier = Modifier.weight(1f))
     }
 }
 

@@ -5,6 +5,7 @@ package org.codingforanimals.veganuniverse.place.presentation.details
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,20 +16,23 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,25 +43,35 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_09
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.fullStreetAddress
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
+import org.codingforanimals.veganuniverse.commons.place.shared.model.AddressComponents
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
 import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
+import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
+import org.codingforanimals.veganuniverse.commons.ui.R.string.bookmark_action
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unbookmark_action
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_title
+import org.codingforanimals.veganuniverse.commons.ui.components.RatingBar
 import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHero
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHeroImageType
+import org.codingforanimals.veganuniverse.commons.ui.contentdetails.FeatureItemScreenTagsFlowRow
+import org.codingforanimals.veganuniverse.commons.ui.contentdetails.TagItem
 import org.codingforanimals.veganuniverse.commons.ui.contribution.EditContentDialog
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialog
-import org.codingforanimals.veganuniverse.commons.ui.details.ContentDetailItem
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.ui.share.getShareIntent
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
 import org.codingforanimals.veganuniverse.commons.user.domain.model.User
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
@@ -66,13 +80,13 @@ import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetail
 import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.AlertDialog
 import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.NewReviewState
 import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.OtherReviewsState
-import org.codingforanimals.veganuniverse.place.presentation.details.composables.Actions
-import org.codingforanimals.veganuniverse.place.presentation.details.composables.FlowRowTags
 import org.codingforanimals.veganuniverse.place.presentation.details.composables.OpeningHours
 import org.codingforanimals.veganuniverse.place.presentation.details.composables.Reviews
 import org.codingforanimals.veganuniverse.place.presentation.details.composables.StaticMap
 import org.codingforanimals.veganuniverse.place.presentation.home.model.PlaceMarker
 import org.koin.androidx.compose.koinViewModel
+import java.util.Date
+import kotlin.math.roundToInt
 
 @Composable
 internal fun PlaceDetailsScreen(
@@ -97,6 +111,7 @@ internal fun PlaceDetailsScreen(
         otherReviewsState = otherReviewsState,
         user = user,
         snackbarHostState = snackbarHostState,
+        navigateUp = navigateUp,
         onAction = viewModel::onAction,
     )
 
@@ -116,59 +131,68 @@ internal fun PlaceDetailsScreen(
         snackbarEffects = viewModel.snackbarEffects,
         snackbarHostState = snackbarHostState
     )
+
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.sideEffects.onEach { sideEffect ->
+            when (sideEffect) {
+                is PlaceDetailsViewModel.SideEffect.Share -> {
+                    runCatching {
+                        context.startActivity(
+                            getShareIntent(
+                                textToShare = sideEffect.textToShare,
+                                title = context.getString(R.string.share_place_title)
+                            )
+                        )
+                    }.onFailure {
+                        Analytics.logNonFatalException(it)
+                    }
+                }
+            }
+        }.collect()
+    }
 }
 
 @Composable
 private fun PlaceDetailsScreen(
-    modifier: Modifier = Modifier,
     placeState: PlaceDetailsViewModel.PlaceState,
-    snackbarHostState: SnackbarHostState,
-    userReview: PlaceReview?,
     otherReviewsState: OtherReviewsState,
-    isBookmarked: Boolean,
     newReviewState: NewReviewState,
-    user: User?,
-    onAction: (Action) -> Unit,
+    modifier: Modifier = Modifier,
+    userReview: PlaceReview? = null,
+    isBookmarked: Boolean = false,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    user: User? = null,
+    navigateUp: () -> Unit = {},
+    onAction: (Action) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            MediumTopAppBar(
-                title = {
-                    Crossfade(
-                        targetState = placeState,
-                        label = "top_bar_title_cross_fade"
-                    ) { state ->
-                        when (state) {
-                            is PlaceDetailsViewModel.PlaceState.Success -> {
-                                Text(text = state.place.name.orEmpty())
-                            }
-
-                            else -> Unit
-                        }
-                    }
-                },
+            TopAppBar(
+                title = {},
                 navigationIcon = {
                     IconButton(
-                        onClick = { onAction(Action.OnNavigateUpClick) },
-                        content = {
-                            Icon(
-                                imageVector = VUIcons.ArrowBack.imageVector,
-                                contentDescription = stringResource(
-                                    id = back
-                                )
-                            )
-                        }
-                    )
+                        onClick = navigateUp,
+                    ) {
+                        Icon(
+                            imageVector = VUIcons.ArrowBack.imageVector,
+                            contentDescription = stringResource(back),
+                        )
+                    }
                 },
                 actions = {
-                    Actions(
-                        isBookmarked = isBookmarked,
-                        onBookmarkClick = { onAction(Action.OnBookmarkClick) },
-                        onEditClick = { onAction(Action.OnEditPlaceClick) },
-                        onReportClick = { onAction(Action.OnReportPlaceClick) },
-                    )
+                    IconButton(
+                        onClick = { onAction(Action.OnEditPlaceClick) }
+                    ) {
+                        VUIcon(icon = VUIcons.Edit)
+                    }
+                    IconButton(
+                        onClick = { onAction(Action.OnReportPlaceClick) }
+                    ) {
+                        VUIcon(icon = VUIcons.Report)
+                    }
                 }
             )
         }
@@ -203,6 +227,7 @@ private fun PlaceDetailsScreen(
                         otherReviewsState = otherReviewsState,
                         newReviewState = newReviewState,
                         user = user,
+                        isBookmarked = isBookmarked,
                         onAction = onAction,
                     )
                 }
@@ -214,15 +239,18 @@ private fun PlaceDetailsScreen(
 @Composable
 private fun PlaceDetails(
     place: Place,
-    userReview: PlaceReview?,
     otherReviewsState: OtherReviewsState,
     newReviewState: NewReviewState,
-    user: User?,
-    onAction: (Action) -> Unit,
+    isBookmarked: Boolean = false,
+    userReview: PlaceReview? = null,
+    user: User? = null,
+    onAction: (Action) -> Unit = {},
 ) {
     var showImageDialog by remember { mutableStateOf(false) }
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState()),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
     ) {
         ContentDetailsHero(
             imageType = ContentDetailsHeroImageType.Image(place.imageUrl),
@@ -233,23 +261,82 @@ private fun PlaceDetails(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = Spacing_05),
+                .padding(Spacing_05),
             verticalArrangement = Arrangement.spacedBy(Spacing_06),
         ) {
-            place.description?.let { description ->
-                ContentDetailItem(
-                    title = stringResource(id = R.string.about_this_place),
-                    subtitle = description,
-                    icon = VUIcons.Community.id
+            Column {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = place.name.orEmpty(),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    IconButton(
+                        onClick = { onAction(Action.OnShareClick) }
+                    ) {
+                        VUIcon(icon = VUIcons.Share)
+                    }
+                    IconButton(
+                        onClick = { onAction(Action.OnBookmarkClick) }
+                    ) {
+                        Crossfade(
+                            targetState = isBookmarked,
+                            label = "bookmark_cross_fade",
+                            content = { bookmarked ->
+                                val (icon, contentDescription) = Pair(
+                                    VUIcons.BookmarkFilled,
+                                    unbookmark_action
+                                )
+                                    .takeIf { bookmarked }
+                                    ?: Pair(VUIcons.Bookmark, bookmark_action)
+                                VUIcon(
+                                    icon = icon,
+                                    contentDescription = stringResource(id = contentDescription),
+                                )
+                            }
+                        )
+                    }
+                }
+                RatingBar(rating = place.rating?.roundToInt() ?: 0)
+            }
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(Spacing_04)
+            ) {
+                place.addressComponents?.fullStreetAddress?.let {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(Spacing_04),
+                    ) {
+                        VUIcon(icon = VUIcons.Location)
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+
+                OpeningHours(
+                    openingHours = place.openingHours.mapNotNull { it.toUI() }
                 )
             }
 
-            place.addressComponents?.fullStreetAddress?.let { address ->
-                ContentDetailItem(
-                    title = stringResource(id = R.string.address),
-                    subtitle = address,
-                    icon = VUIcons.Location.id,
-                    iconTint = MaterialTheme.colorScheme.onSurface
+            place.description?.takeIf { it.isNotBlank() }?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+
+            place.tags?.takeIf { it.isNotEmpty() }?.let {
+                FeatureItemScreenTagsFlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    tags = it.map {
+                        val tag = it.toUI()
+                        TagItem(tag.icon, tag.label)
+                    }
                 )
             }
 
@@ -261,24 +348,9 @@ private fun PlaceDetails(
                 )
             }
             StaticMap(
-                modifier = Modifier.padding(
-                    top = Spacing_04,
-                    start = Spacing_05,
-                    end = Spacing_05,
-                ),
                 marker = marker,
                 cameraPositionState = cameraPositionState,
             )
-
-            OpeningHours(
-                openingHours = place.openingHours.mapNotNull { it.toUI() }
-            )
-
-            place.tags?.let {
-                FlowRowTags(
-                    tags = it,
-                )
-            }
 
             Reviews(
                 userReview = userReview,
@@ -414,5 +486,43 @@ private fun HandleNavigationEffects(
                 PlaceDetailsViewModel.NavigationEffect.NavigateUp -> navigateUp()
             }
         }.collect()
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewPlaceDetailsScreen() {
+    VeganUniverseTheme {
+        val place = Place(
+            geoHash = "123",
+            userId = "333",
+            username = "El pepe",
+            name = "Restaurante El Pepe",
+            addressComponents = AddressComponents(
+                streetAddress = "Pepazo 123",
+                locality = "Pepiña",
+                primaryAdminArea = "Pepeland",
+                secondaryAdminArea = "PepeSecondary",
+                country = "Reino Pepe"
+            ),
+            imageUrl = null,
+            type = PlaceType.RESTAURANT,
+            description = "Este es un lugar hermoso, con muchas opciones veganas.",
+            rating = 5.00,
+            tags = listOf(
+                PlaceTag.DINE_IN,
+                PlaceTag.FULL_VEGAN,
+            ),
+            latitude = 1.00,
+            longitude = 1.00,
+            createdAt = Date(),
+            openingHours = listOf()
+        )
+        PlaceDetailsScreen(
+            placeState = PlaceDetailsViewModel.PlaceState.Success(place),
+            otherReviewsState = OtherReviewsState.Loading,
+            newReviewState = NewReviewState(),
+
+            )
     }
 }

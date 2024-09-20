@@ -33,7 +33,8 @@ android {
     }
 
     buildTypes {
-        named("release") {
+        release {
+            manifestPlaceholders["appLinksHost"] = "veganuniverse-prod.firebaseapp.com"
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             proguardFiles(
@@ -42,6 +43,7 @@ android {
             )
         }
         debug {
+            manifestPlaceholders["appLinksHost"] = "veganuniverse-a924e.firebaseapp.com"
             applicationIdSuffix = ".debug"
         }
     }

@@ -61,7 +61,7 @@ internal fun Steps(
         }
         Text(
             text = stringResource(R.string.steps),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleMedium,
             color = color,
         )
         stepsField.list.forEachIndexed { index, step ->

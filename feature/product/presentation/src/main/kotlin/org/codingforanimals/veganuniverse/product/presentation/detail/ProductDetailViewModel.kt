@@ -46,6 +46,9 @@ internal class ProductDetailViewModel(
     private val snackbarEffectsChannel = Channel<Snackbar>()
     val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
 
+    private val sideEffectsChannel = Channel<SideEffect>()
+    val sideEffects = sideEffectsChannel.receiveAsFlow()
+
     val product = flow {
         id ?: return@flow
         getProductDetail(id)?.let { result ->
@@ -118,6 +121,14 @@ internal class ProductDetailViewModel(
             Action.OnDismissDialog -> {
                 dialog = null
             }
+
+            Action.OnShareClick -> {
+                viewModelScope.launch {
+                    id ?: return@launch
+                    val textToShare = "${ProductDestination.Detail.APP_LINK}/$id"
+                    sideEffectsChannel.send(SideEffect.ShareProductAppLink(textToShare))
+                }
+            }
         }
     }
 
@@ -180,10 +191,15 @@ internal class ProductDetailViewModel(
     }
 
     sealed class Action {
+        data object OnShareClick : Action()
         data object OnBookmarkClick : Action()
         data object OnSuggestClick : Action()
         data object OnReportClick : Action()
         data object OnDismissDialog : Action()
+    }
+
+    sealed class SideEffect {
+        data class ShareProductAppLink(val textToShare: String) : SideEffect()
     }
 
     sealed class Dialog {
