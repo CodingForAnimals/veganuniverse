@@ -5,11 +5,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
-import org.codingforanimals.veganuniverse.commons.ui.navigation.popToStartDestination
+import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination.Details.APP_LINK
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeScreen
@@ -17,7 +19,10 @@ import org.codingforanimals.veganuniverse.recipes.presentation.listing.RecipeLis
 
 sealed class RecipesDestination(route: String) : Destination(route) {
     data object Home : RecipesDestination("feature_recipes_home")
-    data object Details : RecipesDestination("feature_recipes_details")
+    data object Details : RecipesDestination("feature_recipes_details") {
+        const val APP_LINK = "${DeepLink.APP_LINKS_BASE_URL}/recipe"
+        fun getAppLink(recipeId: String) = "$APP_LINK/$recipeId"
+    }
     data class Browsing(
         val tag: String? = null,
         val sorter: String? = null,
@@ -68,15 +73,22 @@ fun NavGraphBuilder.recipesGraph(
         }
     }
 
-    composable(
-        route = "${RecipesDestination.Details.route}/{$RECIPE_ID}",
-        arguments = listOf(
-            navArgument(RECIPE_ID) { type = NavType.StringType }
-        )
-    ) {
-        RecipeDetailsScreen(
-            navigateUp = navController::navigateUp,
-        )
+    with (RecipesDestination.Details) {
+        composable(
+            route = "$route/{$RECIPE_ID}",
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "$APP_LINK/{$RECIPE_ID}"
+                }
+            ),
+            arguments = listOf(
+                navArgument(RECIPE_ID) { type = NavType.StringType }
+            )
+        ) {
+            RecipeDetailsScreen(
+                navigateUp = navController::navigateUp,
+            )
+        }
     }
 
     composable(

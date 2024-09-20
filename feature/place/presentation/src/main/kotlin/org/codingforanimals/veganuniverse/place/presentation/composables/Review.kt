@@ -22,6 +22,8 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.ui.components.RatingBar
+import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
+import org.codingforanimals.veganuniverse.commons.ui.icon.Icon
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 
 @Composable
@@ -33,7 +35,7 @@ internal fun Review(
     description: String?,
     date: String?,
     borderStroke: BorderStroke? = null,
-    actionIcon: Int,
+    actionIcon: Icon,
     onActionIconClick: () -> Unit,
 ) {
     Card(
@@ -62,9 +64,8 @@ internal fun Review(
 
             }
             IconButton(onClick = onActionIconClick) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    painter = painterResource(actionIcon),
+                VUIcon(
+                    icon = actionIcon,
                     contentDescription = null,
                 )
             }
@@ -147,7 +148,7 @@ fun PreviewReview() {
         title = "Review title",
         description = "This is the review description. Can be either 1 line or multiple lines long.",
         date = "Date",
-        actionIcon = VUIcons.Report.id,
+        actionIcon = VUIcons.Report,
         onActionIconClick = {},
     )
 }

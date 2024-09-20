@@ -28,6 +28,7 @@ sealed class DeepLink(private val value: String) {
 
     companion object {
         private const val SCHEMA = "veganuniverse://"
+        const val APP_LINKS_BASE_URL = BuildConfig.APP_LINKS_BASE_URL
         fun withSchema(value: String): String {
             return "$SCHEMA$value"
         }

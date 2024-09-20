@@ -33,6 +33,7 @@ sealed class ProductDestination(route: String) : Destination(route) {
 
     data class Detail(val id: String) : ProductDestination("$ROUTE/$id") {
         companion object {
+            const val APP_LINK = "${DeepLink.APP_LINKS_BASE_URL}/product"
             const val ROUTE = "product_detail_route"
             const val ID_ARG = "product-id"
         }
@@ -107,11 +108,14 @@ fun NavGraphBuilder.productGraph(
             deepLinks = listOf(
                 navDeepLink {
                     uriPattern = "${DeepLink.ProductDetail.pathWithSchema}/{$ID_ARG}"
+                },
+                navDeepLink {
+                    uriPattern = "${DeepLink.APP_LINKS_BASE_URL}/product/{$ID_ARG}"
                 }
             )
         ) {
             ProductDetailScreen(
-                navigateUp = navController::popBackStack,
+                navigateUp = navController::navigateUp,
             )
         }
     }

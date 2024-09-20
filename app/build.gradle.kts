@@ -24,7 +24,8 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file("/Users/agustin.magne/agus/veganuniverse/veganuniverse-keystore-release.jks")
-//            storeFile = file("C:\\Users\\agusm\\Dev\\codingforanimals\\veganuniverse\\vukey.jks")
+//            storeFile =
+//                file("C:\\Users\\agusm\\Dev\\codingforanimals\\veganuniverse\\veganuniverse-keystore-release.jks")
             storePassword = "veganuniverse1324"
             keyAlias = "key0"
             keyPassword = "veganuniverse1324"
@@ -32,7 +33,8 @@ android {
     }
 
     buildTypes {
-        named("release") {
+        release {
+            manifestPlaceholders["appLinksHost"] = "veganuniverse-prod.firebaseapp.com"
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             proguardFiles(
@@ -41,6 +43,7 @@ android {
             )
         }
         debug {
+            manifestPlaceholders["appLinksHost"] = "veganuniverse-a924e.firebaseapp.com"
             applicationIdSuffix = ".debug"
         }
     }

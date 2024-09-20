@@ -41,4 +41,7 @@
     <string name="recipe_no_favs">Esta receta todavía nadie la ha marcado como favorita.</string>
     <string name="recipe_one_favs">Esta receta ha sido marcada como favorita por una persona.</string>
     <string name="recipes_home_title">¿Qué querés cocinar?</string>
+    <string name="unlike_action">Quitar como favorito</string>
+    <string name="like_action">Marcar como favorito</string>
+    <string name="share_recipe_title">¡Comparte esta receta a través del enlace!</string>
 </resources>

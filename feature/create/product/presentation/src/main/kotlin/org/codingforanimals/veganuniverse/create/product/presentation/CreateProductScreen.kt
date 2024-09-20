@@ -215,7 +215,7 @@ private fun CreateProductScreen(
         Text(
             modifier = Modifier.padding(horizontal = Spacing_06),
             text = stringResource(uiState.title),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleMedium,
         )
 
         VUNormalTextField(
@@ -278,7 +278,7 @@ private fun CreateProductScreen(
             Text(
                 modifier = Modifier.padding(horizontal = Spacing_06),
                 text = stringResource(R.string.product_type),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 color = typeColor,
             )
             val colors = if (uiState.isValidating && !uiState.productTypeField.isValid) {
@@ -307,7 +307,7 @@ private fun CreateProductScreen(
         ) {
             Text(
                 text = stringResource(R.string.selected_category),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 color = typeColor,
             )
 
@@ -337,7 +337,6 @@ private fun CreateProductScreen(
                         text = stringResource(categoryUI.label),
                         maxLines = 2,
                         style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center,
                         overflow = TextOverflow.Ellipsis,
                     )

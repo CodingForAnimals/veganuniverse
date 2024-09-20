@@ -16,7 +16,10 @@ import org.codingforanimals.veganuniverse.place.presentation.reviews.PlaceReview
 
 sealed class PlaceDestination(route: String) : Destination(route) {
     data object Home : PlaceDestination("place_home")
-    data object Details : PlaceDestination("place_details")
+    data object Details : PlaceDestination("place_details") {
+        const val APP_LINK = "${DeepLink.APP_LINKS_BASE_URL}/place"
+        fun getAppLink(placeId: String) = "$APP_LINK/$placeId"
+    }
     data object Reviews : PlaceDestination("place_reviews")
     data object Listing : PlaceDestination("place_listing")
 }
@@ -40,23 +43,28 @@ fun NavGraphBuilder.placesGraph(
         }
     )
 
-    composable(
-        route = "${PlaceDestination.Details.route}/{$selected_place_id}",
-        arguments = listOf(
-            navArgument(selected_place_id) { type = NavType.StringType },
-        ),
-        deepLinks = listOf(
-            navDeepLink {
-                uriPattern = "${DeepLink.PlaceDetail.pathWithSchema}/{$selected_place_id}"
-            }
-        )
-    ) {
-        PlaceDetailsScreen(
-            navigateUp = navController::navigateUp,
-            navigateToReviewsScreen = { id, name, rating, userId ->
-                navController.navigate("${PlaceDestination.Reviews.route}/$id/$name/$rating")
-            },
-        )
+    with(PlaceDestination.Details) {
+        composable(
+            route = "$route/{$selected_place_id}",
+            arguments = listOf(
+                navArgument(selected_place_id) { type = NavType.StringType },
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${DeepLink.PlaceDetail.pathWithSchema}/{$selected_place_id}"
+                },
+                navDeepLink {
+                    uriPattern = "$APP_LINK/{$selected_place_id}"
+                }
+            )
+        ) {
+            PlaceDetailsScreen(
+                navigateUp = navController::navigateUp,
+                navigateToReviewsScreen = { id, name, rating, userId ->
+                    navController.navigate("${PlaceDestination.Reviews.route}/$id/$name/$rating")
+                },
+            )
+        }
     }
 
     composable(

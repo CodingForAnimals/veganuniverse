@@ -19,18 +19,24 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +48,7 @@ import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
@@ -51,8 +58,13 @@ import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseThem
 import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
+import org.codingforanimals.veganuniverse.commons.ui.R.string.bookmark_action
 import org.codingforanimals.veganuniverse.commons.ui.R.string.contributed_by
+import org.codingforanimals.veganuniverse.commons.ui.R.string.delete
+import org.codingforanimals.veganuniverse.commons.ui.R.string.edit
 import org.codingforanimals.veganuniverse.commons.ui.R.string.ok
+import org.codingforanimals.veganuniverse.commons.ui.R.string.report
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unbookmark_action
 import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHero
@@ -63,6 +75,7 @@ import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentD
 import org.codingforanimals.veganuniverse.commons.ui.contribution.ReportContentDialogResult
 import org.codingforanimals.veganuniverse.commons.ui.details.ContentDetailItem
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.commons.ui.share.getShareIntent
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
 import org.codingforanimals.veganuniverse.commons.ui.utils.DateUtils
 import org.codingforanimals.veganuniverse.recipes.presentation.R
@@ -87,6 +100,7 @@ internal fun RecipeDetailsScreen(
         isLiked = isLiked,
         isBookmarked = isBookmarked,
         snackbarHostState = snackbarHostState,
+        navigateUp = navigateUp,
         onAction = viewModel::onAction,
     )
 
@@ -106,6 +120,26 @@ internal fun RecipeDetailsScreen(
         navigationEffects = viewModel.navigationEffects,
         navigateUp = navigateUp,
     )
+
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.sideEffects.onEach { sideEffect ->
+            when (sideEffect) {
+                is RecipeDetailsViewModel.SideEffect.Share -> {
+                    runCatching {
+                        context.startActivity(
+                            getShareIntent(
+                                textToShare = sideEffect.textToShare,
+                                title = context.getString(R.string.share_recipe_title)
+                            )
+                        )
+                    }.onFailure {
+                        Analytics.logNonFatalException(it)
+                    }
+                }
+            }
+        }.collect()
+    }
 }
 
 @Composable
@@ -115,22 +149,49 @@ internal fun RecipeDetailsScreen(
     isLiked: Boolean,
     isBookmarked: Boolean,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    navigateUp: () -> Unit = {},
     onAction: (Action) -> Unit = {},
 ) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            RecipeDetailsTopAppBar(
-                recipeState = recipeState,
-                isOwner = isOwner,
-                isLiked = isLiked,
-                onLikeClick = { onAction(Action.OnLikeClick) },
-                isBookmarked = isBookmarked,
-                onBookmarkClick = { onAction(Action.OnBookmarkClick) },
-                onBackClick = { onAction(Action.OnBackClick) },
-                onEditClick = { onAction(Action.OnEditClick) },
-                onReportClick = { onAction(Action.OnReportClick) },
-                onDeleteClick = { onAction(Action.OnDeleteClick) }
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(
+                        onClick = navigateUp,
+                    ) {
+                        Icon(
+                            imageVector = VUIcons.ArrowBack.imageVector,
+                            contentDescription = stringResource(back),
+                        )
+                    }
+                },
+                actions = {
+                    isOwner?.let {
+                        if (isOwner) {
+                            IconButton(onClick = { onAction(Action.OnEditClick) }) {
+                                VUIcon(
+                                    icon = VUIcons.Edit,
+                                    contentDescription = stringResource(id = edit),
+                                )
+                            }
+                            IconButton(onClick = { onAction(Action.OnDeleteClick) }) {
+                                VUIcon(
+                                    icon = VUIcons.Delete,
+                                    contentDescription = stringResource(id = delete),
+                                )
+                            }
+                        } else {
+                            IconButton(onClick = { onAction(Action.OnReportClick) }) {
+                                VUIcon(
+                                    icon = VUIcons.Report,
+                                    contentDescription = stringResource(id = report),
+                                )
+                            }
+                        }
+                    }
+                }
             )
         }
     ) { paddingValues ->
@@ -165,6 +226,9 @@ internal fun RecipeDetailsScreen(
                         RecipeContent(
                             modifier = Modifier.padding(paddingValues),
                             recipe = it.recipeView,
+                            isOwner = isOwner,
+                            isLiked = isLiked,
+                            isBookmarked = isBookmarked,
                             onAction = onAction,
                         )
                     }
@@ -176,44 +240,85 @@ internal fun RecipeDetailsScreen(
 
 @Composable
 private fun RecipeContent(
-    modifier: Modifier = Modifier,
     recipe: RecipeView,
-    onAction: (Action) -> Unit,
+    isOwner: Boolean?,
+    isLiked: Boolean,
+    isBookmarked: Boolean,
+    modifier: Modifier = Modifier,
+    onAction: (Action) -> Unit = {},
 ) {
     Column(
         modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(Spacing_06),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
     ) {
         ContentDetailsHero(
             imageType = ContentDetailsHeroImageType.Image(recipe.imageUrl),
             icon = VUIcons.RecipesFilled,
             onImageClick = { onAction(Action.OnImageClick(recipe.imageUrl)) },
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = Spacing_05),
             verticalArrangement = Arrangement.spacedBy(Spacing_06),
         ) {
-            ContentDetailItem(
-                title = stringResource(id = R.string.recipe_details_description_title),
-                subtitle = recipe.description,
-                icon = VUIcons.Community.id,
-            )
-
-            val likesText = when (recipe.likes) {
-                0 -> stringResource(R.string.recipe_no_favs)
-                1 -> stringResource(R.string.recipe_one_favs)
-                else -> stringResource(R.string.recipe_n_favs, recipe.likes)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = recipe.name,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                IconButton(
+                    onClick = { onAction(Action.OnShareClick) }
+                ) {
+                    VUIcon(icon = VUIcons.Share)
+                }
+                if (isOwner == false) {
+                    IconButton(onClick = { onAction(Action.OnLikeClick) }) {
+                        Crossfade(
+                            targetState = isLiked,
+                            label = "like_cross_fade",
+                            content = { liked ->
+                                val (icon, tint, desc) = Triple(
+                                    VUIcons.FavoriteFilled,
+                                    Color.Red,
+                                    R.string.unlike_action,
+                                ).takeIf { liked }
+                                    ?: Triple(
+                                        VUIcons.Favorite, Color.Unspecified,
+                                        R.string.like_action
+                                    )
+                                VUIcon(
+                                    icon = icon,
+                                    contentDescription = stringResource(desc),
+                                    tint = tint,
+                                )
+                            }
+                        )
+                    }
+                    IconButton(onClick = { onAction(Action.OnBookmarkClick) }) {
+                        Crossfade(
+                            targetState = isBookmarked,
+                            label = "bookmark_cross_fade",
+                            content = { bookmarked ->
+                                val (icon, contentDescription) = Pair(
+                                    VUIcons.BookmarkFilled,
+                                    unbookmark_action
+                                )
+                                    .takeIf { bookmarked }
+                                    ?: Pair(VUIcons.Bookmark, bookmark_action)
+                                VUIcon(
+                                    icon = icon,
+                                    contentDescription = stringResource(id = contentDescription),
+                                )
+                            }
+                        )
+                    }
+                }
             }
-            ContentDetailItem(
-                title = stringResource(id = R.string.likes),
-                subtitle = likesText,
-                icon = VUIcons.Favorite.id,
-            )
 
             ContentDetailItem(
                 title = stringResource(id = R.string.servings),
@@ -234,9 +339,14 @@ private fun RecipeContent(
                 ContentDetailItem(
                     title = stringResource(id = contributed_by),
                     subtitle = contributedBy,
-                    icon = VUIcons.Profile.id,
                 )
             }
+
+//            ContentDetailItem(
+//                title = stringResource(id = R.string.likes),
+//                subtitle = stringResource(id = recipe.likesText, recipe.likes),
+//                icon = VUIcons.Favorite.id,
+//            )
 
             FeatureItemScreenTagsFlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -255,7 +365,11 @@ private fun RecipeContent(
                                     icon = VUIcons.Bullet,
                                     contentDescription = stringResource(R.string.ingredient)
                                 )
-                                Text(modifier = Modifier.padding(start = Spacing_02), text = ing)
+                                Text(
+                                    modifier = Modifier.padding(start = Spacing_02),
+                                    text = ing,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
                             }
                         }
                     }
@@ -285,7 +399,11 @@ private fun RecipeContent(
                                         )
                                     },
                                 )
-                                Text(modifier = Modifier.padding(start = Spacing_04), text = step)
+                                Text(
+                                    modifier = Modifier.padding(start = Spacing_04),
+                                    text = step,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
                             }
                         }
                     }
@@ -415,7 +533,7 @@ private fun PreviewRecipeDetailsScreen() {
         }
         RecipeDetailsScreen(
             recipeState = RecipeDetailsViewModel.RecipeState.Success(recipe),
-            isOwner = false,
+            isOwner = true,
             isLiked = true,
             isBookmarked = true
         )

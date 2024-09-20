@@ -9,6 +9,7 @@ import com.google.firebase.ktx.Firebase
 object Analytics {
     fun logNonFatalException(exception: Throwable) {
         Firebase.crashlytics.recordException(exception)
+        Log.e("Non-Fatal Exception", exception.message ?: "", exception)
     }
 
     fun logUserEvent(name: String, data: Map<String, String>) {
