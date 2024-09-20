@@ -264,42 +264,44 @@ private fun PlaceDetails(
                 .padding(Spacing_05),
             verticalArrangement = Arrangement.spacedBy(Spacing_06),
         ) {
-            Column {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(Spacing_04)
                 ) {
                     Text(
-                        modifier = Modifier.weight(1f),
                         text = place.name.orEmpty(),
                         style = MaterialTheme.typography.titleMedium,
                     )
-                    IconButton(
-                        onClick = { onAction(Action.OnShareClick) }
-                    ) {
-                        VUIcon(icon = VUIcons.Share)
-                    }
-                    IconButton(
-                        onClick = { onAction(Action.OnBookmarkClick) }
-                    ) {
-                        Crossfade(
-                            targetState = isBookmarked,
-                            label = "bookmark_cross_fade",
-                            content = { bookmarked ->
-                                val (icon, contentDescription) = Pair(
-                                    VUIcons.BookmarkFilled,
-                                    unbookmark_action
-                                )
-                                    .takeIf { bookmarked }
-                                    ?: Pair(VUIcons.Bookmark, bookmark_action)
-                                VUIcon(
-                                    icon = icon,
-                                    contentDescription = stringResource(id = contentDescription),
-                                )
-                            }
-                        )
-                    }
+                    RatingBar(rating = place.rating?.roundToInt() ?: 0)
                 }
-                RatingBar(rating = place.rating?.roundToInt() ?: 0)
+                IconButton(
+                    onClick = { onAction(Action.OnShareClick) }
+                ) {
+                    VUIcon(icon = VUIcons.Share)
+                }
+                IconButton(
+                    onClick = { onAction(Action.OnBookmarkClick) }
+                ) {
+                    Crossfade(
+                        targetState = isBookmarked,
+                        label = "bookmark_cross_fade",
+                        content = { bookmarked ->
+                            val (icon, contentDescription) = Pair(
+                                VUIcons.BookmarkFilled,
+                                unbookmark_action
+                            )
+                                .takeIf { bookmarked }
+                                ?: Pair(VUIcons.Bookmark, bookmark_action)
+                            VUIcon(
+                                icon = icon,
+                                contentDescription = stringResource(id = contentDescription),
+                            )
+                        }
+                    )
+                }
             }
 
             Column(
