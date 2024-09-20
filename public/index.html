@@ -3,9 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <meta name="description" content="Este enlace te redirigirá a una sección dentro de la app de Universo Vegano." />
-    <meta property="og:title" content="¡Bienvenido a Universo Vegano!" />
-    <meta property="og:image" content="app_logo.png" />
+    <meta content="Este enlace te redirigirá a una sección dentro de la app de Universo Vegano."
+          name="description"/>
+    <meta content="¡Bienvenido a Universo Vegano!" property="og:title"/>
+    <meta content="image/png" property="og:image:type"/>
+    <meta content="https://veganuniverse-prod.firebaseapp.com/app_logo.webp" property="og:image"/>
+    <meta content="300" property="og:image:width">
+    <meta content="300" property="og:image:height">
     <title>¡Bienvenido a Universo Vegano!</title>
 
     <!-- update the version number as needed -->
@@ -20,11 +24,11 @@
     <script defer src="/__/firebase/10.13.1/firebase-analytics-compat.js"></script>
     <script defer src="/__/firebase/10.13.1/firebase-remote-config-compat.js"></script>
     <script defer src="/__/firebase/10.13.1/firebase-performance-compat.js"></script>
-    <!-- 
+    <!--
       initialize the SDK after all desired features are loaded, set useEmulator to false
       to avoid connecting the SDK to running emulators.
     -->
-    <script defer src="/__/firebase/init.js?useEmulator=false"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
     <style media="screen">
         body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
@@ -43,7 +47,7 @@
 </head>
 <body>
 <div id="message">
-    <img alt="Logo de Universo Vegano" src="app_logo.png"
+    <img alt="Logo de Universo Vegano" src="app_logo.webp"
          style="display: block; margin-left: auto; margin-right: auto;">
     <h2>¡Bienvenido!</h2>
     <h1>Gracias por usar Universo Vegano</h1>

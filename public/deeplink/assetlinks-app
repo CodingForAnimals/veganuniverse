@@ -28,7 +28,8 @@ RELEASE
       "namespace": "android_app",
       "package_name": "org.codingforanimals.veganuniverse",
       "sha256_cert_fingerprints": [
-        "FB:BF:39:A3:70:9F:DE:4E:89:47:DD:B1:AE:DC:59:E2:B9:56:A8:52:4F:27:B5:9F:00:D5:EF:70:AE:A6:99:A4"
+        "FB:BF:39:A3:70:9F:DE:4E:89:47:DD:B1:AE:DC:59:E2:B9:56:A8:52:4F:27:B5:9F:00:D5:EF:70:AE:A6:99:A4",
+        "DC:FE:52:F9:C7:3B:71:67:76:AB:96:70:78:2E:08:8E:DA:2B:E5:33:3C:03:C8:5E:50:19:69:32:A9:39:D7:64"
       ]
     }
   }

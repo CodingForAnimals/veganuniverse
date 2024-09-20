@@ -18,6 +18,8 @@ gradlew.bat
 #for firebase functions
 /functions
 
+.firebase/*
+
 /app/release/**
 **/build
 
