@@ -26,7 +26,7 @@ private fun NavController.exitValidator() {
 
 fun NavGraphBuilder.validatorNavigation(
     navController: NavController,
-    snackbarHostState: SnackbarHostState,
+    navigateToAdditiveEdits: () -> Unit,
 ) {
     navigation(
         route = ValidatorDestination.ROUTE,
@@ -41,7 +41,7 @@ fun NavGraphBuilder.validatorNavigation(
             route = ValidatorDestination.ValidateProducts.route,
         ) {
             ValidateProductsScreen(
-                snackbarHostState = snackbarHostState,
+                navigateToAdditiveEdits = navigateToAdditiveEdits,
                 onBackClick = {
                     navController.exitValidator()
                 }
@@ -52,7 +52,6 @@ fun NavGraphBuilder.validatorNavigation(
             route = ValidatorDestination.ValidatePlaces.route,
         ) {
             ValidatePlacesScreen(
-                snackbarHostState = snackbarHostState,
                 onBackClick = {
                     navController.exitValidator()
                 }

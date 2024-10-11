@@ -49,6 +49,7 @@ sealed class ProductDestination(route: String) : Destination(route) {
 
 fun NavGraphBuilder.productGraph(
     navController: NavController,
+    navigateToAdditivesBrowsing: () -> Unit,
 ) {
     composable(
         route = ProductDestination.Home.route,
@@ -67,6 +68,7 @@ fun NavGraphBuilder.productGraph(
             navigateToProductDetail = { id ->
                 navController.navigate(ProductDestination.Detail(id))
             },
+            navigateToAdditivesBrowsing = navigateToAdditivesBrowsing,
         )
     }
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_additive">Buscar aditivo</string>
+    <string name="no_additives_found">¡No se encontraron aditivos!</string>
+    <string name="additives">Aditivos</string>
+    <string name="additive_code">Código</string>
+    <string name="additive_name">Nombre</string>
+    <string name="additive_description">Descripción</string>
+    <string name="additive_edit_validation_screen_empty_description">Sin descripción</string>
+    <string name="additive_edit_validation_screen_empty_name">Sin nombre</string>
+    <string name="additive_edit_list_top_app_bar_title">Ediciones de Aditivos</string>
+    <string name="additive_edit_list_empty_error">¡No se han encontrado sugerencias para ningún aditivo!</string>
+    <string name="additive_validated_successfully">¡Aditivo validado exitosamente!</string>
+    <string name="additive_validated_error">Error al validar aditivo</string>
+</resources>

@@ -9,7 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.collect
@@ -27,7 +29,8 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_01
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.product.presentation.component.ProductCard
 import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
-import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.LocalSnackbarSender
+import org.codingforanimals.veganuniverse.validator.R
 import org.codingforanimals.veganuniverse.validator.commons.ValidateContentAlertDialog
 import org.codingforanimals.veganuniverse.validator.commons.ValidateContentButton
 import org.codingforanimals.veganuniverse.validator.navigation.ValidatorTopAppBar
@@ -35,7 +38,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ValidateProductsScreen(
-    snackbarHostState: SnackbarHostState,
+    navigateToAdditiveEdits: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     val viewModel: ValidateProductsViewModel = koinViewModel()
@@ -47,6 +50,11 @@ internal fun ValidateProductsScreen(
         topBar = {
             ValidatorTopAppBar(
                 onBackClick = onBackClick,
+                actions = {
+                    TextButton(navigateToAdditiveEdits) {
+                        Text(stringResource(R.string.additives))
+                    }
+                }
             )
         }
     ) { paddingValues ->
@@ -92,10 +100,12 @@ internal fun ValidateProductsScreen(
         )
     }
 
-    HandleSnackbarEffects(
-        snackbarEffects = viewModel.snackbarEffects,
-        snackbarHostState = snackbarHostState,
-    )
+    val displaySnackbar = LocalSnackbarSender.current
+    LaunchedEffect(Unit) {
+        viewModel.snackbarEffects.onEach { snackbar ->
+            displaySnackbar(snackbar)
+        }.collect()
+    }
 
     LaunchedEffect(Unit) {
         viewModel.sideEffects.onEach { effect ->

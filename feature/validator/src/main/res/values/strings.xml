@@ -16,4 +16,5 @@
     <string name="validator_top_app_bar_title">Validador de Universo Vegano</string>
     <string name="place_validated_success">Lugar validado exitosamente</string>
     <string name="place_validated_error">Error al validar lugar</string>
+    <string name="additives">Aditivos</string>
 </resources>

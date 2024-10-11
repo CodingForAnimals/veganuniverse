@@ -23,7 +23,6 @@
     <string name="dough_discs">Tapas de tarta y empanada</string>
     <string name="personal_care">Cuidado personal</string>
     <string name="product_category_label_supplement">Suplementos</string>
-    <string name="product_category_label_additive">Aditivos</string>
     <string name="product_category_label_other">Otros</string>
     <string name="product_confirmed_vegan_description">Este producto es apto vegan. No contiene ingredientes de origen animal y tampoco se usan animales en su producción.</string>
     <string name="product_not_vegan_description">Este producto no es apto vegan. Contiene ingredientes de origen animal y/o se usan animales para su producción.</string>
@@ -33,7 +32,7 @@
     <string name="product_category_candy">Golosinas</string>
     <string name="product_category_label_vegetable_milk">Leches vegetales</string>
     <string name="product_category_label_vegetable_cheese">Quesos vegetales</string>
-    <string name="product_category_label_yogurt">Yogures y cremas</string>
+    <string name="product_category_label_yogurt">Yogures, cremas y postres</string>
     <string name="product_category_label_ice_cream">Helados</string>
     <string name="product_category_label_baked">Panificados</string>
     <string name="product_category_label_snack">Snacks</string>

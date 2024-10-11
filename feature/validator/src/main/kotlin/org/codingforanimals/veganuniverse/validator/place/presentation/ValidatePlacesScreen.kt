@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,7 +27,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.place.presentation.PlaceCard
 import org.codingforanimals.veganuniverse.commons.place.presentation.model.toCard
 import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
-import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
+import org.codingforanimals.veganuniverse.commons.ui.snackbar.LocalSnackbarSender
 import org.codingforanimals.veganuniverse.validator.commons.ValidateContentAlertDialog
 import org.codingforanimals.veganuniverse.validator.commons.ValidateContentButton
 import org.codingforanimals.veganuniverse.validator.navigation.ValidatorTopAppBar
@@ -38,7 +37,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun ValidatePlacesScreen(
     onBackClick: () -> Unit,
-    snackbarHostState: SnackbarHostState,
 ) {
     val viewModel: ValidatePlacesViewModel = koinViewModel()
     val places = viewModel.unvalidatedPlaces.collectAsLazyPagingItems()
@@ -95,10 +93,13 @@ internal fun ValidatePlacesScreen(
         )
     }
 
-    HandleSnackbarEffects(
-        snackbarEffects = viewModel.snackbarEffects,
-        snackbarHostState = snackbarHostState,
-    )
+    val displaySnackbar = LocalSnackbarSender.current
+    LaunchedEffect(Unit) {
+        viewModel.snackbarEffects.onEach { snackbar ->
+            displaySnackbar(snackbar)
+        }.collect()
+    }
+
 
     LaunchedEffect(Unit) {
         viewModel.sideEffects.onEach { effect ->

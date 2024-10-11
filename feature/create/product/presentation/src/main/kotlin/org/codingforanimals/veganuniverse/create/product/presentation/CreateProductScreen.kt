@@ -5,20 +5,14 @@ package org.codingforanimals.veganuniverse.create.product.presentation
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,7 +23,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButtonDefaults
@@ -40,21 +33,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -63,11 +51,8 @@ import org.codingforanimals.veganuniverse.commons.create.presentation.CreateCont
 import org.codingforanimals.veganuniverse.commons.create.presentation.HeroAnchorDefaults
 import org.codingforanimals.veganuniverse.commons.create.presentation.ImagePicker
 import org.codingforanimals.veganuniverse.commons.create.presentation.R.string.publish
-import org.codingforanimals.veganuniverse.commons.designsystem.LightBlue
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
@@ -86,7 +71,6 @@ import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEm
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductViewModel.Action
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductViewModel.SideEffect
 import org.codingforanimals.veganuniverse.create.product.presentation.CreateProductViewModel.UiState
-import org.codingforanimals.veganuniverse.create.product.presentation.model.ProductCategoryField
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -166,7 +150,6 @@ private fun CreateProductScreen(
         verticalArrangement = Arrangement.spacedBy(Spacing_06),
     ) {
         val heroAnchorColors = when {
-            !uiState.productSupportsImage -> HeroAnchorDefaults.primaryColors()
             uiState.pictureField.isValid -> HeroAnchorDefaults.primaryColors()
             uiState.isValidating -> HeroAnchorDefaults.errorColors()
             else -> HeroAnchorDefaults.secondaryColors()
@@ -175,46 +158,17 @@ private fun CreateProductScreen(
             heroAnchorIcon = uiState.heroAnchorIcon,
             heroAnchorColors = heroAnchorColors,
             content = {
-                if (uiState.productSupportsImage) {
-                    ImagePicker(
-                        imageModel = uiState.pictureField.model,
-                        isError = uiState.isValidating && !uiState.pictureField.isValid,
-                        onClick = { onAction(Action.ImagePicker.Click) },
-                    )
-                } else {
-                    val background = remember {
-                        when (uiState.category) {
-                            ProductCategory.ADDITIVE -> LightBlue
-                            else -> Color.Transparent
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(vertical = Spacing_05)
-                            .aspectRatio(1f)
-                            .align(Alignment.Center)
-                            .clip(CardDefaults.shape)
-                            .background(background)
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .padding(Spacing_04)
-                                .align(Alignment.Center),
-                            text = uiState.nameField.value,
-                            style = MaterialTheme.typography.headlineMedium,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
-                }
+                ImagePicker(
+                    imageModel = uiState.pictureField.model,
+                    isError = uiState.isValidating && !uiState.pictureField.isValid,
+                    onClick = { onAction(Action.ImagePicker.Click) },
+                )
             },
         )
 
         Text(
             modifier = Modifier.padding(horizontal = Spacing_06),
-            text = stringResource(uiState.title),
+            text = stringResource(R.string.create_product_title),
             style = MaterialTheme.typography.titleMedium,
         )
 
@@ -224,7 +178,7 @@ private fun CreateProductScreen(
                 .padding(horizontal = Spacing_06),
             value = uiState.nameField.value,
             onValueChange = { onAction(Action.OnTextChange.Name(it)) },
-            label = stringResource(uiState.productNamePlaceholder),
+            label = stringResource(R.string.product_name),
             isError = uiState.isValidating && !uiState.nameField.isValid,
             maxChars = 64,
             keyboardOptions = KeyboardOptions(
@@ -233,22 +187,20 @@ private fun CreateProductScreen(
             ),
         )
 
-        AnimatedVisibility(uiState.productSupportsBrand) {
-            VUNormalTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Spacing_06),
-                value = uiState.brandField.value,
-                onValueChange = { onAction(Action.OnTextChange.Brand(it)) },
-                label = stringResource(R.string.product_brand),
-                isError = uiState.isValidating && !uiState.brandField.isValid,
-                maxChars = 64,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    imeAction = ImeAction.Next,
-                ),
-            )
-        }
+        VUNormalTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Spacing_06),
+            value = uiState.brandField.value,
+            onValueChange = { onAction(Action.OnTextChange.Brand(it)) },
+            label = stringResource(R.string.product_brand),
+            isError = uiState.isValidating && !uiState.brandField.isValid,
+            maxChars = 64,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Sentences,
+                imeAction = ImeAction.Next,
+            ),
+        )
 
         VUNormalTextField(
             modifier = Modifier
@@ -386,24 +338,6 @@ private fun PreviewCreateProductScreen() {
             Surface {
                 CreateProductScreen(
                     uiState = UiState(category = ProductCategory.OTHER),
-                    onAction = {},
-                )
-            }
-        }
-    }
-}
-
-@Composable
-@Preview
-private fun PreviewCreateAdditiveScreen() {
-    VeganUniverseBackground {
-        VeganUniverseTheme {
-            Surface {
-                CreateProductScreen(
-                    uiState = UiState(
-                        category = ProductCategory.ADDITIVE,
-                        nameField = StringField("INS 311"),
-                    ),
                     onAction = {},
                 )
             }

@@ -19,6 +19,7 @@ val ShimmerBackground = Color(0xFF8F8F8F)
 val Success = Color(0xFF49730D)
 val Error = Color(0xFFb3261e)
 val Doubtful = Color(0xFFEB8106)
+val NoData = Color(0xFFA0A0A0)
 val LightBlue = Color(0xFF82dfe5)
 val LightGray = Color(0xFFd9d9d9)
 

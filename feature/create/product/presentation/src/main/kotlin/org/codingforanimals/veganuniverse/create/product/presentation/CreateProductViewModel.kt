@@ -1,7 +1,6 @@
 package org.codingforanimals.veganuniverse.create.product.presentation
 
 import android.net.Uri
-import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -136,11 +135,11 @@ class CreateProductViewModel(
             val type = productTypeField.type ?: return@with showFormAsInvalid()
             val productForm = ProductForm(
                 name = nameField.value.trim(),
-                brand = brandField.value.trim().takeIf { productSupportsBrand },
+                brand = brandField.value.trim(),
                 category = category,
                 type = type,
                 comment = commentsField.value.trim().ifBlank { null },
-                imageModel = pictureField.model.takeIf { productSupportsImage },
+                imageModel = pictureField.model,
             )
             viewModelScope.launch {
                 uiState = uiState.copy(loading = true)
@@ -189,38 +188,16 @@ class CreateProductViewModel(
         val dialog: Dialog? = null,
         val loading: Boolean = false,
     ) {
-        val title: Int = when (category) {
-            ProductCategory.ADDITIVE -> R.string.create_additive_title
-            else -> R.string.create_product_title
-        }
         val heroAnchorIcon = productTypeField.type?.toUI()?.icon
         fun isFormValid() = areFieldsValid(
             pictureField.takeIf { productFormRequiresImage },
             nameField,
-            brandField.takeIf { productSupportsBrand },
+            brandField,
             productTypeField,
         )
 
-        @StringRes
-        val productNamePlaceholder: Int = when (category) {
-            ProductCategory.ADDITIVE -> R.string.additive_name
-            else -> R.string.product_name
-        }
-
-        val productSupportsImage: Boolean = when (category) {
-            ProductCategory.ADDITIVE -> false
-            else -> true
-        }
-
         private val productFormRequiresImage: Boolean = when (category) {
-            ProductCategory.ADDITIVE,
             ProductCategory.OTHER -> false
-
-            else -> true
-        }
-
-        val productSupportsBrand: Boolean = when (category) {
-            ProductCategory.ADDITIVE -> false
             else -> true
         }
 

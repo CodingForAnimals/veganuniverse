@@ -208,14 +208,14 @@ private fun ProfileContentScreen(
         ) {
             Text(
                 text = user.name,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.headlineLarge,
             )
             if (isVerified) {
                 Box(
                     modifier = Modifier
                         .size(24.dp)
                         .border(
-                            width = 3.dp,
+                            width = 2.dp,
                             color = MaterialTheme.colorScheme.primary,
                             shape = CircleShape,
                         )
@@ -244,7 +244,7 @@ private fun ProfileContentScreen(
             )
             Text(
                 text = stringResource(id = R.string.your_bookmarks),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
             )
         }
         Row(
@@ -290,7 +290,7 @@ private fun ProfileContentScreen(
             )
             Text(
                 text = stringResource(id = R.string.your_contributions),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
             )
         }
         Row(
@@ -336,7 +336,7 @@ private fun ProfileContentScreen(
                 )
                 Text(
                     text = stringResource(id = R.string.your_role),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
             ProfileContentCard(
@@ -421,7 +421,7 @@ private fun ProfileContentCard(
                         .wrapContentWidth(Alignment.CenterHorizontally),
                     text = label,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

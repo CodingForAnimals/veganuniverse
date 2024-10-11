@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -106,6 +107,9 @@ fun SelectProductCategoryScreen(
                             )
                         }
                     }
+                }
+                if (ProductCategory.entries.size % 2 == 1) {
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }

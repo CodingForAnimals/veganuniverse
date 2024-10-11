@@ -25,7 +25,6 @@ fun ProductCategory.toUI(): ProductCategoryUI {
         DRESSING_OR_SAUCE -> ProductCategoryUI(R.string.product_category_label_dressing_or_sauce, R.drawable.img_dressing_or_sauce)
         BEVERAGE -> ProductCategoryUI(R.string.product_category_label_beverage, R.drawable.img_beverage)
         SUPPLEMENT -> ProductCategoryUI(R.string.product_category_label_supplement, R.drawable.img_supplement)
-        ADDITIVE -> ProductCategoryUI(R.string.product_category_label_additive, R.drawable.img_additive)
         HYGIENE -> ProductCategoryUI(R.string.product_category_label_hygiene, R.drawable.img_hygiene)
         COSMETIC -> ProductCategoryUI(R.string.product_category_label_cosmetic, R.drawable.img_cosmetic)
         CLEANING -> ProductCategoryUI(R.string.product_category_label_cleaning, R.drawable.img_cleaning)

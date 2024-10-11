@@ -2,6 +2,7 @@
 
 package org.codingforanimals.veganuniverse.validator.navigation
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,6 +18,7 @@ import org.codingforanimals.veganuniverse.validator.R
 @Composable
 internal fun ValidatorTopAppBar(
     onBackClick: () -> Unit,
+    actions: @Composable RowScope.() -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     MediumTopAppBar(
@@ -33,6 +35,7 @@ internal fun ValidatorTopAppBar(
                     contentDescription = stringResource(back)
                 )
             }
-        }
+        },
+        actions = actions
     )
 }

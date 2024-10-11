@@ -1,3 +1,5 @@
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -70,8 +72,11 @@ dependencies {
     implementation(project(":services:location"))
     implementation(project(":commons:navigation"))
     implementation(project(":feature:validator"))
+    implementation(project(":feature:additives:presentation"))
 
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
+    implementation(libs.google.gson)
 
     implementation("androidx.core:core-splashscreen:${versions.splashScreen}")
 
