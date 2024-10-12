@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.app.di
 
+import org.codingforanimals.veganuniverse.additives.presentation.di.additivesPresentationModule
 import org.codingforanimals.veganuniverse.app.MainViewModel
 import org.codingforanimals.veganuniverse.commons.navigation.commonsNavigationModule
 import org.codingforanimals.veganuniverse.commons.user.domain.di.userCommonDomainModule
@@ -28,6 +29,7 @@ internal val appModule = module {
         commonsNavigationModule,
         userCommonDomainModule,
         validatorModule,
+        additivesPresentationModule,
     )
     viewModelOf(::MainViewModel)
 }

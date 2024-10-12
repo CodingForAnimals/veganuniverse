@@ -207,11 +207,6 @@ private fun ProductDetailScreen(
             .verticalScroll(rememberScrollState())
     ) {
         val imageType = when (product.category) {
-            ProductCategory.ADDITIVE -> ContentDetailsHeroImageType.Text(
-                text = product.name,
-                containerColor = LightBlue
-            )
-
             else -> ContentDetailsHeroImageType.Image(product.imageUrl)
         }
         ContentDetailsHero(
@@ -240,7 +235,7 @@ private fun ProductDetailScreen(
                 ContentDetailItem(
                     modifier = Modifier.weight(1f),
                     title = product.name,
-                    subtitle = product.brand.takeUnless { product.category == ProductCategory.ADDITIVE },
+                    subtitle = product.brand,
                 )
                 IconButton(
                     onClick = { onAction(Action.OnShareClick) }
@@ -391,24 +386,6 @@ private fun PreviewDoubtfulVeganProductDetailScreen() {
     VeganUniverseTheme {
         Surface {
             val product = productPreview.copy(type = ProductType.DOUBTFUL)
-            ProductDetailScreen(
-                state = ProductDetailViewModel.State.Success(product),
-                isBookmarked = false,
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewAdditiveProductDetailScreen() {
-    VeganUniverseTheme {
-        Surface {
-            val product = productPreview.copy(
-                type = ProductType.DOUBTFUL,
-                category = ProductCategory.ADDITIVE,
-                name = "INS 311"
-            )
             ProductDetailScreen(
                 state = ProductDetailViewModel.State.Success(product),
                 isBookmarked = false,

@@ -104,6 +104,7 @@ object VUIcons {
     val ProductConfirmedVegan = ImageDrawableResourceIcon(R.drawable.ic_product_isvegan_confirmed)
     val ProductNotVegan = ImageDrawableResourceIcon(R.drawable.ic_product_isvegan_not)
     val ProductDoubtfulVegan = ImageDrawableResourceIcon(R.drawable.ic_product_isvegan_doubtful)
+    val ProductNoDataVegan = ImageDrawableResourceIcon(R.drawable.ic_product_isvegan_nodata)
 }
 
 sealed class Icon {

@@ -58,7 +58,9 @@ internal class ProductHomeViewModel : ViewModel() {
             }
 
             Action.OnSeeAdditivesClick -> {
-                navigateToProductBrowsing(category = ProductCategory.ADDITIVE)
+                viewModelScope.launch {
+                    navigationEffectsChannel.send(NavigationEffect.NavigateToAdditives)
+                }
             }
         }
     }
@@ -107,6 +109,7 @@ internal class ProductHomeViewModel : ViewModel() {
         ) : NavigationEffect()
 
         data class NavigateToProductDetail(val id: String) : NavigationEffect()
+        data object NavigateToAdditives : NavigationEffect()
     }
 
     companion object {

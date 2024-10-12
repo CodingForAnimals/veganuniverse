@@ -206,7 +206,7 @@ private fun ProductBrowsingScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(Spacing_05),
+                    verticalArrangement = Arrangement.spacedBy(Spacing_06),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     contentPadding = PaddingValues(
                         start = Spacing_05,

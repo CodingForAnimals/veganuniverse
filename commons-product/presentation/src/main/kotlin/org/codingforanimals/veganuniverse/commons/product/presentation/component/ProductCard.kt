@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.commons.product.presentation.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,19 +33,72 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.codingforanimals.veganuniverse.commons.designsystem.LightBlue
 import org.codingforanimals.veganuniverse.commons.designsystem.LightGray
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.product.presentation.R
-import org.codingforanimals.veganuniverse.commons.product.presentation.resolveBrand
 import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
 import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
 import java.util.Date
+
+//@Composable
+//fun ProductCard(
+//    product: Product,
+//    modifier: Modifier = Modifier,
+//    onClick: () -> Unit = {},
+//) {
+//    val typeUI = remember { product.type.toUI() }
+//    Card(
+//        modifier = modifier,
+//        onClick = onClick,
+//        border = BorderStroke(
+//            width = 1.dp,
+//            color = typeUI.color,
+//        ),
+//    ) {
+//        Column(
+//            modifier = Modifier.padding(Spacing_05),
+//        ) {
+//            Row(
+//                modifier = Modifier.height(70.dp),
+//                horizontalArrangement = Arrangement.spacedBy(Spacing_05),
+//            ) {
+//                ProductCardImage(
+//                    category = product.category,
+//                    name = product.name,
+//                    imageUrl = product.imageUrl
+//                )
+//                Column(
+//                    modifier = Modifier.weight(1f),
+//                    verticalArrangement = Arrangement.spacedBy(Spacing_02)
+//                ) {
+//                    Text(
+//                        text = product.name,
+//                        style = MaterialTheme.typography.titleMedium,
+//                    )
+//                    Text(
+//                        text = product.resolveBrand,
+//                        style = MaterialTheme.typography.bodyMedium,
+//                        maxLines = 1,
+//                        overflow = TextOverflow.Ellipsis,
+//                    )
+//                }
+//                with(typeUI) {
+//                    Icon(
+//                        modifier = Modifier.size(24.dp),
+//                        painter = painterResource(id = icon.id),
+//                        contentDescription = stringResource(id = label),
+//                        tint = Color.Unspecified
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun ProductCard(
@@ -52,44 +106,54 @@ fun ProductCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
+    val typeUI = remember { product.type.toUI() }
     Card(
         modifier = modifier,
         onClick = onClick,
+        border = BorderStroke(
+            width = 3.dp,
+            color = typeUI.color.copy(alpha = 0.5f),
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = typeUI.color.copy(0.05f)
+        )
     ) {
-        Column(
-            modifier = Modifier.padding(Spacing_05),
+        Row(
+            modifier = Modifier
+                .padding(Spacing_05)
+                .height(70.dp),
+            horizontalArrangement = Arrangement.spacedBy(Spacing_05),
         ) {
-            Row(
-                modifier = Modifier.height(70.dp),
-                horizontalArrangement = Arrangement.spacedBy(Spacing_05),
+            ProductCardImage(
+                category = product.category,
+                name = product.name,
+                imageUrl = product.imageUrl
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(Spacing_02)
             ) {
-                ProductCardImage(
-                    category = product.category,
-                    name = product.name,
-                    imageUrl = product.imageUrl
-                )
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(Spacing_02)
-                ) {
+                Row {
                     Text(
+                        modifier = Modifier.weight(1f),
                         text = product.name,
                         style = MaterialTheme.typography.titleMedium,
                     )
+                    with(typeUI) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(id = icon.id),
+                            contentDescription = stringResource(id = label),
+                            tint = Color.Unspecified
+                        )
+                    }
+
+                }
+                Column {
                     Text(
-                        text = product.resolveBrand,
+                        text = product.brand.orEmpty(),
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                    )
-                }
-                val typeUI = remember { product.type.toUI() }
-                with(typeUI) {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(id = icon.id),
-                        contentDescription = stringResource(id = label),
-                        tint = Color.Unspecified
                     )
                 }
             }
@@ -110,11 +174,6 @@ private fun ProductCardImage(
 ) {
     val image = remember {
         when (category) {
-            ProductCategory.ADDITIVE -> ProductCardImage.TextImage(
-                text = name,
-                backgroundColor = LightBlue
-            )
-
             ProductCategory.OTHER -> {
                 imageUrl?.let { ProductCardImage.Image(it) } ?: ProductCardImage.TextImage(
                     text = name,
@@ -181,11 +240,14 @@ private fun PreviewProductCard() {
                 validated = true,
             )
             val additive = product.copy(
-                name = "INS-311",
-                category = ProductCategory.ADDITIVE,
+                name = "Pan",
+                brand = "El Pepe Argento De Quilmes De Buenos Aires",
+                category = ProductCategory.BAKED,
+                type = ProductType.DOUBTFUL
             )
             val other = product.copy(
-                category = ProductCategory.OTHER
+                category = ProductCategory.OTHER,
+                type = ProductType.NOT_VEGAN
             )
             val otherWithImage = other.copy(
                 imageUrl = "image_url"

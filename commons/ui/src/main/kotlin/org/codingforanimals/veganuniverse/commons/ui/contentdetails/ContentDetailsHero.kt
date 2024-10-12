@@ -192,11 +192,6 @@ private fun PreviewContentDetailsHero() {
                     icon = VUIcons.RecipesFilled,
                     onImageClick = {},
                 )
-                ContentDetailsHero(
-                    imageType = ContentDetailsHeroImageType.Text("INS 311", LightBlue),
-                    icon = VUIcons.ProductConfirmedVegan,
-                    onImageClick = {},
-                )
             }
         }
     }

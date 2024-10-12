@@ -69,6 +69,12 @@ include(
 )
 
 include(
+    ":feature:additives:data",
+    ":feature:additives:domain",
+    ":feature:additives:presentation",
+)
+
+include(
     ":commons:user:data",
     ":commons:user:domain",
     ":commons:user:presentation",

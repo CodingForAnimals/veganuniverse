@@ -8,7 +8,7 @@
     <string name="add_product_suggestion">Si no encontrás un producto, ¡podés agregarlo!</string>
     <string name="all_products">Todos los productos</string>
     <string name="product_list_default_title">Todos los productos</string>
-    <string name="search_product">Buscar producto o aditivo</string>
+    <string name="search_product">Buscar producto</string>
     <string name="no_image">Sin imagen</string>
     <string name="product_suggestion_dialog_edit_title">Editar producto</string>
     <string name="report_product">Reportar producto</string>

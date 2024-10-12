@@ -31,6 +31,7 @@ import org.koin.androidx.compose.koinViewModel
 internal fun ProductHomeScreen(
     navigateToCategoryListScreen: (category: String?, type: String?, sorter: String?, searchText: String) -> Unit,
     navigateToProductDetail: (id: String) -> Unit,
+    navigateToAdditivesBrowsing: () -> Unit,
     viewModel: ProductHomeViewModel = koinViewModel(),
 ) {
 
@@ -43,6 +44,7 @@ internal fun ProductHomeScreen(
         navigationEffects = viewModel.navigationEffects,
         navigateToCategoryListScreen = navigateToCategoryListScreen,
         navigateToProductDetail = navigateToProductDetail,
+        navigateToAdditivesBrowsing = navigateToAdditivesBrowsing,
     )
 }
 
@@ -106,6 +108,7 @@ private fun HandleNavigationEffects(
     navigationEffects: Flow<NavigationEffect>,
     navigateToCategoryListScreen: (category: String?, type: String?, sorter: String?, searchText: String) -> Unit,
     navigateToProductDetail: (id: String) -> Unit,
+    navigateToAdditivesBrowsing: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         navigationEffects.onEach { effect ->
@@ -120,6 +123,7 @@ private fun HandleNavigationEffects(
                 }
 
                 is NavigationEffect.NavigateToProductDetail -> navigateToProductDetail(effect.id)
+                is NavigationEffect.NavigateToAdditives -> navigateToAdditivesBrowsing()
             }
         }.collect()
     }

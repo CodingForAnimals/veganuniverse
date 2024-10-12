@@ -81,4 +81,16 @@
     <string name="sort_by">Ordenar por</string>
     <string name="show_more">Mostrar más</string>
     <string name="all_tags">Todas las etiquetas</string>
+
+    <string name="product_confirmed_vegan">Apto vegan</string>
+    <string name="product_not_vegan">No apto vegan</string>
+    <string name="product_doubtful_vegan">Dudoso</string>
+    <string name="product_nodata">Sin datos</string>
+    <string name="additive_confirmed_vegan_description">Este aditivo es apto vegan. No se utilizan animales en su producción.</string>
+    <string name="additive_not_vegan_description">Este aditivo no es apto vegan. Se utilizan animales para su producción.</string>
+    <string name="additive_doubtful_vegan_description">Este aditivo es de origen dudoso, es decir que puede ser apto vegan o no.</string>
+    <string name="additive_nodata_vegan_description">No sabemos si este aditivo es apto vegan o no. Si vos sabés, ¡podés enviarnos una sugerencia!</string>
+
+    <string name="edit_screen_top_bar_title">"¿Qué cambiarías?"</string>
+    <string name="validate">Validar</string>
 </resources>
