@@ -5,6 +5,7 @@ import org.codingforanimals.veganuniverse.additives.domain.model.Additive
 import org.codingforanimals.veganuniverse.additives.domain.model.AdditiveEdit
 
 interface AdditiveRepository {
+    suspend fun uploadAdditive(additive: Additive): String
     suspend fun getAdditivesFromRemote(): List<Additive>
     suspend fun getAdditivesFromLocal(): List<Additive>
     suspend fun queryAdditivesFromLocal(query: String): List<Additive>

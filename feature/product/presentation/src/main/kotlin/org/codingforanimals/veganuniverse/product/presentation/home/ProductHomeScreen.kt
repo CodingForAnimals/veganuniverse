@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
 import org.codingforanimals.veganuniverse.commons.ui.topbar.HomeScreenTopAppBar
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel.Action
@@ -90,11 +91,11 @@ private fun ProductHomeScreen(
                     onTypeClick = { onAction(Action.OnProductTypeClick(it)) }
                 )
                 SeeAdditivesBanner(
-                    modifier = Modifier.padding(top = Spacing_06),
+                    modifier = Modifier.padding(top = Spacing_07),
                     onClick = { onAction(Action.OnSeeAdditivesClick) },
                 )
                 AllCategories(
-                    modifier = Modifier.padding(top = Spacing_04),
+                    modifier = Modifier.padding(top = Spacing_05),
                     onShowMoreClick = { onAction(Action.OnShowAllClick) },
                     onItemClick = { onAction(Action.OnProductCategorySelected(it)) },
                 )

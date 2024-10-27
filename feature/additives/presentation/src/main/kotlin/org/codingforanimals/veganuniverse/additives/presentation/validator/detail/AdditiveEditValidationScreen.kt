@@ -117,15 +117,18 @@ private fun AdditiveEditValidationScreen(
                 ) {
                     Column {
                         Text(
-                            text = state.remoteAdditive.code,
+                            text = state.remoteAdditive.code
+                                ?: stringResource(R.string.additive_edit_validation_screen_empty_code),
                             style = MaterialTheme.typography.headlineLarge,
                         )
-                        if (state.editAdditive.code != state.remoteAdditive.code) {
-                            Text(
-                                text = state.editAdditive.code,
-                                style = MaterialTheme.typography.headlineSmall,
-                                color = LocalContentColor.current.copy(alpha = 0.5f)
-                            )
+                        state.editAdditive.code?.let { editAdditiveCode ->
+                            if (state.editAdditive.code != state.remoteAdditive.code) {
+                                Text(
+                                    text = editAdditiveCode,
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    color = LocalContentColor.current.copy(alpha = 0.5f)
+                                )
+                            }
                         }
                     }
                     Column(

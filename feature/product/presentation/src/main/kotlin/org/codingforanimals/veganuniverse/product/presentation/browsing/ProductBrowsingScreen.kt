@@ -3,6 +3,7 @@
 package org.codingforanimals.veganuniverse.product.presentation.browsing
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,14 +11,16 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -49,10 +52,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -63,25 +65,27 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
-import org.codingforanimals.veganuniverse.commons.product.presentation.component.ProductCard
-import org.codingforanimals.veganuniverse.commons.product.presentation.label
-import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
-import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductSorter
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
 import org.codingforanimals.veganuniverse.commons.ui.R.drawable.ic_search
 import org.codingforanimals.veganuniverse.commons.ui.R.string.filter_by
+import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
 import org.codingforanimals.veganuniverse.commons.ui.components.SelectableChip
+import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.commons.ui.error.ErrorView
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
+import org.codingforanimals.veganuniverse.product.domain.model.ProductCategory
+import org.codingforanimals.veganuniverse.product.domain.model.ProductSorter
+import org.codingforanimals.veganuniverse.product.domain.model.ProductType
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.Action
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.NavigationEffect
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.UiState
+import org.codingforanimals.veganuniverse.product.presentation.component.ProductCard
+import org.codingforanimals.veganuniverse.product.presentation.component.ProductCardImage
+import org.codingforanimals.veganuniverse.product.presentation.model.label
+import org.codingforanimals.veganuniverse.product.presentation.model.toUI
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -91,14 +95,14 @@ internal fun ProductBrowsingScreen(
     navigateToProductDetail: (String) -> Unit,
 ) {
     val viewModel: ProductBrowsingViewModel = koinViewModel()
-    val products = viewModel.products.collectAsLazyPagingItems()
+    val productsState by viewModel.productsState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
     ProductBrowsingScreen(
         modifier = modifier,
         snackbarHostState = snackbarHostState,
         uiState = viewModel.uiState,
-        products = products,
+        productsState = productsState,
         onAction = viewModel::onAction,
     )
 
@@ -119,7 +123,7 @@ private fun ProductBrowsingScreen(
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
     uiState: UiState,
-    products: LazyPagingItems<Product>,
+    productsState: ProductBrowsingViewModel.ProductsState,
     onAction: (Action) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -143,7 +147,7 @@ private fun ProductBrowsingScreen(
         topBar = {
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
                 VUTopAppBar(
-                    title = {},
+                    title = stringResource(uiState.topBarLabel),
                     onBackClick = { onAction(Action.OnBackClick) },
                 )
                 Row(
@@ -198,37 +202,40 @@ private fun ProductBrowsingScreen(
     ) { paddingValues ->
         Crossfade(
             modifier = Modifier.padding(paddingValues),
-            targetState = products.itemCount == 0 && products.loadState.refresh !is LoadState.Loading && products.loadState.append !is LoadState.Loading,
-            label = "products_empty_state_cross_fade",
-        ) { isEmpty ->
-            if (isEmpty) {
-                ErrorView(message = R.string.no_products_found)
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(Spacing_06),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    contentPadding = PaddingValues(
-                        start = Spacing_05,
-                        end = Spacing_05,
-                        top = Spacing_05,
-                        bottom = Spacing_08,
-                    )
-                ) {
-                    items(products.itemCount) { index ->
-                        val product = products[index] ?: return@items
-                        key(product.id) {
-                            ProductCard(
-                                product = product,
-                                onClick = { product.id?.let { onAction(Action.OnProductClick(it)) } },
-                            )
-                        }
-                    }
+            targetState = productsState,
+            label = "products_cross_fade"
+        ) {
+            when (it) {
+                ProductBrowsingViewModel.ProductsState.Empty -> {
+                    ErrorView(message = R.string.no_products_found)
+                }
 
-                    products.loadState.apply {
-                        when {
-                            refresh is LoadState.Loading -> item { CircularProgressIndicator() }
-                            append is LoadState.Loading -> item { CircularProgressIndicator() }
+                ProductBrowsingViewModel.ProductsState.Error -> {
+                    ErrorView(message = unexpected_error)
+                }
+
+                ProductBrowsingViewModel.ProductsState.Loading -> {
+                    VUCircularProgressIndicator()
+                }
+
+                is ProductBrowsingViewModel.ProductsState.Success -> {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(Spacing_06),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        contentPadding = PaddingValues(
+                            start = Spacing_05,
+                            end = Spacing_05,
+                            top = Spacing_05,
+                            bottom = Spacing_08,
+                        )
+                    ) {
+                        items(it.products) { product ->
+                            key(product.hashCode()) {
+                                ProductCard(
+                                    product = product,
+                                    onClick = { product.id?.let { onAction(Action.OnProductClick(it)) } },
+                                )
+                            }
                         }
                     }
                 }

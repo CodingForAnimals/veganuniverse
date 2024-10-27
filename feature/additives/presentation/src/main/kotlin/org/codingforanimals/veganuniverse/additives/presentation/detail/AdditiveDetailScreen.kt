@@ -139,8 +139,12 @@ private fun AdditiveDetailScreen(
                         .padding(Spacing_05),
                     verticalArrangement = Arrangement.spacedBy(Spacing_06),
                 ) {
+                    val hasCode = remember { !state.additive.code.isNullOrBlank() }
+                    val codeOrName = remember(hasCode) {
+                        if (hasCode) state.additive.code else state.additive.name
+                    }
                     Text(
-                        text = state.additive.code,
+                        text = codeOrName.orEmpty(),
                         style = MaterialTheme.typography.headlineLarge,
                     )
                     Column(
@@ -149,9 +153,12 @@ private fun AdditiveDetailScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
+                            val name = remember(hasCode) {
+                                state.additive.name?.takeIf { hasCode }.orEmpty()
+                            }
                             Text(
                                 modifier = Modifier.weight(1f),
-                                text = state.additive.name.orEmpty(),
+                                text = name,
                                 style = MaterialTheme.typography.titleMedium,
                             )
                             VUIcon(
@@ -197,10 +204,10 @@ private fun PreviewAdditiveDetailScreen() {
 private fun PreviewAdditiveDetailScreenX() {
     val additive = Additive(
         id = "123",
-        code = "INS 100",
-        name = "Curcumina",
-        description = "Colorante amarillo derivado de la cúrcuma",
-        type = AdditiveType.VEGAN,
+        code = null,
+        name = "Oleomargarina",
+        description = "Grasa animal",
+        type = AdditiveType.NOT_VEGAN,
     )
     VeganUniverseTheme {
         AdditiveDetailScreen(state = AdditiveDetailViewModel.AdditiveState.Success(additive))

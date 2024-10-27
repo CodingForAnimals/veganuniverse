@@ -52,10 +52,14 @@ internal fun AdditiveCard(
             modifier = Modifier.padding(Spacing_05),
             verticalArrangement = Arrangement.spacedBy(Spacing_02)
         ) {
+            val hasCode = remember { !additive.code.isNullOrBlank() }
+            val codeOrName = remember(hasCode) {
+                if (hasCode) additive.code else additive.name
+            }
             Row {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = additive.code,
+                    text = codeOrName.orEmpty(),
                     style = MaterialTheme.typography.titleMedium,
                 )
                 with(typeUI) {
@@ -67,9 +71,9 @@ internal fun AdditiveCard(
                     )
                 }
             }
-            additive.name?.let {
+            additive.name?.takeIf { hasCode }?.let { name ->
                 Text(
-                    text = it,
+                    text = name,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -94,7 +98,7 @@ private fun PreviewAdditiveCard() {
             val additives = listOf(
                 additive,
                 additive.copy(
-                    id = "1234", type = AdditiveType.NOT_VEGAN
+                    id = "1234", type = AdditiveType.NOT_VEGAN, code = null, name = "Oleomargarina"
                 ),
                 additive.copy(
                     id = "1235", type = AdditiveType.DOUBTFUL, name = null

@@ -9,6 +9,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import org.codingforanimals.veganuniverse.commons.navigation.DeepLink
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
+import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
+import org.codingforanimals.veganuniverse.place.presentation.create.CreatePlaceScreen
 import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsScreen
 import org.codingforanimals.veganuniverse.place.presentation.home.PlacesHomeScreen
 import org.codingforanimals.veganuniverse.place.presentation.listing.PlaceListingScreen
@@ -16,6 +18,7 @@ import org.codingforanimals.veganuniverse.place.presentation.reviews.PlaceReview
 
 sealed class PlaceDestination(route: String) : Destination(route) {
     data object Home : PlaceDestination("place_home")
+    data object Create : PlaceDestination("create_place_screen")
     data object Details : PlaceDestination("place_details") {
         const val APP_LINK = "${DeepLink.APP_LINKS_BASE_URL}/place"
         fun getAppLink(placeId: String) = "$APP_LINK/$placeId"
@@ -30,6 +33,7 @@ internal const val selected_place_rating = "selected_place_rating_argument"
 
 fun NavGraphBuilder.placesGraph(
     navController: NavController,
+    navigateToThankYouScreen: () -> Unit,
 ) {
     composable(
         route = PlaceDestination.Home.route,
@@ -97,6 +101,20 @@ fun NavGraphBuilder.placesGraph(
             navigateToPlaceDetails = { placeId ->
                 navController.navigate("${PlaceDestination.Details.route}/$placeId")
             }
+        )
+    }
+
+    composable(
+        route = PlaceDestination.Create.route,
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = DeepLink.CreatePlace.deeplink
+            }
+        )
+    ) {
+        CreatePlaceScreen(
+            navigateUp = navController::navigateUp,
+            navigateToThankYouScreen = navigateToThankYouScreen,
         )
     }
 }

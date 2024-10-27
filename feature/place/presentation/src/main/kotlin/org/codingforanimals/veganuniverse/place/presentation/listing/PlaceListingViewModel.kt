@@ -8,11 +8,11 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import org.codingforanimals.veganuniverse.commons.place.presentation.model.toCard
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.GetProfile
 import org.codingforanimals.veganuniverse.commons.ui.listings.ListingType
 import org.codingforanimals.veganuniverse.place.listing.usecase.QueryPlacesByIds
 import org.codingforanimals.veganuniverse.place.presentation.R
+import org.codingforanimals.veganuniverse.place.presentation.model.toCard
 import org.codingforanimals.veganuniverse.place.presentation.navigation.LISTING_TYPE
 
 internal class PlaceListingViewModel(

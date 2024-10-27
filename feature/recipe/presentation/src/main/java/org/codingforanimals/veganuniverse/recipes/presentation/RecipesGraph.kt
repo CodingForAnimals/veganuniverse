@@ -13,12 +13,14 @@ import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination.Details.APP_LINK
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingScreen
+import org.codingforanimals.veganuniverse.recipes.presentation.create.CreateRecipeScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.home.RecipesHomeScreen
 import org.codingforanimals.veganuniverse.recipes.presentation.listing.RecipeListingScreen
 
 sealed class RecipesDestination(route: String) : Destination(route) {
     data object Home : RecipesDestination("feature_recipes_home")
+    data object Create : RecipesDestination("create_recipe_screen")
     data object Details : RecipesDestination("feature_recipes_details") {
         const val APP_LINK = "${DeepLink.APP_LINKS_BASE_URL}/recipe"
         fun getAppLink(recipeId: String) = "$APP_LINK/$recipeId"
@@ -39,6 +41,7 @@ sealed class RecipesDestination(route: String) : Destination(route) {
 
 fun NavGraphBuilder.recipesGraph(
     navController: NavController,
+    navigateToThankYouScreen: () -> Unit,
 ) {
     composable(
         route = RecipesDestination.Home.route,
@@ -102,6 +105,20 @@ fun NavGraphBuilder.recipesGraph(
         RecipeListingScreen(
             navigateUp = navController::navigateUp,
             navigateToRecipeDetails = { id -> navController.navigateToRecipeDetails(id) }
+        )
+    }
+
+    composable(
+        route = RecipesDestination.Create.route,
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = DeepLink.CreateRecipe.deeplink
+            }
+        )
+    ) {
+        CreateRecipeScreen(
+            navigateUp = navController::navigateUp,
+            navigateToThankYouScreen = navigateToThankYouScreen,
         )
     }
 }

@@ -16,8 +16,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.place.shared.model.Place
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_error
 import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_success
 import org.codingforanimals.veganuniverse.commons.ui.R.string.report_success
@@ -36,6 +34,8 @@ import org.codingforanimals.veganuniverse.place.presentation.R
 import org.codingforanimals.veganuniverse.place.presentation.details.usecase.PlaceDetailsUseCases
 import org.codingforanimals.veganuniverse.place.presentation.navigation.PlaceDestination
 import org.codingforanimals.veganuniverse.place.presentation.navigation.selected_place_id
+import org.codingforanimals.veganuniverse.place.shared.model.Place
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReview
 import kotlin.math.roundToInt
 
 internal class PlaceDetailsViewModel(

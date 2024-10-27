@@ -2,7 +2,7 @@ package org.codingforanimals.veganuniverse.additives.data.config.remote
 
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.tasks.await
-import org.codingforanimals.veganuniverse.additives.data.config.model.AdditivesConfigDTO
+import org.codingforanimals.veganuniverse.additives.data.config.remote.model.AdditivesConfigDTO
 
 internal class AdditivesConfigFirebaseSource(
     private val additivesConfigReference: DatabaseReference,

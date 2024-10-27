@@ -43,14 +43,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.commons.designsystem.Doubtful
-import org.codingforanimals.veganuniverse.commons.designsystem.LightBlue
+import org.codingforanimals.veganuniverse.commons.designsystem.NoData
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
-import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.R.string.bookmark_action
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unbookmark_action
@@ -68,14 +64,19 @@ import org.codingforanimals.veganuniverse.commons.ui.share.getShareIntent
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
+import org.codingforanimals.veganuniverse.product.domain.model.Product
+import org.codingforanimals.veganuniverse.product.domain.model.ProductCategory
+import org.codingforanimals.veganuniverse.product.domain.model.ProductType
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.detail.ProductDetailViewModel.Action
+import org.codingforanimals.veganuniverse.product.presentation.model.toUI
 import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 
 @Composable
 internal fun ProductDetailScreen(
     navigateUp: () -> Unit,
+    navigateToEditProduct: (String) -> Unit
 ) {
     val viewModel: ProductDetailViewModel = koinViewModel()
     val state by viewModel.product.collectAsStateWithLifecycle()
@@ -118,6 +119,10 @@ internal fun ProductDetailScreen(
                         Analytics.logNonFatalException(it)
                     }
                 }
+
+                is ProductDetailViewModel.SideEffect.NavigateToEditProduct -> {
+                    navigateToEditProduct(sideEffect.id)
+                }
             }
         }.collect()
     }
@@ -148,7 +153,7 @@ private fun ProductDetailScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { onAction(Action.OnSuggestClick) }
+                        onClick = { onAction(Action.OnEditClick) }
                     ) {
                         VUIcon(icon = VUIcons.Edit)
                     }
@@ -193,7 +198,7 @@ private fun ProductDetailScreen(
 }
 
 @Composable
-private fun ProductDetailScreen(
+internal fun ProductDetailScreen(
     product: Product,
     isBookmarked: Boolean,
     onAction: (Action) -> Unit = {},
@@ -219,6 +224,11 @@ private fun ProductDetailScreen(
                 ProductType.DOUBTFUL -> ContentDetailsHeroDefaults.successColors().copy(
                     divider = Doubtful,
                     iconContainerBorder = Doubtful,
+                )
+
+                ProductType.UNKNOWN -> ContentDetailsHeroDefaults.successColors().copy(
+                    divider = NoData,
+                    iconContainerBorder = NoData,
                 )
             }
         )
@@ -269,10 +279,10 @@ private fun ProductDetailScreen(
                 icon = typeUI.icon.id,
             )
 
-            product.comment?.let { comment ->
+            product.description?.let { description ->
                 ContentDetailItem(
                     title = stringResource(id = R.string.comment),
-                    subtitle = comment,
+                    subtitle = description,
                 )
             }
 
@@ -343,14 +353,15 @@ private val productPreview = Product(
     id = "123",
     name = "Producto Pepe",
     brand = "Argento's",
-    comment = "Rico y económico. 100% vegano. Recomiendo!!",
+    description = "Rico y económico. 100% vegano. Recomiendo!!",
     type = ProductType.VEGAN,
     category = ProductCategory.CHOCOLATE,
     userId = "123123",
     username = "Paola Argento",
     imageUrl = null,
     createdAt = Date(),
-    validated = true,
+    sourceUrl = "https://url-del-producto.com",
+    lastUpdatedAt = Date(),
 )
 
 @Preview

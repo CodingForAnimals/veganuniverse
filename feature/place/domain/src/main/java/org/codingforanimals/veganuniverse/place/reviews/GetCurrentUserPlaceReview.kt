@@ -3,11 +3,11 @@ package org.codingforanimals.veganuniverse.place.reviews
 import android.util.Log
 import kotlinx.coroutines.flow.firstOrNull
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
-import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceReviewRepository
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReviewQueryParams
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReviewUserFilter
+import org.codingforanimals.veganuniverse.place.repository.PlaceReviewRepository
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReview
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReviewQueryParams
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReviewUserFilter
 
 class GetCurrentUserPlaceReview(
     private val placeReviewRepository: PlaceReviewRepository,

@@ -10,6 +10,13 @@ internal class AdditivesFirebaseDataSource(
     private val additivesReference: DatabaseReference,
     private val editsReference: DatabaseReference,
 ) : AdditivesRemoteDataSource {
+
+    override suspend fun uploadAdditive(additiveDTO: AdditiveDTO): String {
+        val keyReference = additivesReference.push()
+        keyReference.setValue(additiveDTO).await()
+        return keyReference.key!!
+    }
+
     override suspend fun getAdditives(): List<AdditiveDTO> {
         return additivesReference.get().await()
             .children.mapNotNull { additiveSnapshot ->

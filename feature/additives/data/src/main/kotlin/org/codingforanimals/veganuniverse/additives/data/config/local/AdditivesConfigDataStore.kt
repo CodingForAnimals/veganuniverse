@@ -10,9 +10,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import org.codingforanimals.veganuniverse.additives.data.config.local.AdditivesConfigDataStore.Companion.DATASTORE_NAME
-import org.codingforanimals.veganuniverse.additives.data.config.model.AdditivesConfigDTO
+import org.codingforanimals.veganuniverse.additives.data.config.local.model.AdditivesConfigLocalModel
 
-internal val Context.additivesConfigDataStore: DataStore<Preferences> by preferencesDataStore(DATASTORE_NAME)
+internal val Context.additivesConfigDataStore: DataStore<Preferences> by preferencesDataStore(
+    DATASTORE_NAME
+)
 
 internal class AdditivesConfigDataStore(
     private val dataStore: DataStore<Preferences>,
@@ -24,17 +26,17 @@ internal class AdditivesConfigDataStore(
         internal const val DATASTORE_NAME = "additives-datastore"
     }
 
-    override suspend fun setConfig(value: AdditivesConfigDTO) {
+    override suspend fun setConfig(value: AdditivesConfigLocalModel) {
         dataStore.edit { preferences ->
-            preferences[versionKey] = value.version ?: 0
+            preferences[versionKey] = value.version
         }
     }
 
-    override fun flowOnConfig(): Flow<AdditivesConfigDTO?> {
+    override fun flowOnConfig(): Flow<AdditivesConfigLocalModel?> {
         return dataStore.data.map { preferences ->
             preferences[versionKey] ?: 0
         }.distinctUntilChanged().map {
-            AdditivesConfigDTO(it)
+            AdditivesConfigLocalModel(it)
         }
     }
 }

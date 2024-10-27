@@ -55,7 +55,6 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_09
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.R.string.bookmark_action
@@ -82,6 +81,7 @@ import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.details.RecipeDetailsViewModel.NavigationEffect
 import org.codingforanimals.veganuniverse.recipes.presentation.details.entity.RecipeView
+import org.codingforanimals.veganuniverse.recipes.presentation.model.toUI
 import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 

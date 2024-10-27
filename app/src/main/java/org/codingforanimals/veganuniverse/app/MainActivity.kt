@@ -25,8 +25,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.database.ServerValue
+import com.google.firebase.database.database
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import org.codingforanimals.veganuniverse.app.content.CheckForContentUpdates
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.navigation.model.DeepLinkNavigationOptions
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.LocalSnackbarSender
@@ -55,6 +64,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         /**
         String(stringToDecode.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8).let {
         val list = it.split("::")
@@ -149,6 +159,8 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+
+            CheckForContentUpdates()
         }
     }
 

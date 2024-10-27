@@ -23,11 +23,11 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
-import org.codingforanimals.veganuniverse.commons.place.presentation.PlaceCard
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.animation.animateAlphaOnStart
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.place.presentation.details.composables.ErrorView
+import org.codingforanimals.veganuniverse.place.presentation.home.composables.PlaceCard
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 

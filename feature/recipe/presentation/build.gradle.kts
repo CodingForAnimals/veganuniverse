@@ -12,14 +12,14 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:recipe:shared"))
     implementation(project(":feature:recipe:domain"))
-    implementation(project(":commons-recipe:domain"))
     implementation(project(":commons-profile:domain"))
     implementation(project(":commons:user:domain"))
-    implementation(project(":commons-recipe:presentation"))
     implementation(project(":commons:user:presentation"))
     implementation(project(":commons:navigation"))
     implementation(libs.androidx.paging_compose)
+    implementation("com.google.android.gms:play-services-cast-framework:21.5.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

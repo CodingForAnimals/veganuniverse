@@ -1,15 +1,19 @@
 package org.codingforanimals.veganuniverse.navigation
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import org.codingforanimals.veganuniverse.additives.presentation.AdditivesDestination
 import org.codingforanimals.veganuniverse.additives.presentation.additivesGraph
+import org.codingforanimals.veganuniverse.app.validate.validatorNavigation
 import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
-import org.codingforanimals.veganuniverse.create.graph.createGraph
+import org.codingforanimals.veganuniverse.create.presentation.navigation.createGraph
+import org.codingforanimals.veganuniverse.create.presentation.navigation.navigateToThankYouAdditiveScreen
+import org.codingforanimals.veganuniverse.create.presentation.navigation.navigateToThankYouPlaceScreen
+import org.codingforanimals.veganuniverse.create.presentation.navigation.navigateToThankYouProductScreen
+import org.codingforanimals.veganuniverse.create.presentation.navigation.navigateToThankYouRecipeScreen
 import org.codingforanimals.veganuniverse.place.presentation.navigation.navigateToPlaceListing
 import org.codingforanimals.veganuniverse.place.presentation.navigation.placesGraph
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination
@@ -20,7 +24,6 @@ import org.codingforanimals.veganuniverse.recipes.presentation.navigateToRecipeL
 import org.codingforanimals.veganuniverse.recipes.presentation.recipesGraph
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.RegistrationDestination
 import org.codingforanimals.veganuniverse.registration.presentation.navigation.registrationGraph
-import org.codingforanimals.veganuniverse.validator.navigation.validatorNavigation
 
 @Composable
 internal fun VUAppNavHost(
@@ -40,13 +43,16 @@ internal fun VUAppNavHost(
             navController = navController,
             navigateToAdditivesBrowsing = {
                 navController.navigate(AdditivesDestination.Browsing)
-            }
+            },
+            navigateToThankYouScreen = navController::navigateToThankYouProductScreen
         )
         additivesGraph(
             navController = navController,
+            navigateToThankYouScreen = navController::navigateToThankYouAdditiveScreen
         )
         placesGraph(
-            navController = navController
+            navController = navController,
+            navigateToThankYouScreen = navController::navigateToThankYouPlaceScreen,
         )
         createGraph(
             navController = navController,
@@ -57,7 +63,8 @@ internal fun VUAppNavHost(
             }
         )
         recipesGraph(
-            navController = navController
+            navController = navController,
+            navigateToThankYouScreen = navController::navigateToThankYouRecipeScreen
         )
         profileGraph(
             navController = navController,

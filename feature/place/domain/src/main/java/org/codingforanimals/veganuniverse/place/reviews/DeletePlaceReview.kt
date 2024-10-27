@@ -2,7 +2,7 @@ package org.codingforanimals.veganuniverse.place.reviews
 
 import android.util.Log
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
-import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceReviewRepository
+import org.codingforanimals.veganuniverse.place.repository.PlaceReviewRepository
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.ProfilePlaceReviewUseCases
 
 private const val TAG = "DeletePlaceReview"

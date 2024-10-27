@@ -9,6 +9,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":commons-place:shared"))
-    api(libs.google.places)
+    implementation(project(":feature:place:shared"))
+    implementation(libs.google.places)
 }

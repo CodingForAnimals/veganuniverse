@@ -23,16 +23,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
-import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
+import org.codingforanimals.veganuniverse.product.domain.model.ProductCategory
 import org.codingforanimals.veganuniverse.product.presentation.R
+import org.codingforanimals.veganuniverse.product.presentation.model.toUI
 
 @Composable
 fun AllCategories(

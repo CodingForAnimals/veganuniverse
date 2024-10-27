@@ -24,15 +24,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.place.presentation.model.PlaceCardUI
-import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceCardSorter
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceType
 import org.codingforanimals.veganuniverse.place.home.GetPlaceAutocompleteIntent
 import org.codingforanimals.veganuniverse.place.home.GetPlaceLocationData
 import org.codingforanimals.veganuniverse.place.home.GetPlaces
+import org.codingforanimals.veganuniverse.place.presentation.model.PlaceCardUI
+import org.codingforanimals.veganuniverse.place.presentation.model.toUI
 import org.codingforanimals.veganuniverse.place.presentation.utils.visibleRadiusInKm
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceCardSorter
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceTag
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceType
 import org.codingforanimals.veganuniverse.services.location.UserLocationManager
 import org.codingforanimals.veganuniverse.services.location.model.LocationResponse
 

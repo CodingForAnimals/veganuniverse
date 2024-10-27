@@ -46,6 +46,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
+import org.codingforanimals.veganuniverse.place.presentation.model.PlaceMarker
 
 @Composable
 internal fun PlacesMap(
@@ -79,7 +80,7 @@ internal fun PlacesMap(
                                 val selected = remember(selectedPlace, isFocused) {
                                     isPlaceSelected(entity)
                                 }
-                                val markerIcon = org.codingforanimals.veganuniverse.place.presentation.home.model.PlaceMarker.getMarker(entity.type)
+                                val markerIcon = PlaceMarker.getMarker(entity.type)
                                     .getDisplayMarker(selected)
                                     ?.let { BitmapDescriptorFactory.fromBitmap(it) }
 

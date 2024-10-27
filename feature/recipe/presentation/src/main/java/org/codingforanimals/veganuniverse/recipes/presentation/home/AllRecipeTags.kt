@@ -7,13 +7,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -29,15 +27,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
-import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
-import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
-import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
 import org.codingforanimals.veganuniverse.recipes.presentation.R
+import org.codingforanimals.veganuniverse.recipes.presentation.model.toUI
 
 @Composable
 internal fun AllRecipeTags(

@@ -155,7 +155,7 @@ private fun AdditivesBrowsingScreen(
                             key(additive.id) {
                                 AdditiveCard(
                                     additive = additive,
-                                    onClick = { onAdditiveClick(additive.id) }
+                                    onClick = { additive.id?.let { id -> onAdditiveClick(id) } }
                                 )
                             }
                         }

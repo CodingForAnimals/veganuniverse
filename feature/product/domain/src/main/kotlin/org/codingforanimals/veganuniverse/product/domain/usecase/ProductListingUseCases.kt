@@ -2,9 +2,10 @@ package org.codingforanimals.veganuniverse.product.domain.usecase
 
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import org.codingforanimals.veganuniverse.commons.product.domain.repository.ProductRepository
-import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
+import kotlinx.coroutines.flow.emptyFlow
 import org.codingforanimals.veganuniverse.commons.profile.domain.usecase.GetProfile
+import org.codingforanimals.veganuniverse.product.domain.model.Product
+import org.codingforanimals.veganuniverse.product.domain.repository.ProductRepository
 
 class ProductListingUseCases(
     private val getProfile: GetProfile,
@@ -19,6 +20,7 @@ class ProductListingUseCases(
     }
 
     fun queryProductsByIds(ids: List<String>): Flow<PagingData<Product>> {
-        return productRepository.queryProductsById(ids)
+        return emptyFlow()
+//        return productRepository.queryProductsById(ids)
     }
 }

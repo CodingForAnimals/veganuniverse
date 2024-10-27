@@ -35,15 +35,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.flowOf
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
 import org.codingforanimals.veganuniverse.commons.ui.components.RatingBar
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.HandleSnackbarEffects
 import org.codingforanimals.veganuniverse.commons.ui.utils.DateUtils
-import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailDialog
 import org.codingforanimals.veganuniverse.place.presentation.R
 import org.codingforanimals.veganuniverse.place.presentation.composables.Review
 import org.codingforanimals.veganuniverse.place.presentation.reviews.PlaceReviewsViewModel.Action
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReview
 import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 

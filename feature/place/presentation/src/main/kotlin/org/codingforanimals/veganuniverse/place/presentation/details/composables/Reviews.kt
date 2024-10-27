@@ -37,7 +37,6 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
 import org.codingforanimals.veganuniverse.commons.ui.animation.animateAlphaOnStart
 import org.codingforanimals.veganuniverse.commons.ui.components.InteractiveRatingBar
@@ -55,6 +54,7 @@ import org.codingforanimals.veganuniverse.place.presentation.composables.Review
 import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.Action
 import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.NewReviewState
 import org.codingforanimals.veganuniverse.place.presentation.details.PlaceDetailsViewModel.OtherReviewsState
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReview
 import kotlin.math.roundToInt
 
 @Composable

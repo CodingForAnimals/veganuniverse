@@ -2,6 +2,7 @@ package org.codingforanimals.veganuniverse.recipes.presentation
 
 import org.codingforanimals.veganuniverse.recipes.domain.di.recipesDomainModule
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.di.recipesBrowsingModule
+import org.codingforanimals.veganuniverse.recipes.presentation.create.di.createRecipePresentationModule
 import org.codingforanimals.veganuniverse.recipes.presentation.details.di.recipeDetailsModule
 import org.codingforanimals.veganuniverse.recipes.presentation.home.di.recipesHomeModule
 import org.codingforanimals.veganuniverse.recipes.presentation.listing.di.recipeListingModule
@@ -13,6 +14,7 @@ val recipesPresentationModule = module {
         recipesDomainModule,
         recipeDetailsModule,
         recipesHomeModule,
-        recipeListingModule
+        recipeListingModule,
+        createRecipePresentationModule,
     )
 }

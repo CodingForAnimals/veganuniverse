@@ -12,4 +12,9 @@
     <string name="additive_edit_list_empty_error">¡No se han encontrado sugerencias para ningún aditivo!</string>
     <string name="additive_validated_successfully">¡Aditivo validado exitosamente!</string>
     <string name="additive_validated_error">Error al validar aditivo</string>
+    <string name="create_error">Ocurrió un error al querer añadir este aditivo. ¡Podés volver a intentarlo!</string>
+    <string name="code_required_error">Necesitas ingresar un código para este aditivo. Si este aditivo no tiene código pero sí nombre, desmarque la casilla e ingrese el nombre.</string>
+    <string name="name_required_error">Necesitas ingresar un nombre para este aditivo. Si este aditivo no tiene nombre pero sí código, marque la casilla e ingrese el código.</string>
+    <string name="code_required">Este aditivo tiene código</string>
+    <string name="additive_edit_validation_screen_empty_code">Sin código</string>
 </resources>

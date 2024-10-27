@@ -11,4 +11,5 @@ android {
 dependencies {
     implementation(project(":feature:additives:data"))
     implementation(project(":commons:user:domain"))
+    implementation(project(":commons:data"))
 }

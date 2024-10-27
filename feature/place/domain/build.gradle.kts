@@ -10,13 +10,17 @@ android {
 }
 
 dependencies {
-    implementation(project(":commons-place:domain"))
+    implementation(project(":feature:place:data"))
+    implementation(project(":feature:place:shared"))
     implementation(project(":commons:user:domain"))
     implementation(project(":commons-profile:domain"))
     implementation(project(":services:google-places"))
+    implementation(project(":services:location"))
     implementation(project(":commons:navigation"))
 
     implementation(libs.androidx.paging)
+    implementation(libs.google.mapsUtils)
+    implementation(libs.google.places)
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

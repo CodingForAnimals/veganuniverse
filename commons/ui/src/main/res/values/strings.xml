@@ -93,4 +93,6 @@
 
     <string name="edit_screen_top_bar_title">"¿Qué cambiarías?"</string>
     <string name="validate">Validar</string>
+    <string name="create_additive_top_bar_title">Aportar Aditivo</string>
+    <string name="image_picker_label">Subir foto</string>
 </resources>
