@@ -1,12 +1,14 @@
+@file:OptIn(ExperimentalLayoutApi::class)
+
 package org.codingforanimals.veganuniverse.product.presentation.home.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,12 +35,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
-import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
+import org.codingforanimals.veganuniverse.product.domain.model.ProductType
 import org.codingforanimals.veganuniverse.product.presentation.R
+import org.codingforanimals.veganuniverse.product.presentation.model.toUI
 
 @Composable
 internal fun ProductsByType(
@@ -130,59 +133,55 @@ internal fun FilterProductsByType(
                 )
             }
         }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Spacing_05)
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(Spacing_06),
+            verticalArrangement = Arrangement.spacedBy(Spacing_04),
+            maxItemsInEachRow = 2,
         ) {
             ProductType.entries.forEach {
                 key(it.name) {
                     val ui = remember { it.toUI() }
-                    Column(
-                        modifier = Modifier.weight(1f)
+                    Card(
+                        modifier = Modifier
+                            .weight(1f)
+                            .border(
+                                width = 3.dp,
+                                color = ui.color.copy(alpha = 0.5f),
+                                shape = ShapeDefaults.Large
+                            )
+                            .shadow(
+                                elevation = 3.dp,
+                                shape = ShapeDefaults.Large
+                            ),
+                        onClick = { onTypeClick(it) },
+                        shape = ShapeDefaults.Large
                     ) {
-                        Card(
+                        Column(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .aspectRatio(1f)
-                                .border(
-                                    width = 3.dp,
-                                    color = ui.color.copy(alpha = 0.5f),
-                                    shape = ShapeDefaults.Large
-                                )
-                                .shadow(
-                                    elevation = 3.dp,
-                                    shape = ShapeDefaults.Large
-                                ),
-                            onClick = { onTypeClick(it) },
-                            shape = ShapeDefaults.Large
+                                .padding(Spacing_04)
+                                .wrapContentHeight(Alignment.CenterVertically),
+                            verticalArrangement = Arrangement.spacedBy(
+                                space = Spacing_03,
+                                alignment = Alignment.CenterVertically,
+                            ),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Column(
+                            Icon(
                                 modifier = Modifier
-                                    .fillMaxHeight()
-                                    .wrapContentHeight(Alignment.CenterVertically),
-                                verticalArrangement = Arrangement.spacedBy(
-                                    space = Spacing_03,
-                                    alignment = Alignment.CenterVertically,
-                                ),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .fillMaxSize(0.3f)
-                                        .aspectRatio(1f),
-                                    painter = painterResource(ui.icon.id),
-                                    contentDescription = null,
-                                    tint = Color.Unspecified
-                                )
-                                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentWidth(Alignment.CenterHorizontally),
-                                    text = ui.shortLabel,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    textAlign = TextAlign.Center,
-                                )
-                            }
+                                    .fillMaxWidth(0.3f)
+                                    .aspectRatio(1f),
+                                painter = painterResource(ui.icon.id),
+                                contentDescription = null,
+                                tint = Color.Unspecified
+                            )
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentWidth(Alignment.CenterHorizontally),
+                                text = ui.shortLabel,
+                                style = MaterialTheme.typography.titleMedium,
+                                textAlign = TextAlign.Center,
+                            )
                         }
                     }
                 }

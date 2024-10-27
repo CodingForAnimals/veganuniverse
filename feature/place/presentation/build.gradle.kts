@@ -13,11 +13,10 @@ dependencies {
     implementation(project(":services:location"))
     implementation(project(":commons:user:domain"))
     implementation(project(":commons:user:presentation"))
-    implementation(project(":commons-place:presentation"))
-    implementation(project(":commons-place:domain"))
     implementation(project(":commons-profile:domain"))
     implementation(project(":commons:navigation"))
     implementation(project(":feature:place:domain"))
+    implementation(project(":feature:place:shared"))
     implementation(libs.google.mapsLibs)
 
     implementation(libs.androidx.paging)

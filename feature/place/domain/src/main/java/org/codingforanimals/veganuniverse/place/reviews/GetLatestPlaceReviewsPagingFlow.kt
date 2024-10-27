@@ -5,12 +5,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceReviewRepository
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReviewQueryParams
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReviewSorter
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReviewUserFilter
+import org.codingforanimals.veganuniverse.place.repository.PlaceReviewRepository
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReview
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReviewQueryParams
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReviewSorter
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReviewUserFilter
 
 class GetLatestPlaceReviewsPagingFlow(
     private val placeReviewRepository: PlaceReviewRepository,

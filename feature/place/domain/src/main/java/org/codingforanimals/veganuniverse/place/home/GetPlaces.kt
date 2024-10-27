@@ -2,9 +2,9 @@ package org.codingforanimals.veganuniverse.place.home
 
 import android.util.Log
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
-import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceRepository
-import org.codingforanimals.veganuniverse.commons.place.shared.model.GeoLocationQueryParams
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceCard
+import org.codingforanimals.veganuniverse.place.repository.PlaceRepository
+import org.codingforanimals.veganuniverse.place.shared.model.GeoLocationQueryParams
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceCard
 
 private const val TAG = "GetPlaces"
 

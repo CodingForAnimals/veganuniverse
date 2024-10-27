@@ -7,27 +7,23 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.product.presentation.label
-import org.codingforanimals.veganuniverse.commons.product.presentation.toUI
-import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductCategory
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductQueryParams
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductSorter
-import org.codingforanimals.veganuniverse.commons.product.shared.model.ProductType
 import org.codingforanimals.veganuniverse.commons.ui.dialog.Dialog
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
-import org.codingforanimals.veganuniverse.product.domain.usecase.QueryProductsPagingDataFlow
+import org.codingforanimals.veganuniverse.product.domain.model.ProductCategory
+import org.codingforanimals.veganuniverse.product.domain.model.ProductSorter
+import org.codingforanimals.veganuniverse.product.domain.model.ProductType
+import org.codingforanimals.veganuniverse.product.domain.repository.ProductRepository
 import org.codingforanimals.veganuniverse.product.presentation.R
+import org.codingforanimals.veganuniverse.product.presentation.model.toUI
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.CATEGORY
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.SEARCH_TEXT
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.SORTER
@@ -35,7 +31,7 @@ import org.codingforanimals.veganuniverse.product.presentation.navigation.Produc
 
 internal class ProductBrowsingViewModel(
     savedStateHandle: SavedStateHandle,
-    queryProductsPagingDataFlow: QueryProductsPagingDataFlow,
+    productRepository: ProductRepository,
 ) : ViewModel() {
 
     private val navigationEffectsChannel = Channel<NavigationEffect>()
@@ -59,17 +55,32 @@ internal class ProductBrowsingViewModel(
 
     private val searchChannel = Channel<Unit>()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val products: Flow<PagingData<Product>> =
-        searchChannel.receiveAsFlow().flatMapLatest {
-            val params = ProductQueryParams.Builder()
-                .withKeyword(uiState.searchText)
-                .withCategory(uiState.category)
-                .withType(uiState.type)
-                .withSorter(uiState.sorter)
-                .build()
-            queryProductsPagingDataFlow(params)
-        }.cachedIn(viewModelScope)
+    val productsState: StateFlow<ProductsState> = searchChannel.receiveAsFlow().map {
+        val products = productRepository.queryProductsFromLocal(
+            query = uiState.searchText,
+            type = uiState.type?.name,
+            category = uiState.category?.name,
+        )
+        if (products.isEmpty()) {
+            ProductsState.Empty
+        } else {
+            ProductsState.Success(products)
+        }
+    }.catch {
+        emit(ProductsState.Error)
+    }.stateIn(
+        scope = viewModelScope,
+        started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5000),
+        initialValue = ProductsState.Loading,
+    )
+
+    sealed class ProductsState {
+        data object Loading : ProductsState()
+        data object Error : ProductsState()
+        data object Empty : ProductsState()
+        data class Success(val products: List<org.codingforanimals.veganuniverse.product.domain.model.Product>) :
+            ProductsState()
+    }
 
     init {
         viewModelScope.launch {
@@ -138,12 +149,7 @@ internal class ProductBrowsingViewModel(
     ) {
 
         @StringRes
-        val topBarLabel: Int = type?.toUI()?.label ?: run {
-            when (sorter) {
-                ProductSorter.NAME -> R.string.all_products
-                ProductSorter.DATE -> sorter.label
-            }
-        }
+        val topBarLabel: Int = type?.toUI()?.label ?: R.string.all_products
 
         companion object {
             fun fromNavArgs(

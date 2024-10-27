@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withTimeout
 import org.codingforanimals.veganuniverse.additives.data.config.local.AdditivesConfigLocalStorage
 import org.codingforanimals.veganuniverse.additives.data.config.remote.AdditivesConfigRemoteSource
-import org.codingforanimals.veganuniverse.additives.domain.mapper.toDTO
+import org.codingforanimals.veganuniverse.additives.domain.mapper.toDto
 import org.codingforanimals.veganuniverse.additives.domain.mapper.toDomain
 import org.codingforanimals.veganuniverse.additives.domain.model.AdditivesConfig
 
@@ -26,7 +26,7 @@ internal class AdditivesConfigRepositoryImpl(
     }
 
     override suspend fun setLocalConfig(config: AdditivesConfig) {
-        return localStorage.setConfig(config.toDTO())
+        return localStorage.setConfig(config.toDto())
     }
 
     companion object {

@@ -1,8 +1,8 @@
 package org.codingforanimals.veganuniverse.additives.domain.model
 
 data class Additive(
-    val id: String,
-    val code: String,
+    val id: String?,
+    val code: String?,
     val name: String?,
     val description: String?,
     val type: AdditiveType,

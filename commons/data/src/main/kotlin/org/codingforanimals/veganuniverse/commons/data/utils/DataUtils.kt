@@ -37,3 +37,12 @@ object DataUtils {
         return keywords
     }
 }
+
+fun String.accentInsensitive(): String {
+    return lowercase()
+        .replace("á", "a")
+        .replace("é", "e")
+        .replace("í", "i")
+        .replace("ó", "o")
+        .replace("ú", "u")
+}

@@ -12,6 +12,7 @@ import org.codingforanimals.veganuniverse.commons.ui.R
 @Composable
 fun ErrorDialog(
     onDismissRequest: () -> Unit,
+    message: Int = R.string.unexpected_error_message,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -19,7 +20,7 @@ fun ErrorDialog(
             Text(text = stringResource(id = R.string.unexpected_error_title))
         },
         text = {
-            Text(text = stringResource(id = R.string.unexpected_error_message))
+            Text(text = stringResource(id = message))
         },
         confirmButton = {
             TextButton(onClick = onDismissRequest) {

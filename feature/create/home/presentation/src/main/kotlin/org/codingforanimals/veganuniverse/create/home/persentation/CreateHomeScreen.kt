@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalLayoutApi::class)
+
 package org.codingforanimals.veganuniverse.create.home.persentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +16,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
+import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseTheme
 import org.codingforanimals.veganuniverse.commons.ui.topbar.HomeScreenTopAppBar
 import org.codingforanimals.veganuniverse.create.home.persentation.CreateHomeViewModel.Action
 import org.codingforanimals.veganuniverse.create.home.persentation.components.CreateContentSelectionCard
@@ -36,9 +42,9 @@ fun CreateHomeScreen(
 
 @Composable
 private fun CreateHomeScreen(
-    onAction: (Action) -> Unit,
-    navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (Action) -> Unit = {},
+    navigateUp: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
@@ -53,15 +59,15 @@ private fun CreateHomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(Spacing_05)
+                .padding(horizontal = Spacing_06, vertical = Spacing_06)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(Spacing_05)
         ) {
             Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Spacing_06)
+                    .fillMaxWidth()
+                    .weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(Spacing_06),
             ) {
                 CreateContentSelectionCard(
                     modifier = Modifier
@@ -80,14 +86,38 @@ private fun CreateHomeScreen(
                     onClick = { onAction(Action.OnCreateRecipeClick) }
                 )
             }
-            CreateContentSelectionCard(
+
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                title = stringResource(R.string.create_product_card_label),
-                image = R.drawable.img_create_product,
-                onClick = { onAction(Action.OnCreateProductClick) },
-            )
+                    .fillMaxWidth()
+                    .weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(Spacing_06),
+            ) {
+                CreateContentSelectionCard(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    title = stringResource(R.string.create_product_card_label),
+                    image = R.drawable.img_create_product,
+                    onClick = { onAction(Action.OnCreateProductClick) },
+                )
+                CreateContentSelectionCard(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    title = stringResource(R.string.create_additive_card_label),
+                    image = R.drawable.img_create_additive,
+                    onClick = { onAction(Action.OnCreateAdditiveClick) },
+                )
+            }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewCreateHomeScreen() {
+    VeganUniverseTheme {
+        CreateHomeScreen()
     }
 }

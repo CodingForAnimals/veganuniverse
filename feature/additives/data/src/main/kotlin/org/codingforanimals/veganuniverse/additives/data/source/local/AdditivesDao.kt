@@ -3,6 +3,7 @@ package org.codingforanimals.veganuniverse.additives.data.source.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import org.codingforanimals.veganuniverse.additives.data.source.local.model.AdditiveEntity
 
 @Dao
 interface AdditivesDao {

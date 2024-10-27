@@ -5,6 +5,7 @@ import org.codingforanimals.veganuniverse.additives.domain.repository.AdditiveRe
 import org.codingforanimals.veganuniverse.additives.domain.repository.AdditiveRepositoryImpl
 import org.codingforanimals.veganuniverse.additives.domain.repository.AdditivesConfigRepository
 import org.codingforanimals.veganuniverse.additives.domain.repository.AdditivesConfigRepositoryImpl
+import org.codingforanimals.veganuniverse.additives.domain.usecase.CheckForAdditivesUpdate
 import org.codingforanimals.veganuniverse.additives.domain.usecase.AdditivesUseCases
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
@@ -18,4 +19,5 @@ val additivesDomainModule = module {
     factoryOf(::AdditivesConfigRepositoryImpl) bind AdditivesConfigRepository::class
     factoryOf(::AdditiveRepositoryImpl) bind AdditiveRepository::class
     factoryOf(::AdditivesUseCases)
+    factoryOf(::CheckForAdditivesUpdate)
 }

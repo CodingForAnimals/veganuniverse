@@ -1,37 +1,22 @@
 package org.codingforanimals.veganuniverse.product.domain.usecase
 
-import android.util.Log
-import kotlinx.coroutines.flow.firstOrNull
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
-import org.codingforanimals.veganuniverse.commons.product.domain.repository.ProductRepository
-import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
-import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
+import org.codingforanimals.veganuniverse.product.domain.model.Product
+import org.codingforanimals.veganuniverse.product.domain.repository.ProductRepository
 
 class GetProductDetail(
-    private val productRepository: ProductRepository,
-    private val flowOnCurrentUser: FlowOnCurrentUser,
+    private val repository: ProductRepository,
 ) {
-    suspend operator fun invoke(id: String): Result? {
-        return runCatching {
-            productRepository.getProductById(id)?.let {
-                val userId = flowOnCurrentUser().firstOrNull()?.id
-                Result(
-                    product = it,
-                    isOwned = it.userId == userId,
-                )
+    suspend operator fun invoke(id: String, unvalidated: Boolean = false): Product? {
+        return try {
+            if (unvalidated) {
+                repository.getUnvalidatedProductByIdFromRemote(id)
+            } else {
+                repository.getProductByIdFromLocal(id)
             }
-        }.onFailure {
-            Log.e(TAG, it.stackTraceToString())
-            Analytics.logNonFatalException(it)
-        }.getOrNull()
-    }
-
-    data class Result(
-        val product: Product,
-        val isOwned: Boolean,
-    )
-
-    companion object {
-        private const val TAG = "GetProduct"
+        } catch (e: Throwable) {
+            Analytics.logNonFatalException(e)
+            null
+        }
     }
 }

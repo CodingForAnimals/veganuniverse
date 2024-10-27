@@ -1,8 +1,7 @@
 package org.codingforanimals.veganuniverse.recipes.presentation.details.entity
 
-import androidx.compose.ui.res.stringResource
-import org.codingforanimals.veganuniverse.commons.recipe.presentation.RecipeTagUI
 import org.codingforanimals.veganuniverse.recipes.presentation.R
+import org.codingforanimals.veganuniverse.recipes.presentation.model.RecipeTagUI
 import java.util.Date
 
 data class RecipeView(

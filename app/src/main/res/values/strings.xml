@@ -5,4 +5,7 @@
     <string name="nav_label_create">Crear</string>
     <string name="nav_label_recipes">Recetas</string>
     <string name="nav_label_profile">Perfil</string>
+    <string name="validator_top_app_bar_title">Validador de Universo Vegano</string>
+    <string name="validate_bottom_nav_label_products">Productos</string>
+    <string name="validate_bottom_nav_label_places">Lugares</string>
 </resources>

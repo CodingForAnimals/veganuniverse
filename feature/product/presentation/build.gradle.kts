@@ -15,7 +15,5 @@ dependencies {
     implementation(project(":commons:user:domain"))
     implementation(project(":commons:navigation"))
     implementation(project(":commons:user:presentation"))
-    implementation(project(":commons-product:shared"))
-    implementation(project(":commons-product:presentation"))
     implementation(project(":feature:product:domain"))
 }

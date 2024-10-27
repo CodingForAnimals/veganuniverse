@@ -1,23 +1,33 @@
 package org.codingforanimals.veganuniverse.additives.domain.mapper
 
-import org.codingforanimals.veganuniverse.additives.data.config.model.AdditivesConfigDTO
-import org.codingforanimals.veganuniverse.additives.data.source.local.AdditiveEntity
+import org.codingforanimals.veganuniverse.additives.data.config.local.model.AdditivesConfigLocalModel
+import org.codingforanimals.veganuniverse.additives.data.config.remote.model.AdditivesConfigDTO
+import org.codingforanimals.veganuniverse.additives.data.source.local.model.AdditiveEntity
 import org.codingforanimals.veganuniverse.additives.data.source.remote.model.AdditiveDTO
 import org.codingforanimals.veganuniverse.additives.data.source.remote.model.AdditiveEditDTO
 import org.codingforanimals.veganuniverse.additives.domain.model.Additive
 import org.codingforanimals.veganuniverse.additives.domain.model.AdditiveEdit
 import org.codingforanimals.veganuniverse.additives.domain.model.AdditiveType
 import org.codingforanimals.veganuniverse.additives.domain.model.AdditivesConfig
-import org.codingforanimals.veganuniverse.additives.domain.utils.accentInsensitive
+import org.codingforanimals.veganuniverse.commons.data.utils.accentInsensitive
 
-internal fun AdditivesConfigDTO.toDomain(): AdditivesConfig {
+internal fun AdditivesConfigLocalModel.toDomain(): AdditivesConfig {
     return AdditivesConfig(
-        version = version ?: 0,
+        version = version,
     )
 }
 
-internal fun AdditivesConfig.toDTO(): AdditivesConfigDTO {
-    return AdditivesConfigDTO(
+internal fun AdditivesConfigDTO.toDomain(): AdditivesConfig {
+    val version = checkNotNull(version) {
+        "AdditivesConfigDTO version cannot be null"
+    }
+    return AdditivesConfig(
+        version = version,
+    )
+}
+
+internal fun AdditivesConfig.toDto(): AdditivesConfigLocalModel {
+    return AdditivesConfigLocalModel(
         version = version,
     )
 }
@@ -25,10 +35,6 @@ internal fun AdditivesConfig.toDTO(): AdditivesConfigDTO {
 internal fun AdditiveDTO.toDomain(): Additive {
     val id = checkNotNull(objectKey) {
         "AdditiveDTO objectKey cannot be null"
-    }
-    val code = code
-    checkNotNull(code) {
-        "AdditiveDTO code cannot be null"
     }
     return Additive(
         id = id,
@@ -50,10 +56,13 @@ internal fun AdditiveEntity.toDomain(): Additive {
 }
 
 internal fun Additive.toEntity(): AdditiveEntity {
+    val id = checkNotNull(id) {
+        "Additive id cannot be null"
+    }
     return AdditiveEntity(
         id = id,
         code = code,
-        codeAccentInsensitive = code.accentInsensitive(),
+        codeAccentInsensitive = code?.accentInsensitive(),
         name = name,
         nameAccentInsensitive = name?.accentInsensitive(),
         description = description,
@@ -61,7 +70,7 @@ internal fun Additive.toEntity(): AdditiveEntity {
     )
 }
 
-internal fun Additive.toDTO(): AdditiveDTO {
+internal fun Additive.toDto(): AdditiveDTO {
     return AdditiveDTO(
         objectKey = id,
         code = code,
@@ -91,9 +100,6 @@ internal fun AdditiveEditDTO.toDomain(): AdditiveEdit {
     }
     val userID = checkNotNull(userID) {
         "AdditiveEditDTO userID cannot be null"
-    }
-    val code = checkNotNull(code) {
-        "AdditiveEditDTO code cannot be null"
     }
     return AdditiveEdit(
         id = objectKey,

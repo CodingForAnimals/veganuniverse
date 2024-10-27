@@ -11,8 +11,11 @@ import org.codingforanimals.veganuniverse.commons.ui.navigation.Destination
 import org.codingforanimals.veganuniverse.commons.ui.navigation.navigate
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingScreen
 import org.codingforanimals.veganuniverse.product.presentation.detail.ProductDetailScreen
+import org.codingforanimals.veganuniverse.product.presentation.edit.EditProductScreen
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeScreen
 import org.codingforanimals.veganuniverse.product.presentation.listing.ProductListingScreen
+import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.UnvalidatedDetail.Companion.UNVALIDATED
+import org.codingforanimals.veganuniverse.product.presentation.validate.CompareProductEditScreen
 
 sealed class ProductDestination(route: String) : Destination(route) {
     data object Home : ProductDestination("product_home_route")
@@ -31,11 +34,21 @@ sealed class ProductDestination(route: String) : Destination(route) {
         }
     }
 
-    data class Detail(val id: String) : ProductDestination("$ROUTE/$id") {
+    data class Detail(val id: String) : ProductDestination("$ROUTE?$ID_ARG=$id") {
         companion object {
             const val APP_LINK = "${DeepLink.APP_LINKS_BASE_URL}/product"
             const val ROUTE = "product_detail_route"
             const val ID_ARG = "product-id"
+        }
+    }
+
+    data class UnvalidatedDetail(
+        val id: String
+    ) : ProductDestination("$ROUTE?$ID_ARG=$id&$UNVALIDATED=true") {
+        companion object {
+            const val ROUTE = "product_detail_route"
+            const val ID_ARG = "product-id"
+            const val UNVALIDATED = "unvalidated"
         }
     }
 
@@ -45,11 +58,30 @@ sealed class ProductDestination(route: String) : Destination(route) {
             const val TYPE = "type"
         }
     }
+
+    data class Edit(val id: String?) :
+        ProductDestination("$ROUTE?$ID=$id") {
+        companion object {
+            const val ROUTE = "edit_product"
+            const val ID = "id"
+        }
+    }
+
+    data class CompareEdit(val editId: String, val originalId: String) : ProductDestination(
+        "$ROUTE?$EDIT_ID=$editId&$ORIGINAL_ID=$originalId"
+    ) {
+        companion object {
+            const val EDIT_ID = "editId"
+            const val ORIGINAL_ID = "originalId"
+            const val ROUTE = "compare_edit"
+        }
+    }
 }
 
 fun NavGraphBuilder.productGraph(
     navController: NavController,
     navigateToAdditivesBrowsing: () -> Unit,
+    navigateToThankYouScreen: () -> Unit,
 ) {
     composable(
         route = ProductDestination.Home.route,
@@ -101,16 +133,17 @@ fun NavGraphBuilder.productGraph(
 
     with(ProductDestination.Detail) {
         composable(
-            route = "$ROUTE/{$ID_ARG}",
+            route = "$ROUTE?$ID_ARG={$ID_ARG}&$UNVALIDATED={$UNVALIDATED}",
             arguments = listOf(
                 navArgument(ID_ARG) {
                     type = NavType.StringType
+                },
+                navArgument(UNVALIDATED) {
+                    type = NavType.BoolType
+                    defaultValue = false
                 }
             ),
             deepLinks = listOf(
-                navDeepLink {
-                    uriPattern = "${DeepLink.ProductDetail.pathWithSchema}/{$ID_ARG}"
-                },
                 navDeepLink {
                     uriPattern = "${DeepLink.APP_LINKS_BASE_URL}/product/{$ID_ARG}"
                 }
@@ -118,6 +151,30 @@ fun NavGraphBuilder.productGraph(
         ) {
             ProductDetailScreen(
                 navigateUp = navController::navigateUp,
+                navigateToEditProduct = {
+                    navController.navigate(ProductDestination.Edit(id = it))
+                }
+            )
+        }
+    }
+
+    with(ProductDestination.UnvalidatedDetail) {
+        composable(
+            route = "$ROUTE?$ID_ARG={$ID_ARG}&$UNVALIDATED=true",
+            arguments = listOf(
+                navArgument(ID_ARG) {
+                    type = NavType.StringType
+                },
+                navArgument(UNVALIDATED) {
+                    type = NavType.BoolType
+                }
+            ),
+        ) {
+            ProductDetailScreen(
+                navigateUp = navController::navigateUp,
+                navigateToEditProduct = {
+                    navController.navigate(ProductDestination.Edit(id = it))
+                }
             )
         }
     }
@@ -136,6 +193,39 @@ fun NavGraphBuilder.productGraph(
                 onProductClick = { id ->
                     navController.navigate(ProductDestination.Detail(id))
                 }
+            )
+        }
+    }
+
+    with(ProductDestination.Edit) {
+        composable(
+            route = "$ROUTE?$ID={$ID}",
+            arguments = listOf(
+                navArgument(ID) {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = DeepLink.CreateProduct.deeplink
+                }
+            )
+        ) {
+            EditProductScreen(
+                navigateUp = navController::navigateUp,
+                navigateToThankYouScreen = navigateToThankYouScreen,
+            )
+        }
+    }
+
+    with(ProductDestination.CompareEdit) {
+        composable(
+            route = "$ROUTE?$EDIT_ID={$EDIT_ID}&$ORIGINAL_ID={$ORIGINAL_ID}",
+        ) {
+            CompareProductEditScreen(
+                navigateUp = navController::navigateUp
             )
         }
     }

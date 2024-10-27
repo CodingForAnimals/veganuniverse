@@ -19,6 +19,7 @@ class CreateHomeViewModel(
                     Action.OnCreatePlaceClick -> DeepLink.CreatePlace
                     Action.OnCreateProductClick -> DeepLink.CreateProduct
                     Action.OnCreateRecipeClick -> DeepLink.CreateRecipe
+                    Action.OnCreateAdditiveClick -> DeepLink.CreateAdditive
                 }.let { deeplink ->
                     deeplinkNavigator.navigate(deeplink)
                 }
@@ -30,5 +31,6 @@ class CreateHomeViewModel(
         data object OnCreatePlaceClick : Action()
         data object OnCreateRecipeClick : Action()
         data object OnCreateProductClick : Action()
+        data object OnCreateAdditiveClick : Action()
     }
 }

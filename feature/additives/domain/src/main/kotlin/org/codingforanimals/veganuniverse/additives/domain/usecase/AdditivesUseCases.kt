@@ -5,41 +5,36 @@ import org.codingforanimals.veganuniverse.additives.domain.mapper.toEditDTO
 import org.codingforanimals.veganuniverse.additives.domain.model.Additive
 import org.codingforanimals.veganuniverse.additives.domain.model.AdditiveEdit
 import org.codingforanimals.veganuniverse.additives.domain.repository.AdditiveRepository
-import org.codingforanimals.veganuniverse.additives.domain.repository.AdditivesConfigRepository
-import org.codingforanimals.veganuniverse.additives.domain.utils.accentInsensitive
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
+import org.codingforanimals.veganuniverse.commons.data.utils.accentInsensitive
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 
 class AdditivesUseCases(
     private val additiveRepository: AdditiveRepository,
-    private val configRepository: AdditivesConfigRepository,
     private val flowOnCurrentUser: FlowOnCurrentUser,
 ) {
+    suspend fun uploadAdditive(additive: Additive): Result<String> = runCatching {
+        additiveRepository.uploadAdditive(additive)
+    }.onFailure { throwable ->
+        Analytics.logNonFatalException(throwable)
+    }
+
     suspend fun getAllAdditives(): List<Additive> {
         return try {
-            val localConfig = configRepository.getConfigFromLocal()
-            val remoteConfig = configRepository.getConfigFromRemote()
-
-            if ((localConfig?.version ?: 0) < remoteConfig.version) {
-                val remote = additiveRepository.getAdditivesFromRemote()
-
-                additiveRepository.clearLocalAdditives()
-                additiveRepository.setLocalAdditives(remote)
-
-                configRepository.setLocalConfig(remoteConfig)
-
-                additiveRepository.getAdditivesFromLocal()
-            } else {
-                additiveRepository.getAdditivesFromLocal()
-            }
+            additiveRepository.getAdditivesFromLocal()
         } catch (throwable: Throwable) {
             Analytics.logNonFatalException(throwable)
-            additiveRepository.getAdditivesFromLocal()
+            throw throwable
         }
     }
 
     suspend fun queryAdditives(query: String): List<Additive> {
-        return additiveRepository.queryAdditivesFromLocal(query.accentInsensitive())
+        return try {
+            additiveRepository.queryAdditivesFromLocal(query.accentInsensitive())
+        } catch (throwable: Throwable) {
+            Analytics.logNonFatalException(throwable)
+            throw throwable
+        }
     }
 
     suspend fun getByIdFromLocal(id: String): Additive {

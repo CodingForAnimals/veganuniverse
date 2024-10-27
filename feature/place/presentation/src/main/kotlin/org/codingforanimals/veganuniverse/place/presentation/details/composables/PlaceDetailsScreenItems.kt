@@ -47,17 +47,16 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
-import org.codingforanimals.veganuniverse.commons.place.presentation.R.string.closed
-import org.codingforanimals.veganuniverse.commons.place.presentation.model.OpeningHoursUI
-import org.codingforanimals.veganuniverse.commons.place.presentation.model.displayPeriod
-import org.codingforanimals.veganuniverse.commons.place.presentation.model.label
-import org.codingforanimals.veganuniverse.commons.place.presentation.model.toUI
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceTag
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.icon.VUIcons
 import org.codingforanimals.veganuniverse.place.presentation.R
-import org.codingforanimals.veganuniverse.place.presentation.home.model.PlaceMarker
+import org.codingforanimals.veganuniverse.place.presentation.model.OpeningHoursUI
+import org.codingforanimals.veganuniverse.place.presentation.model.PlaceMarker
+import org.codingforanimals.veganuniverse.place.presentation.model.displayPeriod
+import org.codingforanimals.veganuniverse.place.presentation.model.label
+import org.codingforanimals.veganuniverse.place.presentation.model.toUI
 import org.codingforanimals.veganuniverse.place.presentation.utils.mapStyleJson
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceTag
 
 @Composable
 internal fun Actions(
@@ -188,7 +187,7 @@ internal fun OpeningHours(
                                 }
                             } ?: Text(
                                 modifier = Modifier.weight(1f),
-                                text = stringResource(closed),
+                                text = stringResource(R.string.closed),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }

@@ -62,7 +62,6 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_08
-import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeSorter
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeTag
@@ -76,6 +75,7 @@ import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.Action
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.SideEffect
 import org.codingforanimals.veganuniverse.recipes.presentation.browsing.RecipeBrowsingViewModel.UiState
+import org.codingforanimals.veganuniverse.recipes.presentation.model.toUI
 import org.codingforanimals.veganuniverse.recipes.presentation.shared.RecipeCard
 import org.koin.androidx.compose.koinViewModel
 

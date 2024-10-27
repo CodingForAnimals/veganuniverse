@@ -3,7 +3,7 @@ package org.codingforanimals.veganuniverse.place.details
 import android.util.Log
 import kotlinx.coroutines.flow.first
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
-import org.codingforanimals.veganuniverse.commons.place.domain.repository.PlaceRepository
+import org.codingforanimals.veganuniverse.place.repository.PlaceRepository
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 
 class ReportPlace(

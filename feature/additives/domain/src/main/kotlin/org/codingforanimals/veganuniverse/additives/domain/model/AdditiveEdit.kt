@@ -4,7 +4,7 @@ data class AdditiveEdit(
     val id: String,
     val additiveID: String,
     val userID: String,
-    val code: String,
+    val code: String?,
     val name: String?,
     val description: String?,
     val type: AdditiveType,

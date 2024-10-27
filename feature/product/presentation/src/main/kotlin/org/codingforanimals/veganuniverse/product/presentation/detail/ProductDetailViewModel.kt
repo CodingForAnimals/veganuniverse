@@ -14,9 +14,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.product.shared.model.Product
-import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_error
-import org.codingforanimals.veganuniverse.commons.ui.R.string.edit_success
 import org.codingforanimals.veganuniverse.commons.ui.R.string.report_error
 import org.codingforanimals.veganuniverse.commons.ui.R.string.report_success
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message_try_again
@@ -27,7 +24,7 @@ import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOn
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_not_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.R.string.verification_email_sent
 import org.codingforanimals.veganuniverse.commons.user.presentation.UnverifiedEmailResult
-import org.codingforanimals.veganuniverse.product.domain.usecase.EditProduct
+import org.codingforanimals.veganuniverse.product.domain.model.Product
 import org.codingforanimals.veganuniverse.product.domain.usecase.GetProductDetail
 import org.codingforanimals.veganuniverse.product.domain.usecase.ProductBookmarkUseCases
 import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
@@ -35,13 +32,14 @@ import org.codingforanimals.veganuniverse.product.presentation.navigation.Produc
 
 internal class ProductDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    getProductDetail: GetProductDetail,
     private val bookmarkUseCases: ProductBookmarkUseCases,
     private val reportProduct: ReportProduct,
-    private val editProduct: EditProduct,
     private val verifiedOnlyUserAction: VerifiedOnlyUserAction,
+    private val getProductDetail: GetProductDetail,
 ) : ViewModel() {
     private val id = savedStateHandle.get<String>(ProductDestination.Detail.ID_ARG)
+    private val unvalidated =
+        savedStateHandle.get<Boolean>(ProductDestination.UnvalidatedDetail.UNVALIDATED) ?: false
 
     private val snackbarEffectsChannel = Channel<Snackbar>()
     val snackbarEffects = snackbarEffectsChannel.receiveAsFlow()
@@ -51,8 +49,8 @@ internal class ProductDetailViewModel(
 
     val product = flow {
         id ?: return@flow
-        getProductDetail(id)?.let { result ->
-            emit(State.Success(result.product))
+        getProductDetail(id, unvalidated)?.let { result ->
+            emit(State.Success(result))
         } ?: emit(State.Error)
     }.stateIn(
         scope = viewModelScope,
@@ -93,6 +91,7 @@ internal class ProductDetailViewModel(
     fun onAction(action: Action) {
         when (action) {
             Action.OnBookmarkClick -> {
+                if (unvalidated) return
                 if (bookmarkActionEnabled) {
                     viewModelScope.launch {
                         verifiedOnlyUserAction {
@@ -103,6 +102,7 @@ internal class ProductDetailViewModel(
             }
 
             Action.OnReportClick -> {
+                if (unvalidated) return
                 viewModelScope.launch {
                     verifiedOnlyUserAction {
                         dialog = Dialog.Report
@@ -110,10 +110,12 @@ internal class ProductDetailViewModel(
                 }
             }
 
-            Action.OnSuggestClick -> {
+            Action.OnEditClick -> {
+                if (unvalidated) return
+                id ?: return
                 viewModelScope.launch {
                     verifiedOnlyUserAction {
-                        dialog = Dialog.Suggestion
+                        sideEffectsChannel.send(SideEffect.NavigateToEditProduct(id))
                     }
                 }
             }
@@ -123,6 +125,7 @@ internal class ProductDetailViewModel(
             }
 
             Action.OnShareClick -> {
+                if (unvalidated) return
                 viewModelScope.launch {
                     id ?: return@launch
                     val textToShare = "${ProductDestination.Detail.APP_LINK}/$id"
@@ -156,11 +159,7 @@ internal class ProductDetailViewModel(
             is EditContentDialogResult.SendEdit -> {
                 id ?: return
                 viewModelScope.launch {
-                    if (editProduct(id, result.edition).isSuccess) {
-                        snackbarEffectsChannel.send(Snackbar(edit_success))
-                    } else {
-                        snackbarEffectsChannel.send(Snackbar(edit_error))
-                    }
+
                 }
             }
         }
@@ -193,13 +192,14 @@ internal class ProductDetailViewModel(
     sealed class Action {
         data object OnShareClick : Action()
         data object OnBookmarkClick : Action()
-        data object OnSuggestClick : Action()
+        data object OnEditClick : Action()
         data object OnReportClick : Action()
         data object OnDismissDialog : Action()
     }
 
     sealed class SideEffect {
         data class ShareProductAppLink(val textToShare: String) : SideEffect()
+        data class NavigateToEditProduct(val id: String) : SideEffect()
     }
 
     sealed class Dialog {

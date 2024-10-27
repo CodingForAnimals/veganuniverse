@@ -4,6 +4,7 @@ import org.codingforanimals.veganuniverse.additives.data.source.remote.model.Add
 import org.codingforanimals.veganuniverse.additives.data.source.remote.model.AdditiveEditDTO
 
 interface AdditivesRemoteDataSource {
+    suspend fun uploadAdditive(additiveDTO: AdditiveDTO): String
     suspend fun getAdditives(): List<AdditiveDTO>
     suspend fun geyById(id: String): AdditiveDTO
     suspend fun getEdits(): List<AdditiveEditDTO>

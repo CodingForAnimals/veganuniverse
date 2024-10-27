@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.codingforanimals.veganuniverse.commons.place.shared.model.PlaceReview
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
 import org.codingforanimals.veganuniverse.commons.user.domain.usecase.VerifiedOnlyUserAction
@@ -28,6 +27,7 @@ import org.codingforanimals.veganuniverse.place.reviews.DeletePlaceReview
 import org.codingforanimals.veganuniverse.place.reviews.GetCurrentUserPlaceReview
 import org.codingforanimals.veganuniverse.place.reviews.GetLatestPlaceReviewsPagingFlow
 import org.codingforanimals.veganuniverse.place.reviews.ReportPlaceReview
+import org.codingforanimals.veganuniverse.place.shared.model.PlaceReview
 
 internal class PlaceReviewsViewModel(
     savedStateHandle: SavedStateHandle,

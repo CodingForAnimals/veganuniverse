@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
-import org.codingforanimals.veganuniverse.commons.recipe.presentation.toUI
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.commons.ui.R.string.report_success
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unexpected_error_message
@@ -34,6 +33,7 @@ import org.codingforanimals.veganuniverse.recipes.presentation.R
 import org.codingforanimals.veganuniverse.recipes.presentation.RECIPE_ID
 import org.codingforanimals.veganuniverse.recipes.presentation.RecipesDestination
 import org.codingforanimals.veganuniverse.recipes.presentation.details.entity.RecipeView
+import org.codingforanimals.veganuniverse.recipes.presentation.model.toUI
 
 private const val TAG = "RecipeDetailsViewModel"
 

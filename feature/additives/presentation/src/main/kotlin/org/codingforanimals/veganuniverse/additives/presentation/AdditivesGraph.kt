@@ -46,6 +46,7 @@ sealed class AdditivesDestination(override val route: String) : Destination(rout
 
 fun NavGraphBuilder.additivesGraph(
     navController: NavController,
+    navigateToThankYouScreen: () -> Unit,
 ) {
     with(AdditivesDestination.Browsing) {
         composable(route) {
@@ -74,10 +75,16 @@ fun NavGraphBuilder.additivesGraph(
 
     with(AdditivesDestination.Edit) {
         composable(
-            route = "$PATH/{$ARG_ID}"
+            route = "$PATH/{$ARG_ID}",
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = DeepLink.CreateAdditive.deeplink
+                }
+            )
         ) {
             AdditiveDetailEditScreen(
                 navigateUp = navController::navigateUp,
+                navigateToThankYouScreen = navigateToThankYouScreen,
             )
         }
     }

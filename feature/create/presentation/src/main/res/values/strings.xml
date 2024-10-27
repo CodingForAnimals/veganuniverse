@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="create_place_card_label">Lugares</string>
+    <string name="create_recipes_card_label">Recetas</string>
+    <string name="create_product_card_label">Productos</string>
+    <string name="create_additive_card_label">Aditivos</string>
+    <string name="create_home_title">¡Haz tu aporte!</string>
+    <string name="thanks_for_your_contribution">¡Gracias por tu aporte!</string>
+    <string name="thank_you_subtitle">En comunidad hacemos que volverse vegan sea más fácil y accesible cada día!</string>
+    <string name="thank_you_continue">Continuar</string>
+    <string name="go_to_profile">Ir al perfil</string>
+    <string name="product_content_available_text">El producto que contribuiste está en proceso de verificación. Cuando hayamos validado esta información podrás compartirlo. ¡Mientras tanto podés verlo desde tu perfil!</string>
+    <string name="place_content_available_text">El lugar que contribuiste está en proceso de verificación. Cuando hayamos validado esta información podrás compartirlo. ¡Mientras tanto podés verlo desde tu perfil!</string>
+    <string name="recipe_content_available_text">¡Ya podés compartir tu receta! Podés encontrarla en el buscador de recetas o en tu perfil.</string>
+    <string name="additive_content_available_text">¡Gracias por contribuir con un nuevo aditivo! Lo estaremos publicando pronto.</string>
+</resources>

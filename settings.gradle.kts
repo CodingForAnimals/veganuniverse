@@ -20,10 +20,6 @@ include(
 )
 
 include(
-    ":feature:validator"
-)
-
-include(
     ":feature:onboarding:data",
     ":feature:onboarding:domain",
     ":feature:onboarding:presentation"
@@ -34,15 +30,8 @@ include(
 )
 
 include(
-    ":feature:create:graph",
+    ":feature:create:presentation",
     ":feature:create:home:presentation",
-    ":feature:create:place:domain",
-    ":feature:create:place:presentation",
-    ":feature:create:recipe:domain",
-    ":feature:create:recipe:presentation",
-    ":feature:create:product:domain",
-    ":feature:create:product:presentation",
-    ":feature:create:thank_you:presentation",
 )
 
 include(
@@ -53,17 +42,21 @@ include(
 )
 
 include(
+    ":feature:place:shared",
+    ":feature:place:data",
     ":feature:place:domain",
     ":feature:place:presentation",
 )
 
 include(
+    ":feature:recipe:shared",
     ":feature:recipe:data",
     ":feature:recipe:domain",
     ":feature:recipe:presentation",
 )
 
 include(
+    ":feature:product:data",
     ":feature:product:domain",
     ":feature:product:presentation"
 )
@@ -90,24 +83,20 @@ include(
 )
 
 include(
-    ":commons-recipe:shared",
-    ":commons-recipe:data",
-    ":commons-recipe:domain",
-    ":commons-recipe:presentation",
+//    ":commons-recipe:shared",
+//    ":commons-recipe:data",
+//    ":commons-recipe:domain",
+//    ":commons-recipe:presentation",
 )
 
 include(
-    ":commons-product:shared",
-    ":commons-product:data",
-    ":commons-product:domain",
-    ":commons-product:presentation",
+//    ":commons-product:shared",
+//    ":commons-product:data",
+//    ":commons-product:domain",
+//    ":commons-product:presentation",
 )
 
 include(
-    ":commons-place:shared",
-    ":commons-place:data",
-    ":commons-place:domain",
-    ":commons-place:presentation",
 )
 
 include(
@@ -115,9 +104,4 @@ include(
     ":commons:designsystem",
     ":commons:navigation",
     ":commons:data",
-)
-
-include(
-    ":commons-create:domain",
-    ":commons-create:presentation",
 )
