@@ -25,7 +25,7 @@ internal class ProductConfigRepositoryImpl(
 
     companion object {
         private val DEFAULT_CONFIG = ProductConfig(
-            version = 1,
+            version = 0,
         )
     }
 }

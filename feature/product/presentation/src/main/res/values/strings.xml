@@ -104,4 +104,6 @@
     <string name="product_edit_validated_error">Error al validar edición de producto</string>
     <string name="product_edit_send_success">Se ha enviado la edición correctamente. ¡Gracias!</string>
     <string name="create_product_top_app_bar_title_edit">Editar producto</string>
+    <string name="source_url_button_label">Ir al sitio oficial</string>
+    <string name="products_found">resultados</string>
 </resources>

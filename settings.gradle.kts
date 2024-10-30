@@ -31,7 +31,6 @@ include(
 
 include(
     ":feature:create:presentation",
-    ":feature:create:home:presentation",
 )
 
 include(

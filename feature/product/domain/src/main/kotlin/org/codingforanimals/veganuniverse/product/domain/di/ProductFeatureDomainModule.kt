@@ -16,6 +16,7 @@ import org.codingforanimals.veganuniverse.product.domain.usecase.ProductListingU
 import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.UploadProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.UploadProductEdit
+import org.codingforanimals.veganuniverse.product.domain.usecase.UploadProductsBatch
 import org.codingforanimals.veganuniverse.product.domain.usecase.ValidateProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.ValidateProductEdit
 import org.koin.core.module.dsl.factoryOf
@@ -70,6 +71,7 @@ val productFeatureDomainModule = module {
     factoryOf(::UploadProductEdit)
     factoryOf(::GetProductEdits)
     factoryOf(::ValidateProductEdit)
+    factoryOf(::UploadProductsBatch)
     factory {
         ProductBookmarkUseCases(
             profileProductUseCases = get(named(PROFILE_PRODUCT_USE_CASES))

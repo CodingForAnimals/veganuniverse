@@ -18,6 +18,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_05
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_07
+import org.codingforanimals.veganuniverse.commons.ui.components.Banner
 import org.codingforanimals.veganuniverse.commons.ui.topbar.HomeScreenTopAppBar
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeViewModel.Action
@@ -25,7 +26,6 @@ import org.codingforanimals.veganuniverse.product.presentation.home.ProductHomeV
 import org.codingforanimals.veganuniverse.product.presentation.home.components.AllCategories
 import org.codingforanimals.veganuniverse.product.presentation.home.components.FilterProductsByType
 import org.codingforanimals.veganuniverse.product.presentation.home.components.ProductSearchBar
-import org.codingforanimals.veganuniverse.product.presentation.home.components.SeeAdditivesBanner
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -90,8 +90,9 @@ private fun ProductHomeScreen(
                     onShowAllClick = { onAction(Action.OnShowAllClick) },
                     onTypeClick = { onAction(Action.OnProductTypeClick(it)) }
                 )
-                SeeAdditivesBanner(
+                Banner(
                     modifier = Modifier.padding(top = Spacing_07),
+                    text = stringResource(R.string.product_see_additives),
                     onClick = { onAction(Action.OnSeeAdditivesClick) },
                 )
                 AllCategories(

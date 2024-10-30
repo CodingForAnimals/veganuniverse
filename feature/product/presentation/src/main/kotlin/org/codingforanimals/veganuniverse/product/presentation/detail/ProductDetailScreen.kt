@@ -2,6 +2,8 @@
 
 package org.codingforanimals.veganuniverse.product.presentation.detail
 
+import android.content.Intent
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.collect
@@ -50,6 +53,7 @@ import org.codingforanimals.veganuniverse.commons.designsystem.VeganUniverseThem
 import org.codingforanimals.veganuniverse.commons.ui.R.string.back
 import org.codingforanimals.veganuniverse.commons.ui.R.string.bookmark_action
 import org.codingforanimals.veganuniverse.commons.ui.R.string.unbookmark_action
+import org.codingforanimals.veganuniverse.commons.ui.components.Banner
 import org.codingforanimals.veganuniverse.commons.ui.components.VUIcon
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHero
 import org.codingforanimals.veganuniverse.commons.ui.contentdetails.ContentDetailsHeroDefaults
@@ -279,10 +283,27 @@ internal fun ProductDetailScreen(
                 icon = typeUI.icon.id,
             )
 
-            product.description?.let { description ->
+            product.description?.takeIf { it.isNotBlank() }?.let { description ->
                 ContentDetailItem(
                     title = stringResource(id = R.string.comment),
                     subtitle = description,
+                )
+            }
+
+            val context = LocalContext.current
+            product.sourceUrl?.takeIf { it.isNotBlank() }?.let {
+                Banner(
+                    text = stringResource(R.string.source_url_button_label),
+                    icon = VUIcons.OpenInNew,
+                    onClick = {
+                        runCatching {
+                            Log.d("ProductDetailScreen", "Opening URL $it")
+                            val intent = Intent(Intent.ACTION_VIEW, it.toUri())
+                            context.startActivity(intent)
+                        }.onFailure {
+                            Analytics.logNonFatalException(it)
+                        }
+                    }
                 )
             }
 

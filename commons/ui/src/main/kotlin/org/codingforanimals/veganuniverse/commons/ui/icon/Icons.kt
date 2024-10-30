@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
+import androidx.compose.material.icons.automirrored.rounded.OpenInNew
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.ArrowDropDown
@@ -58,6 +59,7 @@ object VUIcons {
     val Add = ImageVectorIcon(Icons.Default.Add)
     val ChevronRight = DrawableResourceIcon(R.drawable.ic_chevron_right)
     val ChevronDown = DrawableResourceIcon(R.drawable.ic_chevron_down)
+    val OpenInNew = ImageVectorIcon(Icons.AutoMirrored.Rounded.OpenInNew)
 
     // Icons used in tags mainly
     val Restaurant = DrawableResourceIcon(R.drawable.ic_restaurant)

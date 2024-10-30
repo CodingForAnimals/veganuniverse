@@ -1,5 +1,6 @@
 package org.codingforanimals.veganuniverse.product.domain.model
 
+import android.util.Log
 import org.codingforanimals.veganuniverse.commons.data.utils.accentInsensitive
 import org.codingforanimals.veganuniverse.product.data.source.local.model.ProductEntity
 import org.codingforanimals.veganuniverse.product.data.source.remote.model.ProductDTO

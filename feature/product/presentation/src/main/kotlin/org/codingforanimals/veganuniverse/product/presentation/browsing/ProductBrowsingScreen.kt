@@ -3,7 +3,6 @@
 package org.codingforanimals.veganuniverse.product.presentation.browsing
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,15 +11,12 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -52,7 +48,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
@@ -83,7 +78,6 @@ import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductB
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.NavigationEffect
 import org.codingforanimals.veganuniverse.product.presentation.browsing.ProductBrowsingViewModel.UiState
 import org.codingforanimals.veganuniverse.product.presentation.component.ProductCard
-import org.codingforanimals.veganuniverse.product.presentation.component.ProductCardImage
 import org.codingforanimals.veganuniverse.product.presentation.model.label
 import org.codingforanimals.veganuniverse.product.presentation.model.toUI
 import org.koin.androidx.compose.koinViewModel
