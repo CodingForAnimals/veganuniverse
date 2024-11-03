@@ -122,6 +122,7 @@ private fun PreviewProductCard() {
                 editUsername = "",
                 editUserId = "",
                 originalId = "",
+                updatesImage = false,
             )
             val additive = product.copy(
                 name = "Pan",

@@ -5,4 +5,7 @@ data class User(
     val name: String,
     val email: String,
     val role: UserRole,
-)
+) {
+    val isValidator: Boolean
+        get() = UserRole.VALIDATOR == role
+}

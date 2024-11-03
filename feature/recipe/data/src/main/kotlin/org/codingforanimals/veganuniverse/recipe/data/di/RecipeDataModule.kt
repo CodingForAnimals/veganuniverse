@@ -28,7 +28,7 @@ val recipeDataModule = module {
             reportsReference = FirebaseDatabase.getInstance().getReference(RECIPE_REPORTS_REFERENCE),
             editsReference = FirebaseDatabase.getInstance().getReference(RECIPE_EDITS_REFERENCE),
             firestoreEntityMapper = get(),
-            uploadPictureUseCase = get(),
+            uploadPicture = get(),
         )
     }
 }

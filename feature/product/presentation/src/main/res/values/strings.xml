@@ -41,6 +41,7 @@
     <string name="product_name">Nombre del producto</string>
     <string name="product_brand">Marca del producto</string>
     <string name="product_comments">Aclaraciones (opcional)</string>
+    <string name="product_source_url">Sitio oficial del producto (opcional)</string>
     <string name="product_type">Tipo de producto</string>
     <string name="product_category">Selecciona una categoría</string>
     <string name="product_already_exists">Ya existe un producto con ese nombre</string>
@@ -106,4 +107,16 @@
     <string name="create_product_top_app_bar_title_edit">Editar producto</string>
     <string name="source_url_button_label">Ir al sitio oficial</string>
     <string name="products_found">resultados</string>
+    <string name="refresh">Refrescar</string>
+    <string name="validate_all_content_title">Validar todos los cambios</string>
+    <string name="validate_all_content_text">¿Seguro que querés validar todos los cambios?</string>
+    <string name="validate_all">Validar todos</string>
+    <string name="products_validated_success">¡Todos los productos y sus ediciones han sido validadas exitosamente!</string>
+    <string name="products_validated_error">Ocurrió un error al querer validar todos los productos y sus ediciones.</string>
+    <string name="product_edit_deleted_success">La edición del producto se elminó correctamente.</string>
+    <string name="product_edit_deleted_error">Ocurrió un error al querer eliminar la edición del producto.</string>
+    <string name="eliminate_edit_title">Eliminar edición</string>
+    <string name="eliminate_edit_message">¿Querés eliminar esta edición de producto?</string>
+    <string name="product_deleted_success">Se eliminó el producto exitosamente.</string>
+    <string name="product_deleted_error">Error al eliminar el producto.</string>
 </resources>

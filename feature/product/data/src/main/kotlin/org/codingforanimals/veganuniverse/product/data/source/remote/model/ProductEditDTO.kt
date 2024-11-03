@@ -48,6 +48,11 @@ data class ProductEditDTO(
     @set:PropertyName(PRODUCT_IMAGE)
     var imageId: String? = null,
 
+    @get:PropertyName(UPDATES_IMAGE)
+    @set:PropertyName(UPDATES_IMAGE)
+    var updatesImage: Boolean? = null,
+
+
     @get:PropertyName(PRODUCT_DESCRIPTION)
     @set:PropertyName(PRODUCT_DESCRIPTION)
     var description: String? = null,
@@ -76,6 +81,7 @@ data class ProductEditDTO(
         private const val PRODUCT_CATEGORY = "c"
         private const val PRODUCT_DESCRIPTION = "d"
         private const val PRODUCT_SOURCE_URL = "su"
+        private const val UPDATES_IMAGE = "ui"
         internal const val PRODUCT_IMAGE = "i"
         internal const val TIMESTAMP = "ts"
         internal const val LAST_UPDATED = "lts"

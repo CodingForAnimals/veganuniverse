@@ -27,7 +27,7 @@ val placeDataModule = module {
             placesCollection = FirebaseFirestore.getInstance().collection(PLACES_ITEMS_COLLECTION),
             placesReportsReference = FirebaseDatabase.getInstance().getReference(PLACES_REPORTS),
             placesSuggestionsReference = FirebaseDatabase.getInstance().getReference(PLACES_SUGGESTIONS),
-            uploadPictureUseCase = get(),
+            uploadPicture = get(),
             mapper = get(),
         )
     }

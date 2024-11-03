@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.firebase.storage.model.ResizeResolution
-import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureUseCase
+import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPicture
 import org.codingforanimals.veganuniverse.place.data.mapper.PlaceEntityMapper
 import org.codingforanimals.veganuniverse.place.data.model.PlaceCardDatabaseEntity
 import org.codingforanimals.veganuniverse.place.data.model.PlaceFirestoreEntity
@@ -45,7 +45,7 @@ internal class PlaceFirebaseDataSource(
     private val placesCollection: CollectionReference,
     private val placesReportsReference: DatabaseReference,
     private val placesSuggestionsReference: DatabaseReference,
-    private val uploadPictureUseCase: UploadPictureUseCase,
+    private val uploadPicture: UploadPicture,
     private val mapper: PlaceEntityMapper,
 ) : PlaceRemoteDataSource {
 
@@ -150,7 +150,7 @@ internal class PlaceFirebaseDataSource(
     }
 
     override suspend fun insertPlace(place: Place, imageModel: Parcelable): String {
-        val pictureId = uploadPictureUseCase(
+        val pictureId = uploadPicture(
             fileFolderPath = BASE_PLACE_PICTURE_PATH,
             model = imageModel
         )

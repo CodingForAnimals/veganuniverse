@@ -3,8 +3,10 @@ package org.codingforanimals.veganuniverse.firebase.storage.di
 import com.google.firebase.storage.FirebaseStorage
 import org.codingforanimals.veganuniverse.firebase.storage.model.PublicImageApi
 import org.codingforanimals.veganuniverse.firebase.storage.model.StorageBucketWrapper
-import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureUseCase
-import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureUseCaseImpl
+import org.codingforanimals.veganuniverse.firebase.storage.usecase.DeletePicture
+import org.codingforanimals.veganuniverse.firebase.storage.usecase.DeletePictureImpl
+import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPicture
+import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureImpl
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -22,8 +24,14 @@ val firebaseStorageModule = module {
         )
     }
 
-    factory<UploadPictureUseCase> {
-        UploadPictureUseCaseImpl(
+    factory<UploadPicture> {
+        UploadPictureImpl(
+            storage = FirebaseStorage.getInstance(),
+        )
+    }
+
+    factory<DeletePicture> {
+        DeletePictureImpl(
             storage = FirebaseStorage.getInstance(),
         )
     }

@@ -3,7 +3,6 @@ package org.codingforanimals.veganuniverse.product.presentation.edit
 import android.net.Uri
 import android.os.Parcelable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -78,7 +77,7 @@ class EditProductViewModel(
                     description = product.description.orEmpty(),
                     type = product.type,
                     imageUrl = product.imageUrl,
-                    sourceUrl = product.sourceUrl,
+                    sourceUrl = product.sourceUrl.orEmpty(),
                     loading = false,
                 )
             }
@@ -152,6 +151,7 @@ class EditProductViewModel(
             is Action.OnTextChange.Name -> uiState.copy(name = action.text)
             is Action.OnTextChange.Brand -> uiState.copy(brand = action.text)
             is Action.OnTextChange.Description -> uiState.copy(description = action.text)
+            is Action.OnTextChange.SourceUrl -> uiState.copy(sourceUrl = action.text)
         }
     }
 
@@ -291,7 +291,7 @@ class EditProductViewModel(
         val brand: String = "",
         val description: String = "",
         val type: ProductType? = null,
-        val sourceUrl: String? = null,
+        val sourceUrl: String = "",
         val isValidating: Boolean = false,
         val dialog: Dialog? = null,
         val loading: Boolean = false,
@@ -310,6 +310,7 @@ class EditProductViewModel(
             data class Name(val text: String) : OnTextChange()
             data class Brand(val text: String) : OnTextChange()
             data class Description(val text: String) : OnTextChange()
+            data class SourceUrl(val text: String) : OnTextChange()
         }
 
         data class OnProductTypeSelected(val type: ProductType) : Action()

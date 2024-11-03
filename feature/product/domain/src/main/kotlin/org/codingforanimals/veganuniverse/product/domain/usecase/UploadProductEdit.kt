@@ -36,6 +36,7 @@ class UploadProductEdit(
             lastUpdatedAt = edit.lastUpdatedAt,
             imageUrl = edit.imageUrl,
             sourceUrl = edit.sourceUrl,
+            updatesImage = imageModel != null
         )
 
         productRepository.uploadProductEdit(editWithUserInfo, imageModel)

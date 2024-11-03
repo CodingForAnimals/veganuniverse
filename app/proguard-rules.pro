@@ -25,7 +25,8 @@
 
 # Vegan Universe classes and packages
 -keep class org.codingforanimals.veganuniverse.**.data.model.** { *; }
--keep class org.codingforanimals.veganuniverse.commons.place.shared.model.** { *; }
+-keep class org.codingforanimals.veganuniverse.place.shared.model.** { *; }
+-keep class org.codingforanimals.veganuniverse.place.data.model.** { *; }
 -keep class org.codingforanimals.veganuniverse.additives.data.config.remote.model.** { *; }
 -keep class org.codingforanimals.veganuniverse.additives.data.source.remote.model.** { *; }
 -keep class org.codingforanimals.veganuniverse.product.data.source.remote.model.** { *; }

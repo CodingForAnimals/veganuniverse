@@ -22,7 +22,7 @@ import org.codingforanimals.veganuniverse.commons.data.paging.ContentListingPagi
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.Recipe
 import org.codingforanimals.veganuniverse.commons.recipe.shared.model.RecipeQueryParams
 import org.codingforanimals.veganuniverse.firebase.storage.model.ResizeResolution
-import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureUseCase
+import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPicture
 import org.codingforanimals.veganuniverse.recipe.data.mapper.RecipeFirestoreEntityMapper
 import org.codingforanimals.veganuniverse.recipe.data.mapper.toNewFirestoreEntity
 import org.codingforanimals.veganuniverse.recipe.data.model.RecipeFirestoreEntity
@@ -35,7 +35,7 @@ internal class RecipeFirestoreDataSource(
     private val reportsReference: DatabaseReference,
     private val editsReference: DatabaseReference,
     private val firestoreEntityMapper: RecipeFirestoreEntityMapper,
-    private val uploadPictureUseCase: UploadPictureUseCase,
+    private val uploadPicture: UploadPicture,
 ) : RecipeRemoteDataSource {
 
     override suspend fun getRecipeById(id: String): Recipe? {
@@ -112,7 +112,7 @@ internal class RecipeFirestoreDataSource(
     }
 
     override suspend fun insertRecipe(recipe: Recipe, model: Parcelable): String {
-        val pictureId = uploadPictureUseCase(
+        val pictureId = uploadPicture(
             fileFolderPath = BASE_RECIPE_PICTURE_PATH,
             model = model,
         )

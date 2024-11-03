@@ -3,6 +3,7 @@ package org.codingforanimals.veganuniverse.product.domain.repository
 import android.os.Parcelable
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
 import org.codingforanimals.veganuniverse.product.data.source.local.ProductLocalDataSource
+import org.codingforanimals.veganuniverse.product.data.source.local.model.ProductEntity
 import org.codingforanimals.veganuniverse.product.data.source.remote.ProductRemoteDataSource
 import org.codingforanimals.veganuniverse.product.domain.model.Product
 import org.codingforanimals.veganuniverse.product.domain.model.ProductEdit
@@ -14,6 +15,12 @@ internal class ProductRepositoryImpl(
     private val remoteDataSource: ProductRemoteDataSource,
     private val localDataSource: ProductLocalDataSource,
 ) : ProductRepository {
+    override suspend fun updateProductsFromRemoteToLocal() {
+        val remote = getValidatedProductsFromRemote()
+
+        clearProductsFromLocal()
+        saveProductsToLocal(remote)
+    }
 
     override suspend fun getValidatedProductsFromRemote(): List<Product> {
         return remoteDataSource.getValidatedProducts().mapNotNull { dto ->
@@ -47,11 +54,14 @@ internal class ProductRepositoryImpl(
         return remoteDataSource.getUnvalidatedProductById(id).toDomain()
     }
 
-    override suspend fun deleteUnvalidatedProductFromRemote(id: String) {
-        remoteDataSource.deleteUnvalidatedProduct(id)
+    override suspend fun deleteUnvalidatedProductFromRemote(product: Product) {
+        remoteDataSource.deleteUnvalidatedProduct(product.toDTO())
     }
 
-    override suspend fun uploadUnvalidatedProductToRemote(product: Product, imageModel: Parcelable?): String {
+    override suspend fun uploadUnvalidatedProductToRemote(
+        product: Product,
+        imageModel: Parcelable?
+    ): String {
         return remoteDataSource.uploadUnvalidatedProduct(product.toDTO(), imageModel)
     }
 
@@ -79,8 +89,8 @@ internal class ProductRepositoryImpl(
         remoteDataSource.validateProductEdit(edit.toDTO())
     }
 
-    override suspend fun deleteProductEdit(id: String) {
-        remoteDataSource.deleteProductEdit(id)
+    override suspend fun deleteProductEdit(edit: ProductEdit) {
+        remoteDataSource.deleteProductEdit(edit.toDTO())
     }
 
     override suspend fun saveProductReport(productId: String, userId: String) {
@@ -130,7 +140,9 @@ internal class ProductRepositoryImpl(
                 runCatching { it.toEntity() }
                     .onFailure { Analytics.logNonFatalException(it) }
                     .getOrNull()
-            }.toTypedArray()
+            }
+                .sortedWith(compareBy<ProductEntity> { it.brandAccentInsensitive }.thenBy { it.nameAccentInsensitive })
+                .toTypedArray()
         )
     }
 

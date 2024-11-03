@@ -17,5 +17,6 @@ data class ProductEdit(
     val createdAt: Date?,
     val lastUpdatedAt: Date?,
     val imageUrl: String?,
+    val updatesImage: Boolean,
     val sourceUrl: String?,
 )

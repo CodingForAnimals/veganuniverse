@@ -6,12 +6,18 @@ import android.os.Parcelable
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
 import kotlinx.coroutines.tasks.await
-import org.codingforanimals.veganuniverse.firebase.storage.model.ResizeResolution
 import java.io.ByteArrayOutputStream
 
-internal class UploadPictureUseCaseImpl(
+interface UploadPicture {
+    suspend operator fun invoke(
+        fileFolderPath: String,
+        model: Parcelable,
+    ): String
+}
+
+internal class UploadPictureImpl(
     private val storage: FirebaseStorage,
-) : UploadPictureUseCase {
+) : UploadPicture {
     private val storageImageMetadata =
         StorageMetadata.Builder().setContentType("image/jpeg").build()
 

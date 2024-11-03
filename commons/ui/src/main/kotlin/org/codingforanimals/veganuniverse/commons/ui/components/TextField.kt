@@ -111,6 +111,7 @@ fun VUNormalTextField(
                 )
             }
         },
+        singleLine = maxLines == 1,
         maxLines = maxLines,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,

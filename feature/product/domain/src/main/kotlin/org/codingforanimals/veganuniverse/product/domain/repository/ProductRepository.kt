@@ -5,6 +5,8 @@ import org.codingforanimals.veganuniverse.product.domain.model.Product
 import org.codingforanimals.veganuniverse.product.domain.model.ProductEdit
 
 interface ProductRepository {
+    suspend fun updateProductsFromRemoteToLocal()
+
     suspend fun getValidatedProductsFromRemote(): List<Product>
     suspend fun getValidatedProductByIdFromRemote(id: String): Product
     suspend fun deleteValidatedProductFromRemote(id: String)
@@ -12,7 +14,7 @@ interface ProductRepository {
 
     suspend fun getUnvalidatedProductsFromRemote(): List<Product>
     suspend fun getUnvalidatedProductByIdFromRemote(id: String): Product
-    suspend fun deleteUnvalidatedProductFromRemote(id: String)
+    suspend fun deleteUnvalidatedProductFromRemote(product: Product)
     suspend fun uploadUnvalidatedProductToRemote(product: Product, imageModel: Parcelable?): String
     suspend fun validateProduct(product: Product): String
 
@@ -20,7 +22,7 @@ interface ProductRepository {
     suspend fun getProductEditByIdFromRemote(id: String): ProductEdit
     suspend fun uploadProductEdit(product: ProductEdit, imageModel: Parcelable?)
     suspend fun validateProductEdit(edit: ProductEdit)
-    suspend fun deleteProductEdit(id: String)
+    suspend fun deleteProductEdit(edit: ProductEdit)
 
     suspend fun saveProductReport(productId: String, userId: String)
 

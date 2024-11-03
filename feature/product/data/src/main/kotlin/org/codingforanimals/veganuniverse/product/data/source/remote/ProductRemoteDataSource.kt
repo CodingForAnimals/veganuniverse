@@ -12,7 +12,7 @@ interface ProductRemoteDataSource {
 
     suspend fun getUnvalidatedProducts(): List<ProductDTO>
     suspend fun getUnvalidatedProductById(id: String): ProductDTO
-    suspend fun deleteUnvalidatedProduct(id: String)
+    suspend fun deleteUnvalidatedProduct(product: ProductDTO)
     suspend fun uploadUnvalidatedProduct(product: ProductDTO, imageModel: Parcelable?): String
     suspend fun validateProduct(product: ProductDTO): String
 
@@ -20,7 +20,7 @@ interface ProductRemoteDataSource {
     suspend fun getProductEditById(id: String): ProductEditDTO
     suspend fun uploadProductEdit(product: ProductEditDTO, imageModel: Parcelable?)
     suspend fun validateProductEdit(edit: ProductEditDTO)
-    suspend fun deleteProductEdit(id: String)
+    suspend fun deleteProductEdit(edit: ProductEditDTO)
 
     suspend fun saveProductReport(productId: String, userId: String)
 }

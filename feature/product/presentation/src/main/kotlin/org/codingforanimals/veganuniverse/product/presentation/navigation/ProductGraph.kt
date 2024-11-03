@@ -24,12 +24,11 @@ sealed class ProductDestination(route: String) : Destination(route) {
         val type: String? = null,
         val sorter: String? = null,
         val searchText: String = "",
-    ) : ProductDestination("$ROUTE?$CATEGORY=$category&$TYPE=$type&$SORTER=$sorter&$SEARCH_TEXT=$searchText") {
+    ) : ProductDestination("$ROUTE?$CATEGORY=$category&$TYPE=$type&$SEARCH_TEXT=$searchText") {
         companion object {
             const val ROUTE = "product_list_route"
             const val CATEGORY = "category"
             const val TYPE = "type"
-            const val SORTER = "sorter"
             const val SEARCH_TEXT = "search_text"
         }
     }
@@ -106,7 +105,7 @@ fun NavGraphBuilder.productGraph(
 
     with(ProductDestination.Browsing) {
         composable(
-            route = "$ROUTE?$CATEGORY={$CATEGORY}&$TYPE={$TYPE}&$SORTER={$SORTER}&$SEARCH_TEXT={$SEARCH_TEXT}",
+            route = "$ROUTE?$CATEGORY={$CATEGORY}&$TYPE={$TYPE}&&$SEARCH_TEXT={$SEARCH_TEXT}",
             arguments = listOf(
                 navArgument(CATEGORY) {
                     type = NavType.StringType
@@ -116,10 +115,6 @@ fun NavGraphBuilder.productGraph(
                     type = NavType.StringType
                     nullable = true
                 },
-                navArgument(SORTER) {
-                    type = NavType.StringType
-                    nullable = true
-                }
             )
         ) {
             ProductBrowsingScreen(

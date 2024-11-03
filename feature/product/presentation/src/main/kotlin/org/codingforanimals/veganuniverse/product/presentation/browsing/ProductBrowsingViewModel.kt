@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,26 +13,28 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.codingforanimals.veganuniverse.commons.ui.dialog.Dialog
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.Snackbar
+import org.codingforanimals.veganuniverse.commons.user.domain.model.User
+import org.codingforanimals.veganuniverse.commons.user.domain.usecase.FlowOnCurrentUser
 import org.codingforanimals.veganuniverse.product.domain.model.ProductCategory
-import org.codingforanimals.veganuniverse.product.domain.model.ProductSorter
 import org.codingforanimals.veganuniverse.product.domain.model.ProductType
 import org.codingforanimals.veganuniverse.product.domain.repository.ProductRepository
 import org.codingforanimals.veganuniverse.product.presentation.R
 import org.codingforanimals.veganuniverse.product.presentation.model.toUI
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.CATEGORY
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.SEARCH_TEXT
-import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.SORTER
 import org.codingforanimals.veganuniverse.product.presentation.navigation.ProductDestination.Browsing.Companion.TYPE
 
 internal class ProductBrowsingViewModel(
     savedStateHandle: SavedStateHandle,
-    productRepository: ProductRepository,
+    flowOnCurrentUser: FlowOnCurrentUser,
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
 
     private val navigationEffectsChannel = Channel<NavigationEffect>()
@@ -47,11 +50,18 @@ internal class ProductBrowsingViewModel(
         UiState.fromNavArgs(
             categoryNavArg = savedStateHandle[CATEGORY],
             typeNavArg = savedStateHandle[TYPE],
-            sorterNavArg = savedStateHandle[SORTER],
             searchTextNavArg = savedStateHandle[SEARCH_TEXT],
         )
     )
         private set
+
+    init {
+        viewModelScope.launch {
+            flowOnCurrentUser().collectLatest {
+                uiState = uiState.copy(user = it)
+            }
+        }
+    }
 
     private val searchChannel = Channel<Unit>()
 
@@ -112,7 +122,6 @@ internal class ProductBrowsingViewModel(
                     uiState = uiState.copy(
                         category = action.category,
                         type = action.type,
-                        sorter = action.sorter,
                     )
                     searchProducts()
                 }
@@ -122,7 +131,6 @@ internal class ProductBrowsingViewModel(
                 uiState = uiState.copy(
                     type = null,
                     category = null,
-                    sorter = ProductSorter.NAME,
                 )
                 viewModelScope.launch {
                     searchProducts()
@@ -134,6 +142,13 @@ internal class ProductBrowsingViewModel(
                     navigationEffectsChannel.send(NavigationEffect.NavigateToProductDetails(action.id))
                 }
             }
+
+            Action.RefreshDatabase -> {
+                viewModelScope.launch {
+                    productRepository.updateProductsFromRemoteToLocal()
+                    searchChannel.send(Unit)
+                }
+            }
         }
     }
 
@@ -143,11 +158,8 @@ internal class ProductBrowsingViewModel(
         val category: ProductCategory? = null,
         val searchText: String = "",
         val type: ProductType? = null,
-        val sorter: ProductSorter = ProductSorter.NAME,
-        val dialog: Dialog? = null,
-        val loading: Boolean = false,
+        val user: User? = null,
     ) {
-
         @StringRes
         val topBarLabel: Int = type?.toUI()?.label ?: R.string.all_products
 
@@ -155,14 +167,11 @@ internal class ProductBrowsingViewModel(
             fun fromNavArgs(
                 categoryNavArg: String?,
                 typeNavArg: String?,
-                sorterNavArg: String?,
                 searchTextNavArg: String?,
             ): UiState {
                 return UiState(
                     category = ProductCategory.fromString(categoryNavArg),
                     type = typeNavArg?.let { ProductType.fromString(it) },
-                    sorter = sorterNavArg?.let { ProductSorter.fromString(it) }
-                        ?: ProductSorter.NAME,
                     searchText = searchTextNavArg.orEmpty()
                 )
             }
@@ -171,6 +180,7 @@ internal class ProductBrowsingViewModel(
 
     sealed class Action {
         data object OnBackClick : Action()
+        data object RefreshDatabase : Action()
         data object OnClearFiltersClick : Action()
 
         data class OnSearchTextChange(val text: String) : Action()
@@ -178,7 +188,6 @@ internal class ProductBrowsingViewModel(
         data class ApplyFiltersClick(
             val category: ProductCategory?,
             val type: ProductType?,
-            val sorter: ProductSorter
         ) : Action()
     }
 

@@ -2,6 +2,10 @@ package org.codingforanimals.veganuniverse.product.domain.model
 
 import android.util.Log
 
+/**
+ * Class unused at the moment
+ */
+@Deprecated("Class unused at the moment")
 enum class ProductSorter {
     NAME,
     DATE,

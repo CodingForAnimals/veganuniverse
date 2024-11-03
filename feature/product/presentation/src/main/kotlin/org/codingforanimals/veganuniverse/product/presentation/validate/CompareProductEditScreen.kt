@@ -142,6 +142,7 @@ private fun PreviewCompareProductEditScreen() {
             originalId = "originalId",
             editUsername = "pepe",
             editUserId = "",
+            updatesImage = false,
         )
 
         val edit2 = edit.copy(

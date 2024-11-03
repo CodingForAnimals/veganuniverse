@@ -11,7 +11,8 @@ internal val productRemoteDataModule = module {
         ProductFirebaseDataSource(
             database = Firebase.database,
             publicImageApi = get(),
-            uploadPictureUseCase = get()
+            uploadPicture = get(),
+            deletePicture = get()
         )
     }
 }

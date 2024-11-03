@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -54,6 +56,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_01
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_02
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_03
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_04
@@ -143,6 +146,15 @@ private fun ProductBrowsingScreen(
                 VUTopAppBar(
                     title = stringResource(uiState.topBarLabel),
                     onBackClick = { onAction(Action.OnBackClick) },
+                    actions = {
+                        if (uiState.user?.isValidator == true) {
+                            TextButton(
+                                onClick = { onAction(Action.RefreshDatabase) }
+                            ) {
+                                Text(text = stringResource(R.string.refresh))
+                            }
+                        }
+                    }
                 )
                 Row(
                     modifier = Modifier.padding(
@@ -245,41 +257,17 @@ private fun ProductBrowsingScreen(
         ) {
             var currentCategory by rememberSaveable { mutableStateOf(uiState.category) }
             var currentType by rememberSaveable { mutableStateOf(uiState.type) }
-            var currentSorter by rememberSaveable { mutableStateOf(uiState.sorter) }
-            LazyColumn(
-                modifier = Modifier.weight(1f),
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Spacing_04),
-                contentPadding = PaddingValues(Spacing_03)
+                verticalArrangement = Arrangement.spacedBy(Spacing_02),
             ) {
-                item {
-                    Text(
-                        text = stringResource(R.string.order_by),
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-
-                    FlowRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = Spacing_03),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalArrangement = Arrangement.spacedBy(Spacing_02),
-                    ) {
-                        ProductSorter.entries.forEach { sorter ->
-                            val label = remember { sorter.label }
-                            SelectableChip(
-                                label = stringResource(label),
-                                selected = currentSorter == sorter,
-                                onClick = { currentSorter = sorter },
-                            )
-                        }
-                    }
-
-                    HorizontalDivider(modifier = Modifier.padding(vertical = Spacing_04))
-
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Spacing_03)) {
                     Text(
                         text = stringResource(filter_by),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleMedium,
                     )
 
                     FlowRow(
@@ -287,7 +275,7 @@ private fun ProductBrowsingScreen(
                             .fillMaxWidth()
                             .padding(top = Spacing_03),
                         horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalArrangement = Arrangement.spacedBy(Spacing_02),
+                        verticalArrangement = Arrangement.spacedBy(Spacing_01),
                         maxItemsInEachRow = 2,
                     ) {
                         ProductType.entries.forEach {
@@ -308,9 +296,8 @@ private fun ProductBrowsingScreen(
 
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        horizontalArrangement = Arrangement.spacedBy(Spacing_04, Alignment.CenterHorizontally),
                         verticalArrangement = Arrangement.spacedBy(Spacing_02),
-                        maxItemsInEachRow = 2,
                     ) {
                         ProductCategory.entries.forEach {
                             key(it.name.hashCode()) {
@@ -326,39 +313,36 @@ private fun ProductBrowsingScreen(
                             }
                         }
                     }
-                }
-            }
 
-            HorizontalDivider()
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = Spacing_06)
-            ) {
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        currentCategory = null
-                        currentType = null
-                        onAction(Action.OnClearFiltersClick)
-                        dismissFiltersSheet()
-                    }) {
-                    Text(text = stringResource(R.string.clear_filters))
-                }
-                Button(
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        onAction(
-                            Action.ApplyFiltersClick(
-                                currentCategory,
-                                currentType,
-                                currentSorter
-                            )
-                        )
-                        dismissFiltersSheet()
-                    }) {
-                    Text(text = stringResource(R.string.apply_filters))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = Spacing_05)
+                    ) {
+                        TextButton(
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                currentCategory = null
+                                currentType = null
+                                onAction(Action.OnClearFiltersClick)
+                                dismissFiltersSheet()
+                            }) {
+                            Text(text = stringResource(R.string.clear_filters))
+                        }
+                        Button(
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                onAction(
+                                    Action.ApplyFiltersClick(
+                                        currentCategory,
+                                        currentType,
+                                    )
+                                )
+                                dismissFiltersSheet()
+                            }) {
+                            Text(text = stringResource(R.string.apply_filters))
+                        }
+                    }
                 }
             }
         }

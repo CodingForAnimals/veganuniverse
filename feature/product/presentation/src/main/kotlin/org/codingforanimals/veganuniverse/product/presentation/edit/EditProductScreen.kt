@@ -97,7 +97,7 @@ fun EditProductScreen(
         topBar = {
             VUTopAppBar(
                 title = stringResource(topBarTitle),
-                onBackClick = { viewModel.onAction(Action.OnBackClick) }
+                onBackClick = { viewModel.onAction(Action.OnBackClick) },
             )
         }
     ) { paddingValues ->
@@ -181,7 +181,7 @@ private fun EditProductScreen(
             heroAnchorIcon = uiState.heroAnchorIcon,
             heroAnchorColors = heroAnchorColors,
             content = {
-                if (uiState.imageUrl != null) {
+                if (!uiState.imageUrl.isNullOrBlank()) {
                     AsyncImage(
                         modifier = Modifier.fillMaxSize(),
                         model = uiState.imageUrl,
@@ -242,6 +242,20 @@ private fun EditProductScreen(
             onValueChange = { onAction(Action.OnTextChange.Description(it)) },
             label = stringResource(R.string.product_comments),
             maxChars = 256,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Sentences,
+                imeAction = ImeAction.Done,
+            ),
+        )
+
+        VUNormalTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Spacing_06),
+            value = uiState.sourceUrl,
+            onValueChange = { onAction(Action.OnTextChange.SourceUrl(it)) },
+            label = stringResource(R.string.product_source_url),
+            maxLines = 1,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
                 imeAction = ImeAction.Done,

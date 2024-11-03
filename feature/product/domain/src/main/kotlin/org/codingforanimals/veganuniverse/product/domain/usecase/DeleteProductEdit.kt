@@ -1,17 +1,18 @@
 package org.codingforanimals.veganuniverse.product.domain.usecase
 
 import org.codingforanimals.veganuniverse.commons.analytics.Analytics
-import org.codingforanimals.veganuniverse.product.domain.model.Product
+import org.codingforanimals.veganuniverse.product.domain.model.ProductEdit
 import org.codingforanimals.veganuniverse.product.domain.repository.ProductRepository
 
-class ValidateProduct(
+class DeleteProductEdit(
     private val productRepository: ProductRepository,
 ) {
-    suspend operator fun invoke(product: Product): Result<String> {
+    suspend operator fun invoke(edit: ProductEdit): Result<Unit> {
         return runCatching {
-            productRepository.validateProduct(product)
+            productRepository.deleteProductEdit(edit)
         }.onFailure {
             Analytics.logNonFatalException(it)
         }
     }
 }
+

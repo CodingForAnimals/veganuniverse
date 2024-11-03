@@ -10,14 +10,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.codingforanimals.veganuniverse.firebase.storage.model.PublicImageApi
 import org.codingforanimals.veganuniverse.firebase.storage.model.ResizeResolution
-import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPictureUseCase
+import org.codingforanimals.veganuniverse.firebase.storage.usecase.DeletePicture
+import org.codingforanimals.veganuniverse.firebase.storage.usecase.UploadPicture
 import org.codingforanimals.veganuniverse.product.data.source.remote.model.ProductDTO
 import org.codingforanimals.veganuniverse.product.data.source.remote.model.ProductEditDTO
 
 internal class ProductFirebaseDataSource(
     database: FirebaseDatabase,
     private val publicImageApi: PublicImageApi,
-    private val uploadPictureUseCase: UploadPictureUseCase,
+    private val uploadPicture: UploadPicture,
+    private val deletePicture: DeletePicture,
 ) : ProductRemoteDataSource {
 
     private val productsReference = database.getReference(PRODUCTS_PATH)
@@ -122,8 +124,22 @@ internal class ProductFirebaseDataSource(
         }
     }
 
-    override suspend fun deleteUnvalidatedProduct(id: String) {
-        unvalidatedReference.child(id).removeValue().await()
+    override suspend fun deleteUnvalidatedProduct(product: ProductDTO) {
+        val id = checkNotNull(product.objectKey) {
+            "Unvalidated product objectKey cannot be null"
+        }
+        coroutineScope {
+            launch {
+                unvalidatedReference.child(id).removeValue().await()
+            }
+            if (product.imageId != null) {
+                launch {
+                    val path = "$BASE_PRODUCT_PICTURE_PATH/${product.imageId}"
+                    Log.e("pepe", "clearing picture with path $path")
+                    deletePicture(path)
+                }
+            }
+        }
     }
 
     override suspend fun uploadUnvalidatedProduct(
@@ -134,7 +150,7 @@ internal class ProductFirebaseDataSource(
         idReference.setValue(product).await()
 
         val resizedPictureId = imageModel?.let {
-            val pictureId = uploadPictureUseCase(
+            val pictureId = uploadPicture(
                 fileFolderPath = BASE_PRODUCT_PICTURE_PATH,
                 model = imageModel,
             )
@@ -226,22 +242,28 @@ internal class ProductFirebaseDataSource(
 
         editIdReference.setValue(product).await()
 
-        imageModel?.let {
-            val imageId = uploadPictureUseCase(
-                fileFolderPath = BASE_PRODUCT_PICTURE_PATH,
-                model = imageModel,
-            ) + ResizeResolution.MEDIUM.suffix
-            editIdReference.updateChildren(
-                mapOf(
-                    ProductDTO.PRODUCT_IMAGE to imageId,
-                )
-            ).await()
+        coroutineScope {
+            imageModel?.let {
+                launch {
+                    val imageId = uploadPicture(
+                        fileFolderPath = BASE_PRODUCT_PICTURE_PATH,
+                        model = imageModel,
+                    ) + ResizeResolution.MEDIUM.suffix
+                    editIdReference.updateChildren(
+                        mapOf(
+                            ProductEditDTO.PRODUCT_IMAGE to imageId,
+                        )
+                    ).await()
+                }
+            }
+            launch {
+                editIdReference.updateChildren(
+                    mapOf(
+                        ProductDTO.LAST_UPDATED to ServerValue.TIMESTAMP,
+                    )
+                ).await()
+            }
         }
-        editIdReference.updateChildren(
-            mapOf(
-                ProductDTO.LAST_UPDATED to ServerValue.TIMESTAMP,
-            )
-        ).await()
     }
 
     override suspend fun validateProductEdit(edit: ProductEditDTO) {
@@ -260,8 +282,23 @@ internal class ProductFirebaseDataSource(
         editReference.removeValue().await()
     }
 
-    override suspend fun deleteProductEdit(id: String) {
-        editsReference.child(id).removeValue().await()
+    override suspend fun deleteProductEdit(edit: ProductEditDTO) {
+        val editKey = checkNotNull(edit.objectKey) {
+            "ProductEditDTO objectKey cannot be null"
+        }
+
+        coroutineScope {
+            launch {
+                editsReference.child(editKey).removeValue().await()
+            }
+            if (edit.updatesImage == true) {
+                launch {
+                    val path = "$BASE_PRODUCT_PICTURE_PATH/${edit.imageId}"
+                    Log.e("pepe", "clearing picture with path $path")
+                    deletePicture(path)
+                }
+            }
+        }
     }
 
     override suspend fun saveProductReport(productId: String, userId: String) {

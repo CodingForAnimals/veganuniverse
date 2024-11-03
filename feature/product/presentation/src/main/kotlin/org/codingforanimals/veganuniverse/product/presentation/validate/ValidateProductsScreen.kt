@@ -5,6 +5,7 @@ package org.codingforanimals.veganuniverse.product.presentation.validate
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_01
 import org.codingforanimals.veganuniverse.commons.designsystem.Spacing_06
+import org.codingforanimals.veganuniverse.commons.ui.R.string.delete
 import org.codingforanimals.veganuniverse.commons.ui.components.VUCircularProgressIndicator
 import org.codingforanimals.veganuniverse.commons.ui.components.VUTopAppBar
 import org.codingforanimals.veganuniverse.commons.ui.snackbar.LocalSnackbarSender
@@ -49,10 +51,13 @@ fun ValidateProductsScreen(
     navigateToCompareProductEdit: (String, String) -> Unit,
 ) {
     val viewModel: ValidateProductsViewModel = koinViewModel()
-    val state by viewModel.unvalidatedProducts.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     var selectedProductForValidation by remember { mutableStateOf<Product?>(null) }
+    var selectedProductForElimination by remember { mutableStateOf<Product?>(null) }
     var selectedProductEditForValidation by remember { mutableStateOf<ProductEdit?>(null) }
+    var selectedProductEditForElimination by remember { mutableStateOf<ProductEdit?>(null) }
+    var showValidateAllDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -61,6 +66,11 @@ fun ValidateProductsScreen(
                 actions = {
                     TextButton(navigateToAdditiveEdits) {
                         Text(stringResource(R.string.additives))
+                    }
+                    if (state is ValidateProductsViewModel.State.Success) {
+                        TextButton(onClick = { showValidateAllDialog = true }) {
+                            Text(stringResource(R.string.validate_all))
+                        }
                     }
                 }
             )
@@ -100,11 +110,20 @@ fun ValidateProductsScreen(
                                         }
                                     },
                                 )
-                                TextButton(
+                                Row(
                                     modifier = Modifier.align(Alignment.End),
-                                    onClick = { selectedProductForValidation = product }
+                                    horizontalArrangement = Arrangement.spacedBy(Spacing_01)
                                 ) {
-                                    Text(stringResource(R.string.validate))
+                                    TextButton(
+                                        onClick = { selectedProductForValidation = product }
+                                    ) {
+                                        Text(stringResource(R.string.validate))
+                                    }
+                                    TextButton(
+                                        onClick = { selectedProductForElimination = product }
+                                    ) {
+                                        Text(stringResource(delete))
+                                    }
                                 }
                             }
                         }
@@ -123,11 +142,20 @@ fun ValidateProductsScreen(
                                         }
                                     },
                                 )
-                                TextButton(
+                                Row(
                                     modifier = Modifier.align(Alignment.End),
-                                    onClick = { selectedProductEditForValidation = edit }
+                                    horizontalArrangement = Arrangement.spacedBy(Spacing_01)
                                 ) {
-                                    Text(stringResource(R.string.validate))
+                                    TextButton(
+                                        onClick = { selectedProductEditForValidation = edit }
+                                    ) {
+                                        Text(stringResource(R.string.validate))
+                                    }
+                                    TextButton(
+                                        onClick = { selectedProductEditForElimination = edit }
+                                    ) {
+                                        Text(stringResource(delete))
+                                    }
                                 }
                             }
                         }
@@ -135,8 +163,8 @@ fun ValidateProductsScreen(
                 }
             }
         }
-
     }
+
     selectedProductForValidation?.let {
         AlertDialog(
             onDismissRequest = { selectedProductForValidation = null },
@@ -178,6 +206,72 @@ fun ValidateProductsScreen(
                         Text(stringResource(R.string.confirm))
                     }
                 )
+            }
+        )
+    }
+
+    selectedProductForElimination?.let {
+        AlertDialog(
+            onDismissRequest = { selectedProductForElimination = null },
+            title = {
+                Text(stringResource(R.string.eliminate_edit_title))
+            },
+            text = {
+                Text(stringResource(R.string.eliminate_edit_message))
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        selectedProductForElimination = null
+                        viewModel.onConfirmDeleteProduct(it)
+                    },
+                ) {
+                    Text(stringResource(R.string.confirm))
+                }
+            }
+        )
+    }
+
+    selectedProductEditForElimination?.let {
+        AlertDialog(
+            onDismissRequest = { selectedProductEditForElimination = null },
+            title = {
+                Text(stringResource(R.string.eliminate_edit_title))
+            },
+            text = {
+                Text(stringResource(R.string.eliminate_edit_message))
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        selectedProductEditForElimination = null
+                        viewModel.onConfirmDeleteEdit(it)
+                    },
+                ) {
+                    Text(stringResource(R.string.confirm))
+                }
+            }
+        )
+    }
+
+    if (showValidateAllDialog) {
+        AlertDialog(
+            onDismissRequest = { showValidateAllDialog = false },
+            title = {
+                Text(stringResource(R.string.validate_all_content_title))
+            },
+            text = {
+                Text(stringResource(R.string.validate_all_content_text))
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showValidateAllDialog = false
+                        viewModel.onConfirmValidateAll()
+                    },
+                ) {
+                    Text(stringResource(R.string.confirm))
+                }
             }
         )
     }

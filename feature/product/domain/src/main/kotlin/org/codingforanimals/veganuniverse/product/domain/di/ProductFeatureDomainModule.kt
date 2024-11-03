@@ -7,6 +7,8 @@ import org.codingforanimals.veganuniverse.product.domain.repository.ProductConfi
 import org.codingforanimals.veganuniverse.product.domain.repository.ProductRepository
 import org.codingforanimals.veganuniverse.product.domain.repository.ProductRepositoryImpl
 import org.codingforanimals.veganuniverse.product.domain.usecase.CheckForProductsUpdate
+import org.codingforanimals.veganuniverse.product.domain.usecase.DeleteProduct
+import org.codingforanimals.veganuniverse.product.domain.usecase.DeleteProductEdit
 import org.codingforanimals.veganuniverse.product.domain.usecase.EditProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.GetProductDetail
 import org.codingforanimals.veganuniverse.product.domain.usecase.GetProductEdits
@@ -17,6 +19,7 @@ import org.codingforanimals.veganuniverse.product.domain.usecase.ReportProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.UploadProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.UploadProductEdit
 import org.codingforanimals.veganuniverse.product.domain.usecase.UploadProductsBatch
+import org.codingforanimals.veganuniverse.product.domain.usecase.ValidateAllProducts
 import org.codingforanimals.veganuniverse.product.domain.usecase.ValidateProduct
 import org.codingforanimals.veganuniverse.product.domain.usecase.ValidateProductEdit
 import org.koin.core.module.dsl.factoryOf
@@ -72,6 +75,9 @@ val productFeatureDomainModule = module {
     factoryOf(::GetProductEdits)
     factoryOf(::ValidateProductEdit)
     factoryOf(::UploadProductsBatch)
+    factoryOf(::ValidateAllProducts)
+    factoryOf(::DeleteProductEdit)
+    factoryOf(::DeleteProduct)
     factory {
         ProductBookmarkUseCases(
             profileProductUseCases = get(named(PROFILE_PRODUCT_USE_CASES))

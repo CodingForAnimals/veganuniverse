@@ -14,11 +14,7 @@ class CheckForProductsUpdate(
         val remoteConfig = configRepository.getConfigFromRemote()
 
         if (requiresUpdate(localConfig, remoteConfig)) {
-            val remote = productRepository.getValidatedProductsFromRemote()
-
-            productRepository.clearProductsFromLocal()
-            productRepository.saveProductsToLocal(remote)
-
+            productRepository.updateProductsFromRemoteToLocal()
             configRepository.saveConfigToLocal(remoteConfig)
         }
     }.onFailure { throwable ->
