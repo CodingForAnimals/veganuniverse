@@ -181,7 +181,7 @@ private fun AuthenticatePromptScreen(
             text = stringResource(R.string.profie_screen_unauthenticated_user_text),
             textAlign = TextAlign.Center,
         )
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = onLoginClick) {
             Text(text = stringResource(R.string.access))
         }
@@ -232,97 +232,97 @@ private fun ProfileContentScreen(
         }
         Text(text = user.email, style = MaterialTheme.typography.titleMedium)
 
-        Row(
-            modifier = Modifier.padding(top = Spacing_06),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Spacing_03),
-        ) {
-            Icon(
-                modifier = Modifier.size(20.dp),
-                painter = painterResource(id = VUIcons.Bookmark.id),
-                contentDescription = null,
-            )
-            Text(
-                text = stringResource(id = R.string.your_bookmarks),
-                style = MaterialTheme.typography.titleMedium,
-            )
-        }
-        Row(
-            modifier = Modifier.padding(top = Spacing_04),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Spacing_05),
-        ) {
-            ProfileContentCard(
-                modifier = modifier
-                    .aspectRatio(1f)
-                    .weight(1f),
-                icon = VUIcons.VeganLogo,
-                label = stringResource(id = R.string.products),
-                onClick = { onAction(Action.BookmarksClick.Products) }
-            )
-            ProfileContentCard(
-                modifier = modifier
-                    .aspectRatio(1f)
-                    .weight(1f),
-                icon = VUIcons.Location,
-                label = stringResource(id = R.string.places),
-                onClick = { onAction(Action.BookmarksClick.Places) }
-            )
-            ProfileContentCard(
-                modifier = modifier
-                    .aspectRatio(1f)
-                    .weight(1f),
-                icon = VUIcons.Recipes,
-                label = stringResource(id = R.string.recipes),
-                onClick = { onAction(Action.BookmarksClick.Recipes) }
-            )
-        }
-
-        Row(
-            modifier = Modifier.padding(top = Spacing_06),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Spacing_03),
-        ) {
-            Icon(
-                modifier = Modifier.size(20.dp),
-                painter = painterResource(id = VUIcons.Create.id),
-                contentDescription = null,
-            )
-            Text(
-                text = stringResource(id = R.string.your_contributions),
-                style = MaterialTheme.typography.titleMedium,
-            )
-        }
-        Row(
-            modifier = Modifier.padding(top = Spacing_04),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Spacing_05),
-        ) {
-            ProfileContentCard(
-                modifier = modifier
-                    .aspectRatio(1f)
-                    .weight(1f),
-                icon = VUIcons.VeganLogo,
-                label = stringResource(id = R.string.products),
-                onClick = { onAction(Action.ContributionsClick.Products) }
-            )
-            ProfileContentCard(
-                modifier = modifier
-                    .aspectRatio(1f)
-                    .weight(1f),
-                icon = VUIcons.Location,
-                label = stringResource(id = R.string.places),
-                onClick = { onAction(Action.ContributionsClick.Places) }
-            )
-            ProfileContentCard(
-                modifier = modifier
-                    .aspectRatio(1f)
-                    .weight(1f),
-                icon = VUIcons.Recipes,
-                label = stringResource(id = R.string.recipes),
-                onClick = { onAction(Action.ContributionsClick.Recipes) }
-            )
-        }
+//        Row(
+//            modifier = Modifier.padding(top = Spacing_06),
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(Spacing_03),
+//        ) {
+//            Icon(
+//                modifier = Modifier.size(20.dp),
+//                painter = painterResource(id = VUIcons.Bookmark.id),
+//                contentDescription = null,
+//            )
+//            Text(
+//                text = stringResource(id = R.string.your_bookmarks),
+//                style = MaterialTheme.typography.titleMedium,
+//            )
+//        }
+//        Row(
+//            modifier = Modifier.padding(top = Spacing_04),
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(Spacing_05),
+//        ) {
+//            ProfileContentCard(
+//                modifier = modifier
+//                    .aspectRatio(1f)
+//                    .weight(1f),
+//                icon = VUIcons.VeganLogo,
+//                label = stringResource(id = R.string.products),
+//                onClick = { onAction(Action.BookmarksClick.Products) }
+//            )
+//            ProfileContentCard(
+//                modifier = modifier
+//                    .aspectRatio(1f)
+//                    .weight(1f),
+//                icon = VUIcons.Location,
+//                label = stringResource(id = R.string.places),
+//                onClick = { onAction(Action.BookmarksClick.Places) }
+//            )
+//            ProfileContentCard(
+//                modifier = modifier
+//                    .aspectRatio(1f)
+//                    .weight(1f),
+//                icon = VUIcons.Recipes,
+//                label = stringResource(id = R.string.recipes),
+//                onClick = { onAction(Action.BookmarksClick.Recipes) }
+//            )
+//        }
+//
+//        Row(
+//            modifier = Modifier.padding(top = Spacing_06),
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(Spacing_03),
+//        ) {
+//            Icon(
+//                modifier = Modifier.size(20.dp),
+//                painter = painterResource(id = VUIcons.Create.id),
+//                contentDescription = null,
+//            )
+//            Text(
+//                text = stringResource(id = R.string.your_contributions),
+//                style = MaterialTheme.typography.titleMedium,
+//            )
+//        }
+//        Row(
+//            modifier = Modifier.padding(top = Spacing_04),
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(Spacing_05),
+//        ) {
+//            ProfileContentCard(
+//                modifier = modifier
+//                    .aspectRatio(1f)
+//                    .weight(1f),
+//                icon = VUIcons.VeganLogo,
+//                label = stringResource(id = R.string.products),
+//                onClick = { onAction(Action.ContributionsClick.Products) }
+//            )
+//            ProfileContentCard(
+//                modifier = modifier
+//                    .aspectRatio(1f)
+//                    .weight(1f),
+//                icon = VUIcons.Location,
+//                label = stringResource(id = R.string.places),
+//                onClick = { onAction(Action.ContributionsClick.Places) }
+//            )
+//            ProfileContentCard(
+//                modifier = modifier
+//                    .aspectRatio(1f)
+//                    .weight(1f),
+//                icon = VUIcons.Recipes,
+//                label = stringResource(id = R.string.recipes),
+//                onClick = { onAction(Action.ContributionsClick.Recipes) }
+//            )
+//        }
         if (user.role == UserRole.VALIDATOR) {
             Row(
                 modifier = Modifier.padding(top = Spacing_06),
